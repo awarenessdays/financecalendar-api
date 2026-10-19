@@ -1,0 +1,1792 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Finance Calendar API",
+        "version": "2.0.0",
+        "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
+        "description": "Every scheduled release on financecalendar.com, verified against official calendars and updated within the hour of a print. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included.",
+        "termsOfService": "https://www.financecalendar.com/api/#attribution",
+        "contact": {
+            "url": "https://www.financecalendar.com/about/"
+        },
+        "license": {
+            "name": "Free with attribution",
+            "url": "https://www.financecalendar.com/api/#attribution"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://www.financecalendar.com/wp-json/fc/v1",
+            "description": "Production"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Calendar"
+        },
+        {
+            "name": "Series"
+        },
+        {
+            "name": "Markets"
+        },
+        {
+            "name": "Changes"
+        },
+        {
+            "name": "Keys"
+        },
+        {
+            "name": "Meta"
+        }
+    ],
+    "paths": {
+        "/calendar": {
+            "get": {
+                "tags": [
+                    "Calendar"
+                ],
+                "operationId": "calendar",
+                "summary": "Events in a date range",
+                "parameters": [
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "YYYY-MM-DD, default today (America/New_York).",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "YYYY-MM-DD, default from + 14 days, at most 92 days after from.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "impact",
+                        "in": "query",
+                        "description": "high, medium or low; comma-separated for several.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "economic-indicators, central-banks-monetary-policy or market-holidays. Market holidays are left out unless asked for here or with include=holidays.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "series",
+                        "in": "query",
+                        "description": "Series code or alias (e.g. us-cpi, fomc, uk-cpi); comma-separated for several.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "holidays to add market-holiday rows to the economic rows.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "holidays"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "confirmed, estimated, released; comma-separated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tz",
+                        "in": "query",
+                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "1 to 500, default 100.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 500,
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Skip this many rows (paging).",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "json (default), csv (download) or ics (calendar subscription).",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "csv",
+                                "ics"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rows, soonest first.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "from": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "to": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "count": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        },
+                                        "events": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "attribution": {
+                                            "$ref": "#/components/schemas/Attribution"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/today": {
+            "get": {
+                "tags": [
+                    "Calendar"
+                ],
+                "operationId": "today",
+                "summary": "Today's releases, NYSE status and exchange closures",
+                "parameters": [
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tz",
+                        "in": "query",
+                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Today.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "market": {
+                                            "type": [
+                                                "object",
+                                                "null"
+                                            ]
+                                        },
+                                        "count": {
+                                            "type": "integer"
+                                        },
+                                        "events": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "market_holidays": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "attribution": {
+                                            "$ref": "#/components/schemas/Attribution"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/week": {
+            "get": {
+                "tags": [
+                    "Calendar"
+                ],
+                "operationId": "week",
+                "summary": "This week (Monday to Sunday) or the next one",
+                "parameters": [
+                    {
+                        "name": "which",
+                        "in": "query",
+                        "description": "this (default) or next.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "this",
+                                "next"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "impact",
+                        "in": "query",
+                        "description": "high, medium or low.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tz",
+                        "in": "query",
+                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rows, soonest first.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "from": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "to": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "count": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        },
+                                        "events": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "attribution": {
+                                            "$ref": "#/components/schemas/Attribution"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/next": {
+            "get": {
+                "tags": [
+                    "Calendar"
+                ],
+                "operationId": "next",
+                "summary": "The next occurrence of a series",
+                "parameters": [
+                    {
+                        "name": "series",
+                        "in": "query",
+                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "Override the country for a generic series, e.g. uk.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tz",
+                        "in": "query",
+                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Next event.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "series": {
+                                            "type": "string"
+                                        },
+                                        "series_code": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "country": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "next": {
+                                            "$ref": "#/components/schemas/Event"
+                                        },
+                                        "attribution": {
+                                            "$ref": "#/components/schemas/Attribution"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No upcoming event for that series."
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/series": {
+            "get": {
+                "tags": [
+                    "Series"
+                ],
+                "operationId": "series",
+                "summary": "Every series the API covers, with its next date",
+                "parameters": [
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter by category.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "kind",
+                        "in": "query",
+                        "description": "instance or holiday.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Series list.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer"
+                                        },
+                                        "series": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Series"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/series/{code}": {
+            "get": {
+                "tags": [
+                    "Series"
+                ],
+                "operationId": "seriesDetail",
+                "summary": "One series: next, last, upcoming dates and history",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Series code or alias.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tz",
+                        "in": "query",
+                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Series detail.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "series": {
+                                            "$ref": "#/components/schemas/Series"
+                                        },
+                                        "next": {
+                                            "oneOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/Event"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        },
+                                        "last": {
+                                            "oneOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/Event"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        },
+                                        "upcoming": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "history": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "dataset": {
+                                            "type": [
+                                                "object",
+                                                "null"
+                                            ],
+                                            "description": "Verified long-run history where we publish one (e.g. us-cpi, fomc)."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Unknown series."
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/history": {
+            "get": {
+                "tags": [
+                    "Series"
+                ],
+                "operationId": "history",
+                "summary": "Past releases of a series with consensus, prior and actual",
+                "parameters": [
+                    {
+                        "name": "series",
+                        "in": "query",
+                        "description": "Series code or alias.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "YYYY-MM-DD.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "YYYY-MM-DD.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "1 to 500, default 100.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 500,
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "tz",
+                        "in": "query",
+                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rows, soonest first.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "from": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "to": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "count": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        },
+                                        "events": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "attribution": {
+                                            "$ref": "#/components/schemas/Attribution"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/holidays": {
+            "get": {
+                "tags": [
+                    "Markets"
+                ],
+                "operationId": "holidays",
+                "summary": "Exchange holidays and early closes",
+                "parameters": [
+                    {
+                        "name": "exchange",
+                        "in": "query",
+                        "description": "nyse (default, same calendar as nasdaq), sifma, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse, or all.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "description": "Four-digit year.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Holidays.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "exchange": {
+                                            "type": "string"
+                                        },
+                                        "count": {
+                                            "type": "integer"
+                                        },
+                                        "holidays": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "date": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "exchange": {
+                                                        "type": "string"
+                                                    },
+                                                    "country": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "closed",
+                                                            "early_close"
+                                                        ]
+                                                    },
+                                                    "close_time_local": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "close_time_et": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "url": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/market-status": {
+            "get": {
+                "tags": [
+                    "Markets"
+                ],
+                "operationId": "marketStatus",
+                "summary": "Is the exchange open right now?",
+                "parameters": [
+                    {
+                        "name": "exchange",
+                        "in": "query",
+                        "description": "nyse (default) or any exchange code; live open/closed for NYSE, holiday-aware for the rest.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "exchange": {
+                                            "type": "string"
+                                        },
+                                        "open": {
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
+                                        },
+                                        "label": {
+                                            "type": "string"
+                                        },
+                                        "holiday_today": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "next_holiday": {
+                                            "type": [
+                                                "object",
+                                                "null"
+                                            ]
+                                        },
+                                        "time_utc": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/changes": {
+            "get": {
+                "tags": [
+                    "Changes"
+                ],
+                "operationId": "changes",
+                "summary": "What changed: new dates, moved dates, consensus and actuals",
+                "parameters": [
+                    {
+                        "name": "since",
+                        "in": "query",
+                        "description": "ISO 8601 datetime (default: 24 hours ago; at most 30 days ago).",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "series",
+                        "in": "query",
+                        "description": "Series code or alias.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "change",
+                        "in": "query",
+                        "description": "added, updated or removed.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "1 to 500, default 100.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 500,
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Change log, newest first.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "since": {
+                                            "type": "string"
+                                        },
+                                        "count": {
+                                            "type": "integer"
+                                        },
+                                        "changes": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Change"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/countries": {
+            "get": {
+                "tags": [
+                    "Meta"
+                ],
+                "operationId": "countries",
+                "summary": "Countries covered, with series and event counts",
+                "responses": {
+                    "200": {
+                        "description": "Countries.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "countries": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/status": {
+            "get": {
+                "tags": [
+                    "Meta"
+                ],
+                "operationId": "status",
+                "summary": "Health: snapshot age and counts",
+                "responses": {
+                    "200": {
+                        "description": "Status.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/openapi.json": {
+            "get": {
+                "tags": [
+                    "Meta"
+                ],
+                "operationId": "openapi",
+                "summary": "This document",
+                "responses": {
+                    "200": {
+                        "description": "OpenAPI 3.1.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/keys": {
+            "post": {
+                "tags": [
+                    "Keys"
+                ],
+                "operationId": "createKey",
+                "summary": "Get a free API key by email",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "use_case": {
+                                        "type": "string"
+                                    },
+                                    "website": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Key created (shown once, also emailed).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "tier": {
+                                            "type": "string"
+                                        },
+                                        "daily_limit": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/keys/me": {
+            "get": {
+                "tags": [
+                    "Keys"
+                ],
+                "operationId": "keyInfo",
+                "summary": "Your tier, limit and usage today",
+                "parameters": [
+                    {
+                        "name": "X-API-Key",
+                        "in": "header",
+                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Key info.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or unknown key."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Event": {
+                "type": "object",
+                "description": "One scheduled release, decision or market holiday.",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Stable identifier (matches the page slug).",
+                        "example": "us-cpi-report-november-2026"
+                    },
+                    "series_code": {
+                        "type": "string",
+                        "example": "us-cpi"
+                    },
+                    "series_name": {
+                        "type": "string",
+                        "example": "US CPI Report"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Short display name.",
+                        "example": "US CPI"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "US CPI Report November 2026"
+                    },
+                    "country": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "ISO 3166-1 alpha-2; EU for euro-area releases.",
+                        "example": "US"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "economic-indicators",
+                            "central-banks-monetary-policy",
+                            "market-holidays"
+                        ]
+                    },
+                    "impact": {
+                        "type": "string",
+                        "enum": [
+                            "high",
+                            "medium",
+                            "low"
+                        ]
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Release date in the publisher's local calendar."
+                    },
+                    "release_at_utc": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Null for all-day rows."
+                    },
+                    "time_utc": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Alias of release_at_utc (v1 field)."
+                    },
+                    "time_et": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "HH:MM in America/New_York (v1 field)."
+                    },
+                    "time_local": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "HH:MM in the requested tz (only when ?tz= is given)."
+                    },
+                    "release_tz": {
+                        "type": "string",
+                        "example": "America/New_York"
+                    },
+                    "all_day": {
+                        "type": "boolean"
+                    },
+                    "period": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "What the data covers, when known."
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "confirmed",
+                            "estimated",
+                            "rescheduled",
+                            "cancelled",
+                            "released"
+                        ]
+                    },
+                    "consensus": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "prior": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "actual": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "unit": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "% y/y"
+                    },
+                    "source_url": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "source_name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "url": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri",
+                        "description": "Preview and results page on financecalendar.com, when one exists."
+                    },
+                    "exchange": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Market-holiday rows only."
+                    },
+                    "holiday_status": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "closed",
+                            "early_close",
+                            null
+                        ]
+                    },
+                    "close_time_local": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Series": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "impact": {
+                        "type": "string"
+                    },
+                    "recurrence": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "tier": {
+                        "type": "integer"
+                    },
+                    "aliases": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "unit": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "publisher": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "source_url": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "hub": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "instance",
+                            "holiday"
+                        ]
+                    },
+                    "exchange": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "next": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "next_date": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    },
+                    "last": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "count": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Change": {
+                "type": "object",
+                "properties": {
+                    "at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "series_code": {
+                        "type": "string"
+                    },
+                    "change": {
+                        "type": "string",
+                        "enum": [
+                            "added",
+                            "updated",
+                            "removed"
+                        ]
+                    },
+                    "field": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "old": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "new": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Attribution": {
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type": "string"
+                    },
+                    "terms": {
+                        "type": "string"
+                    },
+                    "docs": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "docs": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "ApiKey": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-Key"
+            }
+        }
+    },
+    "x-attribution": {
+        "required": true,
+        "how": "A visible link to https://www.financecalendar.com near the data, or on your credits page."
+    },
+    "x-rate-limits": {
+        "keyless": {
+            "per": "ip",
+            "daily": 2000
+        },
+        "free": {
+            "daily": 10000
+        },
+        "pro": {
+            "daily": 100000
+        },
+        "business": {
+            "daily": 1000000
+        }
+    },
+    "x-changelog": "https://www.financecalendar.com/api/changelog/"
+}
