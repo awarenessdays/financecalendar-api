@@ -4,7 +4,7 @@ Economic releases, central bank decisions and exchange holidays as JSON, CSV and
 
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
-- **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi.json`)
+- **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
 - **Full dataset:** [`data/calendar.json`](data/calendar.json), refreshed hourly by the engine (also at https://www.financecalendar.com/wp-content/uploads/fc/calendar.json)
 - **MCP server and CLI:** `npx financecalendar-mcp` and `npx financecalendar` (package `financecalendar-mcp`)
 - **Python:** `pip install financecalendar`

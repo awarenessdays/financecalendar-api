@@ -120,7 +120,7 @@
                     {
                         "name": "status",
                         "in": "query",
-                        "description": "confirmed, estimated, released; comma-separated.",
+                        "description": "confirmed, estimated, released, rescheduled, cancelled; comma-separated.",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -259,6 +259,24 @@
                         }
                     },
                     {
+                        "name": "impact",
+                        "in": "query",
+                        "description": "high, medium or low.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "holidays to add market-holiday rows to events (closures are always listed in market_holidays).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "tz",
                         "in": "query",
                         "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
@@ -374,7 +392,43 @@
                     {
                         "name": "impact",
                         "in": "query",
-                        "description": "high, medium or low.",
+                        "description": "high, medium or low; comma-separated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "As for /calendar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "series",
+                        "in": "query",
+                        "description": "As for /calendar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "holidays to add market-holiday rows.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "As for /calendar.",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -387,6 +441,20 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "json, csv or ics.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "csv",
+                                "ics"
+                            ]
                         }
                     },
                     {
@@ -985,7 +1053,8 @@
                                                         "type": [
                                                             "string",
                                                             "null"
-                                                        ]
+                                                        ],
+                                                        "description": "NYSE rows only."
                                                     },
                                                     "url": {
                                                         "type": [
@@ -1062,14 +1131,48 @@
                                         "exchange": {
                                             "type": "string"
                                         },
-                                        "open": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "country": {
                                             "type": [
-                                                "boolean",
+                                                "string",
                                                 "null"
                                             ]
                                         },
+                                        "tz": {
+                                            "type": "string"
+                                        },
+                                        "open": {
+                                            "type": "boolean"
+                                        },
                                         "label": {
                                             "type": "string"
+                                        },
+                                        "local_time": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "time_utc": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "session": {
+                                            "type": "object",
+                                            "properties": {
+                                                "open": {
+                                                    "type": "string"
+                                                },
+                                                "close": {
+                                                    "type": "string"
+                                                },
+                                                "break": {
+                                                    "type": [
+                                                        "array",
+                                                        "null"
+                                                    ]
+                                                }
+                                            }
                                         },
                                         "holiday_today": {
                                             "type": [
@@ -1082,10 +1185,6 @@
                                                 "object",
                                                 "null"
                                             ]
-                                        },
-                                        "time_utc": {
-                                            "type": "string",
-                                            "format": "date-time"
                                         }
                                     }
                                 }
@@ -1271,13 +1370,13 @@
                 }
             }
         },
-        "/openapi.json": {
+        "/openapi": {
             "get": {
                 "tags": [
                     "Meta"
                 ],
                 "operationId": "openapi",
-                "summary": "This document",
+                "summary": "This document (also at /openapi.json on the edge host)",
                 "responses": {
                     "200": {
                         "description": "OpenAPI 3.1.",
@@ -1343,6 +1442,9 @@
                                         },
                                         "daily_limit": {
                                             "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
                                         }
                                     }
                                 }
@@ -1350,24 +1452,13 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
+                        "description": "Invalid email, or no more keys can be created for this address."
                     },
                     "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
+                        "description": "Too many signups from this address today."
+                    },
+                    "500": {
+                        "description": "Could not create a key; retry."
                     }
                 }
             }
@@ -1402,7 +1493,10 @@
                         }
                     },
                     "401": {
-                        "description": "Missing or unknown key."
+                        "description": "Missing, malformed or unknown key."
+                    },
+                    "403": {
+                        "description": "Key revoked."
                     }
                 }
             }
@@ -1592,6 +1686,15 @@
                     "updated_at": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "starts_on": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "First day of a multi-day meeting (only when it differs from date)."
+                    },
+                    "note": {
+                        "type": "string",
+                        "description": "Source note, e.g. a date the official calendar moved."
                     }
                 }
             },
@@ -1786,7 +1889,15 @@
         },
         "business": {
             "daily": 1000000
-        }
+        },
+        "headers": [
+            "X-RateLimit-Limit",
+            "X-RateLimit-Remaining",
+            "X-RateLimit-Reset",
+            "X-RateLimit-Tier",
+            "Retry-After"
+        ],
+        "reset": "00:00 UTC"
     },
     "x-changelog": "https://www.financecalendar.com/api/changelog/"
 }
