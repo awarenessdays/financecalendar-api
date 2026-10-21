@@ -4,7 +4,7 @@
         "title": "Finance Calendar API",
         "version": "2.0.0",
         "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included.",
+        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included. Source-backed crypto events are included where publicly redistributable. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Retain each record source_license credit, source link, licence link and adaptation notice when redistributing. CoinMarketCal internal evaluation data is not distributed.",
         "termsOfService": "https://www.financecalendar.com/api/#attribution",
         "contact": {
             "url": "https://www.financecalendar.com/about/"
@@ -90,10 +90,16 @@
                     {
                         "name": "category",
                         "in": "query",
-                        "description": "economic-indicators, central-banks-monetary-policy or market-holidays. Market holidays are left out unless asked for here or with include=holidays.",
+                        "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "economic-indicators",
+                                "central-banks-monetary-policy",
+                                "market-holidays",
+                                "crypto"
+                            ]
                         }
                     },
                     {
@@ -179,6 +185,16 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": false,
+                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500
                         }
                     }
                 ],
@@ -293,6 +309,16 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": false,
+                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500
+                        }
                     }
                 ],
                 "responses": {
@@ -401,10 +427,16 @@
                     {
                         "name": "category",
                         "in": "query",
-                        "description": "As for /calendar.",
+                        "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "economic-indicators",
+                                "central-banks-monetary-policy",
+                                "market-holidays",
+                                "crypto"
+                            ]
                         }
                     },
                     {
@@ -465,6 +497,16 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": false,
+                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500
+                        }
                     }
                 ],
                 "responses": {
@@ -523,7 +565,8 @@
                             }
                         }
                     }
-                }
+                },
+                "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
             }
         },
         "/next": {
@@ -537,7 +580,7 @@
                     {
                         "name": "series",
                         "in": "query",
-                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
+                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -568,6 +611,29 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": false,
+                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "economic-indicators",
+                                "central-banks-monetary-policy",
+                                "market-holidays",
+                                "crypto"
+                            ]
                         }
                     }
                 ],
@@ -651,10 +717,16 @@
                     {
                         "name": "category",
                         "in": "query",
-                        "description": "Filter by category.",
+                        "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "economic-indicators",
+                                "central-banks-monetary-policy",
+                                "market-holidays",
+                                "crypto"
+                            ]
                         }
                     },
                     {
@@ -673,6 +745,16 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": false,
+                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500
                         }
                     }
                 ],
@@ -754,6 +836,16 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": false,
+                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500
                         }
                     }
                 ],
@@ -903,6 +995,16 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": false,
+                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500
                         }
                     }
                 ],
@@ -1567,7 +1669,7 @@
                             "string",
                             "null"
                         ],
-                        "description": "ISO 3166-1 alpha-2; EU for euro-area releases.",
+                        "description": "ISO country code, or null for global crypto events. Global is not a country code.",
                         "example": "US"
                     },
                     "category": {
@@ -1575,21 +1677,26 @@
                         "enum": [
                             "economic-indicators",
                             "central-banks-monetary-policy",
-                            "market-holidays"
+                            "market-holidays",
+                            "crypto"
                         ]
                     },
                     "impact": {
-                        "type": "string",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
                         "enum": [
                             "high",
                             "medium",
-                            "low"
+                            "low",
+                            null
                         ]
                     },
                     "date": {
                         "type": "string",
                         "format": "date",
-                        "description": "Release date in the publisher's local calendar."
+                        "description": "Publisher calendar date, or the inclusive lower-bound index of date_window_start/end for an estimated month, quarter or year. A lower-bound index is not a confirmed occurrence date."
                     },
                     "release_at_utc": {
                         "type": [
@@ -1597,7 +1704,7 @@
                             "null"
                         ],
                         "format": "date-time",
-                        "description": "Exact release instant when known. Null for date-only, unknown-time and range schedules; a range is represented by time_window_start and time_window_end."
+                        "description": "Exact configured or published instant when available, retaining source seconds. Null for date-only, unknown-time, timed-range and approximate date-window schedules. This is schedule evidence, not proof an activation was observed."
                     },
                     "time_utc": {
                         "type": [
@@ -1622,7 +1729,10 @@
                         "description": "HH:MM in the requested tz (only when ?tz= is given)."
                     },
                     "release_tz": {
-                        "type": "string",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
                         "example": "America/New_York"
                     },
                     "all_day": {
@@ -1683,53 +1793,6 @@
                             "null"
                         ]
                     },
-                    "source_id": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Publisher connector identifier; null when provenance is unavailable."
-                    },
-                    "native_id": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Publisher release identifier, when supplied. Stable across date changes."
-                    },
-                    "release_stage": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Publisher-labelled release stage, e.g. advance, second, third or annual-update. Null when unspecified."
-                    },
-                    "time_precision": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Publisher timing precision, e.g. minute, date or range. A date-only or range release is not an all-day market closure."
-                    },
-                    "last_verified_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Last successful live publisher fetch. Null for unverified or static schedule rows; snapshot generation is not verification."
-                    },
-                    "data_stale": {
-                        "type": "boolean",
-                        "description": "True when last-good publisher data is retained through a source outage. False does not imply live verification."
-                    },
-                    "stale_since": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
                     "url": {
                         "type": [
                             "string",
@@ -1774,6 +1837,64 @@
                     "note": {
                         "type": "string",
                         "description": "Source note, e.g. a date the official calendar moved."
+                    },
+                    "source_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Publisher connector identifier; null when provenance is unavailable."
+                    },
+                    "native_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Publisher release identifier, when supplied. Stable across date changes."
+                    },
+                    "release_stage": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Publisher-labelled release stage, e.g. advance, second, third or annual-update. Null when unspecified."
+                    },
+                    "time_precision": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "second/minute for configured or published exact timing; date for a day without confirmed time; range for a timed window; month/quarter/year for an estimated date window; unknown or null when unspecified. A schedule is not proof of observed activation.",
+                        "enum": [
+                            "minute",
+                            "date",
+                            "range",
+                            "unknown",
+                            "second",
+                            "month",
+                            "quarter",
+                            "year",
+                            null
+                        ]
+                    },
+                    "last_verified_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
+                    },
+                    "data_stale": {
+                        "type": "boolean",
+                        "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
+                    },
+                    "stale_since": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     },
                     "time_window_start": {
                         "type": [
@@ -1880,6 +2001,160 @@
                                 ]
                             }
                         }
+                    },
+                    "assets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CryptoAsset"
+                        },
+                        "description": "Affected assets; empty for economic and exchange holiday rows."
+                    },
+                    "crypto": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "event_type": {
+                                "type": "string",
+                                "enum": [
+                                    "options-expiry",
+                                    "futures-expiry",
+                                    "network-upgrade",
+                                    "token-unlock",
+                                    "halving"
+                                ]
+                            },
+                            "exchange": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "network": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "environment": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "Network environment, e.g. mainnet, hoodi or sepolia. Testnet events are not mainnet activation dates."
+                            },
+                            "activation_status": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "scheduled",
+                                    "target",
+                                    null
+                                ],
+                                "description": "Configured activation schedule or roadmap target, not proof the network activation was observed."
+                            },
+                            "block_height": {
+                                "type": [
+                                    "integer",
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "token_amount": {
+                                "type": [
+                                    "number",
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "date_window_start": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date",
+                        "description": "Inclusive lower bound of an estimated date window. The date field is its index, not a confirmed occurrence date."
+                    },
+                    "date_window_end": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date",
+                        "description": "Inclusive upper bound of an estimated date window."
+                    },
+                    "source_license": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "description": "Upstream attribution and licence requirements travel with each adapted record. Retain the original credit, source link, licence URL, full notice and adaptation notice when redistributing.",
+                        "properties": {
+                            "id": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "url": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "uri"
+                            },
+                            "terms_url": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "uri"
+                            },
+                            "attribution": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "notice": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "Full upstream licence notice where required, e.g. the MIT copyright and permission notice."
+                            },
+                            "adapted": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "verification_url": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri",
+                        "description": "Evidence checked for the stored schedule, e.g. official network configuration. May differ from the human-readable announcement in source_url."
+                    },
+                    "verification_method": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Verification basis, e.g. github-json for an official configuration fetch or manual for a reviewed roadmap."
+                    },
+                    "manually_reviewed_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Fixed timestamp of human source review, when relevant; snapshot generation never advances this timestamp."
                     }
                 }
             },
@@ -1896,13 +2171,17 @@
                         "type": [
                             "string",
                             "null"
-                        ]
+                        ],
+                        "description": "ISO country code, or null for global crypto events. Global is not a country code."
                     },
                     "category": {
                         "type": "string"
                     },
                     "impact": {
-                        "type": "string"
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     },
                     "recurrence": {
                         "type": [
@@ -1978,6 +2257,29 @@
                     },
                     "count": {
                         "type": "integer"
+                    },
+                    "assets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CryptoAsset"
+                        },
+                        "description": "Affected assets; empty for economic and exchange holiday rows."
+                    },
+                    "next_date_window_start": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date",
+                        "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
+                    },
+                    "next_date_window_end": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date",
+                        "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
                     }
                 }
             },
@@ -2040,6 +2342,10 @@
                     "docs": {
                         "type": "string",
                         "format": "uri"
+                    },
+                    "source_licenses": {
+                        "type": "string",
+                        "description": "Records may retain additional original-source attribution and licence requirements."
                     }
                 }
             },
@@ -2159,6 +2465,30 @@
                     "stale_events": {
                         "type": "integer",
                         "description": "Events explicitly marked as retained last-good data during source outages."
+                    }
+                }
+            },
+            "CryptoAsset": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "symbol",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
+                        "examples": [
+                            "ethereum",
+                            "bitcoin"
+                        ]
+                    },
+                    "symbol": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
                     }
                 }
             }

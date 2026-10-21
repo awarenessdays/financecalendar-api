@@ -22,6 +22,19 @@ def fixture_for(request: httpx.Request) -> dict:
     segs = request.url.path.strip("/").split("/")
     path = f"/series/{segs[-1]}" if len(segs) >= 2 and segs[-2] == "series" else f"/{segs[-1]}"
     q = dict(request.url.params)
+    if q.get("asset") == "ethereum":
+        rec = load("crypto")
+        row = rec["body"]["events"][1]
+        window = rec["body"]["events"][0]
+        series = {"code": row["series_code"], "name": row["series_name"], "category": "crypto", "country": None, "impact": None, "assets": row["assets"], "next_date": window["date"], "next_date_window_start": window["date_window_start"], "next_date_window_end": window["date_window_end"]}
+        if path in ("/calendar", "/week", "/today", "/history"):
+            return rec
+        if path == "/next":
+            return {**rec, "body": {"next": row, "series_code": row["series_code"]}}
+        if path == "/series":
+            return {**rec, "body": {"count": 1, "series": [series]}}
+        if path == "/series/ethereum-network-upgrades":
+            return {**rec, "body": {"series": series, "next": window, "last": None, "upcoming": [window, row], "history": []}}
     if path == "/next":
         if q.get("country") == "no":
             return load("error_next_404")

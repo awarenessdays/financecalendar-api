@@ -25,6 +25,8 @@ def local_zone(tz: str | None):
 
 
 def format_when(event: dict[str, Any], tz=None) -> str:
+    if event.get("date_window_start") and event.get("date_window_end"):
+        return f"{event['date_window_start']}–{event['date_window_end']} (estimated window)"
     window = _format_window(event.get("time_window_start"), event.get("time_window_end"), tz or local_zone(None))
     if window:
         return window
@@ -65,7 +67,17 @@ def _format_window(start: Any, end: Any, zone) -> str | None:
 
 def format_event(event: dict[str, Any], tz=None) -> str:
     name = event.get("name") or event.get("title") or ""
-    bits = [format_when(event, tz), name + (f" ({event['country']})" if event.get("country") else "")]
+    area = event.get("country")
+    if not area and event.get("category") == "crypto":
+        assets = "/".join(a.get("symbol") or a.get("id") or "" for a in event.get("assets") or [])
+        area = f"{assets} · Global" if assets else "Global"
+    bits = [format_when(event, tz), name + (f" ({area})" if area else "")]
+    activation = (event.get("crypto") or {}).get("activation_status")
+    if activation:
+        bits.append(f"activation {activation}")
+    environment = (event.get("crypto") or {}).get("environment")
+    if environment and not _contains_detail(name, environment):
+        bits.append(environment)
     if event.get("time_role") == "auction-close" and not _contains_detail(name, "auction close"):
         bits.append("auction close")
     if event.get("period") and not _contains_detail(name, event["period"]):
@@ -73,16 +85,35 @@ def format_event(event: dict[str, Any], tz=None) -> str:
     if event.get("release_stage") and not _contains_detail(name, event["release_stage"]):
         stage = re.sub(r"[-_]+", " ", str(event["release_stage"]))
         bits.append(f"stage {stage}")
-    if event.get("consensus"):
+    if event.get("consensus") is not None and event.get("consensus") != "":
         bits.append(f"cons. {event['consensus']}")
-    if event.get("prior"):
+    if event.get("prior") is not None and event.get("prior") != "":
         bits.append(f"prior {event['prior']}")
-    if event.get("actual"):
+    if event.get("actual") is not None and event.get("actual") != "":
         bits.append(f"actual {event['actual']}")
     if event.get("holiday_status") == "early_close" and event.get("close_time_local"):
         bits.append(f"closes {event['close_time_local']} local")
     line = "  ".join(b for b in bits if b)
-    return f"{line}\n{event['url']}" if event.get("url") else line
+    lines = [line]
+    if event.get("url"):
+        lines.append(event["url"])
+    if event.get("data_stale"):
+        lines.append("Stale source data" + (f" since {event['stale_since']}" if event.get("stale_since") else ""))
+    if event.get("verification_url"):
+        lines.append(f"Verification: {event['verification_url']}")
+    if event.get("manually_reviewed_at"):
+        lines.append(f"Manually reviewed: {event['manually_reviewed_at']}")
+    if event.get("source_license"):
+        license_info = event["source_license"]
+        adapted = " · adapted by Finance Calendar" if license_info.get("adapted") else ""
+        lines.append(f"Original source: {license_info.get('attribution') or event.get('source_name') or ''} · {license_info.get('id') or ''}{adapted}")
+        if event.get("source_url"):
+            lines.append(event["source_url"])
+        if license_info.get("url"):
+            lines.append(license_info["url"])
+        if license_info.get("notice"):
+            lines.append(license_info["notice"])
+    return "\n".join(lines)
 
 
 def _contains_detail(name: str, detail: Any) -> bool:
@@ -103,8 +134,14 @@ def format_holiday(h: dict[str, Any]) -> str:
 
 
 def format_series(s: dict[str, Any]) -> str:
-    nxt = f"next {s['next_date']}" if s.get("next_date") else "next tbc"
-    return f"{s['code']:<24} {s.get('name') or '':<44} {s.get('country') or '--':<3} {s.get('impact') or '':<7} {nxt}"
+    start, end = s.get("next_date_window_start"), s.get("next_date_window_end")
+    if start and end:
+        nxt = f"next target {start}–{end} (estimated window)"
+    elif start or end:
+        nxt = "next target window tbc"
+    else:
+        nxt = f"next {s['next_date']}" if s.get("next_date") else "next tbc"
+    return f"{s['code']:<24} {s.get('name') or '':<44} {s.get('country') or ('Global' if s.get('category') == 'crypto' else '--'):<3} {s.get('impact') or '':<7} {nxt}"
 
 
 def format_change(c: dict[str, Any]) -> str:
@@ -138,19 +175,27 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("next", help="next occurrence of a series")
     s.add_argument("series")
     s.add_argument("--country")
+    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
+    s.add_argument("--category")
 
     s = sub.add_parser("today", help="today's releases and NYSE status")
     s.add_argument("--country")
+    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
+    s.add_argument("--category")
 
     s = sub.add_parser("week", help="this week, Monday to Sunday")
     s.add_argument("--next", action="store_true", help="next week instead")
+    s.add_argument("--category")
     s.add_argument("--country")
+    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
     s.add_argument("--impact")
+    s.add_argument("--series")
 
     s = sub.add_parser("calendar", help="events in a date range (max 92 days)")
     s.add_argument("--from", dest="from_")
     s.add_argument("--to")
     s.add_argument("--country")
+    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
     s.add_argument("--impact")
     s.add_argument("--category")
     s.add_argument("--series")
@@ -162,14 +207,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser("series", help="list every series")
     s.add_argument("--country")
+    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
     s.add_argument("--category")
     s.add_argument("--kind", choices=["instance", "holiday"])
 
     s = sub.add_parser("show", help="one series in detail")
     s.add_argument("code")
+    s.add_argument("--asset")
 
     s = sub.add_parser("history", help="past releases of a series")
     s.add_argument("series")
+    s.add_argument("--asset")
     s.add_argument("--from", dest="from_")
     s.add_argument("--to")
     s.add_argument("--limit", type=int)
@@ -200,10 +248,10 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
     cmd = args.cmd
 
     if cmd == "next":
-        data = client.next(args.series, country=args.country, tz=tz)
+        data = client.next(args.series, country=args.country, asset=args.asset, category=args.category, tz=tz)
         return _emit(args, out, data, lambda: format_event(data["next"], zone()))
     if cmd == "today":
-        data = client.today(country=args.country, tz=tz)
+        data = client.today(country=args.country, asset=args.asset, category=args.category, tz=tz)
 
         def human() -> str:
             lines = []
@@ -217,25 +265,25 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
 
         return _emit(args, out, data, human)
     if cmd == "week":
-        data = client.week("next" if args.next else "this", country=args.country, impact=args.impact, tz=tz)
+        data = client.week("next" if args.next else "this", country=args.country, impact=args.impact, asset=args.asset, category=args.category, series=args.series, tz=tz)
         label = "Next week" if args.next else "This week"
         return _emit(args, out, data, lambda: f"{label}, {data['from']} to {data['to']} ({data.get('total', data['count'])} events)\n\n" + (fmt(data["events"]) if data.get("events") else "No scheduled releases."))
     if cmd == "calendar":
-        params = dict(from_=args.from_, to=args.to, country=args.country, impact=args.impact, category=args.category, series=args.series, include_holidays=args.holidays, status=args.status, tz=tz, limit=args.limit, offset=args.offset)
+        params = dict(from_=args.from_, to=args.to, country=args.country, impact=args.impact, category=args.category, asset=args.asset, series=args.series, include_holidays=args.holidays, status=args.status, tz=tz, limit=args.limit, offset=args.offset)
         if args.csv:
             out(client.calendar_csv(**params).rstrip("\n"))
             return 0
         data = client.calendar(**params)
         return _emit(args, out, data, lambda: f"{data['from']} to {data['to']}: {data['count']} of {data['total']} events\n\n" + (fmt(data["events"]) if data.get("events") else "No scheduled releases in that range."))
     if cmd == "series":
-        data = client.series(country=args.country, category=args.category, kind=args.kind)
+        data = client.series(country=args.country, category=args.category, asset=args.asset, kind=args.kind)
         return _emit(args, out, data, lambda: "\n".join(format_series(s) for s in data["series"]))
     if cmd == "show":
-        data = client.series_detail(args.code, tz=tz)
+        data = client.series_detail(args.code, asset=args.asset, tz=tz)
 
         def human() -> str:
             s = data["series"]
-            lines = [f"{s['name']} ({s['code']})  {s.get('country') or ''}  {s['category']}  impact {s['impact']}  {s.get('recurrence') or ''}".rstrip()]
+            lines = [f"{s['name']} ({s['code']})  {s.get('country') or ('Global' if s.get('category') == 'crypto' else '')}  {s['category']}  impact {s['impact'] if s['impact'] is not None else 'unrated'}  {s.get('recurrence') or ''}".rstrip()]
             if s.get("aliases"):
                 lines.append("aliases: " + ", ".join(s["aliases"]))
             if s.get("publisher"):
@@ -252,7 +300,7 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
 
         return _emit(args, out, data, human)
     if cmd == "history":
-        data = client.history(args.series, from_=args.from_, to=args.to, limit=args.limit, tz=tz)
+        data = client.history(args.series, from_=args.from_, to=args.to, limit=args.limit, asset=args.asset, tz=tz)
         return _emit(args, out, data, lambda: f"{data.get('series_code') or args.series}: {data['count']} releases, {data['from']} to {data['to']}\n\n" + (fmt(data["events"]) if data.get("events") else "No past releases in that range."))
     if cmd == "holidays":
         data = client.holidays(args.exchange, year=args.year)

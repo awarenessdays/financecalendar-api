@@ -1,6 +1,6 @@
 # Finance Calendar API
 
-Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS. The database combines direct official publisher feeds with checked-in schedules. Source verification, estimates and stale data are identified per record; consensus, prior and actual values are included where available. Snapshot updates run hourly, with coverage varying by source and series.
+Economic releases, central bank decisions, selected crypto events and exchange holidays as JSON, CSV and ICS. The database combines direct official publisher feeds with checked-in schedules. Source verification, estimates and stale data are identified per record; consensus, prior and actual values are included where available. Snapshot updates run hourly, with coverage varying by source and series.
 
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
@@ -41,7 +41,7 @@ curl "https://www.financecalendar.com/wp-json/fc/v1/changes"
 
 | Endpoint | What it returns |
 |---|---|
-| `GET /calendar` | Events in a date range (max 92 days): `from`, `to`, `country`, `impact`, `category`, `series`, `status`, `include=holidays`, `tz`, `limit`, `offset`, `format=json\|csv\|ics` |
+| `GET /calendar` | Events in a date range (max 92 days): `from`, `to`, `country`, `impact`, `category`, `asset`, `series`, `status`, `include=holidays`, `tz`, `limit`, `offset`, `format=json\|csv\|ics` |
 | `GET /today` | Today's releases, live NYSE status and any exchange closures |
 | `GET /week` | This week or next (`which=next`) |
 | `GET /next` | Next occurrence of a series (`series=fomc`, `cpi`, `uk-cpi`, `japan-gdp`...; `country=` override) |
@@ -102,3 +102,20 @@ Free for any use, commercial included, with one condition: a visible link to htt
 ## Issues
 
 Wrong date? Missing series? Open an issue here. The engine reads official calendars, so tell us the official source and we will add it.
+
+## Selected crypto events
+
+Use `category=crypto&asset=ethereum` with `/calendar`, `/week` or `/today`.
+Discover canonical asset IDs through `/series?category=crypto`; symbols such as
+ETH are display labels. Initial public coverage is selected Ethereum mainnet
+and testnet upgrade schedules, not every coin or token unlock.
+
+Global crypto has `country=null`; `impact` may be null. Check
+`crypto.environment`, `crypto.activation_status` and `verification_method`.
+Scheduled activation is not observed activation. Month/quarter/year targets
+retain `date_window_start` and `date_window_end`; `date` is only a lower-bound
+index. Calendar filters include overlapping windows. Keep `source_license`
+credit, licence links, adaptation information and notices when reusing records.
+
+See the [crypto calendar](https://www.financecalendar.com/crypto/) and
+[full REST reference](https://www.financecalendar.com/api/reference/).

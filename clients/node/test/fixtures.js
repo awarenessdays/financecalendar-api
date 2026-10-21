@@ -13,6 +13,16 @@ export function fixtureFor(url) {
   const u = new URL(String(url));
   const path = u.pathname.replace(/^.*\/fc\/v1/, "").replace(/^\/v1(?=\/)/, "");
   const q = u.searchParams;
+  if (q.get("asset") === "ethereum") {
+    const rec = fixture("crypto");
+    const row = rec.body.events[1];
+    const window = rec.body.events[0];
+    const series = { code: row.series_code, name: row.series_name, category: "crypto", country: null, impact: null, assets: row.assets, next_date: window.date, next_date_window_start: window.date_window_start, next_date_window_end: window.date_window_end };
+    if (["/calendar", "/week", "/today", "/history"].includes(path)) return rec;
+    if (path === "/next") return { ...rec, body: { next: row, series_code: row.series_code } };
+    if (path === "/series") return { ...rec, body: { count: 1, series: [series] } };
+    if (path === "/series/ethereum-network-upgrades") return { ...rec, body: { series, next: window, last: null, upcoming: [window, row], history: [] } };
+  }
   switch (path) {
     case "/next":
       if (q.get("country") === "no") return fixture("error_next_404");

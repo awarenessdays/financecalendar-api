@@ -1,6 +1,6 @@
 import { test, describe, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { api, buildUrl, baseUrl, formatEvent, formatWhen, eventsToCsv, USER_AGENT, DEFAULT_BASE } from "../lib.js";
+import { api, buildUrl, baseUrl, formatEvent, formatWhen, formatSeries, eventsToCsv, USER_AGENT, DEFAULT_BASE } from "../lib.js";
 import { installMockFetch, fixture, toResponse } from "./fixtures.js";
 
 const realFetch = globalThis.fetch;
@@ -8,6 +8,51 @@ const env = { ...process.env };
 afterEach(() => {
   globalThis.fetch = realFetch;
   for (const k of ["FC_API_BASE", "FC_API_KEY"]) { if (env[k] === undefined) delete process.env[k]; else process.env[k] = env[k]; }
+});
+
+test("crypto requests retain canonical asset filters and structured zero/null data", async () => {
+  const calls = installMockFetch();
+  const response = await api("/calendar", { category: "crypto", asset: ["ethereum"], limit: 1, offset: 2 });
+  const url = new URL(calls[0].url);
+  assert.equal(url.searchParams.get("asset"), "ethereum");
+  assert.equal(url.searchParams.get("category"), "crypto");
+  assert.equal(url.searchParams.get("offset"), "2");
+  const row = response.events[1];
+  assert.equal(row.country, null);
+  assert.equal(row.impact, null);
+  assert.equal(row.actual, 0);
+  assert.equal(row.crypto.block_height, 0);
+  assert.equal(row.source_license.adapted, true);
+});
+
+test("crypto display shows global assets, testnet environment and upstream credit", () => {
+  const row = fixture("crypto").body.events[1];
+  const text = formatEvent(row, { tz: "UTC" });
+  assert.match(text, /Ethereum upgrade \(ETH · Global\)  sepolia  prior 0  actual 0/);
+  assert.match(text, /Ethereum Foundation and ethereum.org contributors · CC-BY-4\.0 · adapted by Finance Calendar/);
+  assert.ok(text.includes(row.source_url) && text.includes(row.source_license.url));
+  const csv = eventsToCsv([row]);
+  assert.match(csv, /source_license/);
+  assert.match(csv, /ethereum/);
+  assert.match(csv, /CC-BY-4\.0/);
+});
+
+test("estimated crypto windows are displayed as windows, never their index date", () => {
+  const row = fixture("crypto").body.events[0];
+  assert.equal(formatWhen(row, "Asia/Tokyo"), "2026-10-01–2026-12-31 (estimated window)");
+  assert.equal(formatWhen(row, "America/New_York"), "2026-10-01–2026-12-31 (estimated window)");
+  assert.match(eventsToCsv([row]), /date_window_start,date_window_end/);
+  assert.match(formatEvent(row), /estimated window/);
+});
+
+test("series targets use the complete estimated window instead of the date index", async () => {
+  installMockFetch();
+  const { series } = await api("/series", { category: "crypto", asset: "ethereum" });
+  const text = formatSeries(series[0]);
+  assert.match(text, /next target 2026-10-01–2026-12-31 \(estimated window\)$/);
+  assert.ok(!text.includes("next 2026-10-01"));
+  assert.match(formatSeries({ ...series[0], next_date_window_end: null }), /next target window tbc$/);
+  assert.match(formatSeries({ ...series[0], next_date_window_start: null, next_date_window_end: null }), /next 2026-10-01$/);
 });
 
 describe("buildUrl / param encoding", () => {

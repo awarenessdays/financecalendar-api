@@ -83,6 +83,9 @@ function zoneLabel(parts, tz) {
 /** Render a UTC instant, or the source date with its timing precision. */
 export function formatWhen(e, tz) {
   const zone = localZone(tz);
+  if (e.date_window_start && e.date_window_end) {
+    return `${e.date_window_start}–${e.date_window_end} (estimated window)`;
+  }
   const window = formatWindow(e.time_window_start, e.time_window_end, zone);
   if (window) return window;
   if (!e.release_at_utc || e.all_day) {
@@ -133,16 +136,32 @@ function pick(parts) {
  */
 export function formatEvent(e, { tz } = {}) {
   const name = e.name || e.title || "";
-  const bits = [formatWhen(e, tz), `${name}${e.country ? ` (${e.country})` : ""}`];
+  const assets = (e.assets || []).map((a) => a.symbol || a.id).filter(Boolean);
+  const area = e.country || (e.category === "crypto" ? [assets.join("/"), "Global"].filter(Boolean).join(" · ") : "");
+  const bits = [formatWhen(e, tz), `${name}${area ? ` (${area})` : ""}`];
+  if (e.crypto?.activation_status) bits.push(`activation ${e.crypto.activation_status}`);
+  if (e.crypto?.environment && !containsDetail(name, e.crypto.environment)) bits.push(e.crypto.environment);
   if (e.time_role === "auction-close" && !containsDetail(name, "auction close")) bits.push("auction close");
   if (e.period && !containsDetail(name, e.period)) bits.push(`period ${e.period}`);
   if (e.release_stage && !containsDetail(name, e.release_stage)) bits.push(`stage ${String(e.release_stage).replace(/[-_]+/g, " ")}`);
-  if (e.consensus) bits.push(`cons. ${e.consensus}`);
-  if (e.prior) bits.push(`prior ${e.prior}`);
-  if (e.actual) bits.push(`actual ${e.actual}`);
+  if (e.consensus !== null && e.consensus !== undefined && e.consensus !== "") bits.push(`cons. ${e.consensus}`);
+  if (e.prior !== null && e.prior !== undefined && e.prior !== "") bits.push(`prior ${e.prior}`);
+  if (e.actual !== null && e.actual !== undefined && e.actual !== "") bits.push(`actual ${e.actual}`);
   if (e.category === "market-holidays" && e.holiday_status === "early_close" && e.close_time_local) bits.push(`closes ${e.close_time_local} local`);
   const line = bits.filter(Boolean).join("  ");
-  return e.url ? `${line}\n${e.url}` : line;
+  const lines = [line];
+  if (e.url) lines.push(e.url);
+  if (e.data_stale) lines.push(`Stale source data${e.stale_since ? " since " + e.stale_since : ""}`);
+  if (e.verification_url) lines.push(`Verification: ${e.verification_url}`);
+  if (e.manually_reviewed_at) lines.push(`Manually reviewed: ${e.manually_reviewed_at}`);
+  if (e.source_license) {
+    const license = e.source_license;
+    lines.push(`Original source: ${license.attribution || e.source_name || ""} · ${license.id || ""}${license.adapted ? " · adapted by Finance Calendar" : ""}`);
+    if (e.source_url) lines.push(e.source_url);
+    if (license.url) lines.push(license.url);
+    if (license.notice) lines.push(license.notice);
+  }
+  return lines.join("\n");
 }
 
 function containsDetail(name, detail) {
@@ -161,8 +180,11 @@ export function formatHoliday(h) {
 }
 
 export function formatSeries(s) {
-  const next = s.next_date ? `next ${s.next_date}` : "next tbc";
-  return `${s.code.padEnd(24)} ${(s.name || "").padEnd(44)} ${(s.country || "--").padEnd(3)} ${(s.impact || "").padEnd(7)} ${next}`;
+  const start = s.next_date_window_start, end = s.next_date_window_end;
+  const next = start && end ? `next target ${start}–${end} (estimated window)`
+    : start || end ? "next target window tbc"
+    : s.next_date ? `next ${s.next_date}` : "next tbc";
+  return `${s.code.padEnd(24)} ${(s.name || "").padEnd(44)} ${(s.country || (s.category === "crypto" ? "Global" : "--")).padEnd(3)} ${(s.impact || "").padEnd(7)} ${next}`;
 }
 
 export function formatChange(c) {
@@ -170,13 +192,13 @@ export function formatChange(c) {
   return `${c.at}  ${c.change.padEnd(7)} ${c.series_code.padEnd(16)} ${c.id}${what ? "  " + what : ""}`;
 }
 
-const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url"];
+const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since"];
 
 /** Build CSV locally from event rows (used when the API's own CSV is not requested). */
 export function eventsToCsv(events) {
   const esc = (v) => {
     if (v === null || v === undefined) return "";
-    const s = typeof v === "boolean" ? String(v) : String(v);
+    const s = typeof v === "object" ? JSON.stringify(v) : String(v);
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   const lines = [CSV_COLUMNS.join(",")];

@@ -1,6 +1,6 @@
 # financecalendar-mcp
 
-Economic calendar data for AI assistants and the terminal: scheduled releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) and exchange holidays. Powered by the free [financecalendar.com API](https://www.financecalendar.com/api/). Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
+Economic calendar data for AI assistants and the terminal: scheduled releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Powered by the free [financecalendar.com API](https://www.financecalendar.com/api/). Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
 
 One package, two binaries:
 
@@ -93,24 +93,57 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json`):
 
 | Tool | What it does |
 |---|---|
-| `next_event(series, country?, tz?)` | Next occurrence of a series: `fomc`, `cpi`, `nfp`, `ecb`, `boe`, `uk-cpi`... |
+| `next_event(series, country?, tz?, asset?, category?)` | Next occurrence of a series: `fomc`, `cpi`, `nfp`, `ecb`, `boe`, `uk-cpi`... |
 | `calendar(from?, to?, country?, impact?, category?, series?, include_holidays?, status?, tz?, limit?, offset?)` | Events in a date range (max 92 days) |
-| `today(country?, impact?, tz?)` | Today's releases, NYSE status and exchange closures |
+| `today(country?, impact?, tz?, asset?, category?)` | Today's releases, NYSE status and exchange closures |
 | `week(which?, country?, impact?, category?, series?, include_holidays?, tz?)` | This week or next, Monday to Sunday |
-| `series_list(country?, category?, kind?)` | Every series with code, aliases and next date |
-| `series_detail(code, tz?)` | One series: next, last, upcoming, history, long-run dataset |
-| `history(series, from?, to?, limit?, tz?)` | Past releases with consensus, prior and actual |
+| `series_list(country?, category?, kind?, asset?)` | Every series with code, aliases and next date |
+| `series_detail(code, tz?, asset?)` | One series: next, last, upcoming, history, long-run dataset |
+| `history(series, from?, to?, limit?, tz?, asset?)` | Past releases with consensus, prior and actual |
 | `market_holidays(exchange?, year?)` | Exchange holidays and early closes (nyse, lse, cme, jpx...) |
 | `market_status(exchange?)` | Is the exchange open right now? |
 | `changes(since?, series?, change?, limit?)` | What changed: new dates, moved dates, consensus, actuals |
 | `countries()` | Countries covered with series and event counts |
 
-Every tool returns the API's JSON as text. Errors (bad parameter, unknown series, rate limit) come back as tool errors with the API's message.
+Every tool returns the API's JSON as text and `structuredContent`, with read-only annotations. Errors (bad parameter, unknown series, rate limit) come back as tool errors with the API's message.
 
 Also included:
 
 - Prompt `economic_calendar_briefing(country?, days?)`: asks the model to pull the high-impact calendar and summarise the week's risk events.
 - Resource `financecalendar://openapi`: the live OpenAPI 3.1 document from `{base}/openapi`.
+
+## Crypto coverage
+
+Use canonical asset IDs such as `ethereum`, rather than ticker symbols. Discover
+currently covered series and assets with `series_list(category="crypto")`.
+The existing `calendar`, `today`, `week`, `next_event`, `series_list`,
+`series_detail` and `history` MCP tools accept `asset`; calendar-like tools also
+accept `category="crypto"`. Macro queries and existing tool names remain valid.
+
+```sh
+financecalendar series --category crypto
+financecalendar calendar --category crypto --asset ethereum --json
+financecalendar next ethereum-network-upgrades --asset ethereum --tz UTC
+financecalendar week --category crypto --asset ethereum
+```
+
+Crypto is global (`country=null`), with nullable impact. Do not add a country
+filter to a global asset query. A testnet environment is distinct from mainnet;
+`crypto.activation_status="scheduled"` is configuration evidence, not proof of
+observed activation. Roadmap targets retain their complete `date_window_start`
+and `date_window_end`; `date` is only the lower-bound index. Calendar filters
+include overlapping windows; history includes them only after the upper bound.
+
+Check `verification_url`, `verification_method`, `manually_reviewed_at`,
+`last_verified_at` and `data_stale`. Human output retains upstream credits,
+licence notices and adaptation labels. JSON and CSV retain `source_license`.
+CoinMarketCal internal evaluation records are never returned by this client API;
+public data contains only sources approved for redistribution. Coverage is
+currently focused on official Ethereum schedules; an empty asset result is
+valid and does not imply comprehensive crypto coverage.
+
+This server retains its existing SDK v1 dependency. SDK v2 is the current stable
+line; `npx @modelcontextprotocol/codemod@latest v1-to-v2 .` is the migration path.
 
 ## CLI
 
@@ -158,7 +191,7 @@ console.log(formatEvent(next, { tz: "Europe/Frankfurt" }));
 
 ## Data terms
 
-Free for any use, commercial included, with attribution: a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+Free for any use, commercial included, with attribution: a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Earnings dates are not included. Records carrying `source_license` also retain the original attribution, source link, licence link, full notice and adaptation notice. These requirements travel with redistributed records. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 

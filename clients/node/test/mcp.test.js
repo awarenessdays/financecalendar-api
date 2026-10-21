@@ -58,17 +58,46 @@ describe("MCP server over stdio", () => {
       for (const t of res.result.tools) {
         assert.ok(t.description && t.description.length > 30, `${t.name} needs a description`);
         assert.equal(t.inputSchema.type, "object");
+        assert.equal(t.annotations.readOnlyHint, true);
+        assert.equal(t.annotations.destructiveHint, false);
       }
       const next = res.result.tools.find((t) => t.name === "next_event");
       assert.deepEqual(next.inputSchema.required, ["series"]);
-      assert.deepEqual(Object.keys(next.inputSchema.properties).sort(), ["country", "series", "tz"]);
+      assert.deepEqual(Object.keys(next.inputSchema.properties).sort(), ["asset", "category", "country", "series", "tz"]);
       const cal = res.result.tools.find((t) => t.name === "calendar");
-      assert.deepEqual(Object.keys(cal.inputSchema.properties).sort(), ["category", "country", "from", "impact", "include_holidays", "limit", "offset", "series", "status", "to", "tz"]);
+      assert.deepEqual(Object.keys(cal.inputSchema.properties).sort(), ["asset", "category", "country", "from", "impact", "include_holidays", "limit", "offset", "series", "status", "to", "tz"]);
       const props = (n) => Object.keys(res.result.tools.find((t) => t.name === n).inputSchema.properties).sort();
-      assert.deepEqual(props("today"), ["country", "impact", "tz"]);
-      assert.deepEqual(props("week"), ["category", "country", "impact", "include_holidays", "series", "tz", "which"]);
-      assert.deepEqual(props("history"), ["from", "limit", "series", "to", "tz"]);
+      assert.deepEqual(props("today"), ["asset", "category", "country", "impact", "tz"]);
+      assert.deepEqual(props("week"), ["asset", "category", "country", "impact", "include_holidays", "series", "tz", "which"]);
+      assert.deepEqual(props("history"), ["asset", "from", "limit", "series", "to", "tz"]);
       assert.deepEqual(props("changes"), ["change", "limit", "series", "since"]);
+    } finally { s.stop(); }
+  });
+
+  test("typed crypto filters pass through every relevant tool and preserve structured data", async () => {
+    const s = await initialised();
+    try {
+      const list = await s.send("tools/list", {});
+      assert.ok(list.result.tools.find((t) => t.name === "calendar").inputSchema.properties.category.enum.includes("crypto"));
+      for (const [name, args] of [
+        ["calendar", { category: "crypto" }], ["today", { category: "crypto" }],
+        ["week", { category: "crypto" }], ["series_list", { category: "crypto" }],
+        ["next_event", { series: "ethereum-network-upgrades" }],
+        ["series_detail", { code: "ethereum-network-upgrades" }],
+        ["history", { series: "ethereum-network-upgrades" }],
+      ]) {
+        const response = await s.send("tools/call", { name, arguments: { ...args, asset: "ethereum" } });
+        assert.equal(response.result.isError, undefined, name);
+        const data = JSON.parse(response.result.content[0].text);
+        assert.deepEqual(response.result.structuredContent, data);
+        assert.match(JSON.stringify(data), /ethereum-network-upgrades/);
+      }
+      const response = await s.send("tools/call", { name: "calendar", arguments: { category: "crypto", asset: "ethereum" } });
+      const row = response.result.structuredContent.events[1];
+      assert.equal(row.country, null);
+      assert.equal(row.actual, 0);
+      assert.equal(row.crypto.environment, "sepolia");
+      assert.equal(row.source_license.adapted, true);
     } finally { s.stop(); }
   });
 

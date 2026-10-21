@@ -131,9 +131,17 @@ class Client:
         """Events in a date range (at most 92 days).
 
         Keyword arguments mirror the API: from_, to, country, impact, category,
-        series, include_holidays, status, tz, limit, offset.
+        series, asset (canonical ID), include_holidays, status, tz, limit, offset.
         """
         return self._request("/calendar", params)
+
+    def crypto_calendar(self, asset: str | list[str] | None = None, **params: Any) -> dict[str, Any]:
+        """Public crypto events, filtered by canonical asset ID (e.g. ethereum).
+
+        Only publicly redistributable snapshot data is returned. Estimated date
+        windows and testnet environments remain explicit in the response.
+        """
+        return self.calendar(**{**params, "category": "crypto", "asset": asset})
 
     def calendar_csv(self, **params: Any) -> str:
         """The same range as calendar(), as the API's CSV text."""
@@ -154,43 +162,52 @@ class Client:
         params.pop("offset", None)
         params.pop("from", None)
         chunk_start = start
+        seen: set[str] = set()
         while chunk_start <= end:
             chunk_end = min(chunk_start + timedelta(days=MAX_RANGE_DAYS), end)
             offset = 0
             while True:
                 page = self.calendar(from_=chunk_start, to=chunk_end, limit=limit, offset=offset, **params)
                 events = page.get("events") or []
-                yield from events
+                # An estimated date window can overlap consecutive chunks. Its
+                # stable ID represents one event, not one event per request.
+                for event in events:
+                    event_id = event.get("id")
+                    if event_id and event_id in seen:
+                        continue
+                    if event_id:
+                        seen.add(event_id)
+                    yield event
                 offset += len(events)
                 total = page.get("total")
                 if not events or (total is not None and offset >= total) or len(events) < limit:
                     break
             chunk_start = chunk_end + timedelta(days=1)
 
-    def today(self, country: str | None = None, tz: str | None = None) -> dict[str, Any]:
+    def today(self, country: str | None = None, tz: str | None = None, *, asset: str | None = None, category: str | None = None) -> dict[str, Any]:
         """Today's releases, NYSE status and exchange closures."""
-        return self._request("/today", {"country": country, "tz": tz})
+        return self._request("/today", {"country": country, "tz": tz, "asset": asset, "category": category})
 
     def week(self, which: str = "this", **params: Any) -> dict[str, Any]:
-        """This week (Monday to Sunday) or next. Extra params: country, impact, tz."""
+        """This week (Monday to Sunday) or next. Extra params: country, impact, category, asset, series, tz."""
         return self._request("/week", {"which": which, **params})
 
-    def next(self, series: str, country: str | None = None, tz: str | None = None) -> dict[str, Any]:
+    def next(self, series: str, country: str | None = None, tz: str | None = None, *, asset: str | None = None, category: str | None = None) -> dict[str, Any]:
         """The next occurrence of a series (fomc, cpi, nfp, ecb, boe, uk-cpi...)."""
-        return self._request("/next", {"series": series, "country": country, "tz": tz})
+        return self._request("/next", {"series": series, "country": country, "tz": tz, "asset": asset, "category": category})
 
     # -- series ------------------------------------------------------------
 
     def series(self, **params: Any) -> dict[str, Any]:
-        """Every series the API covers. Params: country, category, kind."""
+        """Every series the API covers. Params: country, category, asset, kind."""
         return self._request("/series", params)
 
-    def series_detail(self, code: str, tz: str | None = None) -> dict[str, Any]:
+    def series_detail(self, code: str, tz: str | None = None, *, asset: str | None = None) -> dict[str, Any]:
         """One series: next, last, upcoming dates, history and dataset."""
-        return self._request(f"/series/{quote(code, safe='')}", {"tz": tz})
+        return self._request(f"/series/{quote(code, safe='')}", {"tz": tz, "asset": asset})
 
     def history(self, series: str, **params: Any) -> dict[str, Any]:
-        """Past releases of a series with consensus, prior and actual. Params: from_, to, limit, tz."""
+        """Past releases of a series with consensus, prior and actual. Params: from_, to, limit, asset, tz."""
         return self._request("/history", {"series": series, **params})
 
     # -- markets -----------------------------------------------------------
@@ -238,6 +255,13 @@ def to_dataframe(events: list[dict[str, Any]] | dict[str, Any]) -> "Any":
     frame = pd.DataFrame(list(events))
     if "release_at_utc" in frame.columns:
         frame["release_at_utc"] = pd.to_datetime(frame["release_at_utc"], utc=True, errors="coerce")
-    if "date" in frame.columns:
-        frame["date"] = pd.to_datetime(frame["date"], errors="coerce")
+    for column in ("date", "date_window_start", "date_window_end"):
+        if column in frame.columns:
+            frame[column] = pd.to_datetime(frame[column], errors="coerce")
+    if "assets" in frame.columns:
+        frame["asset_ids"] = frame["assets"].map(lambda assets: [a["id"] for a in (assets if isinstance(assets, (list, tuple)) else []) if isinstance(a, dict) and "id" in a])
+        frame["asset_symbols"] = frame["assets"].map(lambda assets: [a["symbol"] for a in (assets if isinstance(assets, (list, tuple)) else []) if isinstance(a, dict) and "symbol" in a])
+    if "crypto" in frame.columns:
+        for field in ("event_type", "network", "exchange", "environment", "activation_status"):
+            frame[f"crypto_{field}"] = frame["crypto"].map(lambda value: value.get(field) if isinstance(value, dict) else None)
     return frame

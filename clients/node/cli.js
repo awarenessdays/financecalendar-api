@@ -12,7 +12,7 @@ Usage:
   financecalendar week [--next] [--country ...] [--impact high]
   financecalendar calendar [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--country ...]
                            [--impact high] [--category ...] [--series us-cpi,fomc]
-                           [--status confirmed,estimated,released] [--holidays]
+                           [--status confirmed,estimated,released] [--holidays] [--asset ethereum]
                            [--limit 100] [--offset 0] [--csv]
   financecalendar series [--country gb]
   financecalendar show <code>
@@ -23,6 +23,8 @@ Usage:
   financecalendar countries
 
 Options:
+  --asset ID  canonical crypto asset ID, e.g. ethereum (not ticker ETH)
+  --category crypto  crypto events only; no country filter for global events
   --json      raw API response on any command
   --tz ZONE   render times in an IANA zone (default: your local zone)
   --help      this message
@@ -67,13 +69,13 @@ export async function main(argv, out = console.log) {
   switch (cmd) {
     case "next": {
       if (!rest[0]) throw new Error("next needs a series, e.g. financecalendar next fomc");
-      const data = await api("/next", { series: rest[0], country: flags.country, tz });
+      const data = await api("/next", { series: rest[0], country: flags.country, category: flags.category, asset: flags.asset, tz });
       if (flags.json) return json(data), 0;
       out(formatEvent(data.next, { tz: zone }));
       return 0;
     }
     case "today": {
-      const data = await api("/today", { country: flags.country, tz });
+      const data = await api("/today", { country: flags.country, category: flags.category, asset: flags.asset, tz });
       if (flags.json) return json(data), 0;
       const lines = [];
       if (data.market) lines.push(`${data.date}  ${data.market.label}${data.market.holiday ? ` (${data.market.holiday})` : ""}`);
@@ -83,7 +85,7 @@ export async function main(argv, out = console.log) {
       return 0;
     }
     case "week": {
-      const data = await api("/week", { which: flags.next ? "next" : undefined, country: flags.country, impact: flags.impact, tz });
+      const data = await api("/week", { which: flags.next ? "next" : undefined, country: flags.country, impact: flags.impact, category: flags.category, asset: flags.asset, series: flags.series, tz });
       if (flags.json) return json(data), 0;
       out(`${flags.next ? "Next week" : "This week"}, ${dateRangeLabel(data.from, data.to)} (${data.total ?? data.count} events)\n`);
       out(data.events?.length ? fmt(data.events) : "No scheduled releases.");
@@ -92,7 +94,7 @@ export async function main(argv, out = console.log) {
     case "calendar": {
       const params = {
         from: flags.from, to: flags.to, country: flags.country, impact: flags.impact, category: flags.category,
-        series: flags.series, include: flags.holidays ? "holidays" : undefined, status: flags.status, tz, limit: flags.limit, offset: flags.offset,
+        asset: flags.asset, series: flags.series, include: flags.holidays ? "holidays" : undefined, status: flags.status, tz, limit: flags.limit, offset: flags.offset,
       };
       if (flags.csv) { out((await api("/calendar", { ...params, format: "csv" }, { raw: true })).replace(/\n$/, "")); return 0; }
       const data = await api("/calendar", params);
@@ -102,18 +104,18 @@ export async function main(argv, out = console.log) {
       return 0;
     }
     case "series": {
-      const data = await api("/series", { country: flags.country, category: flags.category, kind: flags.kind });
+      const data = await api("/series", { country: flags.country, category: flags.category, asset: flags.asset, kind: flags.kind });
       if (flags.json) return json(data), 0;
       out(data.series.map(formatSeries).join("\n"));
       return 0;
     }
     case "show": {
       if (!rest[0]) throw new Error("show needs a series code, e.g. financecalendar show fomc");
-      const data = await api(`/series/${encodeURIComponent(rest[0])}`, { tz });
+      const data = await api(`/series/${encodeURIComponent(rest[0])}`, { asset: flags.asset, tz });
       if (flags.json) return json(data), 0;
       const s = data.series;
       const lines = [
-        `${s.name} (${s.code})  ${s.country || ""}  ${s.category}  impact ${s.impact}  ${s.recurrence || ""}`.trim(),
+        `${s.name} (${s.code})  ${s.country || (s.category === "crypto" ? "Global" : "")}  ${s.category}  impact ${s.impact ?? "unrated"}  ${s.recurrence || ""}`.trim(),
         s.aliases?.length ? `aliases: ${s.aliases.join(", ")}` : "",
         s.publisher ? `publisher: ${s.publisher}${s.source_url ? "  " + s.source_url : ""}` : "",
         s.hub ? `hub: ${s.hub}` : "",
@@ -127,7 +129,7 @@ export async function main(argv, out = console.log) {
     }
     case "history": {
       if (!rest[0]) throw new Error("history needs a series, e.g. financecalendar history us-cpi");
-      const data = await api("/history", { series: rest[0], from: flags.from, to: flags.to, limit: flags.limit, tz });
+      const data = await api("/history", { series: rest[0], from: flags.from, to: flags.to, limit: flags.limit, asset: flags.asset, tz });
       if (flags.json) return json(data), 0;
       out(`${data.series_code || rest[0]}: ${data.count} releases, ${dateRangeLabel(data.from, data.to)}\n`);
       out(data.events?.length ? fmt(data.events) : "No past releases in that range.");

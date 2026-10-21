@@ -29,6 +29,26 @@ describe("parseArgs", () => {
 });
 
 describe("CLI (child process with mocked fetch)", () => {
+  test("crypto asset flags reach calendar, next, series and history commands", () => {
+    for (const command of [
+      ["calendar", "--category", "crypto"], ["next", "ethereum-network-upgrades"],
+      ["today", "--category", "crypto"], ["week", "--category", "crypto"],
+      ["series", "--category", "crypto"], ["show", "ethereum-network-upgrades"],
+      ["history", "ethereum-network-upgrades"],
+    ]) {
+      const result = cli([...command, "--asset", "ethereum", "--json"]);
+      assert.equal(result.code, 0, result.err);
+      assert.match(result.out, /ethereum-network-upgrades/);
+    }
+    const result = cli(["calendar", "--category", "crypto", "--asset", "ethereum", "--tz", "UTC"]);
+    assert.match(result.out, /2026-10-01–2026-12-31 \(estimated window\)/);
+    assert.match(result.out, /ETH · Global/);
+    assert.match(result.out, /CC-BY-4\.0/);
+    const series = cli(["series", "--category", "crypto", "--asset", "ethereum"]);
+    assert.equal(series.code, 0, series.err);
+    assert.match(series.out, /next target 2026-10-01–2026-12-31 \(estimated window\)/);
+    assert.ok(!series.out.includes("next 2026-10-01"));
+  });
   test("--help prints usage and exits 0", () => {
     const r = cli(["--help"]);
     assert.equal(r.code, 0);

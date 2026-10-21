@@ -1,6 +1,6 @@
 # financecalendar
 
-Python client and CLI for the free [financecalendar.com API](https://www.financecalendar.com/api/): scheduled economic releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) and exchange holidays. Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
+Python client and CLI for the free [financecalendar.com API](https://www.financecalendar.com/api/): scheduled economic releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
 
 No API key needed. A free key raises the daily limit from 2,000 to 10,000 requests.
 
@@ -51,7 +51,8 @@ shows these details when provided, labels unknown economic release times
 
 | Method | Endpoint |
 |---|---|
-| `calendar(**params)` | `GET /calendar` (from_, to, country, impact, category, series, include_holidays, status, tz, limit, offset) |
+| `calendar(**params)` | `GET /calendar` (from_, to, country, impact, category, asset, series, include_holidays, status, tz, limit, offset) |
+| `crypto_calendar(asset=None, **params)` | `GET /calendar` with `category=crypto` forced; canonical asset IDs |
 | `calendar_csv(**params)` | `GET /calendar?format=csv`, returns the CSV text |
 | `iter_calendar(from_, to, **params)` | yields every event over any span: pages with offset/limit and splits ranges longer than 92 days |
 | `today(country=None, tz=None)` | `GET /today` |
@@ -111,6 +112,47 @@ print(df[["date", "consensus", "actual"]])
 
 `Client` is also a context manager and has `close()`.
 
+## Crypto coverage
+
+```python
+from financecalendar import Client, to_dataframe
+
+with Client() as fc:
+    series = fc.series(category="crypto")  # discover canonical series and assets
+    calendar = fc.crypto_calendar(asset="ethereum")
+    nxt = fc.next("ethereum-network-upgrades", asset="ethereum")
+    rows = list(fc.iter_calendar("2026-10-01", "2027-03-01", category="crypto", asset="ethereum"))
+```
+
+`asset` passes through `calendar`, `calendar_csv`, `iter_calendar`, `today`,
+`week`, `next`, `series`, `series_detail` and `history`. Asset IDs are canonical
+names such as `ethereum`, not ticker symbols such as ETH. Crypto rows have
+`country=None` and may have `impact=None`. A country filter excludes global rows.
+
+Estimated month/quarter/year windows retain `date_window_start/end`; `date` is
+only their lower-bound index. Range queries include overlapping windows, and
+`iter_calendar` deduplicates stable IDs across chunks. A scheduled testnet fork
+is distinct from mainnet and is not proof of an observed activation. Inspect
+`crypto.environment`, `crypto.activation_status`, `verification_url`,
+`verification_method`, `manually_reviewed_at`, `last_verified_at` and `data_stale`.
+
+`to_dataframe` retains nested `assets`, `crypto` and `source_license`, parses
+estimated date-window bounds, and adds `asset_ids`, `asset_symbols`,
+`crypto_event_type`, `crypto_network`, `crypto_exchange`, `crypto_environment`
+and `crypto_activation_status`. It preserves null countries and recorded zeros.
+
+```sh
+financecalendar series --category crypto
+financecalendar calendar --category crypto --asset ethereum --json
+financecalendar next ethereum-network-upgrades --asset ethereum --tz UTC
+```
+
+The public API contains only sources approved for redistribution. CoinMarketCal
+internal evaluation data is excluded. Current coverage focuses on official
+Ethereum schedules; other assets may return no rows. Retain upstream
+`source_license` credits, links, full notices and adaptation labels when sharing
+data. Human CLI output also shows these credits and stale-data warnings.
+
 ## CLI
 
 ```sh
@@ -140,7 +182,7 @@ https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 
 ## Data terms
 
-Free for any use, commercial included, with attribution: a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+Free for any use, commercial included, with attribution: a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Earnings dates are not included. Records carrying `source_license` also retain the original attribution, source link, licence link, full notice and adaptation notice. These requirements travel with redistributed records. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 
