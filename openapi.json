@@ -4,7 +4,7 @@
         "title": "Finance Calendar API",
         "version": "2.0.0",
         "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-        "description": "Every scheduled release on financecalendar.com, verified against official calendars and updated within the hour of a print. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included.",
+        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included.",
         "termsOfService": "https://www.financecalendar.com/api/#attribution",
         "contact": {
             "url": "https://www.financecalendar.com/about/"
@@ -537,7 +537,7 @@
                     {
                         "name": "series",
                         "in": "query",
-                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
+                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1355,14 +1355,46 @@
                     "Meta"
                 ],
                 "operationId": "status",
-                "summary": "Health: snapshot age and counts",
+                "summary": "Health: snapshot age, counts and publisher source health",
                 "responses": {
                     "200": {
-                        "description": "Status.",
+                        "description": "Snapshot freshness and source-level collection health.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "type": "object",
+                                    "properties": {
+                                        "ok": {
+                                            "type": "boolean",
+                                            "description": "Snapshot availability and age check; consult source_health_summary separately for publisher failures."
+                                        },
+                                        "time_utc": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "snapshot": {
+                                            "type": [
+                                                "object",
+                                                "null"
+                                            ]
+                                        },
+                                        "source_health": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SourceHealth"
+                                            }
+                                        },
+                                        "source_health_summary": {
+                                            "$ref": "#/components/schemas/SourceHealthSummary"
+                                        },
+                                        "api_version": {
+                                            "type": "string"
+                                        },
+                                        "docs": {
+                                            "type": "string",
+                                            "format": "uri"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1651,6 +1683,46 @@
                             "null"
                         ]
                     },
+                    "source_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Publisher connector identifier; null when provenance is unavailable."
+                    },
+                    "native_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Publisher release identifier, when supplied. Stable across date changes."
+                    },
+                    "time_precision": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Publisher timing precision, e.g. minute or date. Null means unknown; a date-only release is not an all-day market closure."
+                    },
+                    "last_verified_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Last successful live publisher fetch. Null for unverified or static schedule rows; snapshot generation is not verification."
+                    },
+                    "data_stale": {
+                        "type": "boolean",
+                        "description": "True when last-good publisher data is retained through a source outage. False does not imply live verification."
+                    },
+                    "stale_since": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
                     "url": {
                         "type": [
                             "string",
@@ -1860,6 +1932,114 @@
                     },
                     "docs": {
                         "type": "string"
+                    }
+                }
+            },
+            "SourceHealth": {
+                "type": "object",
+                "properties": {
+                    "source_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "status": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "success",
+                            "degraded",
+                            "failed",
+                            "disabled",
+                            null
+                        ]
+                    },
+                    "count": {
+                        "type": "integer"
+                    },
+                    "mode": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "scope": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "window_start": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "window_end": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "series_name": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "checked_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "fetched_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Null if no successful live fetch occurred; checked-in schedules do not count as a fetch."
+                    },
+                    "error": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Credential-safe collector diagnostic, without request URLs or response bodies."
+                    }
+                }
+            },
+            "SourceHealthSummary": {
+                "type": "object",
+                "properties": {
+                    "reported": {
+                        "type": "boolean",
+                        "description": "False for snapshots without source-health reporting; this means unknown, not healthy."
+                    },
+                    "total": {
+                        "type": "integer"
+                    },
+                    "success": {
+                        "type": "integer"
+                    },
+                    "degraded": {
+                        "type": "integer"
+                    },
+                    "failed": {
+                        "type": "integer"
+                    },
+                    "disabled": {
+                        "type": "integer"
+                    },
+                    "stale_events": {
+                        "type": "integer",
+                        "description": "Events explicitly marked as retained last-good data during source outages."
                     }
                 }
             }
