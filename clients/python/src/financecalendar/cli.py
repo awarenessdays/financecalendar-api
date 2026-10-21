@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import functools
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from typing import Any, Callable
@@ -28,7 +29,8 @@ def format_when(event: dict[str, Any], tz=None) -> str:
         d = event.get("date")
         if not d:
             return ""
-        return datetime.fromisoformat(d).strftime("%a %d %b") + " all day"
+        timing = "all day" if event.get("category") == "market-holidays" else "time unknown"
+        return datetime.fromisoformat(d).strftime("%a %d %b") + f" {timing}"
     zone = tz or local_zone(None)
     dt = datetime.fromisoformat(event["release_at_utc"].replace("Z", "+00:00")).astimezone(zone)
     name = getattr(zone, "key", None) or ""
@@ -37,7 +39,13 @@ def format_when(event: dict[str, Any], tz=None) -> str:
 
 
 def format_event(event: dict[str, Any], tz=None) -> str:
-    bits = [format_when(event, tz), f"{event.get('name') or event.get('title')}" + (f" ({event['country']})" if event.get("country") else "")]
+    name = event.get("name") or event.get("title") or ""
+    bits = [format_when(event, tz), name + (f" ({event['country']})" if event.get("country") else "")]
+    if event.get("period") and not _contains_detail(name, event["period"]):
+        bits.append(f"period {event['period']}")
+    if event.get("release_stage") and not _contains_detail(name, event["release_stage"]):
+        stage = re.sub(r"[-_]+", " ", str(event["release_stage"]))
+        bits.append(f"stage {stage}")
     if event.get("consensus"):
         bits.append(f"cons. {event['consensus']}")
     if event.get("prior"):
@@ -48,6 +56,13 @@ def format_event(event: dict[str, Any], tz=None) -> str:
         bits.append(f"closes {event['close_time_local']} local")
     line = "  ".join(b for b in bits if b)
     return f"{line}\n{event['url']}" if event.get("url") else line
+
+
+def _contains_detail(name: str, detail: Any) -> bool:
+    def words(value: Any) -> str:
+        return re.sub(r"[^a-z0-9]+", " ", str(value).casefold()).strip()
+    normalized = words(detail)
+    return bool(normalized and f" {normalized} " in f" {words(name)} ")
 
 
 def format_events(events: list[dict[str, Any]], tz=None) -> str:

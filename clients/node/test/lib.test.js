@@ -126,7 +126,30 @@ describe("formatting", () => {
 
   test("released rows show the actual", () => {
     const row = fixture("history_us_cpi").body.events[0];
-    assert.match(formatEvent(row, { tz: "America/New_York" }), /^Wed 14 Oct 08:30 ET  US CPI \(US\)  cons\. 3\.0% y\/y  prior 3\.1% y\/y  actual 3\.0% y\/y\n/);
+    assert.match(formatEvent(row, { tz: "America/New_York" }), /^Wed 14 Oct 08:30 ET  US CPI \(US\)  period September 2026  cons\. 3\.0% y\/y  prior 3\.1% y\/y  actual 3\.0% y\/y\n/);
+  });
+
+  test("GDP estimate stages and catch-up reference periods distinguish otherwise identical names", () => {
+    const row = { name: "US GDP", date: "2026-10-29", country: "US", period: "3rd Quarter 2026", release_at_utc: "2026-10-29T12:30:00Z" };
+    const lines = ["advance", "second", "third"].map((release_stage) => formatEvent({ ...row, release_stage }, { tz: "UTC" }));
+    assert.equal(new Set(lines).size, 3);
+    assert.ok(lines.every((line) => line.includes("period 3rd Quarter 2026  stage ")));
+    assert.notEqual(formatEvent({ ...row, period: "January 2026" }), formatEvent({ ...row, period: "February 2026" }));
+  });
+
+  test("displayed details do not repeat a stage or period already in the name", () => {
+    const row = { name: "US GDP (Second Estimate), 3rd Quarter 2026", date: "2026-11-25", period: "3rd Quarter 2026", release_stage: "second" };
+    const before = JSON.stringify(row);
+    assert.equal(formatEvent(row, { tz: "UTC" }), "Wed 25 Nov time unknown  US GDP (Second Estimate), 3rd Quarter 2026");
+    assert.equal(JSON.stringify(row), before);
+    assert.match(formatEvent({ ...row, name: "Secondary GDP" }), /stage second$/);
+  });
+
+  test("date-only economic releases have unknown timing, while holidays stay all day", () => {
+    const row = { date: "2026-11-25", name: "US GDP", category: "economic-indicators", release_at_utc: null, all_day: true };
+    assert.equal(formatWhen(row, "Asia/Tokyo"), "Wed 25 Nov time unknown");
+    assert.equal(formatWhen({ ...row, category: "market-holidays" }, "Asia/Tokyo"), "Wed 25 Nov all day");
+    assert.match(formatEvent({ ...row, release_stage: "annual-update" }), /stage annual update$/);
   });
 
   test("eventsToCsv quotes fields containing commas", () => {

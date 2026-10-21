@@ -27,6 +27,31 @@ def test_format_event_documented_layout():
     assert format_event(hol, ZoneInfo("UTC")) == "Mon 19 Oct all day  HKEX closed: Day Following Chung Yeung Festival (HK)"
 
 
+def test_release_stages_and_reference_periods_distinguish_events():
+    event = {"name": "US GDP", "date": "2026-10-29", "country": "US", "period": "3rd Quarter 2026",
+             "release_at_utc": "2026-10-29T12:30:00Z"}
+    lines = [format_event({**event, "release_stage": stage}, ZoneInfo("UTC")) for stage in ("advance", "second", "third")]
+    assert len(set(lines)) == 3
+    assert all("period 3rd Quarter 2026  stage " in line for line in lines)
+    assert format_event({**event, "period": "January 2026"}) != format_event({**event, "period": "February 2026"})
+
+
+def test_details_already_in_name_are_not_repeated_and_input_stays_unchanged():
+    event = {"name": "US GDP (Second Estimate), 3rd Quarter 2026", "date": "2026-11-25",
+             "period": "3rd Quarter 2026", "release_stage": "second"}
+    before = dict(event)
+    assert format_event(event, ZoneInfo("UTC")) == "Wed 25 Nov time unknown  US GDP (Second Estimate), 3rd Quarter 2026"
+    assert event == before
+    assert format_event({**event, "name": "Secondary GDP"}).endswith("stage second")
+
+
+def test_unknown_economic_release_time_is_not_an_all_day_holiday():
+    event = {"date": "2026-11-25", "name": "US GDP", "category": "economic-indicators", "release_at_utc": None, "all_day": True}
+    assert format_when(event, ZoneInfo("Asia/Tokyo")) == "Wed 25 Nov time unknown"
+    assert format_when({**event, "category": "market-holidays"}, ZoneInfo("Asia/Tokyo")) == "Wed 25 Nov all day"
+    assert format_event({**event, "release_stage": "annual-update"}).endswith("stage annual update")
+
+
 def test_next_human_and_json(client):
     code, out = run(client, "--tz", "Europe/London", "next", "fomc")
     assert code == 0

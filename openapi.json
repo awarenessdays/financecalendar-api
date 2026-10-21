@@ -1697,6 +1697,13 @@
                         ],
                         "description": "Publisher release identifier, when supplied. Stable across date changes."
                     },
+                    "release_stage": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Publisher-labelled release stage, e.g. advance, second, third or annual-update. Null when unspecified."
+                    },
                     "time_precision": {
                         "type": [
                             "string",

@@ -80,7 +80,7 @@ function zoneLabel(parts, tz) {
   return p ? p.value : tz;
 }
 
-/** "Tue 28 Oct 14:00 ET" for a UTC instant, or "Thu 26 Nov" for a date-only row. */
+/** Render a UTC instant, or the source date with its timing precision. */
 export function formatWhen(e, tz) {
   const zone = localZone(tz);
   if (!e.release_at_utc || e.all_day) {
@@ -88,7 +88,8 @@ export function formatWhen(e, tz) {
     if (!y) return "";
     const dt = new Date(Date.UTC(y, m - 1, d, 12));
     const f = new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", weekday: "short", day: "2-digit", month: "short" });
-    return `${pick(f.formatToParts(dt))} all day`;
+    const timing = e.category === "market-holidays" ? "all day" : "time unknown";
+    return `${pick(f.formatToParts(dt))} ${timing}`;
   }
   const dt = new Date(e.release_at_utc);
   const f = new Intl.DateTimeFormat("en-GB", {
@@ -110,13 +111,22 @@ function pick(parts) {
  *   https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
  */
 export function formatEvent(e, { tz } = {}) {
-  const bits = [formatWhen(e, tz), `${e.name || e.title}${e.country ? ` (${e.country})` : ""}`];
+  const name = e.name || e.title || "";
+  const bits = [formatWhen(e, tz), `${name}${e.country ? ` (${e.country})` : ""}`];
+  if (e.period && !containsDetail(name, e.period)) bits.push(`period ${e.period}`);
+  if (e.release_stage && !containsDetail(name, e.release_stage)) bits.push(`stage ${String(e.release_stage).replace(/[-_]+/g, " ")}`);
   if (e.consensus) bits.push(`cons. ${e.consensus}`);
   if (e.prior) bits.push(`prior ${e.prior}`);
   if (e.actual) bits.push(`actual ${e.actual}`);
   if (e.category === "market-holidays" && e.holiday_status === "early_close" && e.close_time_local) bits.push(`closes ${e.close_time_local} local`);
   const line = bits.filter(Boolean).join("  ");
   return e.url ? `${line}\n${e.url}` : line;
+}
+
+function containsDetail(name, detail) {
+  const words = (value) => String(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const normalized = words(detail);
+  return normalized && ` ${words(name)} `.includes(` ${normalized} `);
 }
 
 export function formatEvents(events, opts) {

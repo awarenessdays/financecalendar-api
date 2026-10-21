@@ -9,13 +9,34 @@ One package, two binaries:
 
 No API key needed. A free key raises the daily limit from 2,000 to 10,000 requests.
 
-## Install
+## Install from source
+
+Registry publication is pending. Install the current version from the public
+source repository:
+
+```sh
+git clone https://github.com/awarenessdays/financecalendar-api.git
+cd financecalendar-api/clients/node
+npm ci
+npm link
+financecalendar --help
+```
+
+For MCP today, configure `node` as the command and the absolute path to this
+checkout's `mcp.js` as its argument. The npm/npx configurations below apply after
+registry publication.
+
+After publication:
 
 ```sh
 npm install -g financecalendar-mcp      # or run ad hoc with npx
 ```
 
 Requires Node 20 or newer.
+
+Human CLI output shows the reference `period` and `release_stage` when provided.
+Unknown economic release times are labelled `time unknown`; exchange holidays
+retain `all day`. Raw JSON preserves the API fields unchanged.
 
 ## MCP server
 

@@ -77,7 +77,7 @@ describe("CLI (child process with mocked fetch)", () => {
     assert.equal(r.code, 0, r.err);
     const lines = r.out.trim().split("\n");
     assert.equal(lines[0], "2026-10-19  NYSE open");
-    assert.equal(lines[1], "Mon 19 Oct 02:00 UTC  China GDP (CN)");
+    assert.equal(lines[1], "Mon 19 Oct 02:00 UTC  China GDP (CN)  period Q3 2026");
     assert.ok(lines.includes("Exchange closures today:"));
     assert.ok(lines.some((l) => l.startsWith("Mon 19 Oct all day  HKEX closed")));
   });

@@ -4,7 +4,23 @@ Python client and CLI for the free [financecalendar.com API](https://www.finance
 
 No API key needed. A free key raises the daily limit from 2,000 to 10,000 requests.
 
-## Install
+## Install from source
+
+Registry publication is pending. Install the current version from the public
+source repository:
+
+```sh
+git clone https://github.com/awarenessdays/financecalendar-api.git
+cd financecalendar-api/clients/python
+python -m venv .venv
+.venv/bin/python -m pip install .
+.venv/bin/financecalendar --help
+```
+
+Use `.venv\Scripts\python` and `.venv\Scripts\financecalendar` on Windows.
+Install `".[pandas]"` instead of `.` for the optional DataFrame helper.
+
+After publication:
 
 ```sh
 pip install financecalendar            # client + CLI
@@ -28,6 +44,10 @@ for e in week["events"]:
 ```
 
 Every method returns the API's JSON as plain dicts and lists.
+
+Events include nullable `period` and `release_stage` fields. Human CLI output
+shows these details when provided, labels unknown economic release times
+`time unknown`, and retains `all day` for exchange holidays.
 
 | Method | Endpoint |
 |---|---|
