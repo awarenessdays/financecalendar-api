@@ -1,13 +1,17 @@
 # Finance Calendar API
 
-Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS. Every row is verified against the official calendar, carries consensus, prior and actual figures, and is refreshed within the hour of a print.
+Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS. The database combines direct official publisher feeds with checked-in schedules. Source verification, estimates and stale data are identified per record; consensus, prior and actual values are included where available. Snapshot updates run hourly, with coverage varying by source and series.
 
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
 - **Full dataset:** [`data/calendar.json`](data/calendar.json), refreshed hourly by the engine (also at https://www.financecalendar.com/wp-content/uploads/fc/calendar.json)
-- **MCP server and CLI:** `npx financecalendar-mcp` and `npx financecalendar` (package `financecalendar-mcp`)
-- **Python:** `pip install financecalendar`
+- **MCP server and CLI:** [Node source and installation](clients/node/README.md)
+- **Python client and CLI:** [Python source and installation](clients/python/README.md)
+- **Measured coverage:** https://www.financecalendar.com/api/coverage/
+
+The API and source installations work now. npm/PyPI publication is pending;
+use the source installation instructions linked above.
 
 No API key is needed. A free key raises the daily limit from 2,000 to 10,000 requests and identifies your app: `POST /keys {"email": "you@example.com"}` or use the form on the docs page.
 
@@ -43,12 +47,12 @@ curl "https://www.financecalendar.com/wp-json/fc/v1/changes"
 | `GET /next` | Next occurrence of a series (`series=fomc`, `cpi`, `uk-cpi`, `japan-gdp`...; `country=` override) |
 | `GET /series` | Every series with code, aliases, country, tier and next date |
 | `GET /series/{code}` | One series: next, last, upcoming, history, verified dataset where published |
-| `GET /history` | Past releases of a series with consensus, prior and actual |
+| `GET /history` | Past releases of a series, with consensus, prior and actual where available |
 | `GET /holidays` | Exchange holidays and early closes for 12 exchanges (`exchange=nyse\|sifma\|cme\|lse\|tsx\|asx\|hkex\|euronext\|jpx\|six\|xetra\|nse\|all`) |
 | `GET /market-status` | Is the exchange open right now (session, breaks, early closes, holidays) |
 | `GET /changes` | Field-level change log for the last 30 days (`since=`) |
 | `GET /countries` | Countries covered with counts |
-| `GET /status` | Health: snapshot age and counts |
+| `GET /status` | Snapshot age/counts and publisher-source health |
 | `POST /keys`, `GET /keys/me` | Free key signup and usage |
 
 Invalid parameters return HTTP 400 with an `error` message. Daily limits return HTTP 429 with `Retry-After`.
@@ -63,7 +67,21 @@ Invalid parameters return HTTP 400 with an `error` message. Daily limits return 
 
 ## Data
 
-`data/calendar.json` is the whole dataset the API serves: every event from 12 months back to 400 days ahead, every series, the exchange table and the 30-day change log. Commit history is the audit trail.
+`data/calendar.json` contains the current database in a rolling window from
+12 months back to 400 days ahead, the series registry, exchange table and
+30-day change log. Commit history records published snapshots.
+
+Direct schedule connectors currently read BLS, ONS, BEA, Census and Federal
+Reserve G.17. Publisher horizons differ; a rolling window does not mean every
+source has announced dates through its end. Check `/status` and the coverage page
+for current availability.
+
+Event JSON includes `period`, nullable `release_stage`, `source_id`, `native_id`,
+`time_precision`, `last_verified_at` and `data_stale`. GDP estimates and separate
+catch-up periods remain distinct releases. A changed date retains the release's
+public ID; last-good data is marked stale when a source is unavailable. Source
+verification refers to a calendar fetch, independently of numerical result
+availability.
 
 ```python
 import json, urllib.request
