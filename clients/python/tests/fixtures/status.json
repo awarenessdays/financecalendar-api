@@ -1,0 +1,23 @@
+{
+ "status": 200,
+ "headers": {
+  "Access-Control-Allow-Origin": "*",
+  "Cache-Control": "public, max-age=60"
+ },
+ "body": {
+  "ok": true,
+  "time_utc": "2026-10-19T15:47:45+00:00",
+  "snapshot": {
+   "generated_at": "2026-10-19T12:00:00+00:00",
+   "age_seconds": 13665,
+   "counts": {
+    "series": 62,
+    "events": 1184,
+    "holidays": 218
+   },
+   "download": "https://www.financecalendar.com/wp-content/uploads/fc/calendar.json"
+  },
+  "api_version": "2.0.0",
+  "docs": "https://www.financecalendar.com/api/"
+ }
+}

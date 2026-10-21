@@ -1,0 +1,101 @@
+{
+    "status": 200,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300, s-maxage=300"
+    },
+    "body": {
+        "count": 14,
+        "countries": [
+            {
+                "code": "US",
+                "name": "United States",
+                "series": 25,
+                "events": 290
+            },
+            {
+                "code": "GB",
+                "name": "United Kingdom",
+                "series": 6,
+                "events": 74
+            },
+            {
+                "code": "CN",
+                "name": "China",
+                "series": 5,
+                "events": 57
+            },
+            {
+                "code": "JP",
+                "name": "Japan",
+                "series": 4,
+                "events": 54
+            },
+            {
+                "code": "EU",
+                "name": "Euro area",
+                "series": 5,
+                "events": 50
+            },
+            {
+                "code": "CA",
+                "name": "Canada",
+                "series": 4,
+                "events": 47
+            },
+            {
+                "code": "AU",
+                "name": "Australia",
+                "series": 4,
+                "events": 44
+            },
+            {
+                "code": "DE",
+                "name": "Germany",
+                "series": 3,
+                "events": 31
+            },
+            {
+                "code": "HK",
+                "name": "Hong Kong",
+                "series": 1,
+                "events": 18
+            },
+            {
+                "code": "IN",
+                "name": "India",
+                "series": 1,
+                "events": 15
+            },
+            {
+                "code": "CH",
+                "name": "Switzerland",
+                "series": 2,
+                "events": 13
+            },
+            {
+                "code": "NO",
+                "name": "Norway",
+                "series": 1,
+                "events": 10
+            },
+            {
+                "code": "NZ",
+                "name": "New Zealand",
+                "series": 1,
+                "events": 10
+            },
+            {
+                "code": "SE",
+                "name": "Sweden",
+                "series": 1,
+                "events": 10
+            }
+        ],
+        "attribution": {
+            "source": "financecalendar.com",
+            "terms": "Free for any use with attribution: link to https://www.financecalendar.com",
+            "docs": "https://www.financecalendar.com/api/"
+        }
+    }
+}

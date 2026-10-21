@@ -1,0 +1,148 @@
+{
+    "status": 200,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300, s-maxage=300"
+    },
+    "body": {
+        "exchange": "nyse",
+        "count": 13,
+        "holidays": [
+            {
+                "date": "2026-09-07",
+                "name": "Labor Day",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2026-11-26",
+                "name": "Thanksgiving",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2026-11-27",
+                "name": "Day After Thanksgiving",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "early_close",
+                "close_time_local": "13:00",
+                "url": null,
+                "close_time_et": "13:00"
+            },
+            {
+                "date": "2026-12-24",
+                "name": "Christmas Eve",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "early_close",
+                "close_time_local": "13:00",
+                "url": null,
+                "close_time_et": "13:00"
+            },
+            {
+                "date": "2026-12-25",
+                "name": "Christmas",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-01-01",
+                "name": "New Years Day",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-01-18",
+                "name": "Martin Luther King, Jr. Day",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-02-15",
+                "name": "Washington's Birthday (Presidents' Day)",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-03-26",
+                "name": "Good Friday",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-05-31",
+                "name": "Memorial Day",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-06-18",
+                "name": "Juneteenth (Observed)",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-07-05",
+                "name": "Independence Day (Observed)",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            },
+            {
+                "date": "2027-09-06",
+                "name": "Labor Day",
+                "exchange": "nyse",
+                "country": "US",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null,
+                "close_time_et": null
+            }
+        ],
+        "attribution": {
+            "source": "financecalendar.com",
+            "terms": "Free for any use with attribution: link to https://www.financecalendar.com",
+            "docs": "https://www.financecalendar.com/api/"
+        }
+    }
+}

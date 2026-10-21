@@ -1,0 +1,72 @@
+{
+    "status": 200,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300, s-maxage=300"
+    },
+    "body": {
+        "exchange": "lse",
+        "count": 6,
+        "holidays": [
+            {
+                "date": "2027-01-01",
+                "name": "New Year's Day",
+                "exchange": "lse",
+                "country": "GB",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null
+            },
+            {
+                "date": "2027-03-26",
+                "name": "Good Friday",
+                "exchange": "lse",
+                "country": "GB",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null
+            },
+            {
+                "date": "2027-03-29",
+                "name": "Easter Monday",
+                "exchange": "lse",
+                "country": "GB",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null
+            },
+            {
+                "date": "2027-05-03",
+                "name": "Early May Bank Holiday",
+                "exchange": "lse",
+                "country": "GB",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null
+            },
+            {
+                "date": "2027-05-31",
+                "name": "Spring Bank Holiday",
+                "exchange": "lse",
+                "country": "GB",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null
+            },
+            {
+                "date": "2027-08-30",
+                "name": "Summer Bank Holiday",
+                "exchange": "lse",
+                "country": "GB",
+                "status": "closed",
+                "close_time_local": null,
+                "url": null
+            }
+        ],
+        "attribution": {
+            "source": "financecalendar.com",
+            "terms": "Free for any use with attribution: link to https://www.financecalendar.com",
+            "docs": "https://www.financecalendar.com/api/"
+        }
+    }
+}

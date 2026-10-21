@@ -1,0 +1,153 @@
+# financecalendar-mcp
+
+Economic calendar data for AI assistants and the terminal: scheduled releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) and exchange holidays. Powered by the free [financecalendar.com API](https://www.financecalendar.com/api/). Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
+
+One package, two binaries:
+
+- `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
+- `financecalendar`: a CLI for your terminal and scripts.
+
+No API key needed. A free key raises the daily limit from 2,000 to 10,000 requests.
+
+## Install
+
+```sh
+npm install -g financecalendar-mcp      # or run ad hoc with npx
+```
+
+Requires Node 20 or newer.
+
+## MCP server
+
+### Claude Desktop
+
+Add to `claude_desktop_config.json` (Settings, Developer, Edit Config):
+
+```json
+{
+  "mcpServers": {
+    "financecalendar": {
+      "command": "npx",
+      "args": ["-y", "financecalendar-mcp"]
+    }
+  }
+}
+```
+
+With a free key (only add the `env` block once you have a real key; a placeholder is rejected with 401):
+
+```json
+{
+  "mcpServers": {
+    "financecalendar": {
+      "command": "npx",
+      "args": ["-y", "financecalendar-mcp"],
+      "env": { "FC_API_KEY": "fc_live_..." }
+    }
+  }
+}
+```
+
+### Claude Code
+
+```sh
+claude mcp add financecalendar -- npx -y financecalendar-mcp
+# with a key:
+claude mcp add financecalendar -e FC_API_KEY=your-key -- npx -y financecalendar-mcp
+```
+
+### Cursor
+
+Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "financecalendar": { "command": "npx", "args": ["-y", "financecalendar-mcp"] }
+  }
+}
+```
+
+### Tools
+
+| Tool | What it does |
+|---|---|
+| `next_event(series, country?, tz?)` | Next occurrence of a series: `fomc`, `cpi`, `nfp`, `ecb`, `boe`, `uk-cpi`... |
+| `calendar(from?, to?, country?, impact?, category?, series?, include_holidays?, status?, tz?, limit?, offset?)` | Events in a date range (max 92 days) |
+| `today(country?, impact?, tz?)` | Today's releases, NYSE status and exchange closures |
+| `week(which?, country?, impact?, category?, series?, include_holidays?, tz?)` | This week or next, Monday to Sunday |
+| `series_list(country?, category?, kind?)` | Every series with code, aliases and next date |
+| `series_detail(code, tz?)` | One series: next, last, upcoming, history, long-run dataset |
+| `history(series, from?, to?, limit?, tz?)` | Past releases with consensus, prior and actual |
+| `market_holidays(exchange?, year?)` | Exchange holidays and early closes (nyse, lse, cme, jpx...) |
+| `market_status(exchange?)` | Is the exchange open right now? |
+| `changes(since?, series?, change?, limit?)` | What changed: new dates, moved dates, consensus, actuals |
+| `countries()` | Countries covered with series and event counts |
+
+Every tool returns the API's JSON as text. Errors (bad parameter, unknown series, rate limit) come back as tool errors with the API's message.
+
+Also included:
+
+- Prompt `economic_calendar_briefing(country?, days?)`: asks the model to pull the high-impact calendar and summarise the week's risk events.
+- Resource `financecalendar://openapi`: the live OpenAPI 3.1 document from `{base}/openapi`.
+
+## CLI
+
+```sh
+financecalendar next fomc
+financecalendar next cpi --country uk --tz Europe/London
+financecalendar today
+financecalendar week --next --impact high
+financecalendar calendar --from 2026-11-01 --to 2026-11-30 --country us,gb --holidays
+financecalendar calendar --from 2026-11-01 --to 2026-11-30 --csv > november.csv
+financecalendar series --country gb
+financecalendar show boe
+financecalendar history us-cpi --limit 12
+financecalendar holidays lse 2027
+financecalendar status hkex
+financecalendar changes --since 2026-10-18T00:00:00Z
+financecalendar countries
+```
+
+Add `--json` to any command for the raw API response and `--help` for the full usage. Times are shown in your local zone unless you pass `--tz`:
+
+```
+$ financecalendar next fomc --tz America/New_York
+Wed 28 Oct 14:00 ET  FOMC Rate Decision (US)  cons. Hold at 3.50-3.75%  prior Hold
+https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
+```
+
+## Environment variables
+
+| Variable | Purpose |
+|---|---|
+| `FC_API_KEY` | Free API key, sent as `X-API-Key` on every request. Get one at [financecalendar.com/api](https://www.financecalendar.com/api/#key). |
+| `FC_API_BASE` | Alternative base URL. Default `https://www.financecalendar.com/wp-json/fc/v1`; an edge mirror at `https://api.financecalendar.com/v1` is planned. |
+
+## Use it as a library
+
+```js
+import { api, formatEvent } from "financecalendar-mcp/lib.js";
+
+const { next } = await api("/next", { series: "ecb" }, { apiKey: process.env.FC_API_KEY });
+console.log(formatEvent(next, { tz: "Europe/Frankfurt" }));
+```
+
+`api()` throws an `Error` whose message carries the API's `error` text and HTTP status; on 429 it adds the `Retry-After` seconds (`err.retryAfter`).
+
+## Data terms
+
+Free for any use, commercial included, with attribution: a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+
+## Source and issues
+
+[Client source and tests](https://github.com/awarenessdays/financecalendar-api/tree/main/clients/node) · [Report an issue](https://github.com/awarenessdays/financecalendar-api/issues).
+
+## Development
+
+```sh
+npm test            # node --test, fully offline (fetch is mocked with recorded fixtures)
+npm pack --dry-run  # confirm the published file list
+```
+
+Licence: MIT, Awareness Days Ltd / financecalendar.com.

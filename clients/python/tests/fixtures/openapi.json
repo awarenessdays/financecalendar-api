@@ -1,0 +1,122 @@
+{
+ "status": 200,
+ "headers": {
+  "Access-Control-Allow-Origin": "*",
+  "Cache-Control": "public, max-age=3600"
+ },
+ "body": {
+  "openapi": "3.1.0",
+  "info": {
+   "title": "Finance Calendar API",
+   "version": "2.0.0",
+   "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
+   "description": "Every scheduled release on financecalendar.com, verified against official calendars and updated within the hour of a print. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included.",
+   "termsOfService": "https://www.financecalendar.com/api/#attribution",
+   "contact": {
+    "url": "https://www.financecalendar.com/about/"
+   },
+   "license": {
+    "name": "Free with attribution",
+    "url": "https://www.financecalendar.com/api/#attribution"
+   }
+  },
+  "servers": [
+   {
+    "url": "https://www.financecalendar.com/wp-json/fc/v1",
+    "description": "Production"
+   }
+  ],
+  "paths": {
+   "/calendar": {
+    "get": {
+     "operationId": "calendar",
+     "summary": "Events in a date range"
+    }
+   },
+   "/today": {
+    "get": {
+     "operationId": "today",
+     "summary": "Today's releases, NYSE status and exchange closures"
+    }
+   },
+   "/week": {
+    "get": {
+     "operationId": "week",
+     "summary": "This week (Monday to Sunday) or the next one"
+    }
+   },
+   "/next": {
+    "get": {
+     "operationId": "next",
+     "summary": "The next occurrence of a series"
+    }
+   },
+   "/series": {
+    "get": {
+     "operationId": "series",
+     "summary": "Every series the API covers, with its next date"
+    }
+   },
+   "/series/{code}": {
+    "get": {
+     "operationId": "seriesDetail",
+     "summary": "One series: next, last, upcoming dates and history"
+    }
+   },
+   "/history": {
+    "get": {
+     "operationId": "history",
+     "summary": "Past releases of a series with consensus, prior and actual"
+    }
+   },
+   "/holidays": {
+    "get": {
+     "operationId": "holidays",
+     "summary": "Exchange holidays and early closes"
+    }
+   },
+   "/market-status": {
+    "get": {
+     "operationId": "marketStatus",
+     "summary": "Is the exchange open right now?"
+    }
+   },
+   "/changes": {
+    "get": {
+     "operationId": "changes",
+     "summary": "What changed: new dates, moved dates, consensus and actuals"
+    }
+   },
+   "/countries": {
+    "get": {
+     "operationId": "countries",
+     "summary": "Countries covered, with series and event counts"
+    }
+   },
+   "/status": {
+    "get": {
+     "operationId": "status",
+     "summary": "Health: snapshot age and counts"
+    }
+   },
+   "/openapi.json": {
+    "get": {
+     "operationId": "openapi",
+     "summary": "This document"
+    }
+   },
+   "/keys": {
+    "get": {
+     "operationId": "createKey",
+     "summary": "Get a free API key by email"
+    }
+   },
+   "/keys/me": {
+    "get": {
+     "operationId": "keyInfo",
+     "summary": "Your tier, limit and usage today"
+    }
+   }
+  }
+ }
+}

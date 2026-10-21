@@ -1,0 +1,47 @@
+{
+    "status": 200,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300, s-maxage=300"
+    },
+    "body": {
+        "series": "fomc",
+        "series_code": "fomc",
+        "country": "US",
+        "next": {
+            "id": "fomc-rate-decision-october-2026",
+            "series_code": "fomc",
+            "series_name": "FOMC Rate Decision",
+            "name": "FOMC Rate Decision",
+            "title": "FOMC Rate Decision October 2026",
+            "country": "US",
+            "category": "central-banks-monetary-policy",
+            "impact": "high",
+            "date": "2026-10-28",
+            "release_at_utc": "2026-10-28T18:00:00+00:00",
+            "time_utc": "2026-10-28T18:00:00+00:00",
+            "time_et": "14:00",
+            "release_tz": "America/New_York",
+            "all_day": false,
+            "period": null,
+            "status": "confirmed",
+            "consensus": "Hold at 3.50-3.75%",
+            "prior": "Hold",
+            "actual": null,
+            "unit": "% target range",
+            "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+            "source_name": "Federal Reserve",
+            "url": "https://www.financecalendar.com/event/fomc-rate-decision-october-2026/",
+            "exchange": null,
+            "holiday_status": null,
+            "close_time_local": null,
+            "updated_at": "2026-10-19T12:00:00+00:00",
+            "starts_on": "2026-10-27"
+        },
+        "attribution": {
+            "source": "financecalendar.com",
+            "terms": "Free for any use with attribution: link to https://www.financecalendar.com",
+            "docs": "https://www.financecalendar.com/api/"
+        }
+    }
+}

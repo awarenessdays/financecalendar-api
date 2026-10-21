@@ -1,0 +1,51 @@
+{
+  "name": "financecalendar-mcp",
+  "version": "0.2.0",
+  "description": "MCP server + CLI for financecalendar.com: economic releases, central bank decisions and market holidays, free with attribution",
+  "type": "module",
+  "bin": {
+    "financecalendar": "cli.js",
+    "financecalendar-mcp": "mcp.js"
+  },
+  "files": [
+    "cli.js",
+    "mcp.js",
+    "lib.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "prepublishOnly": "npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^3.25.0"
+  },
+  "keywords": [
+    "mcp",
+    "economic-calendar",
+    "fomc",
+    "cpi",
+    "nfp",
+    "central-banks",
+    "finance",
+    "market-holidays",
+    "claude",
+    "cursor"
+  ],
+  "license": "MIT",
+  "author": "Awareness Days Ltd (financecalendar.com)",
+  "homepage": "https://www.financecalendar.com/api/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awarenessdays/financecalendar-api.git",
+    "directory": "clients/node"
+  },
+  "bugs": {
+    "url": "https://github.com/awarenessdays/financecalendar-api/issues"
+  }
+}

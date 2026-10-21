@@ -1,0 +1,11 @@
+{
+    "status": 404,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store"
+    },
+    "body": {
+        "error": "No series \"cpi\" for country NO. See /series?country=NO.",
+        "docs": "https://www.financecalendar.com/api/"
+    }
+}
