@@ -52,6 +52,30 @@ def test_unknown_economic_release_time_is_not_an_all_day_holiday():
     assert format_event({**event, "release_stage": "annual-update"}).endswith("stage annual update")
 
 
+def test_publication_windows_render_localized_bounds_without_exact_clock_synthesis():
+    event = {"date": "2026-11-18", "name": "Japan release", "release_at_utc": None, "all_day": False, "time_precision": "range",
+             "time_window_start": "2026-11-18T12:00:00+09:00", "time_window_end": "2026-11-18T12:15:00+09:00", "time_role": "publication"}
+    before = dict(event)
+    assert format_when(event, ZoneInfo("Asia/Tokyo")) == "Wed 18 Nov 12:00–12:15 JST"
+    assert format_when(event, ZoneInfo("America/New_York")) == "Tue 17 Nov 22:00–22:15 ET"
+    assert format_when({**event, "time_window_end": "invalid"}, ZoneInfo("UTC")) == "Wed 18 Nov time unknown"
+    assert format_when({**event, "time_window_start": "2026-11-18T12:00:00"}, ZoneInfo("UTC")) == "Wed 18 Nov time unknown"
+    assert event == before
+
+
+def test_windows_crossing_midnight_or_dst_show_both_bounds():
+    assert format_when({"time_window_start": "2026-11-18T23:55:00Z", "time_window_end": "2026-11-19T00:05:00Z"}, ZoneInfo("UTC")) == "Wed 18 Nov 23:55 UTC–Thu 19 Nov 00:05 UTC"
+    assert format_when({"time_window_start": "2026-11-01T05:55:00Z", "time_window_end": "2026-11-01T06:10:00Z"}, ZoneInfo("America/New_York")) == "Sun 01 Nov 01:55 EDT–Sun 01 Nov 01:10 EST"
+
+
+def test_auction_close_is_labelled_separately_from_result_publication():
+    event = {"name": "US Treasury Bill Auction", "date": "2026-11-18", "release_at_utc": "2026-11-18T16:30:00Z", "time_role": "auction-close",
+             "auction": {"cusip": "912797AB1", "high_rate": "4.050000", "reopening": False}}
+    before = dict(event)
+    assert format_event(event, ZoneInfo("America/New_York")).endswith("11:30 ET  US Treasury Bill Auction  auction close")
+    assert event == before
+
+
 def test_next_human_and_json(client):
     code, out = run(client, "--tz", "Europe/London", "next", "fomc")
     assert code == 0

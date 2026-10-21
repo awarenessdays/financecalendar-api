@@ -71,17 +71,23 @@ Invalid parameters return HTTP 400 with an `error` message. Daily limits return 
 12 months back to 400 days ahead, the series registry, exchange table and
 30-day change log. Commit history records published snapshots.
 
-Direct schedule connectors currently read BLS, ONS, BEA, Census and Federal
-Reserve G.17. Publisher horizons differ; a rolling window does not mean every
+Direct schedule connectors currently read BLS, ONS, BEA, Census, Federal
+Reserve G.17, DOL jobless claims, EIA energy releases, Treasury auctions,
+Eurostat, Japan e-Stat and China NBS. Publisher horizons differ; a rolling window does not mean every
 source has announced dates through its end. Check `/status` and the coverage page
 for current availability.
 
 Event JSON includes `period`, nullable `release_stage`, `source_id`, `native_id`,
-`time_precision`, `last_verified_at` and `data_stale`. GDP estimates and separate
+`time_precision`, `last_verified_at` and `data_stale`. Nullable
+`time_window_start`/`time_window_end` preserve announced publication windows;
+`time_role` identifies auction bidding deadlines, and `auction` contains
+security identifiers and official results where published. China NBS calendar
+dates and pending Treasury announcements retain estimated status. GDP estimates and separate
 catch-up periods remain distinct releases. A changed date retains the release's
 public ID; last-good data is marked stale when a source is unavailable. Source
 verification refers to a calendar fetch, independently of numerical result
-availability.
+availability. Treasury results are imported from the official auctioned-securities
+feed. Other new connectors add schedules, without inventing macro results or consensus.
 
 ```python
 import json, urllib.request

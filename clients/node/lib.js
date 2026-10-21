@@ -83,6 +83,8 @@ function zoneLabel(parts, tz) {
 /** Render a UTC instant, or the source date with its timing precision. */
 export function formatWhen(e, tz) {
   const zone = localZone(tz);
+  const window = formatWindow(e.time_window_start, e.time_window_end, zone);
+  if (window) return window;
   if (!e.release_at_utc || e.all_day) {
     const [y, m, d] = String(e.date || "").split("-").map(Number);
     if (!y) return "";
@@ -100,6 +102,25 @@ export function formatWhen(e, tz) {
   return `${g("weekday")} ${g("day")} ${g("month")} ${g("hour")}:${g("minute")} ${zoneLabel(parts, zone)}`;
 }
 
+function formatWindow(start, end, zone) {
+  const zoned = (value) => typeof value === "string" && /(?:Z|[+-]\d{2}:\d{2})$/i.test(value);
+  if (!zoned(start) || !zoned(end)) return null;
+  const from = new Date(start), to = new Date(end);
+  if (!Number.isFinite(from.getTime()) || !Number.isFinite(to.getTime()) || to < from) return null;
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: zone, weekday: "short", year: "numeric", day: "2-digit", month: "short",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZoneName: "short",
+  });
+  const a = formatter.formatToParts(from), b = formatter.formatToParts(to);
+  const get = (parts, type) => parts.find((part) => part.type === type)?.value || "";
+  const clock = (parts) => `${get(parts, "hour")}:${get(parts, "minute")}`;
+  const sameDay = ["year", "month", "day"].every((type) => get(a, type) === get(b, type));
+  const sameOffset = get(a, "timeZoneName") === get(b, "timeZoneName");
+  if (sameDay && sameOffset) return `${pick(a)} ${clock(a)}–${clock(b)} ${zoneLabel(a, zone)}`;
+  const endpoint = (parts) => `${pick(parts)}${get(a, "year") !== get(b, "year") ? " " + get(parts, "year") : ""} ${clock(parts)} ${sameOffset ? zoneLabel(parts, zone) : get(parts, "timeZoneName")}`;
+  return `${endpoint(a)}–${endpoint(b)}`;
+}
+
 function pick(parts) {
   const g = (t) => (parts.find((x) => x.type === t) || {}).value || "";
   return `${g("weekday")} ${g("day")} ${g("month")}`;
@@ -113,6 +134,7 @@ function pick(parts) {
 export function formatEvent(e, { tz } = {}) {
   const name = e.name || e.title || "";
   const bits = [formatWhen(e, tz), `${name}${e.country ? ` (${e.country})` : ""}`];
+  if (e.time_role === "auction-close" && !containsDetail(name, "auction close")) bits.push("auction close");
   if (e.period && !containsDetail(name, e.period)) bits.push(`period ${e.period}`);
   if (e.release_stage && !containsDetail(name, e.release_stage)) bits.push(`stage ${String(e.release_stage).replace(/[-_]+/g, " ")}`);
   if (e.consensus) bits.push(`cons. ${e.consensus}`);

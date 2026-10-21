@@ -152,6 +152,32 @@ describe("formatting", () => {
     assert.match(formatEvent({ ...row, release_stage: "annual-update" }), /stage annual update$/);
   });
 
+  test("publication windows render localized bounds without inventing an exact release time", () => {
+    const row = { date: "2026-11-18", name: "Japan release", release_at_utc: null, all_day: false, time_precision: "range",
+      time_window_start: "2026-11-18T12:00:00+09:00", time_window_end: "2026-11-18T12:15:00+09:00", time_role: "publication" };
+    const before = JSON.stringify(row);
+    assert.equal(formatWhen(row, "Asia/Tokyo"), "Wed 18 Nov 12:00–12:15 GMT+9");
+    assert.equal(formatWhen(row, "America/New_York"), "Tue 17 Nov 22:00–22:15 ET");
+    assert.equal(formatWhen({ ...row, time_window_end: "invalid" }, "UTC"), "Wed 18 Nov time unknown");
+    assert.equal(formatWhen({ ...row, time_window_start: "2026-11-18T12:00:00" }, "UTC"), "Wed 18 Nov time unknown");
+    assert.equal(JSON.stringify(row), before);
+  });
+
+  test("windows crossing midnight or a DST change show both dates and zone labels", () => {
+    assert.equal(formatWhen({ time_window_start: "2026-11-18T23:55:00Z", time_window_end: "2026-11-19T00:05:00Z" }, "UTC"),
+      "Wed 18 Nov 23:55 UTC–Thu 19 Nov 00:05 UTC");
+    assert.equal(formatWhen({ time_window_start: "2026-11-01T05:55:00Z", time_window_end: "2026-11-01T06:10:00Z" }, "America/New_York"),
+      "Sun 01 Nov 01:55 GMT-4–Sun 01 Nov 01:10 GMT-5");
+  });
+
+  test("auction close is labelled separately from result publication", () => {
+    const row = { name: "US Treasury Bill Auction", date: "2026-11-18", release_at_utc: "2026-11-18T16:30:00Z", time_role: "auction-close",
+      auction: { cusip: "912797AB1", high_rate: "4.050000", reopening: false } };
+    const before = JSON.stringify(row);
+    assert.match(formatEvent(row, { tz: "America/New_York" }), /11:30 ET  US Treasury Bill Auction  auction close$/);
+    assert.equal(JSON.stringify(row), before);
+  });
+
   test("eventsToCsv quotes fields containing commas", () => {
     const csv = eventsToCsv([{ date: "2026-10-22", name: "US Initial Jobless Claims: October 22, 2026", all_day: false, consensus: null }]);
     const [header, row] = csv.trim().split("\n");

@@ -537,7 +537,7 @@
                     {
                         "name": "series",
                         "in": "query",
-                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
+                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1597,7 +1597,7 @@
                             "null"
                         ],
                         "format": "date-time",
-                        "description": "Null for all-day rows."
+                        "description": "Exact release instant when known. Null for date-only, unknown-time and range schedules; a range is represented by time_window_start and time_window_end."
                     },
                     "time_utc": {
                         "type": [
@@ -1709,7 +1709,7 @@
                             "string",
                             "null"
                         ],
-                        "description": "Publisher timing precision, e.g. minute or date. Null means unknown; a date-only release is not an all-day market closure."
+                        "description": "Publisher timing precision, e.g. minute, date or range. A date-only or range release is not an all-day market closure."
                     },
                     "last_verified_at": {
                         "type": [
@@ -1774,6 +1774,112 @@
                     "note": {
                         "type": "string",
                         "description": "Source note, e.g. a date the official calendar moved."
+                    },
+                    "time_window_start": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Start of the publisher-announced release window, with timezone offset. This bound is not an exact publication instant."
+                    },
+                    "time_window_end": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "End of the publisher-announced release window, with timezone offset."
+                    },
+                    "time_role": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Meaning of the scheduled time or window, e.g. publication or auction-close. An auction close is not the publication time of auction results."
+                    },
+                    "auction": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "description": "Treasury auction security and result fields when available. Numerical values remain publisher decimal strings without unit conversion. Auction closing time is not result publication time.",
+                        "properties": {
+                            "cusip": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "security_type": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "security_term": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "original_security_term": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "issue_date": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "maturity_date": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "high_rate": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "high_yield": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "high_discount_margin": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "bid_to_cover": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "reopening": {
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            },
+                            "cash_management_bill": {
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            }
+                        }
                     }
                 }
             },
@@ -1905,14 +2011,20 @@
                     "old": {
                         "type": [
                             "string",
+                            "boolean",
+                            "object",
                             "null"
-                        ]
+                        ],
+                        "description": "Previous field value; structured auction metadata is an object."
                     },
                     "new": {
                         "type": [
                             "string",
+                            "boolean",
+                            "object",
                             "null"
-                        ]
+                        ],
+                        "description": "Updated field value; structured auction metadata is an object."
                     }
                 }
             },

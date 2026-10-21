@@ -25,6 +25,9 @@ def local_zone(tz: str | None):
 
 
 def format_when(event: dict[str, Any], tz=None) -> str:
+    window = _format_window(event.get("time_window_start"), event.get("time_window_end"), tz or local_zone(None))
+    if window:
+        return window
     if not event.get("release_at_utc") or event.get("all_day"):
         d = event.get("date")
         if not d:
@@ -38,9 +41,33 @@ def format_when(event: dict[str, Any], tz=None) -> str:
     return dt.strftime("%a %d %b %H:%M") + f" {label}"
 
 
+def _format_window(start: Any, end: Any, zone) -> str | None:
+    if not isinstance(start, str) or not isinstance(end, str):
+        return None
+    try:
+        first = datetime.fromisoformat(start.replace("Z", "+00:00"))
+        last = datetime.fromisoformat(end.replace("Z", "+00:00"))
+        if first.tzinfo is None or last.tzinfo is None or last < first:
+            return None
+        first, last = first.astimezone(zone), last.astimezone(zone)
+    except ValueError:
+        return None
+    key = getattr(zone, "key", None) or ""
+    same_offset = first.utcoffset() == last.utcoffset()
+    label = ZONE_LABELS.get(key) or first.tzname() or key
+    if first.date() == last.date() and same_offset:
+        return first.strftime("%a %d %b %H:%M") + "–" + last.strftime("%H:%M") + f" {label}"
+    date_format = "%a %d %b %Y %H:%M" if first.year != last.year else "%a %d %b %H:%M"
+    def endpoint(value):
+        return value.strftime(date_format) + " " + ((ZONE_LABELS.get(key) if same_offset else None) or value.tzname() or key)
+    return endpoint(first) + "–" + endpoint(last)
+
+
 def format_event(event: dict[str, Any], tz=None) -> str:
     name = event.get("name") or event.get("title") or ""
     bits = [format_when(event, tz), name + (f" ({event['country']})" if event.get("country") else "")]
+    if event.get("time_role") == "auction-close" and not _contains_detail(name, "auction close"):
+        bits.append("auction close")
     if event.get("period") and not _contains_detail(name, event["period"]):
         bits.append(f"period {event['period']}")
     if event.get("release_stage") and not _contains_detail(name, event["release_stage"]):
