@@ -1,2532 +1,2786 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-        "title": "Finance Calendar API",
-        "version": "2.0.0",
-        "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included. Source-backed crypto events are included where publicly redistributable. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Retain each record source_license credit, source link, licence link and adaptation notice when redistributing. CoinMarketCal internal evaluation data is not distributed.",
-        "termsOfService": "https://www.financecalendar.com/api/#attribution",
-        "contact": {
-            "url": "https://www.financecalendar.com/about/"
-        },
-        "license": {
-            "name": "Free with attribution",
-            "url": "https://www.financecalendar.com/api/#attribution"
-        }
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Finance Calendar API",
+    "version": "2.0.0",
+    "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
+    "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed.",
+    "termsOfService": "https://www.financecalendar.com/api/#attribution",
+    "contact": {
+      "url": "https://www.financecalendar.com/about/"
     },
-    "servers": [
-        {
-            "url": "https://www.financecalendar.com/wp-json/fc/v1",
-            "description": "Production"
-        }
-    ],
-    "tags": [
-        {
-            "name": "Calendar"
-        },
-        {
-            "name": "Series"
-        },
-        {
-            "name": "Markets"
-        },
-        {
-            "name": "Changes"
-        },
-        {
-            "name": "Keys"
-        },
-        {
-            "name": "Meta"
-        }
-    ],
-    "paths": {
-        "/calendar": {
-            "get": {
-                "tags": [
-                    "Calendar"
-                ],
-                "operationId": "calendar",
-                "summary": "Events in a date range",
-                "parameters": [
-                    {
-                        "name": "from",
-                        "in": "query",
-                        "description": "YYYY-MM-DD, default today (America/New_York).",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        }
-                    },
-                    {
-                        "name": "to",
-                        "in": "query",
-                        "description": "YYYY-MM-DD, default from + 14 days, at most 92 days after from.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        }
-                    },
-                    {
-                        "name": "country",
-                        "in": "query",
-                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "impact",
-                        "in": "query",
-                        "description": "high, medium or low; comma-separated for several.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "category",
-                        "in": "query",
-                        "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "economic-indicators",
-                                "central-banks-monetary-policy",
-                                "market-holidays",
-                                "crypto"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "series",
-                        "in": "query",
-                        "description": "Series code or alias (e.g. us-cpi, fomc, uk-cpi); comma-separated for several.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "include",
-                        "in": "query",
-                        "description": "holidays to add market-holiday rows to the economic rows.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "holidays"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "confirmed, estimated, released, rescheduled, cancelled; comma-separated.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tz",
-                        "in": "query",
-                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "1 to 500, default 100.",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 500,
-                            "default": 100
-                        }
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "Skip this many rows (paging).",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "default": 0
-                        }
-                    },
-                    {
-                        "name": "format",
-                        "in": "query",
-                        "description": "json (default), csv (download) or ics (calendar subscription).",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "json",
-                                "csv",
-                                "ics"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "asset",
-                        "in": "query",
-                        "required": false,
-                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 500
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Rows, soonest first.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "from": {
-                                            "type": "string",
-                                            "format": "date"
-                                        },
-                                        "to": {
-                                            "type": "string",
-                                            "format": "date"
-                                        },
-                                        "count": {
-                                            "type": "integer"
-                                        },
-                                        "total": {
-                                            "type": "integer"
-                                        },
-                                        "events": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Event"
-                                            }
-                                        },
-                                        "attribution": {
-                                            "$ref": "#/components/schemas/Attribution"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/today": {
-            "get": {
-                "tags": [
-                    "Calendar"
-                ],
-                "operationId": "today",
-                "summary": "Today's releases, NYSE status and exchange closures",
-                "parameters": [
-                    {
-                        "name": "country",
-                        "in": "query",
-                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "impact",
-                        "in": "query",
-                        "description": "high, medium or low.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "include",
-                        "in": "query",
-                        "description": "holidays to add market-holiday rows to events (closures are always listed in market_holidays).",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tz",
-                        "in": "query",
-                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "asset",
-                        "in": "query",
-                        "required": false,
-                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 500
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Today.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "date": {
-                                            "type": "string",
-                                            "format": "date"
-                                        },
-                                        "market": {
-                                            "type": [
-                                                "object",
-                                                "null"
-                                            ]
-                                        },
-                                        "count": {
-                                            "type": "integer"
-                                        },
-                                        "events": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Event"
-                                            }
-                                        },
-                                        "market_holidays": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Event"
-                                            }
-                                        },
-                                        "attribution": {
-                                            "$ref": "#/components/schemas/Attribution"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/week": {
-            "get": {
-                "tags": [
-                    "Calendar"
-                ],
-                "operationId": "week",
-                "summary": "This week (Monday to Sunday) or the next one",
-                "parameters": [
-                    {
-                        "name": "which",
-                        "in": "query",
-                        "description": "this (default) or next.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "this",
-                                "next"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "country",
-                        "in": "query",
-                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "impact",
-                        "in": "query",
-                        "description": "high, medium or low; comma-separated.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "category",
-                        "in": "query",
-                        "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "economic-indicators",
-                                "central-banks-monetary-policy",
-                                "market-holidays",
-                                "crypto"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "series",
-                        "in": "query",
-                        "description": "As for /calendar.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "include",
-                        "in": "query",
-                        "description": "holidays to add market-holiday rows.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "As for /calendar.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tz",
-                        "in": "query",
-                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "format",
-                        "in": "query",
-                        "description": "json, csv or ics.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "json",
-                                "csv",
-                                "ics"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "asset",
-                        "in": "query",
-                        "required": false,
-                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 500
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Rows, soonest first.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "from": {
-                                            "type": "string",
-                                            "format": "date"
-                                        },
-                                        "to": {
-                                            "type": "string",
-                                            "format": "date"
-                                        },
-                                        "count": {
-                                            "type": "integer"
-                                        },
-                                        "total": {
-                                            "type": "integer"
-                                        },
-                                        "events": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Event"
-                                            }
-                                        },
-                                        "attribution": {
-                                            "$ref": "#/components/schemas/Attribution"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
-            }
-        },
-        "/next": {
-            "get": {
-                "tags": [
-                    "Calendar"
-                ],
-                "operationId": "next",
-                "summary": "The next occurrence of a series",
-                "parameters": [
-                    {
-                        "name": "series",
-                        "in": "query",
-                        "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "country",
-                        "in": "query",
-                        "description": "Override the country for a generic series, e.g. uk.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tz",
-                        "in": "query",
-                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "asset",
-                        "in": "query",
-                        "required": false,
-                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 500
-                        }
-                    },
-                    {
-                        "name": "category",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "economic-indicators",
-                                "central-banks-monetary-policy",
-                                "market-holidays",
-                                "crypto"
-                            ]
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Next event.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "series": {
-                                            "type": "string"
-                                        },
-                                        "series_code": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
-                                        },
-                                        "country": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
-                                        },
-                                        "next": {
-                                            "$ref": "#/components/schemas/Event"
-                                        },
-                                        "attribution": {
-                                            "$ref": "#/components/schemas/Attribution"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "No upcoming event for that series."
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/series": {
-            "get": {
-                "tags": [
-                    "Series"
-                ],
-                "operationId": "series",
-                "summary": "Every series the API covers, with its next date",
-                "parameters": [
-                    {
-                        "name": "country",
-                        "in": "query",
-                        "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "category",
-                        "in": "query",
-                        "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "economic-indicators",
-                                "central-banks-monetary-policy",
-                                "market-holidays",
-                                "crypto"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "kind",
-                        "in": "query",
-                        "description": "instance or holiday.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "asset",
-                        "in": "query",
-                        "required": false,
-                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 500
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Series list.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "count": {
-                                            "type": "integer"
-                                        },
-                                        "series": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Series"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/series/{code}": {
-            "get": {
-                "tags": [
-                    "Series"
-                ],
-                "operationId": "seriesDetail",
-                "summary": "One series: next, last, upcoming dates and history",
-                "parameters": [
-                    {
-                        "name": "code",
-                        "in": "path",
-                        "description": "Series code or alias.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tz",
-                        "in": "query",
-                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "asset",
-                        "in": "query",
-                        "required": false,
-                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 500
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Series detail.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "series": {
-                                            "$ref": "#/components/schemas/Series"
-                                        },
-                                        "next": {
-                                            "oneOf": [
-                                                {
-                                                    "$ref": "#/components/schemas/Event"
-                                                },
-                                                {
-                                                    "type": "null"
-                                                }
-                                            ]
-                                        },
-                                        "last": {
-                                            "oneOf": [
-                                                {
-                                                    "$ref": "#/components/schemas/Event"
-                                                },
-                                                {
-                                                    "type": "null"
-                                                }
-                                            ]
-                                        },
-                                        "upcoming": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Event"
-                                            }
-                                        },
-                                        "history": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Event"
-                                            }
-                                        },
-                                        "dataset": {
-                                            "type": [
-                                                "object",
-                                                "null"
-                                            ],
-                                            "description": "Verified long-run history where we publish one (e.g. us-cpi, fomc)."
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Unknown series."
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/history": {
-            "get": {
-                "tags": [
-                    "Series"
-                ],
-                "operationId": "history",
-                "summary": "Past releases of a series with consensus, prior and actual",
-                "parameters": [
-                    {
-                        "name": "series",
-                        "in": "query",
-                        "description": "Series code or alias.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "from",
-                        "in": "query",
-                        "description": "YYYY-MM-DD.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        }
-                    },
-                    {
-                        "name": "to",
-                        "in": "query",
-                        "description": "YYYY-MM-DD.",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "1 to 500, default 100.",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 500,
-                            "default": 100
-                        }
-                    },
-                    {
-                        "name": "tz",
-                        "in": "query",
-                        "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "asset",
-                        "in": "query",
-                        "required": false,
-                        "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 500
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Rows, soonest first.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "from": {
-                                            "type": "string",
-                                            "format": "date"
-                                        },
-                                        "to": {
-                                            "type": "string",
-                                            "format": "date"
-                                        },
-                                        "count": {
-                                            "type": "integer"
-                                        },
-                                        "total": {
-                                            "type": "integer"
-                                        },
-                                        "events": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Event"
-                                            }
-                                        },
-                                        "attribution": {
-                                            "$ref": "#/components/schemas/Attribution"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/holidays": {
-            "get": {
-                "tags": [
-                    "Markets"
-                ],
-                "operationId": "holidays",
-                "summary": "Exchange holidays and early closes",
-                "parameters": [
-                    {
-                        "name": "exchange",
-                        "in": "query",
-                        "description": "nyse (default, same calendar as nasdaq), sifma, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse, or all.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "year",
-                        "in": "query",
-                        "description": "Four-digit year.",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Holidays.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "exchange": {
-                                            "type": "string"
-                                        },
-                                        "count": {
-                                            "type": "integer"
-                                        },
-                                        "holidays": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "date": {
-                                                        "type": "string",
-                                                        "format": "date"
-                                                    },
-                                                    "name": {
-                                                        "type": "string"
-                                                    },
-                                                    "exchange": {
-                                                        "type": "string"
-                                                    },
-                                                    "country": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ]
-                                                    },
-                                                    "status": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "closed",
-                                                            "early_close"
-                                                        ]
-                                                    },
-                                                    "close_time_local": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ]
-                                                    },
-                                                    "close_time_et": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "NYSE rows only."
-                                                    },
-                                                    "url": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ]
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/market-status": {
-            "get": {
-                "tags": [
-                    "Markets"
-                ],
-                "operationId": "marketStatus",
-                "summary": "Is the exchange open right now?",
-                "parameters": [
-                    {
-                        "name": "exchange",
-                        "in": "query",
-                        "description": "nyse (default) or any exchange code; live open/closed for NYSE, holiday-aware for the rest.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Status.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "exchange": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "country": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
-                                        },
-                                        "tz": {
-                                            "type": "string"
-                                        },
-                                        "open": {
-                                            "type": "boolean"
-                                        },
-                                        "label": {
-                                            "type": "string"
-                                        },
-                                        "local_time": {
-                                            "type": "string",
-                                            "format": "date-time"
-                                        },
-                                        "time_utc": {
-                                            "type": "string",
-                                            "format": "date-time"
-                                        },
-                                        "session": {
-                                            "type": "object",
-                                            "properties": {
-                                                "open": {
-                                                    "type": "string"
-                                                },
-                                                "close": {
-                                                    "type": "string"
-                                                },
-                                                "break": {
-                                                    "type": [
-                                                        "array",
-                                                        "null"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "holiday_today": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
-                                        },
-                                        "next_holiday": {
-                                            "type": [
-                                                "object",
-                                                "null"
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/changes": {
-            "get": {
-                "tags": [
-                    "Changes"
-                ],
-                "operationId": "changes",
-                "summary": "What changed: new dates, moved dates, consensus and actuals",
-                "parameters": [
-                    {
-                        "name": "since",
-                        "in": "query",
-                        "description": "ISO 8601 datetime (default: 24 hours ago; at most 30 days ago).",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "date-time"
-                        }
-                    },
-                    {
-                        "name": "series",
-                        "in": "query",
-                        "description": "Series code or alias.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "change",
-                        "in": "query",
-                        "description": "added, updated or removed.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "1 to 500, default 100.",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 500,
-                            "default": 100
-                        }
-                    },
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Change log, newest first.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "since": {
-                                            "type": "string"
-                                        },
-                                        "count": {
-                                            "type": "integer"
-                                        },
-                                        "changes": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Change"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameter.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/countries": {
-            "get": {
-                "tags": [
-                    "Meta"
-                ],
-                "operationId": "countries",
-                "summary": "Countries covered, with series and event counts",
-                "responses": {
-                    "200": {
-                        "description": "Countries.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "countries": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/status": {
-            "get": {
-                "tags": [
-                    "Meta"
-                ],
-                "operationId": "status",
-                "summary": "Health: snapshot age, counts and publisher source health",
-                "responses": {
-                    "200": {
-                        "description": "Snapshot freshness and source-level collection health.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "ok": {
-                                            "type": "boolean",
-                                            "description": "Snapshot availability and age check; consult source_health_summary separately for publisher failures."
-                                        },
-                                        "time_utc": {
-                                            "type": "string",
-                                            "format": "date-time"
-                                        },
-                                        "snapshot": {
-                                            "type": [
-                                                "object",
-                                                "null"
-                                            ]
-                                        },
-                                        "source_health": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/SourceHealth"
-                                            }
-                                        },
-                                        "source_health_summary": {
-                                            "$ref": "#/components/schemas/SourceHealthSummary"
-                                        },
-                                        "api_version": {
-                                            "type": "string"
-                                        },
-                                        "docs": {
-                                            "type": "string",
-                                            "format": "uri"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/openapi": {
-            "get": {
-                "tags": [
-                    "Meta"
-                ],
-                "operationId": "openapi",
-                "summary": "This document (also at /openapi.json on the edge host)",
-                "responses": {
-                    "200": {
-                        "description": "OpenAPI 3.1.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/keys": {
-            "post": {
-                "tags": [
-                    "Keys"
-                ],
-                "operationId": "createKey",
-                "summary": "Get a free API key by email",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": [
-                                    "email"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "use_case": {
-                                        "type": "string"
-                                    },
-                                    "website": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Key created (shown once, also emailed).",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "key": {
-                                            "type": "string"
-                                        },
-                                        "tier": {
-                                            "type": "string"
-                                        },
-                                        "daily_limit": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid email, or no more keys can be created for this address."
-                    },
-                    "429": {
-                        "description": "Too many signups from this address today."
-                    },
-                    "500": {
-                        "description": "Could not create a key; retry."
-                    }
-                }
-            }
-        },
-        "/keys/me": {
-            "get": {
-                "tags": [
-                    "Keys"
-                ],
-                "operationId": "keyInfo",
-                "summary": "Your tier, limit and usage today",
-                "parameters": [
-                    {
-                        "name": "X-API-Key",
-                        "in": "header",
-                        "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Key info.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Missing, malformed or unknown key."
-                    },
-                    "403": {
-                        "description": "Key revoked."
-                    }
-                }
-            }
-        }
+    "license": {
+      "name": "Free with attribution",
+      "url": "https://www.financecalendar.com/api/#attribution"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.financecalendar.com/wp-json/fc/v1",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Calendar"
     },
-    "components": {
-        "schemas": {
-            "Event": {
-                "type": "object",
-                "description": "One scheduled release, decision or market holiday.",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "Stable identifier (matches the page slug).",
-                        "example": "us-cpi-report-november-2026"
-                    },
-                    "series_code": {
-                        "type": "string",
-                        "example": "us-cpi"
-                    },
-                    "series_name": {
-                        "type": "string",
-                        "example": "US CPI Report"
-                    },
-                    "name": {
-                        "type": "string",
-                        "description": "Short display name.",
-                        "example": "US CPI"
-                    },
-                    "title": {
-                        "type": "string",
-                        "example": "US CPI Report November 2026"
-                    },
-                    "country": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "ISO country code, or null for global crypto events. Global is not a country code.",
-                        "example": "US"
-                    },
-                    "category": {
-                        "type": "string",
-                        "enum": [
-                            "economic-indicators",
-                            "central-banks-monetary-policy",
-                            "market-holidays",
-                            "crypto"
-                        ]
-                    },
-                    "impact": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "enum": [
-                            "high",
-                            "medium",
-                            "low",
-                            null
-                        ]
-                    },
-                    "date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "Publisher calendar date, or the inclusive lower-bound index of date_window_start/end for an estimated month, quarter or year. A lower-bound index is not a confirmed occurrence date."
-                    },
-                    "release_at_utc": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Exact configured or published instant when available, retaining source seconds. Null for date-only, unknown-time, timed-range and approximate date-window schedules. This is schedule evidence, not proof an activation was observed."
-                    },
-                    "time_utc": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Alias of release_at_utc (v1 field)."
-                    },
-                    "time_et": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "HH:MM in America/New_York (v1 field)."
-                    },
-                    "time_local": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "HH:MM in the requested tz (only when ?tz= is given)."
-                    },
-                    "release_tz": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "example": "America/New_York"
-                    },
-                    "all_day": {
-                        "type": "boolean"
-                    },
-                    "period": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "What the data covers, when known."
-                    },
-                    "status": {
-                        "type": "string",
-                        "enum": [
-                            "confirmed",
-                            "estimated",
-                            "rescheduled",
-                            "cancelled",
-                            "released"
-                        ]
-                    },
-                    "consensus": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "prior": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "actual": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "unit": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "example": "% y/y"
-                    },
-                    "source_url": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "uri"
-                    },
-                    "source_name": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "url": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "uri",
-                        "description": "Preview and results page on financecalendar.com, when one exists."
-                    },
-                    "exchange": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Market-holiday rows only."
-                    },
-                    "holiday_status": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "enum": [
-                            "closed",
-                            "early_close",
-                            null
-                        ]
-                    },
-                    "close_time_local": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "starts_on": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "First day of a multi-day meeting (only when it differs from date)."
-                    },
-                    "note": {
-                        "type": "string",
-                        "description": "Source note, e.g. a date the official calendar moved."
-                    },
-                    "source_id": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Publisher connector identifier; null when provenance is unavailable."
-                    },
-                    "native_id": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Publisher release identifier, when supplied. Stable across date changes."
-                    },
-                    "release_stage": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Publisher-labelled release stage, e.g. advance, second, third or annual-update. Null when unspecified."
-                    },
-                    "time_precision": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "second/minute for configured or published exact timing; date for a day without confirmed time; range for a timed window; month/quarter/year for an estimated date window; unknown or null when unspecified. A schedule is not proof of observed activation.",
-                        "enum": [
-                            "minute",
-                            "date",
-                            "range",
-                            "unknown",
-                            "second",
-                            "month",
-                            "quarter",
-                            "year",
-                            null
-                        ]
-                    },
-                    "last_verified_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
-                    },
-                    "data_stale": {
-                        "type": "boolean",
-                        "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
-                    },
-                    "stale_since": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "time_window_start": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Start of the publisher-announced release window, with timezone offset. This bound is not an exact publication instant."
-                    },
-                    "time_window_end": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "End of the publisher-announced release window, with timezone offset."
-                    },
-                    "time_role": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Meaning of the scheduled time or window, e.g. publication or auction-close. An auction close is not the publication time of auction results."
-                    },
-                    "auction": {
-                        "type": [
-                            "object",
-                            "null"
-                        ],
-                        "description": "Treasury auction security and result fields when available. Numerical values remain publisher decimal strings without unit conversion. Auction closing time is not result publication time.",
-                        "properties": {
-                            "cusip": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "security_type": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "security_term": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "original_security_term": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "issue_date": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "format": "date"
-                            },
-                            "maturity_date": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "format": "date"
-                            },
-                            "high_rate": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "high_yield": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "high_discount_margin": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "bid_to_cover": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "reopening": {
-                                "type": [
-                                    "boolean",
-                                    "null"
-                                ]
-                            },
-                            "cash_management_bill": {
-                                "type": [
-                                    "boolean",
-                                    "null"
-                                ]
-                            }
-                        }
-                    },
-                    "assets": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/CryptoAsset"
-                        },
-                        "description": "Affected assets; empty for economic and exchange holiday rows."
-                    },
-                    "crypto": {
-                        "type": [
-                            "object",
-                            "null"
-                        ],
-                        "properties": {
-                            "event_type": {
-                                "type": "string",
-                                "enum": [
-                                    "options-expiry",
-                                    "futures-expiry",
-                                    "network-upgrade",
-                                    "token-unlock",
-                                    "halving"
-                                ]
-                            },
-                            "exchange": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "network": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "environment": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "description": "Network environment, e.g. mainnet, hoodi or sepolia. Testnet events are not mainnet activation dates."
-                            },
-                            "activation_status": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "enum": [
-                                    "scheduled",
-                                    "target",
-                                    null
-                                ],
-                                "description": "Configured activation schedule or roadmap target, not proof the network activation was observed."
-                            },
-                            "block_height": {
-                                "type": [
-                                    "integer",
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "token_amount": {
-                                "type": [
-                                    "number",
-                                    "string",
-                                    "null"
-                                ]
-                            }
-                        }
-                    },
-                    "date_window_start": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date",
-                        "description": "Inclusive lower bound of an estimated date window. The date field is its index, not a confirmed occurrence date."
-                    },
-                    "date_window_end": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date",
-                        "description": "Inclusive upper bound of an estimated date window."
-                    },
-                    "source_license": {
-                        "type": [
-                            "object",
-                            "null"
-                        ],
-                        "description": "Upstream attribution and licence requirements travel with each adapted record. Retain the original credit, source link, licence URL, full notice and adaptation notice when redistributing.",
-                        "properties": {
-                            "id": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "url": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "format": "uri"
-                            },
-                            "terms_url": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "format": "uri"
-                            },
-                            "attribution": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "notice": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "description": "Full upstream licence notice where required, e.g. the MIT copyright and permission notice."
-                            },
-                            "adapted": {
-                                "type": "boolean"
-                            }
-                        }
-                    },
-                    "verification_url": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "uri",
-                        "description": "Evidence checked for the stored schedule, e.g. official network configuration. May differ from the human-readable announcement in source_url."
-                    },
-                    "verification_method": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Verification basis, e.g. github-json for an official configuration fetch or manual for a reviewed roadmap."
-                    },
-                    "manually_reviewed_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Fixed timestamp of human source review, when relevant; snapshot generation never advances this timestamp."
-                    }
-                }
-            },
-            "Series": {
-                "type": "object",
-                "properties": {
-                    "code": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "country": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "ISO country code, or null for global crypto events. Global is not a country code."
-                    },
-                    "category": {
-                        "type": "string"
-                    },
-                    "impact": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "recurrence": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "tier": {
-                        "type": "integer"
-                    },
-                    "aliases": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "unit": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "publisher": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "source_url": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "hub": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "uri"
-                    },
-                    "kind": {
-                        "type": "string",
-                        "enum": [
-                            "instance",
-                            "holiday"
-                        ]
-                    },
-                    "exchange": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "next": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "next_date": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date"
-                    },
-                    "last": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+    {
+      "name": "Series"
+    },
+    {
+      "name": "Markets"
+    },
+    {
+      "name": "Changes"
+    },
+    {
+      "name": "Keys"
+    },
+    {
+      "name": "Meta"
+    }
+  ],
+  "paths": {
+    "/calendar": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "calendar",
+        "summary": "Events in a date range",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "YYYY-MM-DD, default today (America/New_York).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "YYYY-MM-DD, default from + 14 days, at most 92 days after from.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "impact",
+            "in": "query",
+            "description": "high, medium or low; comma-separated for several.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          },
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code or alias (e.g. us-cpi, fomc, uk-cpi); comma-separated for several.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "holidays to add market-holiday rows to the economic rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "holidays"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "confirmed, estimated, released, rescheduled, cancelled; comma-separated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "1 to 500, default 100.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip this many rows (paging).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "json (default), csv (download) or ics (calendar subscription).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "json",
+                "csv",
+                "ics"
+              ]
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows, soonest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "to": {
+                      "type": "string",
+                      "format": "date"
                     },
                     "count": {
-                        "type": "integer"
-                    },
-                    "assets": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/CryptoAsset"
-                        },
-                        "description": "Affected assets; empty for economic and exchange holiday rows."
-                    },
-                    "next_date_window_start": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date",
-                        "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
-                    },
-                    "next_date_window_end": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date",
-                        "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
-                    }
-                }
-            },
-            "Change": {
-                "type": "object",
-                "properties": {
-                    "at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "id": {
-                        "type": "string"
-                    },
-                    "series_code": {
-                        "type": "string"
-                    },
-                    "change": {
-                        "type": "string",
-                        "enum": [
-                            "added",
-                            "updated",
-                            "removed"
-                        ]
-                    },
-                    "field": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "old": {
-                        "type": [
-                            "string",
-                            "boolean",
-                            "object",
-                            "null"
-                        ],
-                        "description": "Previous field value; structured auction metadata is an object."
-                    },
-                    "new": {
-                        "type": [
-                            "string",
-                            "boolean",
-                            "object",
-                            "null"
-                        ],
-                        "description": "Updated field value; structured auction metadata is an object."
-                    }
-                }
-            },
-            "Attribution": {
-                "type": "object",
-                "properties": {
-                    "source": {
-                        "type": "string"
-                    },
-                    "terms": {
-                        "type": "string"
-                    },
-                    "docs": {
-                        "type": "string",
-                        "format": "uri"
-                    },
-                    "source_licenses": {
-                        "type": "string",
-                        "description": "Records may retain additional original-source attribution and licence requirements."
-                    }
-                }
-            },
-            "Error": {
-                "type": "object",
-                "properties": {
-                    "error": {
-                        "type": "string"
-                    },
-                    "docs": {
-                        "type": "string"
-                    }
-                }
-            },
-            "SourceHealth": {
-                "type": "object",
-                "properties": {
-                    "source_id": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "status": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "enum": [
-                            "success",
-                            "degraded",
-                            "failed",
-                            "disabled",
-                            null
-                        ]
-                    },
-                    "count": {
-                        "type": "integer"
-                    },
-                    "mode": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "scope": {
-                        "type": [
-                            "object",
-                            "null"
-                        ],
-                        "properties": {
-                            "window_start": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "format": "date"
-                            },
-                            "window_end": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "format": "date"
-                            },
-                            "series_name": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "checked_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "fetched_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Null if no successful live fetch occurred; checked-in schedules do not count as a fetch."
-                    },
-                    "error": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Credential-safe collector diagnostic, without request URLs or response bodies."
-                    }
-                }
-            },
-            "SourceHealthSummary": {
-                "type": "object",
-                "properties": {
-                    "reported": {
-                        "type": "boolean",
-                        "description": "False for snapshots without source-health reporting; this means unknown, not healthy."
+                      "type": "integer"
                     },
                     "total": {
-                        "type": "integer"
+                      "type": "integer"
                     },
-                    "success": {
-                        "type": "integer"
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
                     },
-                    "degraded": {
-                        "type": "integer"
-                    },
-                    "failed": {
-                        "type": "integer"
-                    },
-                    "disabled": {
-                        "type": "integer"
-                    },
-                    "stale_events": {
-                        "type": "integer",
-                        "description": "Events explicitly marked as retained last-good data during source outages."
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
                     }
+                  }
                 }
-            },
-            "CryptoAsset": {
-                "type": "object",
-                "required": [
-                    "id",
-                    "symbol",
-                    "name"
-                ],
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
-                        "examples": [
-                            "ethereum",
-                            "bitcoin"
-                        ]
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/today": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "today",
+        "summary": "Today's releases, NYSE status and exchange closures",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "impact",
+            "in": "query",
+            "description": "high, medium or low.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "holidays to add market-holiday rows to events (closures are always listed in market_holidays).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Today.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "format": "date"
                     },
-                    "symbol": {
-                        "type": "string"
+                    "market": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "market_holidays": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/week": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "week",
+        "summary": "This week (Monday to Sunday) or the next one",
+        "parameters": [
+          {
+            "name": "which",
+            "in": "query",
+            "description": "this (default) or next.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "this",
+                "next"
+              ]
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "impact",
+            "in": "query",
+            "description": "high, medium or low; comma-separated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          },
+          {
+            "name": "series",
+            "in": "query",
+            "description": "As for /calendar.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "holidays to add market-holiday rows.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "As for /calendar.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "json, csv or ics.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "json",
+                "csv",
+                "ics"
+              ]
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows, soonest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "to": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
+      }
+    },
+    "/next": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "next",
+        "summary": "The next occurrence of a series",
+        "parameters": [
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Override the country for a generic series, e.g. uk.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Next event.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "series": {
+                      "type": "string"
+                    },
+                    "series_code": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "country": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "next": {
+                      "$ref": "#/components/schemas/Event"
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No upcoming event for that series."
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/series": {
+      "get": {
+        "tags": [
+          "Series"
+        ],
+        "operationId": "series",
+        "summary": "Every series the API covers, with its next date",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "description": "instance or holiday.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Series list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "series": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Series"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/series/{code}": {
+      "get": {
+        "tags": [
+          "Series"
+        ],
+        "operationId": "seriesDetail",
+        "summary": "One series: next, last, upcoming dates and history",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Series code or alias.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Series detail.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "series": {
+                      "$ref": "#/components/schemas/Series"
+                    },
+                    "next": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Event"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "last": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Event"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "upcoming": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "history": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "dataset": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "description": "Verified long-run history where we publish one (e.g. us-cpi, fomc)."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown series."
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/history": {
+      "get": {
+        "tags": [
+          "Series"
+        ],
+        "operationId": "history",
+        "summary": "Past releases of a series with consensus, prior and actual",
+        "parameters": [
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code or alias.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "YYYY-MM-DD.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "YYYY-MM-DD.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "1 to 500, default 100.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows, soonest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "to": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/holidays": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "holidays",
+        "summary": "Exchange holidays and early closes",
+        "parameters": [
+          {
+            "name": "exchange",
+            "in": "query",
+            "description": "nyse (default, same calendar as nasdaq), sifma, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse, or all.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Four-digit year.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Holidays.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exchange": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "holidays": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "exchange": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "closed",
+                              "early_close"
+                            ]
+                          },
+                          "close_time_local": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "close_time_et": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "description": "NYSE rows only."
+                          },
+                          "url": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/market-status": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "marketStatus",
+        "summary": "Is the exchange open right now?",
+        "parameters": [
+          {
+            "name": "exchange",
+            "in": "query",
+            "description": "nyse (default) or any exchange code; live open/closed for NYSE, holiday-aware for the rest.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exchange": {
+                      "type": "string"
                     },
                     "name": {
-                        "type": "string"
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "tz": {
+                      "type": "string"
+                    },
+                    "open": {
+                      "type": "boolean"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "local_time": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "time_utc": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "session": {
+                      "type": "object",
+                      "properties": {
+                        "open": {
+                          "type": "string"
+                        },
+                        "close": {
+                          "type": "string"
+                        },
+                        "break": {
+                          "type": [
+                            "array",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "holiday_today": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "next_holiday": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     }
+                  }
                 }
+              }
             }
-        },
-        "securitySchemes": {
-            "ApiKey": {
-                "type": "apiKey",
-                "in": "header",
-                "name": "X-API-Key"
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
             }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
         }
+      }
     },
-    "x-attribution": {
-        "required": true,
-        "how": "A visible link to https://www.financecalendar.com near the data, or on your credits page."
-    },
-    "x-rate-limits": {
-        "keyless": {
-            "per": "ip",
-            "daily": 2000
-        },
-        "free": {
-            "daily": 10000
-        },
-        "pro": {
-            "daily": 100000
-        },
-        "business": {
-            "daily": 1000000
-        },
-        "headers": [
-            "X-RateLimit-Limit",
-            "X-RateLimit-Remaining",
-            "X-RateLimit-Reset",
-            "X-RateLimit-Tier",
-            "Retry-After"
+    "/changes": {
+      "get": {
+        "tags": [
+          "Changes"
         ],
-        "reset": "00:00 UTC"
+        "operationId": "changes",
+        "summary": "What changed: new dates, moved dates, consensus and actuals",
+        "parameters": [
+          {
+            "name": "since",
+            "in": "query",
+            "description": "ISO 8601 datetime (default: 24 hours ago; at most 30 days ago).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code or alias.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "change",
+            "in": "query",
+            "description": "added, updated or removed.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "1 to 500, default 100.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Change log, newest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "since": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "changes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Change"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily limit reached (keyless 2,000/day per IP; free key 10,000/day).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     },
-    "x-changelog": "https://www.financecalendar.com/api/changelog/"
+    "/countries": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "countries",
+        "summary": "Countries covered, with series and event counts",
+        "responses": {
+          "200": {
+            "description": "Countries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "countries": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "status",
+        "summary": "Health: snapshot age, counts and publisher source health",
+        "responses": {
+          "200": {
+            "description": "Snapshot freshness and source-level collection health.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Snapshot availability and age check; consult source_health_summary separately for publisher failures."
+                    },
+                    "time_utc": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "snapshot": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "source_health": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SourceHealth"
+                      }
+                    },
+                    "source_health_summary": {
+                      "$ref": "#/components/schemas/SourceHealthSummary"
+                    },
+                    "api_version": {
+                      "type": "string"
+                    },
+                    "docs": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "openapi",
+        "summary": "This document (also at /openapi.json on the edge host)",
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.1.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/keys": {
+      "post": {
+        "tags": [
+          "Keys"
+        ],
+        "operationId": "createKey",
+        "summary": "Get a free API key by email",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "use_case": {
+                    "type": "string"
+                  },
+                  "website": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Key created (shown once, also emailed).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "tier": {
+                      "type": "string"
+                    },
+                    "daily_limit": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid email, or no more keys can be created for this address."
+          },
+          "429": {
+            "description": "Too many signups from this address today."
+          },
+          "500": {
+            "description": "Could not create a key; retry."
+          }
+        }
+      }
+    },
+    "/keys/me": {
+      "get": {
+        "tags": [
+          "Keys"
+        ],
+        "operationId": "keyInfo",
+        "summary": "Your tier, limit and usage today",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Key info.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, malformed or unknown key."
+          },
+          "403": {
+            "description": "Key revoked."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Event": {
+        "type": "object",
+        "description": "One scheduled release, decision or market holiday.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable identifier (matches the page slug).",
+            "example": "us-cpi-report-november-2026"
+          },
+          "series_code": {
+            "type": "string",
+            "example": "us-cpi"
+          },
+          "series_name": {
+            "type": "string",
+            "example": "US CPI Report"
+          },
+          "name": {
+            "type": "string",
+            "description": "Short display name.",
+            "example": "US CPI"
+          },
+          "title": {
+            "type": "string",
+            "example": "US CPI Report November 2026"
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO country code, or null for global crypto events. Global is not a country code.",
+            "example": "US"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "economic-indicators",
+              "central-banks-monetary-policy",
+              "market-holidays",
+              "crypto"
+            ]
+          },
+          "impact": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              null
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Publisher calendar date, or the inclusive lower-bound index of date_window_start/end for an estimated month, quarter or year. A lower-bound index is not a confirmed occurrence date."
+          },
+          "release_at_utc": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Exact configured or published instant when available, retaining source seconds. Null for date-only, unknown-time, timed-range and approximate date-window schedules. This is schedule evidence, not proof an activation was observed."
+          },
+          "time_utc": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Alias of release_at_utc (v1 field)."
+          },
+          "time_et": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "HH:MM in America/New_York (v1 field)."
+          },
+          "time_local": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "HH:MM in the requested tz (only when ?tz= is given)."
+          },
+          "release_tz": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "America/New_York"
+          },
+          "all_day": {
+            "type": "boolean"
+          },
+          "period": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the data covers, when known."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "estimated",
+              "rescheduled",
+              "cancelled",
+              "released"
+            ]
+          },
+          "consensus": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "prior": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "actual": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "% y/y"
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "source_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Preview and results page on financecalendar.com, when one exists."
+          },
+          "exchange": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Market-holiday rows only."
+          },
+          "holiday_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "closed",
+              "early_close",
+              null
+            ]
+          },
+          "close_time_local": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "starts_on": {
+            "type": "string",
+            "format": "date",
+            "description": "First day of a multi-day meeting (only when it differs from date)."
+          },
+          "note": {
+            "type": "string",
+            "description": "Source note, e.g. a date the official calendar moved."
+          },
+          "source_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Publisher connector identifier; null when provenance is unavailable."
+          },
+          "native_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Publisher release identifier, when supplied. Stable across date changes."
+          },
+          "release_stage": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Publisher-labelled release stage, e.g. advance, second, third or annual-update. Null when unspecified."
+          },
+          "time_precision": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "second/minute for configured or published exact timing; date for a day without confirmed time; range for a timed window; month/quarter/year for an estimated date window; unknown or null when unspecified. A schedule is not proof of observed activation.",
+            "enum": [
+              "minute",
+              "date",
+              "range",
+              "unknown",
+              "second",
+              "month",
+              "quarter",
+              "year",
+              null
+            ]
+          },
+          "last_verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
+          },
+          "data_stale": {
+            "type": "boolean",
+            "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
+          },
+          "stale_since": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "time_window_start": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Start of the publisher-announced release window, with timezone offset. This bound is not an exact publication instant."
+          },
+          "time_window_end": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "End of the publisher-announced release window, with timezone offset."
+          },
+          "time_role": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Meaning of the scheduled time or window, e.g. publication or auction-close. An auction close is not the publication time of auction results."
+          },
+          "auction": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Treasury auction security and result fields when available. Numerical values remain publisher decimal strings without unit conversion. Auction closing time is not result publication time.",
+            "properties": {
+              "cusip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "security_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "security_term": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "original_security_term": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "issue_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "maturity_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "high_rate": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "high_yield": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "high_discount_margin": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "bid_to_cover": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reopening": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "cash_management_bill": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            }
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CryptoAsset"
+            },
+            "description": "Affected assets; empty for economic and exchange holiday rows."
+          },
+          "crypto": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "event_type": {
+                "type": "string",
+                "enum": [
+                  "options-expiry",
+                  "futures-expiry",
+                  "network-upgrade",
+                  "token-unlock",
+                  "supply-projection",
+                  "governance-vote",
+                  "halving"
+                ]
+              },
+              "exchange": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "network": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Network environment, e.g. mainnet, hoodi or sepolia. Testnet events are not mainnet activation dates."
+              },
+              "activation_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "scheduled",
+                  "target",
+                  null
+                ],
+                "description": "Configured activation schedule or roadmap target, not proof the network activation was observed."
+              },
+              "block_height": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "token_amount": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "description": "Scheduled quantity when supported by the primary source. Publisher decimal strings are retained; consult token_amount_basis for estimates or upper bounds. This is not proof of transfer or sale."
+              },
+              "token_amount_basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Evidence or qualification for token_amount, including issuer upper bounds where applicable."
+              },
+              "unlock_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Vesting schedule status; scheduled does not establish an observed token release."
+              },
+              "schedule_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Stable identifier of the independently normalised vesting schedule."
+              },
+              "installment": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Schedule installment index as emitted by the collector; no convention is implied across publishers."
+              },
+              "beneficiaries": {
+                "type": [
+                  "string",
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "Primary-source allocation group or groups; not individual token holders."
+              },
+              "date_basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Basis of the indexed date or estimated window, e.g. issuer-monthly-schedule or issuer-monthly-projection."
+              },
+              "projection_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Supply projection status, e.g. issuer-estimate. A projection is not a confirmed token unlock or observed circulating supply."
+              },
+              "projected_circulating_supply": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "description": "Issuer projected circulating supply. Decimal strings are preserved without rounding."
+              },
+              "projected_monthly_supply_change": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "description": "Change between issuer monthly projections; not an observed release or confirmed discrete unlock. Decimal strings are preserved."
+              },
+              "dao": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "space_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Canonical governance space identifier."
+              },
+              "proposal_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Upstream governance proposal identifier."
+              },
+              "proposal_title": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Short factual proposal label when available; null when omitted. Full proposal bodies are not distributed."
+              },
+              "voting_start": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "voting_end": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "Scheduled voting deadline. It does not establish proposal approval, rejection or execution."
+              },
+              "voting_state": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "pending",
+                  "active",
+                  "closed",
+                  null
+                ],
+                "description": "Voting window state, not a vote result."
+              },
+              "voting_type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Upstream voting method, e.g. basic, copeland, ranked-choice, single-choice or weighted; additional methods may appear."
+              },
+              "choice_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Number of available voting choices. Choice labels, votes and scores are not distributed."
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Upstream licensed schedule provider, when applicable. Provider evidence is not a claim of independent Finance Calendar verification."
+              },
+              "provider_token": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Token identifier within the provider dataset."
+              },
+              "provider_basis": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "Evidence classifications supplied by the licensed provider; retained as provider claims."
+              },
+              "provider_categories": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "Provider allocation categories."
+              }
+            }
+          },
+          "date_window_start": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive lower bound of an estimated date window. The date field is its index, not a confirmed occurrence date."
+          },
+          "date_window_end": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive upper bound of an estimated date window."
+          },
+          "source_license": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Upstream attribution and licence requirements travel with each adapted record. Retain the original credit, attribution link, source link, licence URL, full notice and adaptation notice when redistributing.",
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "terms_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "attribution": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "attribution_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "description": "Required upstream attribution link where supplied, e.g. https://pattern.plus."
+              },
+              "notice": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Full upstream licence notice where required, e.g. the MIT copyright and permission notice."
+              },
+              "adapted": {
+                "type": "boolean"
+              }
+            }
+          },
+          "source_rights": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Provenance and access basis for independently normalised factual records. This is not a publisher copyright licence or permission claim; source_license remains null unless an actual upstream licence applies. Retain the attribution, evidence links and notice.",
+            "properties": {
+              "basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Documented factual normalisation or independently verified public-facts basis."
+              },
+              "access_basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "How primary evidence was accessed, e.g. manual review or an issuer-documented public API."
+              },
+              "reviewed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "attribution": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "description": "Primary-source or access documentation supporting this rights basis."
+              },
+              "terms_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "notice": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "discovery_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Optional discovery-page link, which may identify a calendar aggregator. It is not primary verification evidence or a licence claim; source_id, source_url and verification_url retain the independent primary-source provenance. Internal provider API payloads are not distributed."
+          },
+          "verification_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Evidence checked for the stored schedule, e.g. official network configuration. May differ from the human-readable announcement in source_url."
+          },
+          "verification_method": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Verification basis, e.g. github-json for an official configuration fetch or manual for a reviewed roadmap."
+          },
+          "manually_reviewed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Fixed timestamp of human source review, when relevant; snapshot generation never advances this timestamp."
+          }
+        }
+      },
+      "Series": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO country code, or null for global crypto events. Global is not a country code."
+          },
+          "category": {
+            "type": "string"
+          },
+          "impact": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recurrence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tier": {
+            "type": "integer"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "publisher": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hub": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "instance",
+              "holiday"
+            ]
+          },
+          "exchange": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "next": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "next_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "last": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "count": {
+            "type": "integer"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CryptoAsset"
+            },
+            "description": "Affected assets; empty for economic and exchange holiday rows."
+          },
+          "next_date_window_start": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
+          },
+          "next_date_window_end": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
+          }
+        }
+      },
+      "Change": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "change": {
+            "type": "string",
+            "enum": [
+              "added",
+              "updated",
+              "removed"
+            ]
+          },
+          "field": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "old": {
+            "type": [
+              "string",
+              "boolean",
+              "object",
+              "null"
+            ],
+            "description": "Previous field value; structured auction metadata is an object."
+          },
+          "new": {
+            "type": [
+              "string",
+              "boolean",
+              "object",
+              "null"
+            ],
+            "description": "Updated field value; structured auction metadata is an object."
+          }
+        }
+      },
+      "Attribution": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "terms": {
+            "type": "string"
+          },
+          "docs": {
+            "type": "string",
+            "format": "uri"
+          },
+          "source_licenses": {
+            "type": "string",
+            "description": "Records may retain additional original-source attribution and licence requirements."
+          },
+          "source_rights": {
+            "type": "string",
+            "description": "Independently normalised facts retain provenance and access-basis metadata without asserting a publisher copyright licence."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "docs": {
+            "type": "string"
+          }
+        }
+      },
+      "SourceHealth": {
+        "type": "object",
+        "properties": {
+          "source_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "success",
+              "degraded",
+              "failed",
+              "disabled",
+              null
+            ]
+          },
+          "count": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "scope": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "window_start": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "window_end": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "series_name": {
+                "type": "string"
+              }
+            }
+          },
+          "checked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "fetched_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Null if no successful live fetch occurred; checked-in schedules do not count as a fetch."
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Credential-safe collector diagnostic, without request URLs or response bodies."
+          }
+        }
+      },
+      "SourceHealthSummary": {
+        "type": "object",
+        "properties": {
+          "reported": {
+            "type": "boolean",
+            "description": "False for snapshots without source-health reporting; this means unknown, not healthy."
+          },
+          "total": {
+            "type": "integer"
+          },
+          "success": {
+            "type": "integer"
+          },
+          "degraded": {
+            "type": "integer"
+          },
+          "failed": {
+            "type": "integer"
+          },
+          "disabled": {
+            "type": "integer"
+          },
+          "stale_events": {
+            "type": "integer",
+            "description": "Events explicitly marked as retained last-good data during source outages."
+          }
+        }
+      },
+      "CryptoAsset": {
+        "type": "object",
+        "required": [
+          "id",
+          "symbol",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
+            "examples": [
+              "ethereum",
+              "bitcoin"
+            ]
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "x-attribution": {
+    "required": true,
+    "how": "A visible link to https://www.financecalendar.com near the data, or on your credits page."
+  },
+  "x-rate-limits": {
+    "keyless": {
+      "per": "ip",
+      "daily": 2000
+    },
+    "free": {
+      "daily": 10000
+    },
+    "pro": {
+      "daily": 100000
+    },
+    "business": {
+      "daily": 1000000
+    },
+    "headers": [
+      "X-RateLimit-Limit",
+      "X-RateLimit-Remaining",
+      "X-RateLimit-Reset",
+      "X-RateLimit-Tier",
+      "Retry-After"
+    ],
+    "reset": "00:00 UTC"
+  },
+  "x-changelog": "https://www.financecalendar.com/api/changelog/"
 }

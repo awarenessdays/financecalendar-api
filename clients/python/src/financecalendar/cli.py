@@ -103,16 +103,41 @@ def format_event(event: dict[str, Any], tz=None) -> str:
         lines.append(f"Verification: {event['verification_url']}")
     if event.get("manually_reviewed_at"):
         lines.append(f"Manually reviewed: {event['manually_reviewed_at']}")
+    if (event.get("crypto") or {}).get("event_type") == "supply-projection":
+        lines.append("Issuer supply projection; not a confirmed unlock or observed circulating supply.")
+    if (event.get("crypto") or {}).get("event_type") == "governance-vote":
+        lines.append("Governance voting deadline; not a proposal outcome or execution.")
     if event.get("source_license"):
         license_info = event["source_license"]
         adapted = " · adapted by Finance Calendar" if license_info.get("adapted") else ""
         lines.append(f"Original source: {license_info.get('attribution') or event.get('source_name') or ''} · {license_info.get('id') or ''}{adapted}")
         if event.get("source_url"):
             lines.append(event["source_url"])
+        if license_info.get("attribution_url"):
+            lines.append(f"Attribution: {license_info['attribution_url']}")
         if license_info.get("url"):
             lines.append(license_info["url"])
+        if license_info.get("terms_url"):
+            lines.append(f"Publisher terms: {license_info['terms_url']}")
         if license_info.get("notice"):
             lines.append(license_info["notice"])
+    if event.get("source_rights"):
+        rights = event["source_rights"]
+        lines.append(f"Factual source: {rights.get('attribution') or event.get('source_name') or ''}")
+        if event.get("source_url") and not event.get("source_license"):
+            lines.append(event["source_url"])
+        if rights.get("source_url") and rights["source_url"] != event.get("source_url"):
+            lines.append(f"Rights evidence: {rights['source_url']}")
+        if rights.get("basis"):
+            lines.append(f"Rights basis: {rights['basis']}; not a publisher copyright licence.")
+        if rights.get("access_basis"):
+            lines.append(f"Source access: {rights['access_basis']}")
+        if rights.get("terms_url"):
+            lines.append(f"Publisher terms: {rights['terms_url']}")
+        if rights.get("notice"):
+            lines.append(rights["notice"])
+    if event.get("discovery_url"):
+        lines.append(f"Discovery (not verification): {event['discovery_url']}")
     return "\n".join(lines)
 
 

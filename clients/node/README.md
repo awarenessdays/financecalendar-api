@@ -94,9 +94,9 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json`):
 | Tool | What it does |
 |---|---|
 | `next_event(series, country?, tz?, asset?, category?)` | Next occurrence of a series: `fomc`, `cpi`, `nfp`, `ecb`, `boe`, `uk-cpi`... |
-| `calendar(from?, to?, country?, impact?, category?, series?, include_holidays?, status?, tz?, limit?, offset?)` | Events in a date range (max 92 days) |
+| `calendar(from?, to?, country?, impact?, category?, asset?, series?, include_holidays?, status?, tz?, limit?, offset?)` | Events in a date range (max 92 days) |
 | `today(country?, impact?, tz?, asset?, category?)` | Today's releases, NYSE status and exchange closures |
-| `week(which?, country?, impact?, category?, series?, include_holidays?, tz?)` | This week or next, Monday to Sunday |
+| `week(which?, country?, impact?, category?, asset?, series?, include_holidays?, tz?)` | This week or next, Monday to Sunday |
 | `series_list(country?, category?, kind?, asset?)` | Every series with code, aliases and next date |
 | `series_detail(code, tz?, asset?)` | One series: next, last, upcoming, history, long-run dataset |
 | `history(series, from?, to?, limit?, tz?, asset?)` | Past releases with consensus, prior and actual |
@@ -134,13 +134,34 @@ observed activation. Roadmap targets retain their complete `date_window_start`
 and `date_window_end`; `date` is only the lower-bound index. Calendar filters
 include overlapping windows; history includes them only after the upper bound.
 
+Coverage includes network schedules, vesting installments, governance voting
+deadlines and issuer supply projections. Inspect `crypto.event_type`:
+
+- `network-upgrade`: check `environment` and `activation_status`; a configured schedule is not observed activation.
+- `token-unlock`: retain `schedule_id`, `installment`, `beneficiaries`, `unlock_status`, `date_basis`, `token_amount` and `token_amount_basis` when supplied. A schedule or upper-bound amount does not prove tokens were transferred or sold.
+- `governance-vote`: retain `dao`, `space_id`, `proposal_id`, optional `proposal_title`, `voting_start`, `voting_end`, `voting_state`, `voting_type` and `choice_count`. The event marks a deadline, not approval, rejection or execution.
+- `supply-projection`: retain `projection_status`, `projected_circulating_supply`, `projected_monthly_supply_change` and `date_basis`. These are issuer estimates, not confirmed unlocks or observed circulating supply; decimal strings retain source precision.
+
 Check `verification_url`, `verification_method`, `manually_reviewed_at`,
-`last_verified_at` and `data_stale`. Human output retains upstream credits,
-licence notices and adaptation labels. JSON and CSV retain `source_license`.
-CoinMarketCal internal evaluation records are never returned by this client API;
-public data contains only sources approved for redistribution. Coverage is
-currently focused on official Ethereum schedules; an empty asset result is
-valid and does not imply comprehensive crypto coverage.
+`last_verified_at` and `data_stale`. Public records combine licensed feeds and
+independently normalised factual records. `source_license` carries an actual
+upstream licence and its credit requirements when applicable; `source_rights`
+carries the factual provenance, access basis, review time, attribution and
+notice without asserting a publisher copyright licence. Either may be null.
+An optional `discovery_url` identifies where an event was found, including an
+aggregator; it is separate from primary `source_url` and verification evidence.
+CoinMarketCal internal API evaluation payloads are never returned.
+
+MCP JSON, CLI `--json` and API CSV via CLI `--csv` preserve these nested fields;
+CSV stores structured objects as JSON cells. Retain all source-specific rights,
+licence and attribution metadata when redistributing. PatternPlus records
+require the linked credit [Data: PatternPlus](https://pattern.plus), carried in
+`source_license.attribution` and `source_license.attribution_url`, alongside the
+licence link and adaptation notice. Human CLI output includes source credits,
+attribution links and factual notices, but remains a summary; use JSON/CSV to
+retain every metadata field when redistributing.
+Coverage varies by source and asset; an empty result is valid and does not
+establish comprehensive crypto coverage.
 
 This server retains its existing SDK v1 dependency. SDK v2 is the current stable
 line; `npx @modelcontextprotocol/codemod@latest v1-to-v2 .` is the migration path.
@@ -191,7 +212,7 @@ console.log(formatEvent(next, { tz: "Europe/Frankfurt" }));
 
 ## Data terms
 
-Free for any use, commercial included, with attribution: a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Earnings dates are not included. Records carrying `source_license` also retain the original attribution, source link, licence link, full notice and adaptation notice. These requirements travel with redistributed records. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+API access is currently free, including for commercial applications, subject to applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 
@@ -204,4 +225,4 @@ npm test            # node --test, fully offline (fetch is mocked with recorded 
 npm pack --dry-run  # confirm the published file list
 ```
 
-Licence: MIT, Awareness Days Ltd / financecalendar.com.
+Client source code: MIT, Awareness Days Ltd / financecalendar.com. The code licence does not license upstream data; data terms and record-level rights metadata apply separately.

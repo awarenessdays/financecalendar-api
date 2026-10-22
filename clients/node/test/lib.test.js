@@ -37,6 +37,36 @@ test("crypto display shows global assets, testnet environment and upstream credi
   assert.match(csv, /CC-BY-4\.0/);
 });
 
+test("licensed schedules retain required linked provider credit in human output and local CSV", () => {
+  const row = { ...fixture("crypto").body.events[1], source_rights: null,
+    source_license: { id: "CC-BY-4.0", attribution: "Data: PatternPlus", attribution_url: "https://pattern.plus", url: "https://creativecommons.org/licenses/by/4.0/", terms_url: "https://pattern.plus/developers", notice: "Retain provider attribution.", adapted: true } };
+  const text = formatEvent(row, { tz: "UTC" });
+  assert.match(text, /Data: PatternPlus · CC-BY-4\.0 · adapted by Finance Calendar/);
+  assert.ok(text.includes("Attribution: https://pattern.plus"));
+  assert.ok(text.includes(row.source_license.url) && text.includes(row.source_license.terms_url));
+  assert.ok(text.includes(row.source_url) && text.includes(row.source_license.notice));
+  assert.ok(eventsToCsv([row]).includes("https://pattern.plus"));
+  assert.ok(!text.includes("independently verified"));
+});
+
+test("factual crypto output preserves source notices without inventing a licence or proposal outcome", () => {
+  const rights = { basis: "independently-normalized-facts", access_basis: "manual-review", attribution: "Test issuer factual schedule", source_url: "https://issuer.example/rights", terms_url: "https://issuer.example/terms", notice: "No publisher copyright licence is asserted." };
+  const row = { ...fixture("crypto").body.events[1], source_license: null, source_rights: rights, source_url: "https://issuer.example/schedule", discovery_url: "https://coinmarketcal.com/en/event/discovery-only", crypto: { event_type: "supply-projection", projected_circulating_supply: "3625742933.075554" } };
+  const text = formatEvent(row, { tz: "UTC" });
+  assert.ok(text.includes("Factual source: " + rights.attribution));
+  assert.ok(text.includes(row.source_url) && text.includes("Rights evidence: " + rights.source_url));
+  assert.ok(text.includes(rights.terms_url) && text.includes(rights.notice));
+  assert.ok(text.includes("Rights basis: independently-normalized-facts; not a publisher copyright licence."));
+  assert.ok(text.includes("Source access: manual-review"));
+  assert.ok(text.includes("Discovery (not verification): " + row.discovery_url));
+  assert.ok(text.includes("not a confirmed unlock or observed circulating supply"));
+  assert.ok(!text.includes("MIT") && !text.includes("CC-BY"));
+  assert.match(formatEvent({ ...row, crypto: { event_type: "governance-vote" } }), /Governance voting deadline; not a proposal outcome or execution\./);
+  const csv = eventsToCsv([row]);
+  assert.match(csv.split("\n")[0], /source_rights,discovery_url$/);
+  for (const value of [rights.attribution, rights.notice, row.discovery_url, "3625742933.075554"]) assert.ok(csv.includes(value));
+});
+
 test("estimated crypto windows are displayed as windows, never their index date", () => {
   const row = fixture("crypto").body.events[0];
   assert.equal(formatWhen(row, "Asia/Tokyo"), "2026-10-01–2026-12-31 (estimated window)");

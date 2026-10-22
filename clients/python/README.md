@@ -136,7 +136,8 @@ is distinct from mainnet and is not proof of an observed activation. Inspect
 `crypto.environment`, `crypto.activation_status`, `verification_url`,
 `verification_method`, `manually_reviewed_at`, `last_verified_at` and `data_stale`.
 
-`to_dataframe` retains nested `assets`, `crypto` and `source_license`, parses
+`to_dataframe` retains nested `assets`, `crypto`, `source_license` and
+`source_rights` plus the optional `discovery_url`, parses
 estimated date-window bounds, and adds `asset_ids`, `asset_symbols`,
 `crypto_event_type`, `crypto_network`, `crypto_exchange`, `crypto_environment`
 and `crypto_activation_status`. It preserves null countries and recorded zeros.
@@ -147,11 +148,31 @@ financecalendar calendar --category crypto --asset ethereum --json
 financecalendar next ethereum-network-upgrades --asset ethereum --tz UTC
 ```
 
-The public API contains only sources approved for redistribution. CoinMarketCal
-internal evaluation data is excluded. Current coverage focuses on official
-Ethereum schedules; other assets may return no rows. Retain upstream
-`source_license` credits, links, full notices and adaptation labels when sharing
-data. Human CLI output also shows these credits and stale-data warnings.
+Coverage includes network schedules, vesting installments, governance voting
+deadlines and issuer supply projections. The `crypto` object retains source
+metadata:
+
+- Unlocks: `schedule_id`, `installment`, `beneficiaries`, `unlock_status`, `date_basis`, `token_amount` and `token_amount_basis` when supplied. Scheduled or upper-bound quantities do not prove transfer or sale.
+- Governance: `dao`, `space_id`, `proposal_id`, optional `proposal_title`, `voting_start`, `voting_end`, `voting_state`, `voting_type` and `choice_count`. A voting deadline is not approval, rejection or execution.
+- Supply projections: `projection_status`, `projected_circulating_supply`, `projected_monthly_supply_change` and `date_basis`. Issuer estimates are not confirmed unlocks or observed circulating supply; decimal strings retain source precision.
+
+Public records combine licensed feeds and independently normalised factual
+records. `source_license` carries actual upstream licensing requirements;
+`source_rights` carries factual provenance, access basis, review time,
+attribution and notice without asserting a publisher copyright licence. Either
+may be null. An optional `discovery_url` is a discovery-page link, potentially
+from an aggregator, and is separate from primary `source_url` and verification
+evidence. CoinMarketCal internal API evaluation payloads are excluded. Coverage
+varies by asset and source; empty results do not establish comprehensive coverage.
+
+Raw JSON, `calendar_csv` and CLI `--csv` retain these fields; CSV stores nested
+objects as JSON cells. Preserve record-level rights and licence metadata when
+sharing data. PatternPlus records require the linked credit
+[Data: PatternPlus](https://pattern.plus), carried in
+`source_license.attribution` and `source_license.attribution_url`, alongside the
+licence link and adaptation notice. Human CLI output includes source credits,
+attribution links and factual notices, but remains a summary; use JSON/CSV to
+retain every metadata field when redistributing.
 
 ## CLI
 
@@ -182,7 +203,7 @@ https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 
 ## Data terms
 
-Free for any use, commercial included, with attribution: a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Earnings dates are not included. Records carrying `source_license` also retain the original attribution, source link, licence link, full notice and adaptation notice. These requirements travel with redistributed records. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+API access is currently free, including for commercial applications, subject to applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 
@@ -197,4 +218,4 @@ python3 -m venv .venv
 .venv/bin/python -m build            # wheel + sdist into dist/
 ```
 
-Licence: MIT, Awareness Days Ltd / financecalendar.com.
+Client source code: MIT, Awareness Days Ltd / financecalendar.com. The code licence does not license upstream data; data terms and record-level rights metadata apply separately.

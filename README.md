@@ -1,6 +1,6 @@
 # Finance Calendar API
 
-Economic releases, central bank decisions, selected crypto events and exchange holidays as JSON, CSV and ICS. The database combines direct official publisher feeds with checked-in schedules. Source verification, estimates and stale data are identified per record; consensus, prior and actual values are included where available. Snapshot updates run hourly, with coverage varying by source and series.
+Economic releases, central bank decisions, selected crypto events and exchange holidays as JSON, CSV and ICS. The database combines direct official publisher feeds, checked-in schedules and explicitly licensed crypto data. Source verification, estimates and stale data are identified per record; consensus, prior and actual values are included where available. Snapshot updates run hourly, with coverage varying by source and series.
 
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
@@ -97,7 +97,7 @@ print(cal["generated_at"], cal["counts"])
 
 ## Terms
 
-Free for any use, commercial included, with one condition: a visible link to https://www.financecalendar.com wherever the data appears (or on your app's credits page). Earnings dates are not included. See [DATA-TERMS.md](DATA-TERMS.md).
+Free for commercial use subject to applicable source terms and credits, with a visible link to https://www.financecalendar.com wherever the data appears (or on your app's credits page). Earnings dates are not included. See [DATA-TERMS.md](DATA-TERMS.md).
 
 ## Issues
 
@@ -107,15 +107,22 @@ Wrong date? Missing series? Open an issue here. The engine reads official calend
 
 Use `category=crypto&asset=ethereum` with `/calendar`, `/week` or `/today`.
 Discover canonical asset IDs through `/series?category=crypto`; symbols such as
-ETH are display labels. Initial public coverage is selected Ethereum mainnet
-and testnet upgrade schedules, not every coin or token unlock.
+ETH are display labels. Coverage includes selected network upgrades, token unlock
+schedules, public DAO voting deadlines and labelled supply projections. A declared
+asset or series does not guarantee an upcoming record.
 
-Global crypto has `country=null`; `impact` may be null. Check
-`crypto.environment`, `crypto.activation_status` and `verification_method`.
-Scheduled activation is not observed activation. Month/quarter/year targets
-retain `date_window_start` and `date_window_end`; `date` is only a lower-bound
-index. Calendar filters include overlapping windows. Keep `source_license`
-credit, licence links, adaptation information and notices when reusing records.
+Global crypto has `country=null`; `impact` may be null. Inspect `crypto.event_type`,
+source evidence and `verification_method`. Schedules are not proof of observed
+activation or token transfer. Month/quarter/year targets retain both
+`date_window_start` and `date_window_end`; `date` is their lower-bound index.
+Supply projections are not confirmed cliff unlocks; voting deadlines are not
+proposal outcomes. Provider-reported evidence remains labelled as such.
+
+Keep `source_license` credits, `attribution_url`, licence links, adaptation notices
+and `source_rights` factual-source notices when redistributing records. Licensed
+PatternPlus rows require [Data: PatternPlus](https://pattern.plus) linked credit
+under CC BY 4.0. A discovery URL is separate from primary verification evidence.
+The MIT software licence does not relicense upstream data.
 
 See the [crypto calendar](https://www.financecalendar.com/crypto/) and
 [full REST reference](https://www.financecalendar.com/api/reference/).

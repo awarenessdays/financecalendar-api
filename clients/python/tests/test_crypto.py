@@ -84,6 +84,36 @@ def test_human_crypto_output_distinguishes_global_testnets_and_estimates():
     assert "all day" not in text
 
 
+def test_licensed_provider_credit_keeps_required_link_and_notices_in_human_output():
+    row = {**load("crypto")["body"]["events"][1], "source_rights": None,
+           "source_license": {"id": "CC-BY-4.0", "attribution": "Data: PatternPlus", "attribution_url": "https://pattern.plus", "url": "https://creativecommons.org/licenses/by/4.0/", "terms_url": "https://pattern.plus/developers", "notice": "Retain provider attribution.", "adapted": True}}
+    text = format_event(row, ZoneInfo("UTC"))
+    assert "Data: PatternPlus · CC-BY-4.0 · adapted by Finance Calendar" in text
+    assert "Attribution: https://pattern.plus" in text
+    assert all(row["source_license"][key] in text for key in ("url", "terms_url", "notice"))
+    assert row["source_url"] in text
+    assert "independently verified" not in text
+
+
+@pytest.mark.parametrize("event_type,qualification", [
+    ("supply-projection", "Issuer supply projection; not a confirmed unlock or observed circulating supply."),
+    ("governance-vote", "Governance voting deadline; not a proposal outcome or execution."),
+])
+def test_factual_crypto_output_retains_primary_provenance_and_no_licence_claim(event_type, qualification):
+    rights = {"basis": "independently-normalized-facts", "access_basis": "manual-review", "attribution": "Test issuer factual schedule", "source_url": "https://issuer.example/rights", "terms_url": "https://issuer.example/terms", "notice": "No publisher copyright licence is asserted."}
+    row = {**load("crypto")["body"]["events"][1], "source_license": None, "source_rights": rights, "source_url": "https://issuer.example/schedule", "discovery_url": "https://coinmarketcal.com/en/event/discovery-only", "crypto": {"event_type": event_type}}
+    text = format_event(row, ZoneInfo("UTC"))
+    assert "Factual source: " + rights["attribution"] in text
+    assert row["source_url"] in text
+    assert "Rights evidence: " + rights["source_url"] in text
+    assert rights["terms_url"] in text and rights["notice"] in text
+    assert "Rights basis: independently-normalized-facts; not a publisher copyright licence." in text
+    assert "Source access: manual-review" in text
+    assert "Discovery (not verification): " + row["discovery_url"] in text
+    assert qualification in text
+    assert "MIT" not in text and "CC-BY" not in text
+
+
 def test_series_target_output_uses_the_full_window(client):
     series = client.series(category="crypto", asset="ethereum")["series"][0]
     expected = "next target 2026-10-01–2026-12-31 (estimated window)"

@@ -154,13 +154,28 @@ export function formatEvent(e, { tz } = {}) {
   if (e.data_stale) lines.push(`Stale source data${e.stale_since ? " since " + e.stale_since : ""}`);
   if (e.verification_url) lines.push(`Verification: ${e.verification_url}`);
   if (e.manually_reviewed_at) lines.push(`Manually reviewed: ${e.manually_reviewed_at}`);
+  if (e.crypto?.event_type === "supply-projection") lines.push("Issuer supply projection; not a confirmed unlock or observed circulating supply.");
+  if (e.crypto?.event_type === "governance-vote") lines.push("Governance voting deadline; not a proposal outcome or execution.");
   if (e.source_license) {
     const license = e.source_license;
     lines.push(`Original source: ${license.attribution || e.source_name || ""} · ${license.id || ""}${license.adapted ? " · adapted by Finance Calendar" : ""}`);
     if (e.source_url) lines.push(e.source_url);
+    if (license.attribution_url) lines.push(`Attribution: ${license.attribution_url}`);
     if (license.url) lines.push(license.url);
+    if (license.terms_url) lines.push(`Publisher terms: ${license.terms_url}`);
     if (license.notice) lines.push(license.notice);
   }
+  if (e.source_rights) {
+    const rights = e.source_rights;
+    lines.push(`Factual source: ${rights.attribution || e.source_name || ""}`);
+    if (e.source_url && !e.source_license) lines.push(e.source_url);
+    if (rights.source_url && rights.source_url !== e.source_url) lines.push(`Rights evidence: ${rights.source_url}`);
+    if (rights.basis) lines.push(`Rights basis: ${rights.basis}; not a publisher copyright licence.`);
+    if (rights.access_basis) lines.push(`Source access: ${rights.access_basis}`);
+    if (rights.terms_url) lines.push(`Publisher terms: ${rights.terms_url}`);
+    if (rights.notice) lines.push(rights.notice);
+  }
+  if (e.discovery_url) lines.push(`Discovery (not verification): ${e.discovery_url}`);
   return lines.join("\n");
 }
 
@@ -192,7 +207,7 @@ export function formatChange(c) {
   return `${c.at}  ${c.change.padEnd(7)} ${c.series_code.padEnd(16)} ${c.id}${what ? "  " + what : ""}`;
 }
 
-const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since"];
+const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since", "source_rights", "discovery_url"];
 
 /** Build CSV locally from event rows (used when the API's own CSV is not requested). */
 export function eventsToCsv(events) {
