@@ -566,7 +566,7 @@
             }
           }
         },
-        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
+        "description": "This or next Monday\u2013Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
       }
     },
     "/next": {
@@ -580,7 +580,7 @@
           {
             "name": "series",
             "in": "query",
-            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
+            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3504,7 +3504,8 @@
           },
           "used_today": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Counted attempts today in UTC. Account aggregate for owned keys; this key otherwise. Includes rate-limited attempts."
           },
           "remaining_today": {
             "type": "integer",
@@ -3560,6 +3561,25 @@
             "items": {
               "$ref": "#/components/schemas/EndpointUsage"
             }
+          },
+          "quota_scope": {
+            "type": "string",
+            "enum": [
+              "account"
+            ],
+            "description": "Present for keys linked to a verified WordPress account. Daily usage and allowance cover all keys belonging to that account, including revoked keys."
+          },
+          "key_used_today": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "This key only. Present for account-owned keys."
+          },
+          "retained_requests_scope": {
+            "type": "string",
+            "enum": [
+              "key"
+            ],
+            "description": "Retained history continues to describe this key only."
           }
         }
       },
