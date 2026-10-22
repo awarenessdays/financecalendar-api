@@ -566,7 +566,7 @@
             }
           }
         },
-        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
+        "description": "This or next Monday\u2013Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
       }
     },
     "/next": {
@@ -580,7 +580,7 @@
           {
             "name": "series",
             "in": "query",
-            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
+            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
             "required": true,
             "schema": {
               "type": "string"
@@ -694,7 +694,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
       }
     },
     "/series": {
@@ -927,7 +928,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
       }
     },
     "/history": {
@@ -960,7 +962,7 @@
           {
             "name": "to",
             "in": "query",
-            "description": "YYYY-MM-DD.",
+            "description": "Publisher-date upper bound. Defaults to the latest current publisher-local date among the series records. Explicit dates are retained; only elapsed records are returned.",
             "required": false,
             "schema": {
               "type": "string",
@@ -1064,7 +1066,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
       }
     },
     "/holidays": {
@@ -1372,6 +1375,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque next_cursor from the preceding page; bound to its snapshot, since, filters and limit.",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            }
           }
         ],
         "responses": {
@@ -1393,8 +1406,43 @@
                       "items": {
                         "$ref": "#/components/schemas/Change"
                       }
+                    },
+                    "generated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Snapshot publication identifier; retained for compatibility."
+                    },
+                    "snapshot_generated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Immutable publication identifier binding this traversal."
+                    },
+                    "total": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Total retained changes matching since and filters in this snapshot."
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Continuation token, or null after the final page."
                     }
-                  }
+                  },
+                  "required": [
+                    "since",
+                    "generated_at",
+                    "snapshot_generated_at",
+                    "count",
+                    "total",
+                    "has_more",
+                    "next_cursor",
+                    "changes"
+                  ]
                 }
               }
             }
@@ -1418,8 +1466,28 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Snapshot changed during pagination. Restart with the original since and filters and deduplicate repeated changes; resync from the full snapshot if outside retention.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "docs": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
           }
-        }
+        },
+        "description": "Retained changes in stable snapshot order, newest first. Follow next_cursor until has_more is false; a single publication can exceed 500 changes with the same timestamp. Pass the cursor alone, or repeat the same since, series, change and limit. Cursors bind to snapshot_generated_at. On 409 restart with the original since and filters and deduplicate repeated changes; only advance the checkpoint after all pages complete. Since accepts YYYY-MM-DD or an ISO datetime with seconds and an explicit timezone; relative dates and timezone-less datetimes are rejected. Since is inclusive and normalized to whole UTC seconds. Beyond 30 days, resync from the full snapshot. Responses are not cached."
       }
     },
     "/countries": {
@@ -2427,6 +2495,12 @@
               },
               "label": {
                 "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "week_ending": {
+                "type": "string"
               }
             }
           },
@@ -2509,7 +2583,8 @@
                     "string",
                     "null"
                   ],
-                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\\d|3[01]))?$",
+                  "description": "Explicit month YYYY-MM, or a weekly ending date YYYY-MM-DD. Inspect frequency and reference_period_kind; never infer this period from the announcement date."
                 },
                 "frequency": {
                   "type": [
@@ -2610,6 +2685,85 @@
                     "null"
                   ]
                 },
+                "reference_period_kind": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_publisher": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_calendar_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "source_document_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "edition_release_at_utc": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "edition_latest_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "edition_prior_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_release_at_utc": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "occurrence_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_prior_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_document_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "vintage": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "historical_first_print": {
+                  "type": "boolean",
+                  "description": "False for current-vintage backfills; these are not the values originally known at historical releases."
+                },
                 "data_stale": {
                   "type": "boolean"
                 },
@@ -2653,6 +2807,13 @@
                           "string",
                           "null"
                         ]
+                      },
+                      "source_document_sha256": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Original evidence-document fingerprint when supplied by a document-based numerical source."
                       }
                     }
                   },
@@ -2669,6 +2830,25 @@
                       "format": "uri"
                     },
                     "attribution": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "source_rights": {
+                  "type": "object",
+                  "description": "Publisher attribution and public-domain policy evidence for results without an asserted upstream licence.",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "attribution": {
+                      "type": "string"
+                    },
+                    "policy": {
+                      "type": "string"
+                    },
+                    "vintage_notice": {
                       "type": "string"
                     }
                   }

@@ -19,7 +19,7 @@ Usage:
   financecalendar history <series> [--limit 12]
   financecalendar holidays [exchange] [year]
   financecalendar status [exchange]
-  financecalendar changes [--since 2026-10-18T00:00:00Z] [--series ...] [--change updated] [--limit 100]
+  financecalendar changes [--since 2026-10-18T00:00:00Z] [--series ...] [--change updated] [--limit 100] [--cursor ...]
   financecalendar countries
 
 Options:
@@ -153,10 +153,11 @@ export async function main(argv, out = console.log) {
       return 0;
     }
     case "changes": {
-      const data = await api("/changes", { since: flags.since, series: flags.series, change: flags.change, limit: flags.limit });
+      const data = await api("/changes", { since: flags.since, series: flags.series, change: flags.change, limit: flags.limit, cursor: flags.cursor });
       if (flags.json) return json(data), 0;
       out(`${data.count} changes since ${data.since}\n`);
       out(data.changes.length ? data.changes.map(formatChange).join("\n") : "No changes.");
+      if (data.has_more) out(`More changes: rerun changes --cursor '${data.next_cursor}'. Complete all pages before advancing since.`);
       return 0;
     }
     case "countries": {

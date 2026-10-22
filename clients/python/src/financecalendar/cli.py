@@ -126,6 +126,14 @@ def format_event(event: dict[str, Any], tz=None) -> str:
                 lines.append(license_info["url"])
             if license_info.get("notice"):
                 lines.append(license_info["notice"])
+        rights = observation.get("source_rights")
+        if isinstance(rights, dict):
+            if rights.get("attribution"):
+                lines.append(rights["attribution"])
+            if rights.get("url"):
+                lines.append(f"Publisher rights policy: {rights['url']}")
+            if rights.get("vintage_notice"):
+                lines.append(rights["vintage_notice"])
     if event.get("verification_url"):
         lines.append(f"Verification: {event['verification_url']}")
     if event.get("manually_reviewed_at"):
@@ -197,7 +205,11 @@ def format_series(s: dict[str, Any]) -> str:
 
 
 def format_change(c: dict[str, Any]) -> str:
-    what = f"  {c['field']}: {c.get('old') or '-'} -> {c.get('new') or '-'}" if c.get("field") else ""
+    def value(v):
+        if v is None:
+            return "-"
+        return json.dumps(v, separators=(",", ":"), ensure_ascii=False) if isinstance(v, (dict, list, bool)) else str(v)
+    what = f"  {c['field']}: {value(c.get('old'))} -> {value(c.get('new'))}" if c.get("field") else ""
     return f"{c['at']}  {c['change']:<7} {c['series_code']:<16} {c['id']}{what}"
 
 
@@ -283,6 +295,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser("changes", help="what changed in the calendar")
     s.add_argument("--since")
+    s.add_argument("--cursor", help="next_cursor from a prior page; omit since/series/change when continuing")
     s.add_argument("--series")
     s.add_argument("--change", choices=["added", "updated", "removed"])
     s.add_argument("--limit", type=int, help="rows to return, 1 to 500")
@@ -374,8 +387,10 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
 
         return _emit(args, out, data, human)
     if cmd == "changes":
-        data = client.changes(since=args.since, series=args.series, change=args.change, limit=args.limit)
-        return _emit(args, out, data, lambda: f"{data['count']} changes since {data['since']}\n\n" + ("\n".join(format_change(c) for c in data["changes"]) if data.get("changes") else "No changes."))
+        data = client.changes(since=args.since, series=args.series, change=args.change, limit=args.limit, cursor=args.cursor)
+        more = (f"\nMore changes: rerun changes --cursor '{data['next_cursor']}'. Complete all pages before advancing since."
+                if data.get("has_more") else "")
+        return _emit(args, out, data, lambda: f"{data['count']} changes since {data['since']}\n\n" + ("\n".join(format_change(c) for c in data["changes"]) if data.get("changes") else "No changes.") + more)
     if cmd == "countries":
         data = client.countries()
         return _emit(args, out, data, lambda: "\n".join(f"{c['code']}  {c.get('name') or '':<16} {c['series']:>3} series  {c['events']:>5} events" for c in data["countries"]))

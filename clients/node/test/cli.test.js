@@ -29,6 +29,14 @@ describe("parseArgs", () => {
 });
 
 describe("CLI (child process with mocked fetch)", () => {
+  test("changes exposes continuation and passes a cursor without resetting filters", () => {
+    const first = cli(["changes", "--limit", "1"]);
+    assert.equal(first.code, 0, first.err);
+    assert.match(first.out, /changes --cursor 'page-2'/);
+    const second = cli(["changes", "--cursor", "page-2", "--json"]);
+    assert.equal(second.code, 0, second.err);
+    assert.equal(JSON.parse(second.out).has_more, false);
+  });
   test("crypto asset flags reach calendar, next, series and history commands", () => {
     for (const command of [
       ["calendar", "--category", "crypto"], ["next", "ethereum-network-upgrades"],

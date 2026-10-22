@@ -223,7 +223,12 @@ class Client:
     # -- changes and meta --------------------------------------------------
 
     def changes(self, since: str | datetime | None = None, **params: Any) -> dict[str, Any]:
-        """What changed since a datetime (default 24 hours ago). Params: series, change, limit."""
+        """One page of changes. Params: series, change, limit, cursor.
+
+        Follow next_cursor while has_more is true. A 409 indicates a changed
+        snapshot: restart from the original since and deduplicate; advance the
+        checkpoint only after all pages have been read.
+        """
         if isinstance(since, datetime):
             since = since.isoformat()
         return self._request("/changes", {"since": since, **params})

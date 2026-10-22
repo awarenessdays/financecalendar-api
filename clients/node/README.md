@@ -9,6 +9,81 @@ One package, two binaries:
 
 No API key needed. A free key raises the daily limit from 2,000 to 10,000 requests.
 
+## Hosted MCP connector: ChatGPT and Claude
+
+The public beta connects over HTTPS without installing this package. Server URL:
+
+```text
+https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
+```
+
+Use **Streamable HTTP** and **No authentication / No sign-in**. This is a custom
+connection, not a listing in either platform's directory. Account and workspace
+policies control whether you can add it.
+
+- **ChatGPT:** in Plugins, choose **+ → Add custom MCP server**, enter the URL
+  and **No authentication**, then create and install the plugin. Select it with
+  `@` in a new conversation where supported. See the
+  [official ChatGPT guide](https://developers.openai.com/plugins/deploy/connect-chatgpt).
+- **Claude:** open [Customize → Connectors](https://claude.ai/customize/connectors),
+  choose **Add custom connector**, paste the URL and choose **No sign-in** if
+  shown. Leave OAuth credentials and request headers empty. Organization owners
+  may need to add it first; see
+  [Claude's custom connector guide](https://claude.com/docs/connectors/custom/add-unlisted).
+- **Claude Code:** run:
+
+  ```sh
+  claude mcp add --transport http financecalendar https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
+  ```
+
+Try: “Find the next UK CPI release, show its time in Europe/London and cite its
+publisher. Check source health and say which values or dates are uncertain.”
+
+### Hosted tools and output
+
+The hosted server provides the 11 tools listed below plus `feed_status()` for
+snapshot age, source health, stale records and numerical coverage. All are
+read-only. It does not expose the local briefing prompt or OpenAPI resource,
+tasks, sessions, server notifications or subscriptions. GET and DELETE return
+405; Streamable HTTP requests use POST and receive JSON, without an SSE stream.
+
+Hosted results include identical JSON text and `structuredContent` containing:
+
+```json
+{
+  "data": { "count": 0, "total": 0, "events": [] },
+  "attribution": { "source": "financecalendar.com" },
+  "transport": { "api_status": 200, "rate_limit": {} }
+}
+```
+
+This illustrates the envelope, not a live event result. `data` holds the
+canonical API body; `attribution` also carries links and rights guidance.
+`transport.rate_limit` carries available rate headers and `Retry-After`.
+API failures return `isError: true`; inspect `transport.api_status` even when
+the MCP HTTP response is 200. Local stdio tools return the API body directly,
+without this envelope.
+
+Hosted `calendar`, `history` and initial `changes` calls default to 20 rows and
+accept 1–50. Calendar supports `offset`. Continue changes with only `cursor`;
+do not inject a new limit. Overview tools bound large arrays to at most 50
+entries and can return fewer to meet the 120,000-byte encoded response cap.
+Partial results carry `truncation.fields`, original counts and recovery
+instructions; check canonical totals too. Narrow filters, page `calendar`, or
+use the supplied full REST endpoint. A partial overview is not a complete
+export. Cursor pages are never trimmed after a cursor is issued: a size error
+requires restarting from the original checkpoint with a smaller initial limit
+and deduplicating. Requests are limited to 32,768 bytes; unknown arguments are
+rejected.
+
+The public beta uses **2,000 data requests per IP per UTC day**, potentially
+shared by users behind a ChatGPT or Claude proxy. It does not forward API keys,
+cookies or authorization headers, provide OAuth, or assign personal paid quotas.
+For production use, choose the keyed REST API or local stdio server. Each tool
+call uses the same canonical API and its rate limits; discovery is separate.
+Respect `Retry-After` where supplied. See the
+[full hosted and local MCP reference](https://www.financecalendar.com/api/mcp/).
+
 ## Install from source
 
 Registry publication is pending. Install the current version from the public
@@ -38,7 +113,7 @@ Human CLI output shows the reference `period` and `release_stage` when provided.
 Unknown economic release times are labelled `time unknown`; exchange holidays
 retain `all day`. Raw JSON preserves the API fields unchanged.
 
-## MCP server
+## Local MCP server
 
 ### Claude Desktop
 
@@ -102,7 +177,7 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json`):
 | `history(series, from?, to?, limit?, tz?, asset?)` | Past releases with consensus, prior and actual |
 | `market_holidays(exchange?, year?)` | Exchange holidays and early closes (nyse, lse, cme, jpx...) |
 | `market_status(exchange?)` | Is the exchange open right now? |
-| `changes(since?, series?, change?, limit?)` | What changed: new dates, moved dates, consensus, actuals |
+| `changes(since?, series?, change?, limit?, cursor?)` | A page of changes with explicit continuation metadata |
 | `countries()` | Countries covered with series and event counts |
 
 Every tool returns the API's JSON as text and `structuredContent`, with read-only annotations. Errors (bad parameter, unknown series, rate limit) come back as tool errors with the API's message.
@@ -185,6 +260,13 @@ financecalendar countries
 ```
 
 Add `--json` to any command for the raw API response and `--help` for the full usage. Times are shown in your local zone unless you pass `--tz`:
+
+For change-feed polling, follow `next_cursor` using `changes --cursor …` until
+`has_more` is false. A cursor binds the snapshot, original filters and page size;
+omit those parameters when continuing. Advance your `since` checkpoint only
+after the entire traversal. On HTTP 409, restart from the original `since` and
+filters and deduplicate repeated changes. If that checkpoint has expired from
+the 30-day retention window, reload the full snapshot.
 
 ```
 $ financecalendar next fomc --tz America/New_York

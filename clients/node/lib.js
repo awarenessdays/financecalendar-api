@@ -169,6 +169,12 @@ export function formatEvent(e, { tz } = {}) {
       if (license.url) lines.push(license.url);
       if (license.notice) lines.push(license.notice);
     }
+    const rights = observation.source_rights;
+    if (rights && typeof rights === "object") {
+      if (rights.attribution) lines.push(rights.attribution);
+      if (rights.url) lines.push(`Publisher rights policy: ${rights.url}`);
+      if (rights.vintage_notice) lines.push(rights.vintage_notice);
+    }
   }
   if (e.verification_url) lines.push(`Verification: ${e.verification_url}`);
   if (e.manually_reviewed_at) lines.push(`Manually reviewed: ${e.manually_reviewed_at}`);
@@ -221,7 +227,8 @@ export function formatSeries(s) {
 }
 
 export function formatChange(c) {
-  const what = c.field ? `${c.field}: ${c.old ?? "-"} -> ${c.new ?? "-"}` : "";
+  const value = (v) => v === null || v === undefined ? "-" : typeof v === "object" ? JSON.stringify(v) : String(v);
+  const what = c.field ? `${c.field}: ${value(c.old)} -> ${value(c.new)}` : "";
   return `${c.at}  ${c.change.padEnd(7)} ${c.series_code.padEnd(16)} ${c.id}${what ? "  " + what : ""}`;
 }
 

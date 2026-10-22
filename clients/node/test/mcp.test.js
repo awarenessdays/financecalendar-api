@@ -70,7 +70,7 @@ describe("MCP server over stdio", () => {
       assert.deepEqual(props("today"), ["asset", "category", "country", "impact", "tz"]);
       assert.deepEqual(props("week"), ["asset", "category", "country", "impact", "include_holidays", "series", "tz", "which"]);
       assert.deepEqual(props("history"), ["asset", "from", "limit", "series", "to", "tz"]);
-      assert.deepEqual(props("changes"), ["change", "limit", "series", "since"]);
+      assert.deepEqual(props("changes"), ["change", "cursor", "limit", "series", "since"]);
     } finally { s.stop(); }
   });
 
@@ -108,6 +108,17 @@ describe("MCP server over stdio", () => {
       assert.equal(res.result.isError, undefined);
       const data = JSON.parse(res.result.content[0].text);
       assert.equal(data.next.title, "FOMC Rate Decision October 2026");
+    } finally { s.stop(); }
+  });
+
+  test("change cursors reach the API and preserve continuation metadata", async () => {
+    const s = await initialised();
+    try {
+      const first = await s.send("tools/call", { name: "changes", arguments: { limit: 1 } });
+      assert.equal(first.result.structuredContent.has_more, true);
+      const second = await s.send("tools/call", { name: "changes", arguments: { cursor: first.result.structuredContent.next_cursor } });
+      assert.equal(second.result.structuredContent.has_more, false);
+      assert.equal(second.result.structuredContent.count, 0);
     } finally { s.stop(); }
   });
 

@@ -1,10 +1,23 @@
 import { test, describe, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { api, buildUrl, baseUrl, formatEvent, formatWhen, formatSeries, eventsToCsv, USER_AGENT, DEFAULT_BASE } from "../lib.js";
+import { api, buildUrl, baseUrl, formatEvent, formatWhen, formatSeries, formatChange, eventsToCsv, USER_AGENT, DEFAULT_BASE } from "../lib.js";
 import { installMockFetch, fixture, toResponse } from "./fixtures.js";
 
 const realFetch = globalThis.fetch;
 const env = { ...process.env };
+test("changes display preserves measured zero and structured object/array distinctions", () => {
+  const change = { at: "2026-10-22T09:00:00Z", change: "updated", series_code: "example", id: "example", field: "actual", old: 0, new: false };
+  assert.match(formatChange(change), /actual: 0 -> false$/);
+  assert.match(formatChange({ ...change, field: "source_rights", old: {}, new: [] }), /source_rights: \{\} -> \[\]$/);
+});
+
+test("weekly observation output retains publisher attribution and vintage notice", () => {
+  const text = formatEvent({ date: "2026-10-15", name: "Initial claims", observations: [{ role: "actual", value: "199000", unit: "claims", reference_period: "2026-10-10", source_rights: {
+    attribution: "Source: U.S. Department of Labor.", url: "https://www.dol.gov/rights", vintage_notice: "Current edition; not original first prints." } }] });
+  assert.match(text, /199000 claims/);
+  assert.match(text, /Source: U.S. Department of Labor/);
+  assert.match(text, /Current edition; not original first prints/);
+});
 afterEach(() => {
   globalThis.fetch = realFetch;
   for (const k of ["FC_API_BASE", "FC_API_KEY"]) { if (env[k] === undefined) delete process.env[k]; else process.env[k] = env[k]; }

@@ -63,7 +63,7 @@ shows these details when provided, labels unknown economic release times
 | `history(series, **params)` | `GET /history` |
 | `holidays(exchange="nyse", year=None)` | `GET /holidays` |
 | `market_status(exchange="nyse")` | `GET /market-status` |
-| `changes(since=None, **params)` | `GET /changes` |
+| `changes(since=None, **params)` | One page from `GET /changes`; accepts series, change, limit and cursor |
 | `countries()` | `GET /countries` |
 | `status()` | `GET /status` |
 | `openapi()` | `GET /openapi` |
@@ -75,6 +75,13 @@ from datetime import date
 
 rows = list(fc.iter_calendar(date(2026, 1, 1), date(2026, 12, 31), country="us,gb", impact="high"))
 ```
+
+For changes, follow `next_cursor` until `has_more` is false, passing that cursor
+alone to `fc.changes(cursor=...)`. Advance the `since` checkpoint only after all
+pages finish. HTTP 409 means the snapshot changed: restart with the original
+`since` and filters and deduplicate repeated changes. Reload the full snapshot
+if the checkpoint is outside the 30-day retention window. The CLI accepts the
+same continuation with `financecalendar changes --cursor ...`.
 
 ### Errors
 

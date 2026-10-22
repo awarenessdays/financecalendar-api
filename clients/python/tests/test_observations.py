@@ -10,6 +10,14 @@ from financecalendar import Client
 from financecalendar.cli import format_event, main
 
 
+def test_weekly_observation_carries_attribution_and_current_vintage_notice():
+    text = format_event({"date": "2026-10-15", "name": "Initial claims", "observations": [{"role": "actual", "value": "199000", "unit": "claims", "reference_period": "2026-10-10", "source_rights": {
+        "attribution": "Source: U.S. Department of Labor.", "url": "https://www.dol.gov/rights", "vintage_notice": "Current edition; not original first prints."}}]})
+    assert "199000 claims" in text
+    assert "Source: U.S. Department of Labor." in text
+    assert "Current edition; not original first prints." in text
+
+
 def row():
     return {"id": "synthetic-cpi", "name": "Synthetic CPI", "date": "2026-10-21", "country": "GB", "period": "2026-09", "actual": 0,
             "source_id": "ons", "native_id": "synthetic-native", "source_reference_period": {"date": "2026-09-01", "formatted": "2026-09", "frequency": "MONTHLY"},

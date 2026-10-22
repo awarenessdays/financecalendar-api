@@ -130,6 +130,11 @@ def test_changes_countries_status_openapi(client, recorder):
     assert client.openapi()["openapi"] == "3.1.0"
 
 
+def test_changes_cursor_is_passed_without_a_new_since_checkpoint(client, recorder):
+    client.changes(cursor="opaque-page-2", limit=10)
+    assert dict(recorder.last.url.params) == {"cursor": "opaque-page-2", "limit": "10"}
+
+
 # -- errors ------------------------------------------------------------------
 
 def test_error_mapping_400(client):

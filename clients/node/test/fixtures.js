@@ -42,7 +42,12 @@ export function fixtureFor(url) {
     case "/history": return fixture("history_us_cpi");
     case "/holidays": return fixture(q.get("exchange") === "lse" ? "holidays_lse_2027" : "holidays_nyse");
     case "/market-status": return fixture(q.get("exchange") === "lse" ? "market_status_lse" : "market_status_nyse");
-    case "/changes": return fixture("changes");
+    case "/changes": {
+      const rec = fixture("changes");
+      if (q.get("cursor") === "page-2") return { ...rec, body: { ...rec.body, changes: [], count: 0, total: 100, has_more: false, next_cursor: null } };
+      if (q.get("limit") === "1") return { ...rec, body: { ...rec.body, changes: rec.body.changes.slice(0, 1), count: 1, total: 100, has_more: true, next_cursor: "page-2" } };
+      return rec;
+    }
     case "/countries": return fixture("countries");
     case "/status": return fixture("status");
     case "/openapi": return fixture("openapi");

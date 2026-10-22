@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from financecalendar.cli import format_event, format_when, main
+from financecalendar.cli import format_event, format_when, format_change, main
 
 from conftest import load
 
@@ -13,6 +13,12 @@ def run(client, *argv):
     lines: list[str] = []
     code = main(list(argv), client=client, out=lines.append)
     return code, "\n".join(lines)
+
+
+def test_changes_preserve_zero_and_object_array_types():
+    change = {"at": "2026-10-22T09:00:00Z", "change": "updated", "series_code": "example", "id": "example", "field": "actual", "old": 0, "new": False}
+    assert format_change(change).endswith("actual: 0 -> false")
+    assert format_change({**change, "field": "source_rights", "old": {}, "new": []}).endswith("source_rights: {} -> []")
 
 
 def test_format_event_documented_layout():
@@ -169,6 +175,8 @@ def test_calendar_status_offset_and_changes_limit(client, recorder):
     assert dict(recorder.last.url.params) == {"status": "estimated", "limit": "2", "offset": "5"}
     run(client, "changes", "--limit", "10")
     assert dict(recorder.last.url.params) == {"limit": "10"}
+    run(client, "changes", "--cursor", "opaque-page-2")
+    assert dict(recorder.last.url.params) == {"cursor": "opaque-page-2"}
 
 
 def test_series_code_is_url_quoted(client, recorder):

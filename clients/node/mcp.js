@@ -130,15 +130,16 @@ server.registerTool("market_status", {
 
 server.registerTool("changes", {
   title: "Change log",
-  description: "What changed in the calendar: new dates, moved dates, consensus updates and actuals, newest first. Default window is the last 24 hours (at most 30 days).",
+  description: "What changed in the calendar, newest first. Default window is 24 hours (at most 30 days). Follow next_cursor while has_more is true; only advance your since checkpoint after every page. A 409 means the snapshot changed: restart with the original since and deduplicate changes.",
   annotations: readOnly,
   inputSchema: {
     since: z.string().optional().describe("ISO 8601 datetime, e.g. 2026-10-18T00:00:00Z."),
     series: z.string().optional().describe("Series code or alias."),
     change: z.enum(["added", "updated", "removed"]).optional(),
     limit: z.number().int().min(1).max(500).optional().describe("Rows to return, 1 to 500 (default 100)."),
+    cursor: z.string().max(2048).optional().describe("Opaque next_cursor from the previous page. It binds the original filters and snapshot; omit since/series/change when continuing."),
   },
-}, run(({ since, series, change, limit }) => api("/changes", { since, series, change, limit })));
+}, run((args) => api("/changes", args)));
 
 server.registerTool("countries", {
   title: "Countries",

@@ -6,6 +6,7 @@ Economic releases, central bank decisions, selected crypto events and exchange h
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
 - **Full dataset:** [`data/calendar.json`](data/calendar.json), refreshed hourly by the engine (also at https://www.financecalendar.com/wp-content/uploads/fc/calendar.json)
+- **ChatGPT and Claude connector:** [Hosted MCP setup](https://www.financecalendar.com/api/mcp/) — public beta, no local installation.
 - **MCP server and CLI:** [Node source and installation](clients/node/README.md)
 - **Python client and CLI:** [Python source and installation](clients/python/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
@@ -14,6 +15,16 @@ The API and source installations work now. npm/PyPI publication is pending;
 use the source installation instructions linked above.
 
 No API key is needed. A free key raises the daily limit from 2,000 to 10,000 requests and identifies your app: `POST /keys {"email": "you@example.com"}` or use the form on the docs page.
+
+## Hosted connector
+
+Add this Streamable HTTP endpoint as a custom connector in ChatGPT or Claude, with no authentication:
+
+```text
+https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
+```
+
+[Setup and full tool reference](https://www.financecalendar.com/api/mcp/). The public beta provides 12 read-only tools and shares the keyless per-IP daily allowance; platform proxy IPs may be shared by several users. The local server remains available with a personal API key. Directory listing and real ChatGPT/Claude conversation verification are pending.
 
 ## Quick start
 
@@ -50,7 +61,7 @@ curl "https://www.financecalendar.com/wp-json/fc/v1/changes"
 | `GET /history` | Past releases of a series, with consensus, prior and actual where available |
 | `GET /holidays` | Exchange holidays and early closes for 12 exchanges (`exchange=nyse\|sifma\|cme\|lse\|tsx\|asx\|hkex\|euronext\|jpx\|six\|xetra\|nse\|all`) |
 | `GET /market-status` | Is the exchange open right now (session, breaks, early closes, holidays) |
-| `GET /changes` | Field-level change log for the last 30 days (`since=`) |
+| `GET /changes` | Lossless cursor-paginated change log for the last 30 days (`since=`, `limit=`, `cursor=`); restart the original checkpoint on snapshot-change HTTP 409 |
 | `GET /countries` | Countries covered with counts |
 | `GET /status` | Snapshot age/counts and publisher-source health |
 | `POST /keys`, `GET /keys/me` | Free key signup and usage |
