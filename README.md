@@ -7,12 +7,12 @@ Economic releases, central bank decisions, selected crypto events and exchange h
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
 - **Full dataset:** [`data/calendar.json`](data/calendar.json), refreshed hourly by the engine (also at https://www.financecalendar.com/wp-content/uploads/fc/calendar.json)
 - **ChatGPT and Claude connector:** [Hosted MCP setup](https://www.financecalendar.com/api/mcp/) — public beta, no local installation.
+- **Codex and Claude Code:** [Plugin and portable Agent Skill](integrations/README.md)
 - **MCP server and CLI:** [Node source and installation](clients/node/README.md)
 - **Python client and CLI:** [Python source and installation](clients/python/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and source installations work now. npm/PyPI publication is pending;
-use the source installation instructions linked above.
+The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-10-22) work now. npm/PyPI registry publication is pending; use those downloads or the source installation instructions linked above.
 
 No API key is needed. A free key raises the daily limit from 2,000 to 10,000 requests and identifies your app: `POST /keys {"email": "you@example.com"}` or use the form on the docs page.
 

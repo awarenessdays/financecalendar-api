@@ -4,6 +4,16 @@ Python client and CLI for the free [financecalendar.com API](https://www.finance
 
 No API key needed. A free key raises the daily limit from 2,000 to 10,000 requests.
 
+## Install the tested beta download
+
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-10-22). Use the direct package URL in your chosen environment:
+
+```sh
+python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-2026-10-22/financecalendar-0.1.0-py3-none-any.whl
+```
+
+Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
+
 ## Install from source
 
 Registry publication is pending. Install the current version from the public

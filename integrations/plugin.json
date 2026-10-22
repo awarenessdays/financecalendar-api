@@ -1,0 +1,35 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "financecalendar",
+  "version": "0.1.0",
+  "description": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance.",
+  "author": {
+    "name": "Awareness Days Ltd",
+    "url": "https://www.financecalendar.com"
+  },
+  "homepage": "https://www.financecalendar.com/api/mcp/",
+  "repository": "https://github.com/awarenessdays/financecalendar-api",
+  "license": "MIT",
+  "keywords": [
+    "economic-calendar",
+    "finance",
+    "mcp",
+    "release-dates"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Finance Calendar",
+        "shortDescription": "Economic event dates with original source evidence",
+        "longDescription": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance.",
+        "developerName": "Awareness Days Ltd",
+        "category": "Finance",
+        "capabilities": [
+          "Read"
+        ],
+        "websiteURL": "https://www.financecalendar.com/api/",
+        "logo": "./assets/icon.png"
+      }
+    }
+  }
+}

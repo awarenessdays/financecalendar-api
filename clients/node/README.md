@@ -9,6 +9,16 @@ One package, two binaries:
 
 No API key needed. A free key raises the daily limit from 2,000 to 10,000 requests.
 
+## Install the tested beta download
+
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-10-22). Use the direct package URL in your chosen environment:
+
+```sh
+npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-2026-10-22/financecalendar-mcp-0.2.0.tgz
+```
+
+Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
+
 ## Hosted MCP connector: ChatGPT and Claude
 
 The public beta connects over HTTPS without installing this package. Server URL:
