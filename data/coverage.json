@@ -8,7 +8,7 @@
     "to": "2027-11-26"
   },
   "freshness": {
-    "generated_at": "2026-10-22T10:46:54+00:00",
+    "generated_at": "2026-10-22T11:02:06+00:00",
     "age_calendar_days_utc": 0,
     "generated_after_as_of_date": false
   },
@@ -27,8 +27,8 @@
     "country": "Country/area codes; EU denotes the euro area. Economic-indicator economies require observed economic-indicators rows, not holidays or central-bank-only rows. Missing row country/category falls back to its declared series metadata."
   },
   "global": {
-    "declared_series": 320,
-    "observed_series": 312,
+    "declared_series": 332,
+    "observed_series": 324,
     "observed_country_area_codes": [
       "AU",
       "CA",
@@ -54,32 +54,33 @@
       "DE",
       "EU",
       "GB",
+      "IN",
       "JP",
       "KR",
       "MY",
       "US"
     ],
-    "economic_indicator_economy_count": 10,
+    "economic_indicator_economy_count": 11,
     "records": {
-      "total": 3933,
-      "past": 2415,
-      "today_future": 1518,
+      "total": 4005,
+      "past": 2452,
+      "today_future": 1553,
       "undated": 0,
-      "economic_indicators": 2991,
+      "economic_indicators": 3063,
       "central_banks": 147,
       "holidays": 199
     },
     "schedule_status": {
       "labels": {
         "closed": 123,
-        "confirmed": 2960,
+        "confirmed": 2993,
         "early_close": 31,
-        "estimated": 584,
+        "estimated": 623,
         "released": 235
       },
-      "estimated_dated": 584,
-      "non_estimated_status_dated": 3195,
-      "today_future_estimated": 294,
+      "estimated_dated": 623,
+      "non_estimated_status_dated": 3228,
+      "today_future_estimated": 329,
       "today_future_non_estimated_status": 1079
     },
     "provenance": {
@@ -87,59 +88,59 @@
       "missing_source_name": 57,
       "missing_both_source_url_and_name": 57,
       "today_future_missing_source_url": 87,
-      "estimated_with_source_url": 480,
+      "estimated_with_source_url": 519,
       "non_estimated_status_missing_source_url": 60
     },
     "values": {
       "all_nonholiday": {
-        "records": 3734,
+        "records": 3806,
         "actual": {
           "present": 235,
-          "missing": 3499
+          "missing": 3571
         },
         "consensus": {
           "present": 0,
-          "missing": 3734
+          "missing": 3806
         },
         "prior": {
           "present": 35,
-          "missing": 3699
+          "missing": 3771
         }
       },
       "past_nonholiday": {
-        "records": 2394,
+        "records": 2431,
         "actual": {
           "present": 235,
-          "missing": 2159
+          "missing": 2196
         },
         "consensus": {
           "present": 0,
-          "missing": 2394
+          "missing": 2431
         },
         "prior": {
           "present": 35,
-          "missing": 2359
+          "missing": 2396
         }
       },
       "today_future_nonholiday": {
-        "records": 1340,
+        "records": 1375,
         "actual": {
           "present": 0,
-          "missing": 1340
+          "missing": 1375
         },
         "consensus": {
           "present": 0,
-          "missing": 1340
+          "missing": 1375
         },
         "prior": {
           "present": 0,
-          "missing": 1340
+          "missing": 1375
         }
       }
     },
     "numerical_evidence": {
       "all_nonholiday": {
-        "records": 3734,
+        "records": 3806,
         "exact_observations": {
           "rows_with_entries": 35,
           "entries": 70,
@@ -161,7 +162,7 @@
         },
         "fields": {
           "actual": {
-            "missing": 3499,
+            "missing": 3571,
             "matching_current_as_recorded_observation": 35,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 200,
@@ -171,7 +172,7 @@
             "valid_evidence_without_scalar": 0
           },
           "consensus": {
-            "missing": 3734,
+            "missing": 3806,
             "matching_current_as_recorded_observation": 0,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
@@ -181,7 +182,7 @@
             "valid_evidence_without_scalar": 0
           },
           "prior": {
-            "missing": 3699,
+            "missing": 3771,
             "matching_current_as_recorded_observation": 35,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
@@ -193,7 +194,7 @@
         }
       },
       "past_nonholiday": {
-        "records": 2394,
+        "records": 2431,
         "exact_observations": {
           "rows_with_entries": 35,
           "entries": 70,
@@ -215,7 +216,7 @@
         },
         "fields": {
           "actual": {
-            "missing": 2159,
+            "missing": 2196,
             "matching_current_as_recorded_observation": 35,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 200,
@@ -225,7 +226,7 @@
             "valid_evidence_without_scalar": 0
           },
           "consensus": {
-            "missing": 2394,
+            "missing": 2431,
             "matching_current_as_recorded_observation": 0,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
@@ -235,7 +236,7 @@
             "valid_evidence_without_scalar": 0
           },
           "prior": {
-            "missing": 2359,
+            "missing": 2396,
             "matching_current_as_recorded_observation": 35,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
@@ -247,7 +248,7 @@
         }
       },
       "today_future_nonholiday": {
-        "records": 1340,
+        "records": 1375,
         "exact_observations": {
           "rows_with_entries": 0,
           "entries": 0,
@@ -269,7 +270,7 @@
         },
         "fields": {
           "actual": {
-            "missing": 1340,
+            "missing": 1375,
             "matching_current_as_recorded_observation": 0,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
@@ -279,7 +280,7 @@
             "valid_evidence_without_scalar": 0
           },
           "consensus": {
-            "missing": 1340,
+            "missing": 1375,
             "matching_current_as_recorded_observation": 0,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
@@ -289,7 +290,7 @@
             "valid_evidence_without_scalar": 0
           },
           "prior": {
-            "missing": 1340,
+            "missing": 1375,
             "matching_current_as_recorded_observation": 0,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
@@ -302,10 +303,10 @@
       }
     },
     "past_nonholiday_actual_coverage": {
-      "denominator": 2394,
+      "denominator": 2431,
       "with_actual": 235,
-      "missing_actual": 2159,
-      "percent": 9.82
+      "missing_actual": 2196,
+      "percent": 9.67
     },
     "horizons": {
       "last_known_scheduled_date": "2027-11-26",
@@ -347,6 +348,7 @@
       "gb-house-prices",
       "gb-labour-productivity",
       "gnosisdao-governance-votes",
+      "in-asi",
       "jackson-hole",
       "kr-bop-region",
       "kr-flow-of-funds",
@@ -2605,27 +2607,40 @@
     },
     "IN": {
       "series": [
-        "holidays-nse"
+        "holidays-nse",
+        "in-asi",
+        "in-asuse-annual-quarterly",
+        "in-asuse-quarterly",
+        "in-cpi",
+        "in-gdp-publications",
+        "in-iip",
+        "in-infrastructure-review",
+        "in-isp",
+        "in-plfs-annual",
+        "in-plfs-monthly",
+        "in-plfs-quarterly",
+        "in-project-flash"
       ],
-      "has_economic_indicator_records": false,
-      "coverage_type": "holidays-only",
+      "has_economic_indicator_records": true,
+      "coverage_type": "economic-indicators",
       "records": {
-        "total": 18,
-        "past": 4,
-        "today_future": 14,
+        "total": 90,
+        "past": 41,
+        "today_future": 49,
         "undated": 0,
-        "economic_indicators": 0,
+        "economic_indicators": 72,
         "central_banks": 0,
         "holidays": 18
       },
       "schedule_status": {
         "labels": {
           "closed": 13,
-          "confirmed": 5
+          "confirmed": 38,
+          "estimated": 39
         },
-        "estimated_dated": 0,
-        "non_estimated_status_dated": 5,
-        "today_future_estimated": 0,
+        "estimated_dated": 39,
+        "non_estimated_status_dated": 38,
+        "today_future_estimated": 35,
         "today_future_non_estimated_status": 2
       },
       "provenance": {
@@ -2633,59 +2648,59 @@
         "missing_source_name": 3,
         "missing_both_source_url_and_name": 3,
         "today_future_missing_source_url": 2,
-        "estimated_with_source_url": 0,
+        "estimated_with_source_url": 39,
         "non_estimated_status_missing_source_url": 3
       },
       "values": {
         "all_nonholiday": {
-          "records": 0,
+          "records": 72,
           "actual": {
             "present": 0,
-            "missing": 0
+            "missing": 72
           },
           "consensus": {
             "present": 0,
-            "missing": 0
+            "missing": 72
           },
           "prior": {
             "present": 0,
-            "missing": 0
+            "missing": 72
           }
         },
         "past_nonholiday": {
-          "records": 0,
+          "records": 37,
           "actual": {
             "present": 0,
-            "missing": 0
+            "missing": 37
           },
           "consensus": {
             "present": 0,
-            "missing": 0
+            "missing": 37
           },
           "prior": {
             "present": 0,
-            "missing": 0
+            "missing": 37
           }
         },
         "today_future_nonholiday": {
-          "records": 0,
+          "records": 35,
           "actual": {
             "present": 0,
-            "missing": 0
+            "missing": 35
           },
           "consensus": {
             "present": 0,
-            "missing": 0
+            "missing": 35
           },
           "prior": {
             "present": 0,
-            "missing": 0
+            "missing": 35
           }
         }
       },
       "numerical_evidence": {
         "all_nonholiday": {
-          "records": 0,
+          "records": 72,
           "exact_observations": {
             "rows_with_entries": 0,
             "entries": 0,
@@ -2707,7 +2722,7 @@
           },
           "fields": {
             "actual": {
-              "missing": 0,
+              "missing": 72,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2717,7 +2732,7 @@
               "valid_evidence_without_scalar": 0
             },
             "consensus": {
-              "missing": 0,
+              "missing": 72,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2727,7 +2742,7 @@
               "valid_evidence_without_scalar": 0
             },
             "prior": {
-              "missing": 0,
+              "missing": 72,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2739,7 +2754,7 @@
           }
         },
         "past_nonholiday": {
-          "records": 0,
+          "records": 37,
           "exact_observations": {
             "rows_with_entries": 0,
             "entries": 0,
@@ -2761,7 +2776,7 @@
           },
           "fields": {
             "actual": {
-              "missing": 0,
+              "missing": 37,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2771,7 +2786,7 @@
               "valid_evidence_without_scalar": 0
             },
             "consensus": {
-              "missing": 0,
+              "missing": 37,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2781,7 +2796,7 @@
               "valid_evidence_without_scalar": 0
             },
             "prior": {
-              "missing": 0,
+              "missing": 37,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2793,7 +2808,7 @@
           }
         },
         "today_future_nonholiday": {
-          "records": 0,
+          "records": 35,
           "exact_observations": {
             "rows_with_entries": 0,
             "entries": 0,
@@ -2815,7 +2830,7 @@
           },
           "fields": {
             "actual": {
-              "missing": 0,
+              "missing": 35,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2825,7 +2840,7 @@
               "valid_evidence_without_scalar": 0
             },
             "consensus": {
-              "missing": 0,
+              "missing": 35,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2835,7 +2850,7 @@
               "valid_evidence_without_scalar": 0
             },
             "prior": {
-              "missing": 0,
+              "missing": 35,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
@@ -2848,10 +2863,10 @@
         }
       },
       "past_nonholiday_actual_coverage": {
-        "denominator": 0,
+        "denominator": 37,
         "with_actual": 0,
-        "missing_actual": 0,
-        "percent": null
+        "missing_actual": 37,
+        "percent": 0.0
       },
       "horizons": {
         "last_known_scheduled_date": "2027-10-29",
@@ -40101,6 +40116,3099 @@
         "last_known_scheduled_date": "2026-12-09",
         "last_known_today_future_date": "2026-12-09",
         "last_known_non_estimated_today_future_date": "2026-12-09"
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-asi": {
+      "name": "India Annual Survey of Industries Results",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 1,
+        "past": 1,
+        "today_future": 0,
+        "undated": 0,
+        "economic_indicators": 1,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 1
+        },
+        "estimated_dated": 0,
+        "non_estimated_status_dated": 1,
+        "today_future_estimated": 0,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 0,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        },
+        "past_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 0,
+          "actual": {
+            "present": 0,
+            "missing": 0
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 0
+          },
+          "prior": {
+            "present": 0,
+            "missing": 0
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 0,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 1,
+        "with_actual": 0,
+        "missing_actual": 1,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2026-09-30",
+        "last_known_today_future_date": null,
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": true,
+      "requested_horizon": null
+    },
+    "in-asuse-annual-quarterly": {
+      "name": "India ASUSE Annual and Quarterly Publication",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 1,
+        "past": 0,
+        "today_future": 1,
+        "undated": 0,
+        "economic_indicators": 1,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "estimated": 1
+        },
+        "estimated_dated": 1,
+        "non_estimated_status_dated": 0,
+        "today_future_estimated": 1,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 1,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        },
+        "past_nonholiday": {
+          "records": 0,
+          "actual": {
+            "present": 0,
+            "missing": 0
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 0
+          },
+          "prior": {
+            "present": 0,
+            "missing": 0
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 0,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 0,
+        "with_actual": 0,
+        "missing_actual": 0,
+        "percent": null
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-03-21",
+        "last_known_today_future_date": "2027-03-21",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-asuse-quarterly": {
+      "name": "India ASUSE Quarterly Bulletin",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 3,
+        "past": 2,
+        "today_future": 1,
+        "undated": 0,
+        "economic_indicators": 3,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 2,
+          "estimated": 1
+        },
+        "estimated_dated": 1,
+        "non_estimated_status_dated": 2,
+        "today_future_estimated": 1,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 1,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 3,
+          "actual": {
+            "present": 0,
+            "missing": 3
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 3
+          },
+          "prior": {
+            "present": 0,
+            "missing": 3
+          }
+        },
+        "past_nonholiday": {
+          "records": 2,
+          "actual": {
+            "present": 0,
+            "missing": 2
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 2
+          },
+          "prior": {
+            "present": 0,
+            "missing": 2
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 3,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 2,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 2,
+        "with_actual": 0,
+        "missing_actual": 2,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2026-11-21",
+        "last_known_today_future_date": "2026-11-21",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-cpi": {
+      "name": "India Consumer Price Index",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 12,
+        "past": 7,
+        "today_future": 5,
+        "undated": 0,
+        "economic_indicators": 12,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 6,
+          "estimated": 6
+        },
+        "estimated_dated": 6,
+        "non_estimated_status_dated": 6,
+        "today_future_estimated": 5,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 6,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 12,
+          "actual": {
+            "present": 0,
+            "missing": 12
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 12
+          },
+          "prior": {
+            "present": 0,
+            "missing": 12
+          }
+        },
+        "past_nonholiday": {
+          "records": 7,
+          "actual": {
+            "present": 0,
+            "missing": 7
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 7
+          },
+          "prior": {
+            "present": 0,
+            "missing": 7
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 5,
+          "actual": {
+            "present": 0,
+            "missing": 5
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 5
+          },
+          "prior": {
+            "present": 0,
+            "missing": 5
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 12,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 12,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 12,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 12,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 7,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 7,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 7,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 7,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 5,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 7,
+        "with_actual": 0,
+        "missing_actual": 7,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-03-12",
+        "last_known_today_future_date": "2027-03-12",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-gdp-publications": {
+      "name": "India GDP Estimates Publication",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 5,
+        "past": 2,
+        "today_future": 3,
+        "undated": 0,
+        "economic_indicators": 5,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 2,
+          "estimated": 3
+        },
+        "estimated_dated": 3,
+        "non_estimated_status_dated": 2,
+        "today_future_estimated": 3,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 3,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 5,
+          "actual": {
+            "present": 0,
+            "missing": 5
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 5
+          },
+          "prior": {
+            "present": 0,
+            "missing": 5
+          }
+        },
+        "past_nonholiday": {
+          "records": 2,
+          "actual": {
+            "present": 0,
+            "missing": 2
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 2
+          },
+          "prior": {
+            "present": 0,
+            "missing": 2
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 3,
+          "actual": {
+            "present": 0,
+            "missing": 3
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 3
+          },
+          "prior": {
+            "present": 0,
+            "missing": 3
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 5,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 2,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 3,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 2,
+        "with_actual": 0,
+        "missing_actual": 2,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-02-26",
+        "last_known_today_future_date": "2027-02-26",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-iip": {
+      "name": "India Industrial Production",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 10,
+        "past": 4,
+        "today_future": 6,
+        "undated": 0,
+        "economic_indicators": 10,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 4,
+          "estimated": 6
+        },
+        "estimated_dated": 6,
+        "non_estimated_status_dated": 4,
+        "today_future_estimated": 6,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 6,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 10,
+          "actual": {
+            "present": 0,
+            "missing": 10
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 10
+          },
+          "prior": {
+            "present": 0,
+            "missing": 10
+          }
+        },
+        "past_nonholiday": {
+          "records": 4,
+          "actual": {
+            "present": 0,
+            "missing": 4
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 4
+          },
+          "prior": {
+            "present": 0,
+            "missing": 4
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 6,
+          "actual": {
+            "present": 0,
+            "missing": 6
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 6
+          },
+          "prior": {
+            "present": 0,
+            "missing": 6
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 10,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 10,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 10,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 10,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 4,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 6,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 4,
+        "with_actual": 0,
+        "missing_actual": 4,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-03-28",
+        "last_known_today_future_date": "2027-03-28",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-infrastructure-review": {
+      "name": "India Infrastructure Performance Review",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 4,
+        "past": 3,
+        "today_future": 1,
+        "undated": 0,
+        "economic_indicators": 4,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 1,
+          "estimated": 3
+        },
+        "estimated_dated": 3,
+        "non_estimated_status_dated": 1,
+        "today_future_estimated": 1,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 3,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 4,
+          "actual": {
+            "present": 0,
+            "missing": 4
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 4
+          },
+          "prior": {
+            "present": 0,
+            "missing": 4
+          }
+        },
+        "past_nonholiday": {
+          "records": 3,
+          "actual": {
+            "present": 0,
+            "missing": 3
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 3
+          },
+          "prior": {
+            "present": 0,
+            "missing": 3
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 4,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 3,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 3,
+        "with_actual": 0,
+        "missing_actual": 3,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-01-16",
+        "last_known_today_future_date": "2027-01-16",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-isp": {
+      "name": "India Services Production",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 9,
+        "past": 3,
+        "today_future": 6,
+        "undated": 0,
+        "economic_indicators": 9,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 3,
+          "estimated": 6
+        },
+        "estimated_dated": 6,
+        "non_estimated_status_dated": 3,
+        "today_future_estimated": 6,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 6,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 9,
+          "actual": {
+            "present": 0,
+            "missing": 9
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 9
+          },
+          "prior": {
+            "present": 0,
+            "missing": 9
+          }
+        },
+        "past_nonholiday": {
+          "records": 3,
+          "actual": {
+            "present": 0,
+            "missing": 3
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 3
+          },
+          "prior": {
+            "present": 0,
+            "missing": 3
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 6,
+          "actual": {
+            "present": 0,
+            "missing": 6
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 6
+          },
+          "prior": {
+            "present": 0,
+            "missing": 6
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 9,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 9,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 9,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 9,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 3,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 3,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 6,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 3,
+        "with_actual": 0,
+        "missing_actual": 3,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-03-29",
+        "last_known_today_future_date": "2027-03-29",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-plfs-annual": {
+      "name": "India PLFS Annual Report",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 1,
+        "past": 0,
+        "today_future": 1,
+        "undated": 0,
+        "economic_indicators": 1,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "estimated": 1
+        },
+        "estimated_dated": 1,
+        "non_estimated_status_dated": 0,
+        "today_future_estimated": 1,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 1,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        },
+        "past_nonholiday": {
+          "records": 0,
+          "actual": {
+            "present": 0,
+            "missing": 0
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 0
+          },
+          "prior": {
+            "present": 0,
+            "missing": 0
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "actual": {
+            "present": 0,
+            "missing": 1
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 1
+          },
+          "prior": {
+            "present": 0,
+            "missing": 1
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 0,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 0,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 1,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 1,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 0,
+        "with_actual": 0,
+        "missing_actual": 0,
+        "percent": null
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-03-25",
+        "last_known_today_future_date": "2027-03-25",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-plfs-monthly": {
+      "name": "India PLFS Monthly Bulletin",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 12,
+        "past": 7,
+        "today_future": 5,
+        "undated": 0,
+        "economic_indicators": 12,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 6,
+          "estimated": 6
+        },
+        "estimated_dated": 6,
+        "non_estimated_status_dated": 6,
+        "today_future_estimated": 5,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 6,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 12,
+          "actual": {
+            "present": 0,
+            "missing": 12
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 12
+          },
+          "prior": {
+            "present": 0,
+            "missing": 12
+          }
+        },
+        "past_nonholiday": {
+          "records": 7,
+          "actual": {
+            "present": 0,
+            "missing": 7
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 7
+          },
+          "prior": {
+            "present": 0,
+            "missing": 7
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 5,
+          "actual": {
+            "present": 0,
+            "missing": 5
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 5
+          },
+          "prior": {
+            "present": 0,
+            "missing": 5
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 12,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 12,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 12,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 12,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 7,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 7,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 7,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 7,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 5,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 5,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 7,
+        "with_actual": 0,
+        "missing_actual": 7,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-03-15",
+        "last_known_today_future_date": "2027-03-15",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-plfs-quarterly": {
+      "name": "India PLFS Quarterly Bulletin",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 4,
+        "past": 2,
+        "today_future": 2,
+        "undated": 0,
+        "economic_indicators": 4,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 2,
+          "estimated": 2
+        },
+        "estimated_dated": 2,
+        "non_estimated_status_dated": 2,
+        "today_future_estimated": 2,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 2,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 4,
+          "actual": {
+            "present": 0,
+            "missing": 4
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 4
+          },
+          "prior": {
+            "present": 0,
+            "missing": 4
+          }
+        },
+        "past_nonholiday": {
+          "records": 2,
+          "actual": {
+            "present": 0,
+            "missing": 2
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 2
+          },
+          "prior": {
+            "present": 0,
+            "missing": 2
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 2,
+          "actual": {
+            "present": 0,
+            "missing": 2
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 2
+          },
+          "prior": {
+            "present": 0,
+            "missing": 2
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 4,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 2,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 2,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 2,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 2,
+        "with_actual": 0,
+        "missing_actual": 2,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-02-10",
+        "last_known_today_future_date": "2027-02-10",
+        "last_known_non_estimated_today_future_date": null
+      },
+      "no_today_future_scheduled_dates": false,
+      "requested_horizon": null
+    },
+    "in-project-flash": {
+      "name": "India Infrastructure Project Flash Report",
+      "country": "IN",
+      "category": "economic-indicators",
+      "declared_in_snapshot": true,
+      "in_local_engine_registry": true,
+      "records": {
+        "total": 10,
+        "past": 6,
+        "today_future": 4,
+        "undated": 0,
+        "economic_indicators": 10,
+        "central_banks": 0,
+        "holidays": 0
+      },
+      "schedule_status": {
+        "labels": {
+          "confirmed": 6,
+          "estimated": 4
+        },
+        "estimated_dated": 4,
+        "non_estimated_status_dated": 6,
+        "today_future_estimated": 4,
+        "today_future_non_estimated_status": 0
+      },
+      "provenance": {
+        "missing_source_url": 0,
+        "missing_source_name": 0,
+        "missing_both_source_url_and_name": 0,
+        "today_future_missing_source_url": 0,
+        "estimated_with_source_url": 4,
+        "non_estimated_status_missing_source_url": 0
+      },
+      "values": {
+        "all_nonholiday": {
+          "records": 10,
+          "actual": {
+            "present": 0,
+            "missing": 10
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 10
+          },
+          "prior": {
+            "present": 0,
+            "missing": 10
+          }
+        },
+        "past_nonholiday": {
+          "records": 6,
+          "actual": {
+            "present": 0,
+            "missing": 6
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 6
+          },
+          "prior": {
+            "present": 0,
+            "missing": 6
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 4,
+          "actual": {
+            "present": 0,
+            "missing": 4
+          },
+          "consensus": {
+            "present": 0,
+            "missing": 4
+          },
+          "prior": {
+            "present": 0,
+            "missing": 4
+          }
+        }
+      },
+      "numerical_evidence": {
+        "all_nonholiday": {
+          "records": 10,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 10,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 10,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 10,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "past_nonholiday": {
+          "records": 6,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 6,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        },
+        "today_future_nonholiday": {
+          "records": 4,
+          "exact_observations": {
+            "rows_with_entries": 0,
+            "entries": 0,
+            "valid_entries": 0,
+            "current_as_recorded_entries": 0,
+            "stale_entries": 0,
+            "invalid_entries": 0,
+            "invalid_reasons": {},
+            "rows_with_valid_entries": 0,
+            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_stale_entries": 0
+          },
+          "structured_auction_summaries": {
+            "valid_rows": 0,
+            "explicitly_stale_rows": 0,
+            "freshness_unknown_rows": 0,
+            "invalid_rows": 0,
+            "invalid_reasons": {}
+          },
+          "fields": {
+            "actual": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "consensus": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            },
+            "prior": {
+              "missing": 4,
+              "matching_current_as_recorded_observation": 0,
+              "matching_stale_observation": 0,
+              "matching_auction_summary_freshness_unknown": 0,
+              "matching_stale_auction_summary": 0,
+              "mismatching_structured_evidence": 0,
+              "without_valid_structured_evidence": 0,
+              "valid_evidence_without_scalar": 0
+            }
+          }
+        }
+      },
+      "past_nonholiday_actual_coverage": {
+        "denominator": 6,
+        "with_actual": 0,
+        "missing_actual": 6,
+        "percent": 0.0
+      },
+      "horizons": {
+        "last_known_scheduled_date": "2027-01-25",
+        "last_known_today_future_date": "2027-01-25",
+        "last_known_non_estimated_today_future_date": null
       },
       "no_today_future_scheduled_dates": false,
       "requested_horizon": null
