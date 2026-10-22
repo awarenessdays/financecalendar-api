@@ -76,6 +76,10 @@ Invalid parameters return HTTP 400 with an `error` message. Daily limits return 
 - [`examples/curl.md`](examples/curl.md)
 - [`widget/`](widget/): drop-in calendar widget for any site
 
+## Numerical evidence
+
+Current `actual` and `prior` fields require supported official observation evidence or an exact structured Treasury result summary; article metadata is not a fallback. Consensus estimates are not currently collected and remain null. Check reference periods, measurement units, source vintages and stale flags. BLS payroll values are already in jobs, while `source_value` retains thousands of jobs and the exact conversion factor. Publisher-reported revisions, engine-observed revisions and original first prints are distinct. See the [complete reference](https://www.financecalendar.com/api/reference/) for document manifests and occurrence bindings.
+
 ## Data
 
 `data/calendar.json` contains the current database in a rolling window from

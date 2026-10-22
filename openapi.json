@@ -1830,19 +1830,22 @@
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "description": "Market consensus is not currently collected and this field is null. Do not infer a forecast from prior or actual values."
           },
           "prior": {
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "description": "The validated prior reference-period observation at its recorded source vintage; null when unsupported. A previous article value, a different metric, and an original first print are not interchangeable."
           },
           "actual": {
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "description": "A result backed by the implemented validated official observation contract, or the exact structured Treasury auction summary; null otherwise. Article metadata is not a numerical fallback. Zero is a value, and elapsed time does not establish that a result was collected."
           },
           "unit": {
             "type": [
@@ -2760,6 +2763,136 @@
                     "null"
                   ]
                 },
+                "source_value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Exact decimal in the publisher measurement scale before canonical conversion. Payroll changes are published in thousands of jobs."
+                },
+                "source_unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_definition": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "conversion_factor": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Exact decimal multiplier from source_value to value; 1000 converts payroll thousands into canonical jobs. Never apply this factor a second time."
+                },
+                "conversion_method": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "identity",
+                    "multiply",
+                    null
+                  ]
+                },
+                "edition_fingerprint_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_native_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_edition_fingerprint_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_documents": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "url",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    }
+                  },
+                  "description": "Exact publisher documents checked for the current numerical edition. The canonical manifest has edition_fingerprint_sha256."
+                },
+                "occurrence_source_documents": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "url",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    }
+                  },
+                  "description": "Original document manifest that verified this occurrence and its reference period. This binding remains separate from later numerical editions."
+                },
+                "publisher_reported_revisions": {
+                  "type": "array",
+                  "description": "Revisions explicitly reported in the publisher edition. Values retain the stated source unit; these are separate from engine-observed revision_history and do not establish original first prints.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "reference_period": {
+                        "type": "string",
+                        "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                      },
+                      "previous_value": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "change": {
+                        "type": "string"
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": [
+                          "up",
+                          "down",
+                          "unchanged"
+                        ]
+                      },
+                      "unit": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
                 "historical_first_print": {
                   "type": "boolean",
                   "description": "False for current-vintage backfills; these are not the values originally known at historical releases."
@@ -2814,6 +2947,24 @@
                           "null"
                         ],
                         "description": "Original evidence-document fingerprint when supplied by a document-based numerical source."
+                      },
+                      "source_value": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "source_unit": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "edition_fingerprint_sha256": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       }
                     }
                   },
@@ -2830,6 +2981,12 @@
                       "format": "uri"
                     },
                     "attribution": {
+                      "type": "string"
+                    },
+                    "policy": {
+                      "type": "string"
+                    },
+                    "vintage_notice": {
                       "type": "string"
                     }
                   }

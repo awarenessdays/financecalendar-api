@@ -238,3 +238,12 @@ Numerical-source staleness is separate from calendar schedule staleness.
 Text output explains this distinction and retains source credits; JSON and CSV
 retain the available lineage. Unknown consensus stays absent. See the
 [REST reference](https://www.financecalendar.com/api/reference/) for the contract.
+
+Current actual/prior fields require the supported official numerical evidence;
+article metadata is not a fallback. Consensus estimates are not currently collected.
+BLS payroll `value` is already converted to jobs. `source_value` remains in
+`source_unit` thousands of jobs with `conversion_factor="1000"`; do not multiply
+the canonical value again. `publisher_reported_revisions` retains publisher units
+and is separate from engine-observed `revision_history`. Neither establishes
+original first prints. Preserve document manifests, occurrence bindings and
+record-level source credits when reusing data.
