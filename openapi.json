@@ -566,7 +566,7 @@
             }
           }
         },
-        "description": "This or next Monday\u2013Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
+        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
       }
     },
     "/next": {
@@ -580,7 +580,7 @@
           {
             "name": "series",
             "in": "query",
-            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
+            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1692,7 +1692,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/KeyUsage"
                 }
               }
             }
@@ -1702,8 +1702,30 @@
           },
           "403": {
             "description": "Key revoked."
+          },
+          "503": {
+            "description": "Usage log could not be read; no zero usage is inferred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
-        }
+        },
+        "description": "Requires a valid active key. Reading usage is not counted or capped. Counts are rate-gate attempts, including 429, not successful responses. The lifetime requests_total is unknown; use the explicit retained UTC-date window. Send X-API-Key, or use the legacy api_key query/Bearer alternatives.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "ApiKeyQuery": []
+          },
+          {
+            "ApiKeyBearer": []
+          }
+        ]
       }
     }
   },
@@ -3437,6 +3459,179 @@
           }
         }
       },
+      "KeyUsage": {
+        "type": "object",
+        "required": [
+          "key_prefix",
+          "email",
+          "tier",
+          "status",
+          "daily_limit",
+          "used_today",
+          "remaining_today",
+          "resets_at",
+          "created_at",
+          "last_used_at",
+          "requests_total",
+          "requests_total_basis",
+          "legacy_activity_samples",
+          "retained_requests",
+          "usage_window",
+          "last_30_days_since",
+          "last_30_days_by_endpoint"
+        ],
+        "properties": {
+          "key_prefix": {
+            "type": "string",
+            "description": "Display prefix, never the complete key."
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "tier": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active"
+            ]
+          },
+          "daily_limit": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "used_today": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "remaining_today": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resets_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Key creation time in UTC, YYYY-MM-DD HH:MM:SS."
+          },
+          "last_used_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Last recorded activity in UTC, YYYY-MM-DD HH:MM:SS; legacy updates may be cache-throttled for 60 seconds."
+          },
+          "requests_total": {
+            "type": "null",
+            "deprecated": true,
+            "description": "Unknown lifetime total. The old numeric field was cache-throttled and undercounted requests; it is now null."
+          },
+          "requests_total_basis": {
+            "type": "string",
+            "enum": [
+              "unavailable_legacy_counter_is_cache_throttled"
+            ]
+          },
+          "legacy_activity_samples": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Old cache-throttled counter retained for diagnosis; not a request total or elapsed-minute count."
+          },
+          "retained_requests": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "All attempts logged within usage_window, including rate-limit rejections. Not successful requests, unique users or a lifetime total."
+          },
+          "usage_window": {
+            "$ref": "#/components/schemas/KeyUsageWindow"
+          },
+          "last_30_days_since": {
+            "type": "string",
+            "format": "date",
+            "description": "Inclusive start of exactly 30 UTC dates including today."
+          },
+          "last_30_days_by_endpoint": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/EndpointUsage"
+            }
+          }
+        }
+      },
+      "KeyUsageWindow": {
+        "type": "object",
+        "description": "Exactly 90 UTC dates including today, applied even if physical log pruning is late. A shorter observed history is not backfilled.",
+        "required": [
+          "from",
+          "to",
+          "days",
+          "timezone",
+          "basis",
+          "includes_rate_limited_attempts",
+          "all_time_total_available"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          },
+          "days": {
+            "type": "integer",
+            "enum": [
+              90
+            ]
+          },
+          "timezone": {
+            "type": "string",
+            "enum": [
+              "UTC"
+            ]
+          },
+          "basis": {
+            "type": "string",
+            "enum": [
+              "rate_limit_gate_attempts"
+            ]
+          },
+          "includes_rate_limited_attempts": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "all_time_total_available": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        }
+      },
+      "EndpointUsage": {
+        "type": "object",
+        "required": [
+          "endpoint",
+          "hits"
+        ],
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "hits": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
       "CryptoAsset": {
         "type": "object",
         "required": [
@@ -3467,6 +3662,16 @@
         "type": "apiKey",
         "in": "header",
         "name": "X-API-Key"
+      },
+      "ApiKeyQuery": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "api_key"
+      },
+      "ApiKeyBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "fc_live_ key"
       }
     }
   },

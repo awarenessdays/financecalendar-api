@@ -68,6 +68,10 @@ curl "https://www.financecalendar.com/wp-json/fc/v1/changes"
 
 Invalid parameters return HTTP 400 with an `error` message. Daily limits return HTTP 429 with `Retry-After`.
 
+## Key usage
+
+`GET /keys/me` requires an active key and is uncounted, even after the daily cap. `used_today` and `retained_requests` count rate-gate attempts, including 429 responses. `usage_window` explicitly covers 90 UTC dates including today; lifetime `requests_total` is null because the legacy counter was cache-throttled and is not reliable as a request total. `legacy_activity_samples` is diagnostic only. Successful origin responses are a separate metric. [Complete usage fields](https://www.financecalendar.com/api/reference/#schema-keyusage).
+
 ## Examples
 
 - [`examples/python.py`](examples/python.py)
