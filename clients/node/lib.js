@@ -232,7 +232,7 @@ export function formatChange(c) {
   return `${c.at}  ${c.change.padEnd(7)} ${c.series_code.padEnd(16)} ${c.id}${what ? "  " + what : ""}`;
 }
 
-const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since", "source_rights", "discovery_url", "observations", "observation_status", "observation_metric_id", "observation_fields", "source_reference_period", "source_id", "native_id"];
+const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since", "source_rights", "discovery_url", "observations", "observation_status", "observation_metric_id", "observation_fields", "source_reference_period", "source_id", "native_id", "source_clock"];
 
 /** Build CSV locally from event rows (used when the API's own CSV is not requested). */
 export function eventsToCsv(events) {

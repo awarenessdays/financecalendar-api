@@ -72,7 +72,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -268,7 +268,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -409,7 +409,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -589,7 +589,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "Override the country for a generic series, e.g. uk. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
+            "description": "Override the country for a generic series, e.g. uk. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -709,7 +709,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -2479,6 +2479,41 @@
             ],
             "format": "date-time",
             "description": "Fixed timestamp of human source review, when relevant; snapshot generation never advances this timestamp."
+          },
+          "source_clock": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Raw publisher clock evidence, distinct from a verified release instant. If timezone is null, release_at_utc and time_local remain null; release_tz only identifies the calendar jurisdiction. Date precision does not imply an all-day event.",
+            "properties": {
+              "clock": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Publisher clock exactly normalised to HH:MM, where supplied."
+              },
+              "timezone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Explicitly verified clock timezone, otherwise null."
+              },
+              "role": {
+                "type": "string",
+                "description": "Meaning of the source clock, e.g. media-publication or date-only. ECOS availability is a separate clock."
+              },
+              "verification": {
+                "type": "string",
+                "description": "Evidence limitation, e.g. timezone-unverified or no-clock-published."
+              },
+              "source_url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
           },
           "source_reference_period": {
             "type": [

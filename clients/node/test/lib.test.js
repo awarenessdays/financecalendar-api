@@ -76,7 +76,7 @@ test("factual crypto output preserves source notices without inventing a licence
   assert.ok(!text.includes("MIT") && !text.includes("CC-BY"));
   assert.match(formatEvent({ ...row, crypto: { event_type: "governance-vote" } }), /Governance voting deadline; not a proposal outcome or execution\./);
   const csv = eventsToCsv([row]);
-  assert.match(csv.split("\n")[0], /source_rights,discovery_url,observations,observation_status,observation_metric_id,observation_fields,source_reference_period,source_id,native_id$/);
+  assert.match(csv.split("\n")[0], /source_rights,discovery_url,observations,observation_status,observation_metric_id,observation_fields,source_reference_period,source_id,native_id,source_clock$/);
   for (const value of [rights.attribution, rights.notice, row.discovery_url, "3625742933.075554"]) assert.ok(csv.includes(value));
 });
 
@@ -110,7 +110,7 @@ test("raw API JSON preserves official observation lineage without transformation
 });
 
 test("appended CSV observation columns round-trip nested revisions and native reference metadata", () => {
-  const row = officialObservationRow(), csv = eventsToCsv([row]);
+  const row = { ...officialObservationRow(), source_clock: { clock: "06:00", timezone: null, role: "media-publication", verification: "timezone-unverified" } }, csv = eventsToCsv([row]);
   // Parse the actual CSV quoting, including embedded JSON commas and quotes.
   const records = [], values = [];
   let value = "", quoted = false;
@@ -127,6 +127,7 @@ test("appended CSV observation columns round-trip nested revisions and native re
   const result = Object.fromEntries(records[0].map((column, i) => [column, records[1][i]]));
   assert.deepEqual(JSON.parse(result.observations), row.observations);
   assert.deepEqual(JSON.parse(result.source_reference_period), row.source_reference_period);
+  assert.deepEqual(JSON.parse(result.source_clock), row.source_clock);
   assert.deepEqual(JSON.parse(result.observation_fields), ["actual", "prior"]);
   assert.equal(result.actual, "0");
   assert.equal(result.native_id, row.native_id);

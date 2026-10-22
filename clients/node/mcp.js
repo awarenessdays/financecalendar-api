@@ -169,6 +169,7 @@ server.registerPrompt("economic_calendar_briefing", {
           "2. If fewer than three rows come back, call it again with impact=\"high,medium\".",
           "3. List each event in date order with its local time, consensus and prior, and say in one line why it matters for markets.",
           "4. Finish with a two-sentence summary of the week's main risk events.",
+          "Preserve missing values as unknown. When release_at_utc is null, never infer UTC from source_clock or release_tz; all_day=false with date precision means the exact time is unknown.",
           "Attribute the data to financecalendar.com with a link to https://www.financecalendar.com.",
         ].join("\n"),
       },

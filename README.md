@@ -24,7 +24,7 @@ Add this Streamable HTTP endpoint as a custom connector in ChatGPT or Claude, wi
 https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
 ```
 
-[Setup and full tool reference](https://www.financecalendar.com/api/mcp/). The public beta provides 12 read-only tools and shares the keyless per-IP daily allowance; platform proxy IPs may be shared by several users. The local server remains available with a personal API key. Directory listing and real ChatGPT/Claude conversation verification are pending.
+[Setup and full tool reference](https://www.financecalendar.com/api/mcp/). The public beta provides 12 read-only tools and shares the keyless per-IP daily allowance; platform proxy IPs may be shared by several users. The local server remains available with a personal API key. A real Claude Messages API call has been verified against the hosted MCP endpoint. ChatGPT and Claude.ai account-level setup checks, plus directory listings, remain pending.
 
 ## Quick start
 
@@ -88,7 +88,7 @@ Current `actual` and `prior` fields require supported official observation evide
 
 Direct schedule connectors currently read BLS, ONS, BEA, Census, Federal
 Reserve G.17, DOL jobless claims, EIA energy releases, Treasury auctions,
-Eurostat, Japan e-Stat and China NBS. Publisher horizons differ; a rolling window does not mean every
+Eurostat, Japan e-Stat, China NBS, Malaysia DOSM, Australia ABS, South Korea MODS and Bank of Korea statistics. Publisher horizons differ; a rolling window does not mean every
 source has announced dates through its end. Check `/status` and the coverage page
 for current availability.
 
@@ -143,3 +143,9 @@ The MIT software licence does not relicense upstream data.
 
 See the [crypto calendar](https://www.financecalendar.com/crypto/) and
 [full REST reference](https://www.financecalendar.com/api/reference/).
+
+Korean calendars use `country=KR` and `kr-` series codes. They retain explicit
+period/stage identities and raw `source_clock` evidence. Where a clock timezone
+has not been independently verified, exact UTC/local time remains null and
+`all_day=false`; `release_tz` records calendar jurisdiction, not permission to
+convert the raw clock. Check the published horizon and per-source health.

@@ -329,3 +329,17 @@ the canonical value again. `publisher_reported_revisions` retains publisher unit
 and is separate from engine-observed `revision_history`. Neither establishes
 original first prints. Preserve document manifests, occurrence bindings and
 record-level source credits when reusing data.
+
+## Korean official calendars
+
+Filter with `country=KR` (aliases `korea` and `south korea`) or a `kr-` series
+code. MODS and BOK schedules retain explicit reference periods and release
+stages; unsupported or ambiguous identities are withheld. Coverage ends at the
+publisher's verified horizon: a year selector does not establish published dates.
+
+These records currently have date precision and `all_day=false`. BOK's raw
+media-publication clock is carried in `source_clock`, distinct from ECOS
+availability. Its timezone has not been explicitly verified, so `release_at_utc`
+and local display time remain null. `release_tz=Asia/Seoul` identifies the calendar
+jurisdiction; do not use it to manufacture an instant. Numerical results and
+consensus remain null until separately verified by an implemented result source.
