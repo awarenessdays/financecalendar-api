@@ -63,8 +63,61 @@ test("factual crypto output preserves source notices without inventing a licence
   assert.ok(!text.includes("MIT") && !text.includes("CC-BY"));
   assert.match(formatEvent({ ...row, crypto: { event_type: "governance-vote" } }), /Governance voting deadline; not a proposal outcome or execution\./);
   const csv = eventsToCsv([row]);
-  assert.match(csv.split("\n")[0], /source_rights,discovery_url$/);
+  assert.match(csv.split("\n")[0], /source_rights,discovery_url,observations,observation_status,observation_metric_id,observation_fields,source_reference_period,source_id,native_id$/);
   for (const value of [rights.attribution, rights.notice, row.discovery_url, "3625742933.075554"]) assert.ok(csv.includes(value));
+});
+
+function officialObservationRow() {
+  return { id: "synthetic-cpi", name: "Synthetic CPI", date: "2026-10-21", country: "GB", period: "2026-09", actual: 0,
+    source_id: "ons", native_id: "synthetic-native", source_reference_period: { date: "2026-09-01", formatted: "2026-09", frequency: "MONTHLY" },
+    data_stale: false, observation_status: "stale", observation_metric_id: "test-cpi", observation_fields: ["actual", "prior"], observations: [
+      { role: "actual", value: 0, unit: "% y/y", reference_period: "2026-09", source_id: "ons-observations-test", known_at: "2026-10-21T08:00:00Z", data_stale: false,
+        revision_history: [{ value: "0.1", known_at: "2026-10-20T08:00:00Z" }], source_url: "https://www.ons.gov.uk/synthetic-observation",
+        source_license: { spdx: "OGL-UK-3.0", attribution: "Source: Office for National Statistics", url: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" } },
+      { role: "prior", value: "0", unit: "% y/y", reference_period: "2026-08", data_stale: true, value_basis: "previous-reference-period-current-vintage" }] };
+}
+
+test("official observations display zero, precise periods, vintage caveats and independent stale status", () => {
+  const row = officialObservationRow(), text = formatEvent(row, { tz: "UTC" });
+  assert.ok(text.includes("Official actual: 0 % y/y · reference period 2026-09 · current observed vintage"));
+  assert.ok(text.includes("Official prior: 0 % y/y · reference period 2026-08"));
+  assert.ok(text.includes("Prior is the previous reference period at the current observed vintage, not the original first print."));
+  assert.ok(text.includes("Stale official prior observation; schedule freshness is independent."));
+  assert.ok(!text.includes("Stale source data") && !text.includes("Stale official actual observation"));
+  assert.ok(text.includes("Recorded value revisions: 1 (observed by Finance Calendar)."));
+  assert.ok(text.includes("not the publisher's first-print timestamp"));
+  assert.ok(text.includes(row.observations[0].source_url) && text.includes(row.observations[0].source_license.url));
+  assert.ok(text.includes("OGL-UK-3.0 · Source: Office for National Statistics"));
+});
+
+test("raw API JSON preserves official observation lineage without transformation", async () => {
+  const row = officialObservationRow();
+  const response = await api("/calendar", {}, { fetch: async () => ({ ok: true, json: async () => ({ events: [row] }) }) });
+  assert.deepEqual(response.events[0], row);
+});
+
+test("appended CSV observation columns round-trip nested revisions and native reference metadata", () => {
+  const row = officialObservationRow(), csv = eventsToCsv([row]);
+  // Parse the actual CSV quoting, including embedded JSON commas and quotes.
+  const records = [], values = [];
+  let value = "", quoted = false;
+  for (let i = 0; i < csv.length; i++) {
+    const ch = csv[i];
+    if (ch === '"') {
+      if (quoted && csv[i + 1] === '"') { value += '"'; i++; }
+      else quoted = !quoted;
+    } else if (!quoted && (ch === "," || ch === "\n")) {
+      values.push(value); value = "";
+      if (ch === "\n") { records.push(values.splice(0)); }
+    } else value += ch;
+  }
+  const result = Object.fromEntries(records[0].map((column, i) => [column, records[1][i]]));
+  assert.deepEqual(JSON.parse(result.observations), row.observations);
+  assert.deepEqual(JSON.parse(result.source_reference_period), row.source_reference_period);
+  assert.deepEqual(JSON.parse(result.observation_fields), ["actual", "prior"]);
+  assert.equal(result.actual, "0");
+  assert.equal(result.native_id, row.native_id);
+  assert.equal(result.source_id, "ons");
 });
 
 test("estimated crypto windows are displayed as windows, never their index date", () => {

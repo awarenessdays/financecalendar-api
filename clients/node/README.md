@@ -226,3 +226,15 @@ npm pack --dry-run  # confirm the published file list
 ```
 
 Client source code: MIT, Awareness Days Ltd / financecalendar.com. The code licence does not license upstream data; data terms and record-level rights metadata apply separately.
+
+## Official numerical observations
+
+Where a result is explicitly mapped, responses retain `observations`,
+`observation_status`, `observation_metric_id` and `observation_fields`. Each
+observation identifies its value, unit, reference period, source, engine capture
+time and any revisions. The previous value uses the previous reference period
+at the current observed vintage; it is not a reconstructed original first print.
+Numerical-source staleness is separate from calendar schedule staleness.
+Text output explains this distinction and retains source credits; JSON and CSV
+retain the available lineage. Unknown consensus stays absent. See the
+[REST reference](https://www.financecalendar.com/api/reference/) for the contract.

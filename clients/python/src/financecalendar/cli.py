@@ -99,6 +99,33 @@ def format_event(event: dict[str, Any], tz=None) -> str:
         lines.append(event["url"])
     if event.get("data_stale"):
         lines.append("Stale source data" + (f" since {event['stale_since']}" if event.get("stale_since") else ""))
+    if event.get("observation_status") == "stale":
+        lines.append("Official observation data stale; calendar freshness is reported separately.")
+    for observation in event.get("observations") or []:
+        if not isinstance(observation, dict):
+            continue
+        role = observation.get("role") or "value"
+        value = str(observation["value"]) if observation.get("value") is not None else "unknown"
+        unit = " " + str(observation["unit"]) if observation.get("unit") else ""
+        lines.append(f"Official {role}: {value}{unit} · reference period {observation.get('reference_period') or 'unknown'} · current observed vintage")
+        if role == "prior":
+            lines.append("Prior is the previous reference period at the current observed vintage, not the original first print.")
+        if observation.get("data_stale"):
+            lines.append(f"Stale official {role} observation; schedule freshness is independent.")
+        if observation.get("known_at"):
+            lines.append(f"Value observed by Finance Calendar: {observation['known_at']}; not the publisher's first-print timestamp.")
+        if observation.get("revision_history"):
+            lines.append(f"Recorded value revisions: {len(observation['revision_history'])} (observed by Finance Calendar).")
+        if observation.get("source_url"):
+            lines.append(f"Observation source: {observation['source_url']}")
+        license_info = observation.get("source_license")
+        if isinstance(license_info, dict):
+            credit = " · " + license_info["attribution"] if license_info.get("attribution") else ""
+            lines.append(f"Observation licence: {license_info.get('spdx') or license_info.get('id') or ''}{credit}")
+            if license_info.get("url"):
+                lines.append(license_info["url"])
+            if license_info.get("notice"):
+                lines.append(license_info["notice"])
     if event.get("verification_url"):
         lines.append(f"Verification: {event['verification_url']}")
     if event.get("manually_reviewed_at"):
@@ -110,7 +137,7 @@ def format_event(event: dict[str, Any], tz=None) -> str:
     if event.get("source_license"):
         license_info = event["source_license"]
         adapted = " · adapted by Finance Calendar" if license_info.get("adapted") else ""
-        lines.append(f"Original source: {license_info.get('attribution') or event.get('source_name') or ''} · {license_info.get('id') or ''}{adapted}")
+        lines.append(f"Original source: {license_info.get('attribution') or event.get('source_name') or ''} · {license_info.get('spdx') or license_info.get('id') or ''}{adapted}")
         if event.get("source_url"):
             lines.append(event["source_url"])
         if license_info.get("attribution_url"):

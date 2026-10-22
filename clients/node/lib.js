@@ -152,13 +152,31 @@ export function formatEvent(e, { tz } = {}) {
   const lines = [line];
   if (e.url) lines.push(e.url);
   if (e.data_stale) lines.push(`Stale source data${e.stale_since ? " since " + e.stale_since : ""}`);
+  if (e.observation_status === "stale") lines.push("Official observation data stale; calendar freshness is reported separately.");
+  for (const observation of e.observations || []) {
+    if (!observation || typeof observation !== "object") continue;
+    const role = observation.role || "value";
+    const value = observation.value !== null && observation.value !== undefined ? String(observation.value) : "unknown";
+    lines.push(`Official ${role}: ${value}${observation.unit ? " " + observation.unit : ""} · reference period ${observation.reference_period || "unknown"} · current observed vintage`);
+    if (role === "prior") lines.push("Prior is the previous reference period at the current observed vintage, not the original first print.");
+    if (observation.data_stale) lines.push(`Stale official ${role} observation; schedule freshness is independent.`);
+    if (observation.known_at) lines.push(`Value observed by Finance Calendar: ${observation.known_at}; not the publisher's first-print timestamp.`);
+    if (Array.isArray(observation.revision_history) && observation.revision_history.length) lines.push(`Recorded value revisions: ${observation.revision_history.length} (observed by Finance Calendar).`);
+    if (observation.source_url) lines.push(`Observation source: ${observation.source_url}`);
+    const license = observation.source_license;
+    if (license && typeof license === "object") {
+      lines.push(`Observation licence: ${license.spdx || license.id || ""}${license.attribution ? " · " + license.attribution : ""}`);
+      if (license.url) lines.push(license.url);
+      if (license.notice) lines.push(license.notice);
+    }
+  }
   if (e.verification_url) lines.push(`Verification: ${e.verification_url}`);
   if (e.manually_reviewed_at) lines.push(`Manually reviewed: ${e.manually_reviewed_at}`);
   if (e.crypto?.event_type === "supply-projection") lines.push("Issuer supply projection; not a confirmed unlock or observed circulating supply.");
   if (e.crypto?.event_type === "governance-vote") lines.push("Governance voting deadline; not a proposal outcome or execution.");
   if (e.source_license) {
     const license = e.source_license;
-    lines.push(`Original source: ${license.attribution || e.source_name || ""} · ${license.id || ""}${license.adapted ? " · adapted by Finance Calendar" : ""}`);
+    lines.push(`Original source: ${license.attribution || e.source_name || ""} · ${license.spdx || license.id || ""}${license.adapted ? " · adapted by Finance Calendar" : ""}`);
     if (e.source_url) lines.push(e.source_url);
     if (license.attribution_url) lines.push(`Attribution: ${license.attribution_url}`);
     if (license.url) lines.push(license.url);
@@ -207,7 +225,7 @@ export function formatChange(c) {
   return `${c.at}  ${c.change.padEnd(7)} ${c.series_code.padEnd(16)} ${c.id}${what ? "  " + what : ""}`;
 }
 
-const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since", "source_rights", "discovery_url"];
+const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since", "source_rights", "discovery_url", "observations", "observation_status", "observation_metric_id", "observation_fields", "source_reference_period", "source_id", "native_id"];
 
 /** Build CSV locally from event rows (used when the API's own CSV is not requested). */
 export function eventsToCsv(events) {

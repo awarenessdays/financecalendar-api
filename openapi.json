@@ -72,7 +72,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -268,7 +268,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -409,7 +409,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -589,7 +589,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "Override the country for a generic series, e.g. uk.",
+            "description": "Override the country for a generic series, e.g. uk. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -708,7 +708,7 @@
           {
             "name": "country",
             "in": "query",
-            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted.",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia. Use /countries for populated coverage.",
             "required": false,
             "schema": {
               "type": "string"
@@ -1495,6 +1495,9 @@
                     "docs": {
                       "type": "string",
                       "format": "uri"
+                    },
+                    "observation_summary": {
+                      "$ref": "#/components/schemas/ObservationSummary"
                     }
                   }
                 }
@@ -2405,6 +2408,274 @@
             ],
             "format": "date-time",
             "description": "Fixed timestamp of human source review, when relevant; snapshot generation never advances this timestamp."
+          },
+          "source_reference_period": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Publisher reference-period date, frequency and label; separate from publication date.",
+            "properties": {
+              "date": {
+                "type": "string"
+              },
+              "frequency": {
+                "type": "string"
+              },
+              "formatted": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          },
+          "source_family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_publication_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observation_metric_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observation_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "current",
+              "stale",
+              null
+            ],
+            "description": "Numerical source status, independent of calendar timing verification."
+          },
+          "observation_fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "actual",
+                "prior"
+              ]
+            },
+            "description": "Flat values filled by the explicitly mapped official metric; existing article values may remain unchanged."
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "actual",
+                    "prior"
+                  ]
+                },
+                "metric_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                },
+                "frequency": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "seasonal_adjustment": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "definition": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_series_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_dataset_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "source_api_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "measurement_basis_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "source_update_precision": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "edition_published_date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_updated_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "known_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "first_seen_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "last_checked_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value_basis": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "data_stale": {
+                  "type": "boolean"
+                },
+                "revision_history": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "unit": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "known_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "first_seen_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "source_updated_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "superseded_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  },
+                  "description": "Earlier engine-observed values; no retrospective first-print claim."
+                },
+                "source_license": {
+                  "type": "object",
+                  "properties": {
+                    "spdx": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "attribution": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Explicitly mapped official numerical observations. Values are source decimal strings, including zero. known_at/first_seen_at record engine observation, not the original publisher release. Prior is the previous reference period at the current observed vintage; consensus is never inferred."
           }
         }
       },
@@ -2565,18 +2836,20 @@
               "string",
               "boolean",
               "object",
-              "null"
+              "null",
+              "array"
             ],
-            "description": "Previous field value; structured auction metadata is an object."
+            "description": "Previous or updated semantic value, including structured observations and revision history. Routine successful fetch timestamps do not create changes."
           },
           "new": {
             "type": [
               "string",
               "boolean",
               "object",
-              "null"
+              "null",
+              "array"
             ],
-            "description": "Updated field value; structured auction metadata is an object."
+            "description": "Previous or updated semantic value, including structured observations and revision history. Routine successful fetch timestamps do not create changes."
           }
         }
       },
@@ -2667,6 +2940,15 @@
               },
               "series_name": {
                 "type": "string"
+              },
+              "metric_id": {
+                "type": "string"
+              },
+              "series_code": {
+                "type": "string"
+              },
+              "lookback_months": {
+                "type": "integer"
               }
             }
           },
@@ -2719,6 +3001,36 @@
           "stale_events": {
             "type": "integer",
             "description": "Events explicitly marked as retained last-good data during source outages."
+          }
+        }
+      },
+      "ObservationSummary": {
+        "type": "object",
+        "description": "Explicitly mapped official numerical observations only. Independent of schedule staleness and article-derived values. A current row means the latest collection succeeded; it does not establish first-print availability or real-time latency.",
+        "properties": {
+          "rows_with_observations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "current_rows": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "stale_rows": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "official_actual_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "official_prior_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "mapped_metrics": {
+            "type": "integer",
+            "minimum": 0
           }
         }
       },
