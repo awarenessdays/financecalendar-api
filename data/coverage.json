@@ -8,7 +8,7 @@
     "to": "2027-11-26"
   },
   "freshness": {
-    "generated_at": "2026-10-22T07:36:12+00:00",
+    "generated_at": "2026-10-22T07:49:38+00:00",
     "age_calendar_days_utc": 0,
     "generated_after_as_of_date": false
   },
@@ -67,10 +67,10 @@
     "schedule_status": {
       "labels": {
         "closed": 123,
-        "confirmed": 2627,
+        "confirmed": 2616,
         "early_close": 31,
         "estimated": 598,
-        "released": 314
+        "released": 325
       },
       "estimated_dated": 598,
       "non_estimated_status_dated": 2941,
@@ -89,31 +89,31 @@
       "all_nonholiday": {
         "records": 3494,
         "actual": {
-          "present": 303,
-          "missing": 3191
+          "present": 314,
+          "missing": 3180
         },
         "consensus": {
           "present": 36,
           "missing": 3458
         },
         "prior": {
-          "present": 187,
-          "missing": 3307
+          "present": 197,
+          "missing": 3297
         }
       },
       "past_nonholiday": {
         "records": 2240,
         "actual": {
-          "present": 303,
-          "missing": 1937
+          "present": 314,
+          "missing": 1926
         },
         "consensus": {
           "present": 29,
           "missing": 2211
         },
         "prior": {
-          "present": 81,
-          "missing": 2159
+          "present": 91,
+          "missing": 2149
         }
       },
       "today_future_nonholiday": {
@@ -134,9 +134,9 @@
     },
     "past_nonholiday_actual_coverage": {
       "denominator": 2240,
-      "with_actual": 303,
-      "missing_actual": 1937,
-      "percent": 13.53
+      "with_actual": 314,
+      "missing_actual": 1926,
+      "percent": 14.02
     },
     "horizons": {
       "last_known_scheduled_date": "2027-11-26",
@@ -916,10 +916,10 @@
       "schedule_status": {
         "labels": {
           "closed": 8,
-          "confirmed": 352,
+          "confirmed": 341,
           "early_close": 2,
           "estimated": 29,
-          "released": 26
+          "released": 37
         },
         "estimated_dated": 29,
         "non_estimated_status_dated": 378,
@@ -938,31 +938,31 @@
         "all_nonholiday": {
           "records": 404,
           "actual": {
-            "present": 26,
-            "missing": 378
+            "present": 37,
+            "missing": 367
           },
           "consensus": {
             "present": 2,
             "missing": 402
           },
           "prior": {
-            "present": 38,
-            "missing": 366
+            "present": 48,
+            "missing": 356
           }
         },
         "past_nonholiday": {
           "records": 247,
           "actual": {
-            "present": 26,
-            "missing": 221
+            "present": 37,
+            "missing": 210
           },
           "consensus": {
             "present": 2,
             "missing": 245
           },
           "prior": {
-            "present": 25,
-            "missing": 222
+            "present": 35,
+            "missing": 212
           }
         },
         "today_future_nonholiday": {
@@ -983,9 +983,9 @@
       },
       "past_nonholiday_actual_coverage": {
         "denominator": 247,
-        "with_actual": 26,
-        "missing_actual": 221,
-        "percent": 10.53
+        "with_actual": 37,
+        "missing_actual": 210,
+        "percent": 14.98
       },
       "horizons": {
         "last_known_scheduled_date": "2027-11-19",
@@ -9307,9 +9307,9 @@
       },
       "schedule_status": {
         "labels": {
-          "confirmed": 23,
+          "confirmed": 12,
           "estimated": 1,
-          "released": 1
+          "released": 12
         },
         "estimated_dated": 1,
         "non_estimated_status_dated": 24,
@@ -9328,31 +9328,31 @@
         "all_nonholiday": {
           "records": 25,
           "actual": {
-            "present": 1,
-            "missing": 24
+            "present": 12,
+            "missing": 13
           },
           "consensus": {
             "present": 0,
             "missing": 25
           },
           "prior": {
-            "present": 6,
-            "missing": 19
+            "present": 16,
+            "missing": 9
           }
         },
         "past_nonholiday": {
           "records": 12,
           "actual": {
-            "present": 1,
-            "missing": 11
+            "present": 12,
+            "missing": 0
           },
           "consensus": {
             "present": 0,
             "missing": 12
           },
           "prior": {
-            "present": 2,
-            "missing": 10
+            "present": 12,
+            "missing": 0
           }
         },
         "today_future_nonholiday": {
@@ -9373,9 +9373,9 @@
       },
       "past_nonholiday_actual_coverage": {
         "denominator": 12,
-        "with_actual": 1,
-        "missing_actual": 11,
-        "percent": 8.33
+        "with_actual": 12,
+        "missing_actual": 0,
+        "percent": 100.0
       },
       "horizons": {
         "last_known_scheduled_date": "2027-11-12",
