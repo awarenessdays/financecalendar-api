@@ -2469,7 +2469,7 @@
                 "prior"
               ]
             },
-            "description": "Flat values filled by the explicitly mapped official metric; existing article values may remain unchanged."
+            "description": "Flat actual/prior fields populated by an exact official metric and reference-period match. Matching official values take precedence over article-derived values; the linked article text is not rewritten and consensus is never inferred."
           },
           "observations": {
             "type": "array",
