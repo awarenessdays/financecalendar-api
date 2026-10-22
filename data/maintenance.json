@@ -1,24 +1,24 @@
 {
   "version": 1,
-  "generated_at": "2026-10-22T07:36:16+00:00",
+  "generated_at": "2026-10-22T07:40:06.450215+00:00",
   "snapshot_generated_at": "2026-10-22T07:36:12+00:00",
   "summary": {
-    "source_count": 38,
+    "source_count": 39,
     "source_states": {
       "blocked": 1,
       "degraded": 2,
       "success": 33,
-      "unobserved": 2
+      "unobserved": 3
     },
-    "snapshot_age_hours": 0.0,
+    "snapshot_age_hours": 0.07,
     "event_count": 3693,
     "stale_event_count": 0,
     "unattributed_event_count": 0,
-    "unregistered_source_count": 1,
-    "action_count": 9,
+    "unregistered_source_count": 0,
+    "action_count": 8,
     "actions_by_severity": {
       "info": 3,
-      "warning": 6
+      "warning": 5
     },
     "candidate_count": 4
   },
@@ -1057,6 +1057,32 @@
       "license_url": null
     },
     {
+      "source_id": "wordpress",
+      "name": "Finance Calendar editorial records",
+      "mode": "editorial",
+      "kind": "editorial",
+      "state": "unobserved",
+      "optional": true,
+      "source_url": "https://www.financecalendar.com/",
+      "row_count": 57,
+      "upcoming_count": 35,
+      "stale_count": 0,
+      "near_term_stale_count": 0,
+      "observation_count": 0,
+      "last_checked_at": null,
+      "last_successful_fetch_at": null,
+      "last_retained_row_verified_at": null,
+      "reviewed_at": "2026-10-22",
+      "review_due_at": "2026-10-29",
+      "review_due": false,
+      "refresh_hours": null,
+      "health_outcomes": {},
+      "public_eligible": null,
+      "rights_basis": null,
+      "license": null,
+      "license_url": null
+    },
+    {
       "source_id": "zknation-token-docs",
       "name": "ZK Nation",
       "mode": "manual",
@@ -1141,13 +1167,6 @@
       "source_id": "intl_macro",
       "message": "The explicit source review is due or has no recorded date.",
       "next_action": "Review source identity, publication horizon and reuse terms; record the actual review date separately from fetch timestamps."
-    },
-    {
-      "id": "unregistered-source:wordpress",
-      "severity": "warning",
-      "source_id": "wordpress",
-      "message": "Snapshot contains an unregistered source identity.",
-      "next_action": "Review its collector, rights and identity mapping before adding it to the maintenance register."
     }
   ],
   "candidates": [
