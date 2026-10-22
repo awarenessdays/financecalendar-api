@@ -261,3 +261,14 @@ availability. Its timezone has not been explicitly verified, so `release_at_utc`
 and local display time remain null. `release_tz=Asia/Seoul` identifies the calendar
 jurisdiction; do not use it to manufacture an instant. Numerical results and
 consensus remain null until separately verified by an implemented result source.
+
+## Indian official release dates
+
+MoSPI dates use `country=IN` and `in-` series codes. Publisher-planned dates remain
+estimated, with no computed holiday adjustment or clock. The source's explicitly
+recorded publication dates take precedence. A publication month is not the
+measured month: `period` and `source_reference_period` stay null where omitted.
+GDP publications may bundle multiple quarterly/annual estimate components;
+these retain their original description and do not imply one headline result.
+Reference-year conflicts and indistinguishable release identities are held for
+review. Inspect per-source health and the verified fiscal-year horizon.

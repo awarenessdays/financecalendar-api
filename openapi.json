@@ -2520,7 +2520,7 @@
               "object",
               "null"
             ],
-            "description": "Publisher reference-period date, frequency and label; separate from publication date.",
+            "description": "Publisher reference period or explicit publication-bundle description, separate from announcement date. Null when the source does not identify the measured period. A fiscal publication-month slot is an identity aid and must not be substituted for the measured month.",
             "properties": {
               "date": {
                 "type": "string"
@@ -2535,10 +2535,41 @@
                 "type": "string"
               },
               "kind": {
-                "type": "string"
+                "type": "string",
+                "description": "Source-specific period kind, e.g. month, quarter, quarter-and-year, half-year, year, week-ending, month-range, fiscal-year or publication-bundle."
               },
               "week_ending": {
                 "type": "string"
+              },
+              "reference_month": {
+                "type": "string",
+                "description": "Explicit measured month as YYYY-MM; never inferred from a publication month."
+              },
+              "quarter": {
+                "type": "string"
+              },
+              "half_year": {
+                "type": "string"
+              },
+              "year": {
+                "type": "string"
+              },
+              "fiscal_year": {
+                "type": "string",
+                "description": "Explicit publisher fiscal-year label, e.g. 2024-25; distinct from a calendar year."
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Explicit source components for a combined reference period or publication bundle. A publication-bundle component may retain the original combined description; it is not a single headline metric."
               }
             }
           },

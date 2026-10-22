@@ -88,7 +88,7 @@ Current `actual` and `prior` fields require supported official observation evide
 
 Direct schedule connectors currently read BLS, ONS, BEA, Census, Federal
 Reserve G.17, DOL jobless claims, EIA energy releases, Treasury auctions,
-Eurostat, Japan e-Stat, China NBS, Malaysia DOSM, Australia ABS, South Korea MODS and Bank of Korea statistics. Publisher horizons differ; a rolling window does not mean every
+Eurostat, Japan e-Stat, China NBS, Malaysia DOSM, Australia ABS, South Korea MODS, Bank of Korea statistics and India MoSPI. Publisher horizons differ; a rolling window does not mean every
 source has announced dates through its end. Check `/status` and the coverage page
 for current availability.
 
@@ -149,3 +149,11 @@ period/stage identities and raw `source_clock` evidence. Where a clock timezone
 has not been independently verified, exact UTC/local time remains null and
 `all_day=false`; `release_tz` records calendar jurisdiction, not permission to
 convert the raw clock. Check the published horizon and per-source health.
+
+MoSPI dates use `country=IN` and `in-` series codes. Its latest fiscal-year
+calendar is discovered from the official manifest. Planned dates remain
+estimated; explicitly recorded publication dates take precedence. No holiday
+move, publication clock or missing measured period is inferred. Combined GDP
+publications retain their original component description and are not a single
+headline observation. Source health exposes held reference-year and identity
+ambiguities.
