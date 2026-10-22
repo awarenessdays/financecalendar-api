@@ -102,7 +102,9 @@ catch-up periods remain distinct releases. A changed date retains the release's
 public ID; last-good data is marked stale when a source is unavailable. Source
 verification refers to a calendar fetch, independently of numerical result
 availability. Treasury results are imported from the official auctioned-securities
-feed. Other new connectors add schedules, without inventing macro results or consensus.
+feed. Explicit ONS, DOL and BLS mappings add selected numerical observations with
+reference periods, units and source-vintage evidence. Other calendar connectors
+add schedules without inventing macro results or consensus.
 
 ```python
 import json, urllib.request
