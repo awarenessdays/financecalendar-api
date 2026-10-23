@@ -8,7 +8,7 @@
     "to": "2027-11-27"
   },
   "freshness": {
-    "generated_at": "2026-10-23T05:46:33+00:00",
+    "generated_at": "2026-10-23T06:59:19+00:00",
     "age_calendar_days_utc": 0,
     "generated_after_as_of_date": false
   },
@@ -73,10 +73,10 @@
     "schedule_status": {
       "labels": {
         "closed": 123,
-        "confirmed": 3158,
+        "confirmed": 3157,
         "early_close": 31,
         "estimated": 600,
-        "released": 236
+        "released": 237
       },
       "estimated_dated": 600,
       "non_estimated_status_dated": 3394,
@@ -95,16 +95,16 @@
       "all_nonholiday": {
         "records": 3949,
         "actual": {
-          "present": 236,
-          "missing": 3713
+          "present": 237,
+          "missing": 3712
         },
         "consensus": {
           "present": 0,
           "missing": 3949
         },
         "prior": {
-          "present": 33,
-          "missing": 3916
+          "present": 34,
+          "missing": 3915
         }
       },
       "past_nonholiday": {
@@ -125,16 +125,16 @@
       "today_future_nonholiday": {
         "records": 1514,
         "actual": {
-          "present": 0,
-          "missing": 1514
+          "present": 1,
+          "missing": 1513
         },
         "consensus": {
           "present": 0,
           "missing": 1514
         },
         "prior": {
-          "present": 0,
-          "missing": 1514
+          "present": 1,
+          "missing": 1513
         }
       }
     },
@@ -142,15 +142,15 @@
       "all_nonholiday": {
         "records": 3949,
         "exact_observations": {
-          "rows_with_entries": 33,
-          "entries": 66,
-          "valid_entries": 66,
-          "current_as_recorded_entries": 66,
+          "rows_with_entries": 34,
+          "entries": 68,
+          "valid_entries": 68,
+          "current_as_recorded_entries": 68,
           "stale_entries": 0,
           "invalid_entries": 0,
           "invalid_reasons": {},
-          "rows_with_valid_entries": 33,
-          "rows_with_current_as_recorded_entries": 33,
+          "rows_with_valid_entries": 34,
+          "rows_with_current_as_recorded_entries": 34,
           "rows_with_stale_entries": 0
         },
         "structured_auction_summaries": {
@@ -162,8 +162,8 @@
         },
         "fields": {
           "actual": {
-            "missing": 3713,
-            "matching_current_as_recorded_observation": 33,
+            "missing": 3712,
+            "matching_current_as_recorded_observation": 34,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 203,
             "matching_stale_auction_summary": 0,
@@ -182,8 +182,8 @@
             "valid_evidence_without_scalar": 0
           },
           "prior": {
-            "missing": 3916,
-            "matching_current_as_recorded_observation": 33,
+            "missing": 3915,
+            "matching_current_as_recorded_observation": 34,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
             "matching_stale_auction_summary": 0,
@@ -250,15 +250,15 @@
       "today_future_nonholiday": {
         "records": 1514,
         "exact_observations": {
-          "rows_with_entries": 0,
-          "entries": 0,
-          "valid_entries": 0,
-          "current_as_recorded_entries": 0,
+          "rows_with_entries": 1,
+          "entries": 2,
+          "valid_entries": 2,
+          "current_as_recorded_entries": 2,
           "stale_entries": 0,
           "invalid_entries": 0,
           "invalid_reasons": {},
-          "rows_with_valid_entries": 0,
-          "rows_with_current_as_recorded_entries": 0,
+          "rows_with_valid_entries": 1,
+          "rows_with_current_as_recorded_entries": 1,
           "rows_with_stale_entries": 0
         },
         "structured_auction_summaries": {
@@ -270,8 +270,8 @@
         },
         "fields": {
           "actual": {
-            "missing": 1514,
-            "matching_current_as_recorded_observation": 0,
+            "missing": 1513,
+            "matching_current_as_recorded_observation": 1,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
             "matching_stale_auction_summary": 0,
@@ -290,8 +290,8 @@
             "valid_evidence_without_scalar": 0
           },
           "prior": {
-            "missing": 1514,
-            "matching_current_as_recorded_observation": 0,
+            "missing": 1513,
+            "matching_current_as_recorded_observation": 1,
             "matching_stale_observation": 0,
             "matching_auction_summary_freshness_unknown": 0,
             "matching_stale_auction_summary": 0,
@@ -2101,10 +2101,10 @@
       "schedule_status": {
         "labels": {
           "closed": 8,
-          "confirmed": 348,
+          "confirmed": 347,
           "early_close": 2,
           "estimated": 29,
-          "released": 30
+          "released": 31
         },
         "estimated_dated": 29,
         "non_estimated_status_dated": 378,
@@ -2123,16 +2123,16 @@
         "all_nonholiday": {
           "records": 404,
           "actual": {
-            "present": 30,
-            "missing": 374
+            "present": 31,
+            "missing": 373
           },
           "consensus": {
             "present": 0,
             "missing": 404
           },
           "prior": {
-            "present": 30,
-            "missing": 374
+            "present": 31,
+            "missing": 373
           }
         },
         "past_nonholiday": {
@@ -2153,16 +2153,16 @@
         "today_future_nonholiday": {
           "records": 157,
           "actual": {
-            "present": 0,
-            "missing": 157
+            "present": 1,
+            "missing": 156
           },
           "consensus": {
             "present": 0,
             "missing": 157
           },
           "prior": {
-            "present": 0,
-            "missing": 157
+            "present": 1,
+            "missing": 156
           }
         }
       },
@@ -2170,15 +2170,15 @@
         "all_nonholiday": {
           "records": 404,
           "exact_observations": {
-            "rows_with_entries": 30,
-            "entries": 60,
-            "valid_entries": 60,
-            "current_as_recorded_entries": 60,
+            "rows_with_entries": 31,
+            "entries": 62,
+            "valid_entries": 62,
+            "current_as_recorded_entries": 62,
             "stale_entries": 0,
             "invalid_entries": 0,
             "invalid_reasons": {},
-            "rows_with_valid_entries": 30,
-            "rows_with_current_as_recorded_entries": 30,
+            "rows_with_valid_entries": 31,
+            "rows_with_current_as_recorded_entries": 31,
             "rows_with_stale_entries": 0
           },
           "structured_auction_summaries": {
@@ -2190,8 +2190,8 @@
           },
           "fields": {
             "actual": {
-              "missing": 374,
-              "matching_current_as_recorded_observation": 30,
+              "missing": 373,
+              "matching_current_as_recorded_observation": 31,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
@@ -2210,8 +2210,8 @@
               "valid_evidence_without_scalar": 0
             },
             "prior": {
-              "missing": 374,
-              "matching_current_as_recorded_observation": 30,
+              "missing": 373,
+              "matching_current_as_recorded_observation": 31,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
@@ -2278,15 +2278,15 @@
         "today_future_nonholiday": {
           "records": 157,
           "exact_observations": {
-            "rows_with_entries": 0,
-            "entries": 0,
-            "valid_entries": 0,
-            "current_as_recorded_entries": 0,
+            "rows_with_entries": 1,
+            "entries": 2,
+            "valid_entries": 2,
+            "current_as_recorded_entries": 2,
             "stale_entries": 0,
             "invalid_entries": 0,
             "invalid_reasons": {},
-            "rows_with_valid_entries": 0,
-            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_valid_entries": 1,
+            "rows_with_current_as_recorded_entries": 1,
             "rows_with_stale_entries": 0
           },
           "structured_auction_summaries": {
@@ -2298,8 +2298,8 @@
           },
           "fields": {
             "actual": {
-              "missing": 157,
-              "matching_current_as_recorded_observation": 0,
+              "missing": 156,
+              "matching_current_as_recorded_observation": 1,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
@@ -2318,8 +2318,8 @@
               "valid_evidence_without_scalar": 0
             },
             "prior": {
-              "missing": 157,
-              "matching_current_as_recorded_observation": 0,
+              "missing": 156,
+              "matching_current_as_recorded_observation": 1,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
@@ -5129,7 +5129,7 @@
       "horizons": {
         "last_known_scheduled_date": "2027-11-01",
         "last_known_today_future_date": "2027-11-01",
-        "last_known_non_estimated_today_future_date": "2027-04-19"
+        "last_known_non_estimated_today_future_date": "2027-04-21"
       },
       "no_today_future_scheduled_dates": false,
       "requested_horizon": null
@@ -15669,9 +15669,9 @@
         "percent": null
       },
       "horizons": {
-        "last_known_scheduled_date": "2027-04-18",
-        "last_known_today_future_date": "2027-04-18",
-        "last_known_non_estimated_today_future_date": "2027-04-18"
+        "last_known_scheduled_date": "2027-04-21",
+        "last_known_today_future_date": "2027-04-21",
+        "last_known_non_estimated_today_future_date": "2027-04-21"
       },
       "no_today_future_scheduled_dates": false,
       "requested_horizon": null
@@ -35486,9 +35486,9 @@
       },
       "schedule_status": {
         "labels": {
-          "confirmed": 4,
+          "confirmed": 3,
           "estimated": 8,
-          "released": 6
+          "released": 7
         },
         "estimated_dated": 8,
         "non_estimated_status_dated": 10,
@@ -35507,16 +35507,16 @@
         "all_nonholiday": {
           "records": 18,
           "actual": {
-            "present": 6,
-            "missing": 12
+            "present": 7,
+            "missing": 11
           },
           "consensus": {
             "present": 0,
             "missing": 18
           },
           "prior": {
-            "present": 6,
-            "missing": 12
+            "present": 7,
+            "missing": 11
           }
         },
         "past_nonholiday": {
@@ -35537,16 +35537,16 @@
         "today_future_nonholiday": {
           "records": 11,
           "actual": {
-            "present": 0,
-            "missing": 11
+            "present": 1,
+            "missing": 10
           },
           "consensus": {
             "present": 0,
             "missing": 11
           },
           "prior": {
-            "present": 0,
-            "missing": 11
+            "present": 1,
+            "missing": 10
           }
         }
       },
@@ -35554,15 +35554,15 @@
         "all_nonholiday": {
           "records": 18,
           "exact_observations": {
-            "rows_with_entries": 6,
-            "entries": 12,
-            "valid_entries": 12,
-            "current_as_recorded_entries": 12,
+            "rows_with_entries": 7,
+            "entries": 14,
+            "valid_entries": 14,
+            "current_as_recorded_entries": 14,
             "stale_entries": 0,
             "invalid_entries": 0,
             "invalid_reasons": {},
-            "rows_with_valid_entries": 6,
-            "rows_with_current_as_recorded_entries": 6,
+            "rows_with_valid_entries": 7,
+            "rows_with_current_as_recorded_entries": 7,
             "rows_with_stale_entries": 0
           },
           "structured_auction_summaries": {
@@ -35574,8 +35574,8 @@
           },
           "fields": {
             "actual": {
-              "missing": 12,
-              "matching_current_as_recorded_observation": 6,
+              "missing": 11,
+              "matching_current_as_recorded_observation": 7,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
@@ -35594,8 +35594,8 @@
               "valid_evidence_without_scalar": 0
             },
             "prior": {
-              "missing": 12,
-              "matching_current_as_recorded_observation": 6,
+              "missing": 11,
+              "matching_current_as_recorded_observation": 7,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
@@ -35662,15 +35662,15 @@
         "today_future_nonholiday": {
           "records": 11,
           "exact_observations": {
-            "rows_with_entries": 0,
-            "entries": 0,
-            "valid_entries": 0,
-            "current_as_recorded_entries": 0,
+            "rows_with_entries": 1,
+            "entries": 2,
+            "valid_entries": 2,
+            "current_as_recorded_entries": 2,
             "stale_entries": 0,
             "invalid_entries": 0,
             "invalid_reasons": {},
-            "rows_with_valid_entries": 0,
-            "rows_with_current_as_recorded_entries": 0,
+            "rows_with_valid_entries": 1,
+            "rows_with_current_as_recorded_entries": 1,
             "rows_with_stale_entries": 0
           },
           "structured_auction_summaries": {
@@ -35682,8 +35682,8 @@
           },
           "fields": {
             "actual": {
-              "missing": 11,
-              "matching_current_as_recorded_observation": 0,
+              "missing": 10,
+              "matching_current_as_recorded_observation": 1,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
@@ -35702,8 +35702,8 @@
               "valid_evidence_without_scalar": 0
             },
             "prior": {
-              "missing": 11,
-              "matching_current_as_recorded_observation": 0,
+              "missing": 10,
+              "matching_current_as_recorded_observation": 1,
               "matching_stale_observation": 0,
               "matching_auction_summary_freshness_unknown": 0,
               "matching_stale_auction_summary": 0,
