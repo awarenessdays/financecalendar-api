@@ -8,7 +8,7 @@
     "to": "2027-11-27"
   },
   "freshness": {
-    "generated_at": "2026-10-23T13:47:19+00:00",
+    "generated_at": "2026-10-23T14:50:22+00:00",
     "age_calendar_days_utc": 0,
     "generated_after_as_of_date": false
   },
@@ -155,8 +155,8 @@
         },
         "structured_auction_summaries": {
           "valid_rows": 203,
-          "explicitly_stale_rows": 0,
-          "freshness_unknown_rows": 203,
+          "explicitly_stale_rows": 3,
+          "freshness_unknown_rows": 200,
           "invalid_rows": 0,
           "invalid_reasons": {}
         },
@@ -165,8 +165,8 @@
             "missing": 3713,
             "matching_current_as_recorded_observation": 34,
             "matching_stale_observation": 0,
-            "matching_auction_summary_freshness_unknown": 203,
-            "matching_stale_auction_summary": 0,
+            "matching_auction_summary_freshness_unknown": 200,
+            "matching_stale_auction_summary": 3,
             "mismatching_structured_evidence": 0,
             "without_valid_structured_evidence": 0,
             "valid_evidence_without_scalar": 0
@@ -209,8 +209,8 @@
         },
         "structured_auction_summaries": {
           "valid_rows": 203,
-          "explicitly_stale_rows": 0,
-          "freshness_unknown_rows": 203,
+          "explicitly_stale_rows": 3,
+          "freshness_unknown_rows": 200,
           "invalid_rows": 0,
           "invalid_reasons": {}
         },
@@ -219,8 +219,8 @@
             "missing": 2199,
             "matching_current_as_recorded_observation": 33,
             "matching_stale_observation": 0,
-            "matching_auction_summary_freshness_unknown": 203,
-            "matching_stale_auction_summary": 0,
+            "matching_auction_summary_freshness_unknown": 200,
+            "matching_stale_auction_summary": 3,
             "mismatching_structured_evidence": 0,
             "without_valid_structured_evidence": 0,
             "valid_evidence_without_scalar": 0
@@ -4681,8 +4681,8 @@
           },
           "structured_auction_summaries": {
             "valid_rows": 203,
-            "explicitly_stale_rows": 0,
-            "freshness_unknown_rows": 203,
+            "explicitly_stale_rows": 3,
+            "freshness_unknown_rows": 200,
             "invalid_rows": 0,
             "invalid_reasons": {}
           },
@@ -4691,8 +4691,8 @@
               "missing": 1140,
               "matching_current_as_recorded_observation": 3,
               "matching_stale_observation": 0,
-              "matching_auction_summary_freshness_unknown": 203,
-              "matching_stale_auction_summary": 0,
+              "matching_auction_summary_freshness_unknown": 200,
+              "matching_stale_auction_summary": 3,
               "mismatching_structured_evidence": 0,
               "without_valid_structured_evidence": 0,
               "valid_evidence_without_scalar": 0
@@ -4735,8 +4735,8 @@
           },
           "structured_auction_summaries": {
             "valid_rows": 203,
-            "explicitly_stale_rows": 0,
-            "freshness_unknown_rows": 203,
+            "explicitly_stale_rows": 3,
+            "freshness_unknown_rows": 200,
             "invalid_rows": 0,
             "invalid_reasons": {}
           },
@@ -4745,8 +4745,8 @@
               "missing": 701,
               "matching_current_as_recorded_observation": 3,
               "matching_stale_observation": 0,
-              "matching_auction_summary_freshness_unknown": 203,
-              "matching_stale_auction_summary": 0,
+              "matching_auction_summary_freshness_unknown": 200,
+              "matching_stale_auction_summary": 3,
               "mismatching_structured_evidence": 0,
               "without_valid_structured_evidence": 0,
               "valid_evidence_without_scalar": 0
@@ -87518,8 +87518,8 @@
           },
           "structured_auction_summaries": {
             "valid_rows": 93,
-            "explicitly_stale_rows": 0,
-            "freshness_unknown_rows": 93,
+            "explicitly_stale_rows": 3,
+            "freshness_unknown_rows": 90,
             "invalid_rows": 0,
             "invalid_reasons": {}
           },
@@ -87528,8 +87528,8 @@
               "missing": 106,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
-              "matching_auction_summary_freshness_unknown": 93,
-              "matching_stale_auction_summary": 0,
+              "matching_auction_summary_freshness_unknown": 90,
+              "matching_stale_auction_summary": 3,
               "mismatching_structured_evidence": 0,
               "without_valid_structured_evidence": 0,
               "valid_evidence_without_scalar": 0
@@ -87572,8 +87572,8 @@
           },
           "structured_auction_summaries": {
             "valid_rows": 93,
-            "explicitly_stale_rows": 0,
-            "freshness_unknown_rows": 93,
+            "explicitly_stale_rows": 3,
+            "freshness_unknown_rows": 90,
             "invalid_rows": 0,
             "invalid_reasons": {}
           },
@@ -87582,8 +87582,8 @@
               "missing": 102,
               "matching_current_as_recorded_observation": 0,
               "matching_stale_observation": 0,
-              "matching_auction_summary_freshness_unknown": 93,
-              "matching_stale_auction_summary": 0,
+              "matching_auction_summary_freshness_unknown": 90,
+              "matching_stale_auction_summary": 3,
               "mismatching_structured_evidence": 0,
               "without_valid_structured_evidence": 0,
               "valid_evidence_without_scalar": 0
