@@ -8,7 +8,7 @@
     "to": "2027-12-01"
   },
   "freshness": {
-    "generated_at": "2026-10-27T13:51:08+00:00",
+    "generated_at": "2026-10-27T14:51:43+00:00",
     "age_calendar_days_utc": 0,
     "generated_after_as_of_date": false
   },
@@ -73,22 +73,22 @@
     "schedule_status": {
       "labels": {
         "closed": 123,
-        "confirmed": 3162,
+        "confirmed": 3164,
         "early_close": 31,
-        "estimated": 600,
+        "estimated": 598,
         "released": 241
       },
-      "estimated_dated": 600,
-      "non_estimated_status_dated": 3403,
-      "today_future_estimated": 305,
-      "today_future_non_estimated_status": 1243
+      "estimated_dated": 598,
+      "non_estimated_status_dated": 3405,
+      "today_future_estimated": 303,
+      "today_future_non_estimated_status": 1245
     },
     "provenance": {
       "missing_source_url": 166,
       "missing_source_name": 57,
       "missing_both_source_url_and_name": 57,
       "today_future_missing_source_url": 90,
-      "estimated_with_source_url": 494,
+      "estimated_with_source_url": 492,
       "non_estimated_status_missing_source_url": 60
     },
     "values": {
@@ -2104,22 +2104,22 @@
       "schedule_status": {
         "labels": {
           "closed": 8,
-          "confirmed": 353,
+          "confirmed": 355,
           "early_close": 2,
-          "estimated": 24,
+          "estimated": 22,
           "released": 30
         },
-        "estimated_dated": 24,
-        "non_estimated_status_dated": 383,
-        "today_future_estimated": 21,
-        "today_future_non_estimated_status": 142
+        "estimated_dated": 22,
+        "non_estimated_status_dated": 385,
+        "today_future_estimated": 19,
+        "today_future_non_estimated_status": 144
       },
       "provenance": {
         "missing_source_url": 5,
         "missing_source_name": 5,
         "missing_both_source_url_and_name": 5,
         "today_future_missing_source_url": 3,
-        "estimated_with_source_url": 24,
+        "estimated_with_source_url": 22,
         "non_estimated_status_missing_source_url": 5
       },
       "values": {
@@ -35232,20 +35232,20 @@
       },
       "schedule_status": {
         "labels": {
-          "confirmed": 16,
-          "estimated": 9
+          "confirmed": 18,
+          "estimated": 7
         },
-        "estimated_dated": 9,
-        "non_estimated_status_dated": 16,
-        "today_future_estimated": 9,
-        "today_future_non_estimated_status": 4
+        "estimated_dated": 7,
+        "non_estimated_status_dated": 18,
+        "today_future_estimated": 7,
+        "today_future_non_estimated_status": 6
       },
       "provenance": {
         "missing_source_url": 0,
         "missing_source_name": 0,
         "missing_both_source_url_and_name": 0,
         "today_future_missing_source_url": 0,
-        "estimated_with_source_url": 9,
+        "estimated_with_source_url": 7,
         "non_estimated_status_missing_source_url": 0
       },
       "values": {
@@ -35468,7 +35468,7 @@
       "horizons": {
         "last_known_scheduled_date": "2027-11-17",
         "last_known_today_future_date": "2027-11-17",
-        "last_known_non_estimated_today_future_date": "2027-03-24"
+        "last_known_non_estimated_today_future_date": "2027-10-20"
       },
       "no_today_future_scheduled_dates": false,
       "requested_horizon": null
