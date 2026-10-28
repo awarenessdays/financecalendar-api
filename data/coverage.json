@@ -8,7 +8,7 @@
     "to": "2027-12-02"
   },
   "freshness": {
-    "generated_at": "2026-10-28T10:41:17+00:00",
+    "generated_at": "2026-10-28T11:41:19+00:00",
     "age_calendar_days_utc": 0,
     "generated_after_as_of_date": false
   },
@@ -73,22 +73,22 @@
     "schedule_status": {
       "labels": {
         "closed": 123,
-        "confirmed": 3168,
+        "confirmed": 3170,
         "early_close": 31,
-        "estimated": 597,
+        "estimated": 595,
         "released": 243
       },
-      "estimated_dated": 597,
-      "non_estimated_status_dated": 3411,
-      "today_future_estimated": 301,
-      "today_future_non_estimated_status": 1241
+      "estimated_dated": 595,
+      "non_estimated_status_dated": 3413,
+      "today_future_estimated": 299,
+      "today_future_non_estimated_status": 1243
     },
     "provenance": {
       "missing_source_url": 166,
       "missing_source_name": 57,
       "missing_both_source_url_and_name": 57,
       "today_future_missing_source_url": 89,
-      "estimated_with_source_url": 491,
+      "estimated_with_source_url": 489,
       "non_estimated_status_missing_source_url": 60
     },
     "values": {
@@ -2107,22 +2107,22 @@
       "schedule_status": {
         "labels": {
           "closed": 8,
-          "confirmed": 355,
+          "confirmed": 357,
           "early_close": 2,
-          "estimated": 22,
+          "estimated": 20,
           "released": 30
         },
-        "estimated_dated": 22,
-        "non_estimated_status_dated": 385,
-        "today_future_estimated": 19,
-        "today_future_non_estimated_status": 144
+        "estimated_dated": 20,
+        "non_estimated_status_dated": 387,
+        "today_future_estimated": 17,
+        "today_future_non_estimated_status": 146
       },
       "provenance": {
         "missing_source_url": 5,
         "missing_source_name": 5,
         "missing_both_source_url_and_name": 5,
         "today_future_missing_source_url": 3,
-        "estimated_with_source_url": 22,
+        "estimated_with_source_url": 20,
         "non_estimated_status_missing_source_url": 5
       },
       "values": {
@@ -35236,20 +35236,20 @@
       },
       "schedule_status": {
         "labels": {
-          "confirmed": 18,
-          "estimated": 7
+          "confirmed": 20,
+          "estimated": 5
         },
-        "estimated_dated": 7,
-        "non_estimated_status_dated": 18,
-        "today_future_estimated": 7,
-        "today_future_non_estimated_status": 6
+        "estimated_dated": 5,
+        "non_estimated_status_dated": 20,
+        "today_future_estimated": 5,
+        "today_future_non_estimated_status": 8
       },
       "provenance": {
         "missing_source_url": 0,
         "missing_source_name": 0,
         "missing_both_source_url_and_name": 0,
         "today_future_missing_source_url": 0,
-        "estimated_with_source_url": 7,
+        "estimated_with_source_url": 5,
         "non_estimated_status_missing_source_url": 0
       },
       "values": {
