@@ -7,7 +7,7 @@ One package, two binaries:
 - `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
 - `financecalendar`: a CLI for your terminal and scripts.
 
-Direct REST access currently allows 250 requests per IP per day without a key. A new verified Free account allows 1,000 daily requests shared across its keys; existing allowances are preserved. Create keys in your [account](https://www.financecalendar.com/account/).
+A verified Finance Calendar account and API key are required for every API request, including hosted MCP, status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/), then set `FC_API_KEY` for local clients. New Free accounts include 1,000 API requests per UTC day, shared across account keys. Existing accounts and issued keys retain their effective allowance; Pro and Business increase API allowance. No anonymous API allowance is available.
 
 ## Install the tested beta download
 
@@ -27,25 +27,23 @@ The public beta connects over HTTPS without installing this package. Server URL:
 https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
 ```
 
-Use **Streamable HTTP** and **No authentication / No sign-in**. This is a custom
-connection, not a listing in either platform's directory. Account and workspace
-policies control whether you can add it.
+Use **Streamable HTTP** with your own credential on every HTTP request:
 
-- **ChatGPT:** in Plugins, choose **+ → Add custom MCP server**, enter the URL
-  and **No authentication**, then create and install the plugin. Select it with
-  `@` in a new conversation where supported. See the
-  [official ChatGPT guide](https://developers.openai.com/plugins/deploy/connect-chatgpt).
-- **Claude:** open [Customize → Connectors](https://claude.ai/customize/connectors),
-  choose **Add custom connector**, paste the URL and choose **No sign-in** if
-  shown. Leave OAuth credentials and request headers empty. Organization owners
-  may need to add it first; see
-  [Claude's custom connector guide](https://claude.com/docs/connectors/custom/add-unlisted).
-- **Claude Code:** run:
+```text
+X-API-Key: fc_live_YOUR_ACTUAL_KEY
+```
 
-  ```sh
-  claude mcp add --transport http financecalendar https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
-  ```
+`Authorization: Bearer fc_live_YOUR_ACTUAL_KEY` is also accepted. Replace the
+example with a real key; never put keys in URLs or shared configuration files.
+This server does not implement OAuth. Choose a client that supports a custom
+API-key or bearer header. A connector limited to “No authentication” or OAuth
+cannot access this endpoint; use the local stdio client instead. Platform and
+workspace policies still govern custom connectors. No directory listing or
+one-click ChatGPT/Claude compatibility is implied.
 
+For a header-capable HTTP MCP client, configure the server URL above and the
+credential securely. Do not leave authentication empty. A missing or invalid
+credential returns HTTP401; revoked or disallowed accounts return403.
 Try: “Find the next UK CPI release, show its time in Europe/London and cite its
 publisher. Check source health and say which values or dates are uncertain.”
 
@@ -86,13 +84,13 @@ requires restarting from the original checkpoint with a smaller initial limit
 and deduplicating. Requests are limited to 32,768 bytes; unknown arguments are
 rejected.
 
-The public beta uses **2,000 data requests per IP per UTC day**, potentially
-shared by users behind a ChatGPT or Claude proxy. It does not forward API keys,
-cookies or authorization headers, provide OAuth, or assign personal paid quotas.
-For production use, choose the keyed REST API or local stdio server. Each tool
-call uses the same canonical API and its rate limits; discovery is separate.
-Respect `Retry-After` where supplied. See the
-[full hosted and local MCP reference](https://www.financecalendar.com/api/mcp/).
+Every hosted protocol POST, including initialize, ping and tools/list, validates
+your API credential. Tool calls forward only your key to the canonical REST API
+and consume the same account allowance as direct API calls. Protocol discovery
+itself does not consume a data request. No shared server key, anonymous proxy
+allowance or OAuth flow is supplied. Respect account rate headers and
+`Retry-After`. Cookies and unrelated client headers are not forwarded.
+See the [MCP reference](https://www.financecalendar.com/api/mcp/).
 
 ## Install from source
 
@@ -127,20 +125,8 @@ retain `all day`. Raw JSON preserves the API fields unchanged.
 
 ### Claude Desktop
 
-Add to `claude_desktop_config.json` (Settings, Developer, Edit Config):
-
-```json
-{
-  "mcpServers": {
-    "financecalendar": {
-      "command": "npx",
-      "args": ["-y", "financecalendar-mcp"]
-    }
-  }
-}
-```
-
-With a free key (only add the `env` block once you have a real key; a placeholder is rejected with 401):
+Add to `claude_desktop_config.json` (Settings, Developer, Edit Config), using
+your actual API key in a private local configuration:
 
 ```json
 {
@@ -148,17 +134,18 @@ With a free key (only add the `env` block once you have a real key; a placeholde
     "financecalendar": {
       "command": "npx",
       "args": ["-y", "financecalendar-mcp"],
-      "env": { "FC_API_KEY": "fc_live_..." }
+      "env": { "FC_API_KEY": "fc_live_YOUR_ACTUAL_KEY" }
     }
   }
 }
 ```
 
+The npx example applies after registry publication; use the source command and
+absolute script path above today. Missing keys fail before any data request.
+
 ### Claude Code
 
 ```sh
-claude mcp add financecalendar -- npx -y financecalendar-mcp
-# with a key:
 claude mcp add financecalendar -e FC_API_KEY=your-key -- npx -y financecalendar-mcp
 ```
 
@@ -169,7 +156,7 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json`):
 ```json
 {
   "mcpServers": {
-    "financecalendar": { "command": "npx", "args": ["-y", "financecalendar-mcp"] }
+    "financecalendar": { "command": "npx", "args": ["-y", "financecalendar-mcp"], "env": { "FC_API_KEY": "fc_live_YOUR_ACTUAL_KEY" } }
   }
 }
 ```
@@ -276,7 +263,7 @@ For change-feed polling, follow `next_cursor` using `changes --cursor …` until
 omit those parameters when continuing. Advance your `since` checkpoint only
 after the entire traversal. On HTTP 409, restart from the original `since` and
 filters and deduplicate repeated changes. If that checkpoint has expired from
-the 30-day retention window, reload a Business full dataset export, or rebuild the required date range with filtered API queries.
+the 30-day retention window, reload the full snapshot.
 
 ```
 $ financecalendar next fomc --tz America/New_York
@@ -288,7 +275,7 @@ https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 
 | Variable | Purpose |
 |---|---|
-| `FC_API_KEY` | Free API key, sent as `X-API-Key` on every request. Get one at [financecalendar.com/api](https://www.financecalendar.com/api/#key). |
+| `FC_API_KEY` | Required account API key, sent as `X-API-Key` on every request. Create one in your [account](https://www.financecalendar.com/account/). |
 | `FC_API_BASE` | Alternative base URL. Default `https://www.financecalendar.com/wp-json/fc/v1`; an edge mirror at `https://api.financecalendar.com/v1` is planned. |
 
 ## Use it as a library
@@ -304,7 +291,7 @@ console.log(formatEvent(next, { tz: "Europe/Frankfurt" }));
 
 ## Data terms
 
-API access is currently free, including for commercial applications, subject to applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+The Free account plan supports commercial applications within its allowance, subject to applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 

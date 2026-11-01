@@ -30,7 +30,7 @@ Options:
   --help      this message
 
 Environment:
-  FC_API_KEY  free API key (raises the daily limit), sent as X-API-Key
+  FC_API_KEY  required API key, sent as X-API-Key; create one at financecalendar.com/account/
   FC_API_BASE alternative base URL (default https://www.financecalendar.com/wp-json/fc/v1)
 
 Data: financecalendar.com, free with attribution. https://www.financecalendar.com/api/`;

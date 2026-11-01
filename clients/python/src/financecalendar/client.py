@@ -68,7 +68,7 @@ class Client:
 
     Args:
         base_url: API root. Defaults to FC_API_BASE or the production URL.
-        api_key: Optional free key, sent as X-API-Key. Defaults to FC_API_KEY.
+        api_key: Required API key for requests, sent as X-API-Key. Defaults to FC_API_KEY.
         timeout: Request timeout in seconds.
         transport: An httpx transport (used in tests with httpx.MockTransport).
     """
@@ -81,7 +81,7 @@ class Client:
         transport: httpx.BaseTransport | None = None,
     ):
         self.base_url = (base_url or os.environ.get("FC_API_BASE") or DEFAULT_BASE).rstrip("/")
-        self.api_key = api_key or os.environ.get("FC_API_KEY") or None
+        self.api_key = (api_key or os.environ.get("FC_API_KEY") or "").strip() or None
         headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
         if self.api_key:
             headers["X-API-Key"] = self.api_key
@@ -101,6 +101,8 @@ class Client:
     # -- transport ---------------------------------------------------------
 
     def _request(self, path: str, params: dict[str, Any] | None = None, raw: bool = False) -> Any:
+        if not self.api_key:
+            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key. Create a verified Free account and key at https://www.financecalendar.com/account/.")
         headers = {"Accept": "text/csv, text/plain, */*"} if raw else None
         response = self._http.get(path, params=_clean_params(params or {}), headers=headers)
         if response.status_code >= 400:
@@ -240,6 +242,26 @@ class Client:
     def status(self) -> dict[str, Any]:
         """API health: snapshot age and counts."""
         return self._request("/status")
+
+    def quality(self, **params: Any) -> dict[str, Any]:
+        """Current snapshot quality, provenance and supported evidence coverage.
+
+        Returns the server's complete nested report. This is an engine-observed
+        current snapshot, not historical first-print evidence; as_of is unsupported.
+        Extra parameters are passed through using the normal API error handling.
+        """
+        return self._request("/quality", params)
+
+    def observations(self, **params: Any) -> dict[str, Any]:
+        """One page of validated current-vintage numerical evidence.
+
+        Params: series, event_id, role, reference_period, limit, offset and
+        snapshot_generated_at. Follow next_offset with the same filters and
+        snapshot_generated_at; on HTTP 409 restart at offset=0. Nested source
+        lineage and engine-observed revisions are preserved. as_of and original
+        historical first-print reconstruction are unsupported.
+        """
+        return self._request("/observations", params)
 
     def openapi(self) -> dict[str, Any]:
         """The OpenAPI 3.1 document."""

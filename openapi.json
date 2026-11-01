@@ -4,7 +4,7 @@
     "title": "Finance Calendar API",
     "version": "2.0.0",
     "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-    "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included. Quota policy v1: Anonymous REST allows 250 requests/IP/day. New verified Free accounts allow 1,000 requests/account/day; existing allowances are retained. The hosted read-only MCP beta retains 2,000 requests/shared IP/day. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed.",
+    "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. An API key is required. Create and verify an account, then create a key in the account workspace. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. Quota policy v1: API keys are required for all programmatic data and metadata requests. New verified Free accounts allow 1,000 requests/account/day; existing allowances are retained.",
     "termsOfService": "https://www.financecalendar.com/api/#attribution",
     "contact": {
       "url": "https://www.financecalendar.com/about/"
@@ -181,7 +181,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -245,7 +245,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -253,8 +253,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/today": {
@@ -304,7 +318,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -373,7 +387,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -381,8 +395,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/week": {
@@ -492,7 +520,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -556,7 +584,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -564,9 +592,23 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
         },
-        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
+        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/next": {
@@ -607,7 +649,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -685,7 +727,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -693,9 +735,23 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
         },
-        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/series": {
@@ -742,7 +798,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -792,7 +848,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -800,8 +856,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/series/{code}": {
@@ -833,7 +903,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -919,7 +989,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -927,9 +997,23 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
         },
-        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/history": {
@@ -993,7 +1077,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -1057,7 +1141,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1065,9 +1149,23 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
         },
-        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/holidays": {
@@ -1099,7 +1197,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -1186,7 +1284,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1194,8 +1292,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/market-status": {
@@ -1218,7 +1330,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -1307,7 +1419,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1315,8 +1427,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/changes": {
@@ -1370,7 +1496,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -1458,7 +1584,7 @@
             }
           },
           "429": {
-            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "description": "Daily allowance reached. A valid API key is required. New Free accounts: 1,000 requests/account/day; existing and paid account allowances retained. Hosted MCP data calls use the caller allowance. Reset: 00:00 UTC.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1485,9 +1611,23 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
         },
-        "description": "Retained changes in stable snapshot order, newest first. Follow next_cursor until has_more is false; a single publication can exceed 500 changes with the same timestamp. Pass the cursor alone, or repeat the same since, series, change and limit. Cursors bind to snapshot_generated_at. On 409 restart with the original since and filters and deduplicate repeated changes; only advance the checkpoint after all pages complete. Since accepts YYYY-MM-DD or an ISO datetime with seconds and an explicit timezone; relative dates and timezone-less datetimes are rejected. Since is inclusive and normalized to whole UTC seconds. Beyond 30 days, resync from the full snapshot. Responses are not cached."
+        "description": "Retained changes in stable snapshot order, newest first. Follow next_cursor until has_more is false; a single publication can exceed 500 changes with the same timestamp. Pass the cursor alone, or repeat the same since, series, change and limit. Cursors bind to snapshot_generated_at. On 409 restart with the original since and filters and deduplicate repeated changes; only advance the checkpoint after all pages complete. Since accepts YYYY-MM-DD or an ISO datetime with seconds and an explicit timezone; relative dates and timezone-less datetimes are rejected. Since is inclusive and normalized to whole UTC seconds. Beyond 30 days, resync from the full snapshot. Responses are not cached.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/countries": {
@@ -1515,8 +1655,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/status": {
@@ -1580,8 +1734,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/openapi": {
@@ -1601,8 +1769,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/keys": {
@@ -1663,7 +1845,7 @@
           {
             "name": "X-API-Key",
             "in": "header",
-            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "description": "Send your Finance Calendar API key in this header unless you use Bearer authorization. A valid API credential is required for every programmatic request. Keep credentials out of URLs.",
             "required": false,
             "schema": {
               "type": "string"
@@ -1682,7 +1864,7 @@
             }
           },
           "401": {
-            "description": "Missing, malformed or unknown key."
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
             "description": "Key revoked."
@@ -1704,10 +1886,10 @@
             "ApiKey": []
           },
           {
-            "ApiKeyQuery": []
+            "BearerAuth": []
           },
           {
-            "ApiKeyBearer": []
+            "ApiKeyQuery": []
           }
         ]
       }
@@ -1735,7 +1917,7 @@
             "description": "Invalid filter or unsupported as_of query."
           },
           "401": {
-            "description": "Malformed or unknown API key."
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
             "description": "Revoked API key."
@@ -1746,7 +1928,18 @@
           "503": {
             "description": "No usable canonical snapshot."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/observations": {
@@ -1849,7 +2042,7 @@
             "description": "Invalid filter or unsupported as_of query."
           },
           "401": {
-            "description": "Malformed or unknown API key."
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
             "description": "Revoked API key."
@@ -1863,7 +2056,18 @@
           "409": {
             "description": "Snapshot changed during pagination; restart using current generation."
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
       }
     },
     "/account/full-export": {
@@ -1879,7 +2083,7 @@
             "ApiKey": []
           },
           {
-            "ApiKeyBearer": []
+            "BearerAuth": []
           }
         ],
         "x-required-plan": "business",
@@ -2068,51 +2272,6 @@
               "null"
             ]
           },
-          "url": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "uri",
-            "description": "Preview and results page on financecalendar.com, when one exists."
-          },
-          "exchange": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Market-holiday rows only."
-          },
-          "holiday_status": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "enum": [
-              "closed",
-              "early_close",
-              null
-            ]
-          },
-          "close_time_local": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "starts_on": {
-            "type": "string",
-            "format": "date",
-            "description": "First day of a multi-day meeting (only when it differs from date)."
-          },
-          "note": {
-            "type": "string",
-            "description": "Source note, e.g. a date the official calendar moved."
-          },
           "source_id": {
             "type": [
               "string",
@@ -2151,25 +2310,6 @@
               "year",
               null
             ]
-          },
-          "last_verified_at": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time",
-            "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
-          },
-          "data_stale": {
-            "type": "boolean",
-            "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
-          },
-          "stale_since": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time"
           },
           "time_window_start": {
             "type": [
@@ -2276,6 +2416,70 @@
                 ]
               }
             }
+          },
+          "last_verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
+          },
+          "data_stale": {
+            "type": "boolean",
+            "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
+          },
+          "stale_since": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Preview and results page on financecalendar.com, when one exists."
+          },
+          "exchange": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Market-holiday rows only."
+          },
+          "holiday_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "closed",
+              "early_close",
+              null
+            ]
+          },
+          "close_time_local": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "starts_on": {
+            "type": "string",
+            "format": "date",
+            "description": "First day of a multi-day meeting (only when it differs from date)."
+          },
+          "note": {
+            "type": "string",
+            "description": "Source note, e.g. a date the official calendar moved."
           },
           "data_quality": {
             "$ref": "#/components/schemas/EventDataQuality"
@@ -4305,6 +4509,30 @@
           }
         }
       },
+      "CryptoAsset": {
+        "type": "object",
+        "required": [
+          "id",
+          "symbol",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
+            "examples": [
+              "ethereum",
+              "bitcoin"
+            ]
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "KeyUsage": {
         "type": "object",
         "required": [
@@ -4497,30 +4725,6 @@
             "minimum": 0
           }
         }
-      },
-      "CryptoAsset": {
-        "type": "object",
-        "required": [
-          "id",
-          "symbol",
-          "name"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
-            "examples": [
-              "ethereum",
-              "bitcoin"
-            ]
-          },
-          "symbol": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
       }
     },
     "securitySchemes": {
@@ -4538,6 +4742,11 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "fc_live_ key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "fc_live_ API key"
       }
     }
   },
@@ -4547,8 +4756,9 @@
   },
   "x-rate-limits": {
     "keyless": {
-      "per": "ip",
-      "daily": 250
+      "available": false,
+      "daily": 0,
+      "authentication_required": true
     },
     "free": {
       "daily": 1000,
@@ -4571,11 +4781,21 @@
     "reset": "00:00 UTC",
     "policy_state": "active",
     "hosted_mcp": {
-      "per": "ip",
-      "daily": 2000,
-      "shared_between_users": true,
-      "counter_shared_with": "keyless"
+      "authentication_required": true,
+      "scope": "caller-account-or-existing-key",
+      "shared_between_users": false
     }
   },
-  "x-changelog": "https://www.financecalendar.com/api/changelog/"
+  "x-changelog": "https://www.financecalendar.com/api/changelog/",
+  "security": [
+    {
+      "ApiKey": []
+    },
+    {
+      "BearerAuth": []
+    },
+    {
+      "ApiKeyQuery": []
+    }
+  ]
 }

@@ -1,11 +1,11 @@
 # API and client recipes
 
 Canonical REST base: `https://www.financecalendar.com/wp-json/fc/v1`.
-Hosted MCP: `https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp` (Streamable HTTP, public no-auth beta).
+Hosted MCP: `https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp` (Streamable HTTP; API key required for every request).
 
 Discover actual coverage with `/countries`, `/series` and `/status`. Consult [the complete API reference](https://www.financecalendar.com/api/reference/) or `/openapi` before adding parameters. MCP tool discovery gives the installed server's current schemas. Hosted results wrap canonical data in `structuredContent.data`; local stdio results use a different envelope.
 
-Useful public GET queries:
+Useful authenticated GET queries:
 
 ```text
 /next?series=cpi&country=IN
@@ -28,4 +28,4 @@ financecalendar calendar --country KR --from YYYY-MM-DD --to YYYY-MM-DD --json
 
 Python `Client.iter_calendar` handles window chunking, pagination and stable-ID deduplication. Node/CLI commands expose individual pages; use explicit limits and offsets for a full export. `/week` and human overview output do not guarantee every matching record. Source installation and per-client configuration are documented in the public repository.
 
-Direct anonymous REST/local-client access currently allows 250 requests per IP per day. New verified Free accounts allow 1,000 daily requests shared across their keys; existing allowances are preserved. The hosted MCP beta keeps its separate shared 2,000 requests/IP/day ceiling. The hosted no-auth connector does not forward personal credentials; platform proxy IPs may be shared. Inspect the response's transport/rate metadata. Public endpoint access and recorded series availability do not establish enterprise uptime or comprehensive worldwide coverage.
+Every REST and hosted MCP request requires your API key. Use X-API-Key or Bearer authorization in a header; never place credentials in a URL. New Free accounts include 1,000 requests/day, Pro 100,000 and Business 1,000,000. Linked keys and hosted MCP data calls share the account allowance; existing accounts and previously issued keys retain their effective allowance. Configure FC_API_KEY in your client environment. Hosted installation requires client support for environment-expanded custom headers; use local stdio otherwise. Inspect your usage response for the actual limit. Public endpoint access and recorded series availability do not establish enterprise uptime or comprehensive worldwide coverage.

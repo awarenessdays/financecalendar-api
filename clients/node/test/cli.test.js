@@ -11,7 +11,7 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
 function cli(args, env = {}) {
   const r = spawnSync(process.execPath, ["--import", "./test/mock-fetch.mjs", "cli.js", ...args], {
-    cwd: ROOT, encoding: "utf8", env: { ...process.env, TZ: "UTC", FC_API_KEY: "", ...env },
+    cwd: ROOT, encoding: "utf8", env: { ...process.env, TZ: "UTC", FC_API_KEY: "fc_live_0123456789abcdef0123456789abcdef", ...env },
   });
   return { code: r.status, out: r.stdout, err: r.stderr };
 }
@@ -29,6 +29,10 @@ describe("parseArgs", () => {
 });
 
 describe("CLI (child process with mocked fetch)", () => {
+  test("missing key exits nonzero with signup guidance instead of anonymous data", () => {
+    const result = cli(["countries"], { FC_API_KEY: "" });
+    assert.equal(result.code, 1);assert.equal(result.out, "");assert.match(result.err, /HTTP 401/);assert.match(result.err, /FC_API_KEY/);assert.match(result.err, /account\//);
+  });
   test("changes exposes continuation and passes a cursor without resetting filters", () => {
     const first = cli(["changes", "--limit", "1"]);
     assert.equal(first.code, 0, first.err);

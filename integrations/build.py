@@ -25,8 +25,8 @@ def validate(root=ROOT):
     for filename,kind in [('mcp.json','streamable-http'),('.mcp.json','http')]:
         doc=json.loads((root/filename).read_text());assert set(doc['mcpServers'])=={'financecalendar'}
         server=doc['mcpServers']['financecalendar'];assert server['type']==kind and server['url']==ENDPOINT
-        assert set(server)<= {'type','url','extensions'}
-        if filename=='mcp.json':assert server['extensions']['com.openai']['auth']=={'type':'none'}
+        assert set(server)<= {'type','url','headers'}
+        assert server['headers']=={'X-API-Key':'${FC_API_KEY}'}
     for name in FILES:
         p=root/name
         assert p.is_file() and not p.is_symlink() and p.resolve().is_relative_to(root.resolve())

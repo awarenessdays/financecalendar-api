@@ -1,15 +1,16 @@
 {
- "status": 429,
- "headers": {
-  "Access-Control-Allow-Origin": "*",
-  "Cache-Control": "no-store",
-  "Retry-After": "29535",
-  "X-RateLimit-Limit": "2000",
-  "X-RateLimit-Remaining": "0",
-  "X-RateLimit-Tier": "keyless"
- },
- "body": {
-  "error": "Daily limit of 2,000 keyless requests reached for your IP. Get a free key (10,000/day) at https://www.financecalendar.com/api/#key.",
-  "docs": "https://www.financecalendar.com/api/"
- }
+  "status": 429,
+  "headers": {
+    "Access-Control-Allow-Origin": "*",
+    "Cache-Control": "no-store",
+    "Retry-After": "29535",
+    "X-RateLimit-Limit": "1000",
+    "X-RateLimit-Remaining": "0",
+    "X-RateLimit-Tier": "free",
+    "X-RateLimit-Scope": "account"
+  },
+  "body": {
+    "error": "Your account daily allowance has been reached. All account keys share this limit; it resets at 00:00 UTC.",
+    "docs": "https://www.financecalendar.com/api/"
+  }
 }

@@ -2,7 +2,18 @@
 
 Python client and CLI for the free [financecalendar.com API](https://www.financecalendar.com/api/): scheduled economic releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
 
-Direct REST access currently allows 250 requests per IP per day without a key. A new verified Free account allows 1,000 daily requests shared across its keys; existing allowances are preserved. Create keys in your [account](https://www.financecalendar.com/account/).
+A verified Finance Calendar account and API key are required for every API request,
+including status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/),
+then set `FC_API_KEY` or pass `Client(api_key=...)`. Missing credentials fail with
+an actionable HTTP401 error before any network request. New Free accounts include
+1,000 API requests per UTC day shared across account keys; existing accounts and
+issued keys retain their effective allowance. Pro and Business increase API allowance.
+
+```sh
+export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
+```
+
+Use your real key and keep it private; never include it in a shared notebook or URL.
 
 ## Install the tested beta download
 
@@ -44,7 +55,7 @@ Requires Python 3.10 or newer. The only runtime dependency is `httpx` (plus `tzd
 ```python
 from financecalendar import Client
 
-fc = Client()                                  # reads FC_API_KEY and FC_API_BASE if set
+fc = Client()                                  # requires FC_API_KEY; reads FC_API_BASE if set
 nxt = fc.next("fomc")["next"]
 print(nxt["date"], nxt["time_et"], nxt["consensus"], nxt["url"])
 
@@ -76,6 +87,8 @@ shows these details when provided, labels unknown economic release times
 | `changes(since=None, **params)` | One page from `GET /changes`; accepts series, change, limit and cursor |
 | `countries()` | `GET /countries` |
 | `status()` | `GET /status` |
+| `quality(**params)` | `GET /quality`, the current snapshot's quality and evidence-coverage report |
+| `observations(**params)` | One page from `GET /observations`; accepts series, event_id, role, reference_period, limit, offset and snapshot_generated_at |
 | `openapi()` | `GET /openapi` |
 
 ### Long ranges and paging
@@ -89,7 +102,7 @@ rows = list(fc.iter_calendar(date(2026, 1, 1), date(2026, 12, 31), country="us,g
 For changes, follow `next_cursor` until `has_more` is false, passing that cursor
 alone to `fc.changes(cursor=...)`. Advance the `since` checkpoint only after all
 pages finish. HTTP 409 means the snapshot changed: restart with the original
-`since` and filters and deduplicate repeated changes. Reload a Business full dataset export
+`since` and filters and deduplicate repeated changes. Reload the full snapshot
 if the checkpoint is outside the 30-day retention window. The CLI accepts the
 same continuation with `financecalendar changes --cursor ...`.
 
@@ -220,7 +233,7 @@ https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 
 ## Data terms
 
-API access is currently free, including for commercial applications, subject to applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+The Free account plan supports commercial applications within its allowance, subject to applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 
@@ -257,6 +270,35 @@ the canonical value again. `publisher_reported_revisions` retains publisher unit
 and is separate from engine-observed `revision_history`. Neither establishes
 original first prints. Preserve document manifests, occurrence bindings and
 record-level source credits when reusing data.
+
+### Query quality and observation evidence
+
+These methods are available in the current source checkout. The older versioned
+beta wheel above may predate these additions; no new registry release is implied.
+
+```python
+with Client() as fc:
+    quality = fc.quality()
+    evidence = fc.observations(series="us-cpi", role="actual", limit=100)
+    for row in evidence["observations"]:
+        print(row["event_id"], row["observation"])
+```
+
+Both methods use the same API key, quotas and `FinanceCalendarError` handling as
+the calendar. They return unmodified nested JSON, including source lineage,
+engine-observed revision history, null values and recorded zeros. `quality()`
+reports the current engine snapshot; `observations()` returns validated evidence
+per event and role, including retained stale observations where endorsed by the
+engine contract. Missing evidence does not establish that a release has no result.
+
+For observation paging, pass `offset=page["next_offset"]` together with
+`snapshot_generated_at=page["snapshot_generated_at"]` and the identical filters
+while `has_more` is true. On HTTP 409, restart at offset zero against the current
+snapshot. An `observation_id` can occur in several event/role entries.
+
+These are **engine-observed current vintages**. They do not reconstruct original
+first prints or arbitrary historical knowledge. The API rejects `as_of`; the
+client passes it through so callers receive the server's normal HTTP 400 error.
 
 ## Korean official calendars
 

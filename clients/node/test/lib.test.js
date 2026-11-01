@@ -5,6 +5,7 @@ import { installMockFetch, fixture, toResponse } from "./fixtures.js";
 
 const realFetch = globalThis.fetch;
 const env = { ...process.env };
+beforeEach(() => { process.env.FC_API_KEY = "fc_live_0123456789abcdef0123456789abcdef"; });
 test("changes display preserves measured zero and structured object/array distinctions", () => {
   const change = { at: "2026-10-22T09:00:00Z", change: "updated", series_code: "example", id: "example", field: "actual", old: 0, new: false };
   assert.match(formatChange(change), /actual: 0 -> false$/);
@@ -178,14 +179,20 @@ describe("api()", () => {
   let calls;
   beforeEach(() => { calls = installMockFetch(); });
 
-  test("returns parsed JSON and sends the User-Agent, no key by default", async () => {
-    delete process.env.FC_API_KEY;
+  test("missing and blank credentials fail with actionable401 before any network request", async () => {
+    for (const value of [undefined, "", "   "]) {
+      if (value === undefined) delete process.env.FC_API_KEY; else process.env.FC_API_KEY = value;
+      await assert.rejects(api("/next", { series: "fomc" }), error => error.status === 401 && /FC_API_KEY/.test(error.message) && /account\//.test(error.message));
+    }
+    assert.equal(calls.length, 0);
+  });
+
+  test("returns parsed JSON and sends User-Agent with the caller credential", async () => {
     const data = await api("/next", { series: "fomc" });
     assert.equal(data.next.id, "fomc-rate-decision-october-2026");
     assert.equal(calls[0].url, `${DEFAULT_BASE}/next?series=fomc`);
     assert.equal(calls[0].headers["User-Agent"], USER_AGENT);
-    assert.equal(USER_AGENT, "financecalendar-mcp/0.2.0");
-    assert.equal(calls[0].headers["X-API-Key"], undefined);
+    assert.equal(calls[0].headers["X-API-Key"], "fc_live_0123456789abcdef0123456789abcdef");
   });
 
   test("sends X-API-Key from FC_API_KEY", async () => {
@@ -222,7 +229,7 @@ describe("api()", () => {
     await assert.rejects(api("/rate-limited"), (e) => {
       assert.equal(e.status, 429);
       assert.equal(e.retryAfter, 29535);
-      assert.match(e.message, /Daily limit of 2,000 keyless requests reached/);
+      assert.match(e.message, /account daily allowance has been reached/);
       assert.match(e.message, /HTTP 429 rate limit reached, retry after 29535s/);
       return true;
     });
@@ -239,7 +246,7 @@ describe("api()", () => {
 
   test("custom fetch option is used", async () => {
     let seen;
-    const data = await api("/countries", {}, { fetch: async (u) => { seen = String(u); return toResponse(fixture("countries")); } });
+    const data = await api("/countries", {}, { fetch: async (u, options) => { seen = String(u); assert.equal(options.redirect,"error"); assert.ok(options.headers["X-API-Key"]); return toResponse(fixture("countries")); } });
     assert.equal(seen, `${DEFAULT_BASE}/countries`);
     assert.equal(data.countries[0].code, "US");
   });

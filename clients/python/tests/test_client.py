@@ -9,7 +9,7 @@ import pytest
 from financecalendar import DEFAULT_BASE, Client, FinanceCalendarError, __version__, to_dataframe
 from financecalendar.client import USER_AGENT, _clean_params
 
-from conftest import Recorder, load
+from conftest import Recorder, load, FIXTURE_KEY
 
 
 def test_version():
@@ -19,12 +19,22 @@ def test_version():
 
 # -- construction and env defaults -------------------------------------------
 
-def test_defaults_without_env(client, recorder):
+def test_defaults_with_caller_key(client, recorder):
     client.today()
     assert str(recorder.last.url) == f"{DEFAULT_BASE}/today"
     assert recorder.last.headers["User-Agent"] == USER_AGENT
-    assert "X-API-Key" not in recorder.last.headers
+    assert recorder.last.headers["X-API-Key"] == FIXTURE_KEY
 
+
+@pytest.mark.parametrize("key", [None, "", "   "])
+def test_missing_key_fails_before_network(monkeypatch, recorder, key):
+    monkeypatch.delenv("FC_API_KEY", raising=False)
+    with Client(api_key=key, transport=recorder.transport) as client:
+        with pytest.raises(FinanceCalendarError) as caught:
+            client.countries()
+    assert caught.value.status == 401
+    assert "FC_API_KEY" in str(caught.value) and "account/" in str(caught.value)
+    assert recorder.requests == []
 
 def test_env_base_and_key(monkeypatch, recorder):
     monkeypatch.setenv("FC_API_BASE", "https://api.financecalendar.com/v1/")
@@ -160,7 +170,7 @@ def test_error_mapping_429_retry_after(client):
         client._request("/rate-limited")
     assert exc.value.status == 429
     assert exc.value.retry_after == 29535
-    assert "Daily limit of 2,000 keyless requests" in exc.value.message
+    assert "account daily allowance has been reached" in exc.value.message
     assert str(exc.value).endswith("(retry after 29535s)")
 
 

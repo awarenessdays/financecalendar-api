@@ -8,8 +8,8 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const TOOLS = ["next_event", "calendar", "today", "week", "series_list", "series_detail", "history", "market_holidays", "market_status", "changes", "countries"];
 
 /** Minimal JSON-RPC client over the server's stdio. */
-function startServer() {
-  const child = spawn(process.execPath, ["--import", "./test/mock-fetch.mjs", "mcp.js"], { cwd: ROOT, stdio: ["pipe", "pipe", "pipe"], env: { ...process.env, FC_API_KEY: "" } });
+function startServer(apiKey="fc_live_0123456789abcdef0123456789abcdef") {
+  const child = spawn(process.execPath, ["--import", "./test/mock-fetch.mjs", "mcp.js"], { cwd: ROOT, stdio: ["pipe", "pipe", "pipe"], env: { ...process.env, FC_API_KEY: apiKey } });
   const pending = new Map();
   let buf = "";
   child.stdout.on("data", (chunk) => {
@@ -38,8 +38,8 @@ function startServer() {
   return { send, stop, child };
 }
 
-async function initialised() {
-  const s = startServer();
+async function initialised(apiKey) {
+  const s = startServer(apiKey);
   const init = await s.send("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "0" } });
   assert.equal(init.result.serverInfo.name, "financecalendar");
   assert.equal(init.result.serverInfo.version, "0.2.0");
@@ -48,6 +48,10 @@ async function initialised() {
 }
 
 describe("MCP server over stdio", () => {
+  test("local protocol discovery works but no-key data calls return actionable401 tool error", async () => {
+    const server=await initialised("");
+    try {const response=await server.send("tools/call",{name:"countries",arguments:{}});assert.equal(response.result.isError,true);assert.match(response.result.content[0].text,/HTTP 401/);assert.match(response.result.content[0].text,/FC_API_KEY/);assert.match(response.result.content[0].text,/account\//);}finally{server.stop();}
+  });
   test("initialize + tools/list exposes the 11 tools with schemas", async () => {
     const s = await initialised();
     try {

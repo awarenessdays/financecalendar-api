@@ -6,46 +6,70 @@ Economic releases, central bank decisions, selected crypto events and exchange h
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
 - **Full dataset export:** [Business account download](https://www.financecalendar.com/account/#fc-account-full-export). Active Business subscription required; full snapshots and capture history are not distributed in this source repository.
-- **ChatGPT and Claude connector:** [Hosted MCP setup](https://www.financecalendar.com/api/mcp/) — public beta, no local installation.
+- **ChatGPT and Claude connector:** [Hosted MCP setup](https://www.financecalendar.com/api/mcp/) — authenticated HTTPS for clients supporting API-key headers.
 - **Codex and Claude Code:** [Plugin and portable Agent Skill](integrations/README.md)
 - **MCP server and CLI:** [Node source and installation](clients/node/README.md)
 - **Python client and CLI:** [Python source and installation](clients/python/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-10-22) work now. npm/PyPI registry publication is pending; use those downloads or the source installation instructions linked above.
+The API and [previous beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-10-22) accept a configured API key. The existing archives are unchanged; use current source for the updated setup and missing-key errors. npm/PyPI registry publication remains pending.
 
-Direct REST access without a key currently allows 250 requests per IP per UTC day. Create and verify a [Free account](https://www.financecalendar.com/account/?mode=register), then create an API key in your workspace for 1,000 daily requests shared across that account’s keys. Existing accounts and keys retain their previous allowance; check `/keys/me` for your effective limit. Anonymous `POST /keys` creation is retired.
+Every API request requires an active API key, including status and OpenAPI.
+Create and verify a [Free account](https://www.financecalendar.com/account/?mode=register),
+then create a key in your workspace. New Free accounts include **1,000 API requests
+per UTC day**, Pro **100,000** and Business **1,000,000**, shared across each
+account's keys. Existing accounts and issued keys retain their effective earlier
+allowance; check `/keys/me`. Anonymous `POST /keys` creation is retired.
+
+The [Data explorer](https://www.financecalendar.com/data/) has the same browser
+features on Free, Pro and Business: search/filter calendar records and recorded
+observations, saved views and columns, source evidence, and matching/selected
+CSV or JSON exports within its displayed limits. It uses your verified account
+sign-in; no API key or payment is needed in the browser. Complete snapshot file
+downloads remain a separate Business feature.
 
 ## Hosted connector
 
-Add this Streamable HTTP endpoint as a custom connector in ChatGPT or Claude, with no authentication:
+Use Streamable HTTP with your own key on **every** request:
 
 ```text
 https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
+X-API-Key: fc_live_YOUR_ACTUAL_KEY
 ```
 
-[Setup and full tool reference](https://www.financecalendar.com/api/mcp/). The public beta provides 12 read-only tools and keeps a separate shared ceiling of 2,000 data requests per IP per UTC day; platform proxy IPs may be shared by several users. The local server remains available with a personal API key. A real Claude Messages API call has been verified against the hosted MCP endpoint. ChatGPT and Claude.ai account-level setup checks, plus directory listings, remain pending.
+`Authorization: Bearer fc_live_YOUR_ACTUAL_KEY` is also accepted. Use an actual
+key in private client settings. Hosted data calls consume the same account
+allowance as direct REST; protocol initialization/discovery validates the key
+without consuming a data request. There is no shared anonymous MCP allowance.
+
+The server does not implement OAuth. Use a header-capable MCP client; a platform
+that only offers no authentication or OAuth cannot use this hosted setup. The
+[local stdio server](clients/node/README.md) accepts `FC_API_KEY` instead.
+[Setup and full reference](https://www.financecalendar.com/api/mcp/). Existing
+platform smoke results predate this authentication change and do not establish
+current ChatGPT or Claude.ai account-level setup or directory approval.
 
 ## Quick start
 
 ```bash
+export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
+B=https://www.financecalendar.com/wp-json/fc/v1
+
 # Next Fed decision
-curl "https://www.financecalendar.com/wp-json/fc/v1/next?series=fomc"
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/next?series=fomc"
 
-# Next UK CPI print
-curl "https://www.financecalendar.com/wp-json/fc/v1/next?series=uk-cpi"
+# Next UK CPI release
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/next?series=uk-cpi"
 
-# Every high-impact release in the next two weeks, in London time
-curl "https://www.financecalendar.com/wp-json/fc/v1/calendar?impact=high&tz=Europe/London"
+# High-impact releases in London time
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/calendar?impact=high&tz=Europe/London"
 
-# This week as a CSV
-curl -o week.csv "https://www.financecalendar.com/wp-json/fc/v1/week?format=csv"
+# This week as CSV; ICS downloads require the same credential header.
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/week?format=csv" -o week.csv
 
-# Subscribe in a calendar app (ICS)
-https://www.financecalendar.com/wp-json/fc/v1/calendar?series=fomc,us-cpi,us-nfp&format=ics
+# What changed in the retained window
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/changes"
 
-# What changed in the last 24 hours (new dates, moved dates, consensus, actuals)
-curl "https://www.financecalendar.com/wp-json/fc/v1/changes"
 ```
 
 ## Endpoints
@@ -67,7 +91,7 @@ curl "https://www.financecalendar.com/wp-json/fc/v1/changes"
 | `GET /keys/me` | Key and shared-account usage; create keys in your verified account |
 | `GET /account/full-export` | Complete current JSON dataset; active Business subscription and Business API key header required |
 
-Invalid parameters return HTTP 400 with an `error` message. Daily limits return HTTP 429 with `Retry-After`.
+Missing or invalid keys return HTTP 401; revoked keys or disallowed accounts return 403. Invalid parameters return HTTP 400 with an `error` message. Daily limits return HTTP 429 with `Retry-After`. Send credentials in headers rather than URLs, and do not expose them in browser code.
 
 ## Key usage
 
@@ -81,7 +105,7 @@ Keys created or linked in your [verified account](https://www.financecalendar.co
 - [`examples/javascript.js`](examples/javascript.js)
 - [`examples/google-sheets.md`](examples/google-sheets.md)
 - [`examples/curl.md`](examples/curl.md)
-- [`widget/`](widget/): drop-in calendar widget for any site
+- [`widget/`](widget/): server-side integration guidance; the legacy anonymous embed is retired
 
 ## Numerical evidence
 
