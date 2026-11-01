@@ -1,0 +1,11 @@
+{
+    "status": 400,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store"
+    },
+    "body": {
+        "error": "tz must be an IANA timezone such as Europe/London or Asia/Tokyo.",
+        "docs": "https://www.financecalendar.com/api/"
+    }
+}

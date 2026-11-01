@@ -1,0 +1,11 @@
+{
+    "status": 400,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store"
+    },
+    "body": {
+        "error": "Unknown series \"nope\". See /series for codes and aliases.",
+        "docs": "https://www.financecalendar.com/api/"
+    }
+}

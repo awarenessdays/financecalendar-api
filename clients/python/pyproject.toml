@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "financecalendar"
+version = "0.1.0"
+description = "Python client and CLI for the financecalendar.com API: economic releases, central bank decisions and exchange holidays, free with attribution."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Awareness Days Ltd (financecalendar.com)" }]
+keywords = ["economic-calendar", "fomc", "cpi", "nfp", "central-banks", "market-holidays", "finance"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = ["httpx>=0.27", "tzdata; platform_system == 'Windows'"]
+
+[project.optional-dependencies]
+pandas = ["pandas>=2.0"]
+test = ["pytest>=8", "build>=1.2"]
+
+[project.urls]
+Homepage = "https://www.financecalendar.com/api/"
+Documentation = "https://www.financecalendar.com/api/"
+Changelog = "https://www.financecalendar.com/api/changelog/"
+Source = "https://github.com/awarenessdays/financecalendar-api/tree/main/clients/python"
+Issues = "https://github.com/awarenessdays/financecalendar-api/issues"
+
+[project.scripts]
+financecalendar = "financecalendar.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/financecalendar"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/financecalendar", "tests", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

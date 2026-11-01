@@ -1,0 +1,47 @@
+{
+    "status": 200,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300, s-maxage=300"
+    },
+    "body": {
+        "series": "cpi",
+        "series_code": "gb-cpi",
+        "country": "GB",
+        "next": {
+            "id": "uk-cpi-inflation-october-2026",
+            "series_code": "gb-cpi",
+            "series_name": "UK CPI Inflation",
+            "name": "UK CPI Inflation",
+            "title": "UK CPI Inflation October 2026",
+            "country": "GB",
+            "category": "economic-indicators",
+            "impact": "high",
+            "date": "2026-10-21",
+            "release_at_utc": "2026-10-21T06:00:00+00:00",
+            "time_utc": "2026-10-21T06:00:00+00:00",
+            "time_et": "02:00",
+            "release_tz": "Europe/London",
+            "all_day": false,
+            "period": "September 2026",
+            "status": "confirmed",
+            "consensus": null,
+            "prior": null,
+            "actual": null,
+            "unit": "% y/y",
+            "source_url": "https://www.ons.gov.uk/releasecalendar",
+            "source_name": "Office for National Statistics",
+            "url": null,
+            "exchange": null,
+            "holiday_status": null,
+            "close_time_local": null,
+            "updated_at": "2026-10-19T12:00:00+00:00",
+            "note": "Covers September 2026"
+        },
+        "attribution": {
+            "source": "financecalendar.com",
+            "terms": "Free for any use with attribution: link to https://www.financecalendar.com",
+            "docs": "https://www.financecalendar.com/api/"
+        }
+    }
+}

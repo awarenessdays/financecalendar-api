@@ -1,0 +1,10 @@
+interface:
+  display_name: "Finance Calendar"
+  short_description: "Source-backed economic calendars and API integrations"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "financecalendar"
+      description: "Public Finance Calendar read-only MCP server"
+      transport: "streamable_http"
+      url: "https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp"

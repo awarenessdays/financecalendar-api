@@ -1,0 +1,105 @@
+{
+  "status": 200,
+  "headers": {},
+  "body": {
+    "from": "2026-10-22",
+    "to": "2026-10-25",
+    "count": 2,
+    "total": 2,
+    "events": [
+      {
+        "id": "ethereum-estimated-window",
+        "series_code": "ethereum-network-upgrades",
+        "series_name": "Ethereum Network Upgrades",
+        "name": "Ethereum mainnet target",
+        "title": "Ethereum mainnet target",
+        "date": "2026-10-01",
+        "release_at_utc": null,
+        "time_utc": null,
+        "time_et": null,
+        "country": null,
+        "impact": null,
+        "category": "crypto",
+        "status": "estimated",
+        "all_day": false,
+        "prior": 0,
+        "consensus": null,
+        "actual": 0,
+        "url": null,
+        "source_url": "https://ethereum.org/roadmap/",
+        "source_name": "Ethereum Foundation",
+        "assets": [
+          {
+            "id": "ethereum",
+            "symbol": "ETH",
+            "name": "Ethereum"
+          }
+        ],
+        "crypto": {
+          "event_type": "network-upgrade",
+          "network": "ethereum",
+          "environment": "mainnet"
+        },
+        "source_license": {
+          "id": "CC-BY-4.0",
+          "url": "https://creativecommons.org/licenses/by/4.0/",
+          "terms_url": "https://ethereum.org/terms-of-use/",
+          "attribution": "Ethereum Foundation and ethereum.org contributors",
+          "adapted": true
+        },
+        "time_precision": "quarter",
+        "date_window_start": "2026-10-01",
+        "date_window_end": "2026-12-31"
+      },
+      {
+        "id": "ethereum-test-upgrade",
+        "series_code": "ethereum-network-upgrades",
+        "series_name": "Ethereum Network Upgrades",
+        "name": "Ethereum upgrade",
+        "title": "Ethereum upgrade",
+        "date": "2026-10-22",
+        "release_at_utc": "2026-10-22T12:30:23Z",
+        "time_utc": "2026-10-22T12:30:23Z",
+        "time_et": "08:30",
+        "country": null,
+        "impact": null,
+        "category": "crypto",
+        "status": "confirmed",
+        "all_day": false,
+        "prior": 0,
+        "consensus": null,
+        "actual": 0,
+        "url": null,
+        "source_url": "https://ethereum.org/roadmap/",
+        "source_name": "Ethereum Foundation",
+        "assets": [
+          {
+            "id": "ethereum",
+            "symbol": "ETH",
+            "name": "Ethereum"
+          }
+        ],
+        "crypto": {
+          "event_type": "network-upgrade",
+          "network": "ethereum",
+          "environment": "sepolia",
+          "block_height": 0
+        },
+        "source_license": {
+          "id": "CC-BY-4.0",
+          "url": "https://creativecommons.org/licenses/by/4.0/",
+          "terms_url": "https://ethereum.org/terms-of-use/",
+          "attribution": "Ethereum Foundation and ethereum.org contributors",
+          "adapted": true
+        },
+        "time_precision": "second",
+        "date_window_start": null,
+        "date_window_end": null
+      }
+    ],
+    "attribution": {
+      "source": "financecalendar.com",
+      "source_licenses": "Retain source_license attribution and adaptation notice."
+    }
+  }
+}

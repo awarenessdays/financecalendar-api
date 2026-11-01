@@ -1,0 +1,330 @@
+import { test, describe, beforeEach, afterEach } from "node:test";
+import assert from "node:assert/strict";
+import { api, buildUrl, baseUrl, formatEvent, formatWhen, formatSeries, formatChange, eventsToCsv, USER_AGENT, DEFAULT_BASE } from "../lib.js";
+import { installMockFetch, fixture, toResponse } from "./fixtures.js";
+
+const realFetch = globalThis.fetch;
+const env = { ...process.env };
+test("changes display preserves measured zero and structured object/array distinctions", () => {
+  const change = { at: "2026-10-22T09:00:00Z", change: "updated", series_code: "example", id: "example", field: "actual", old: 0, new: false };
+  assert.match(formatChange(change), /actual: 0 -> false$/);
+  assert.match(formatChange({ ...change, field: "source_rights", old: {}, new: [] }), /source_rights: \{\} -> \[\]$/);
+});
+
+test("weekly observation output retains publisher attribution and vintage notice", () => {
+  const text = formatEvent({ date: "2026-10-15", name: "Initial claims", observations: [{ role: "actual", value: "199000", unit: "claims", reference_period: "2026-10-10", source_rights: {
+    attribution: "Source: U.S. Department of Labor.", url: "https://www.dol.gov/rights", vintage_notice: "Current edition; not original first prints." } }] });
+  assert.match(text, /199000 claims/);
+  assert.match(text, /Source: U.S. Department of Labor/);
+  assert.match(text, /Current edition; not original first prints/);
+});
+afterEach(() => {
+  globalThis.fetch = realFetch;
+  for (const k of ["FC_API_BASE", "FC_API_KEY"]) { if (env[k] === undefined) delete process.env[k]; else process.env[k] = env[k]; }
+});
+
+test("crypto requests retain canonical asset filters and structured zero/null data", async () => {
+  const calls = installMockFetch();
+  const response = await api("/calendar", { category: "crypto", asset: ["ethereum"], limit: 1, offset: 2 });
+  const url = new URL(calls[0].url);
+  assert.equal(url.searchParams.get("asset"), "ethereum");
+  assert.equal(url.searchParams.get("category"), "crypto");
+  assert.equal(url.searchParams.get("offset"), "2");
+  const row = response.events[1];
+  assert.equal(row.country, null);
+  assert.equal(row.impact, null);
+  assert.equal(row.actual, 0);
+  assert.equal(row.crypto.block_height, 0);
+  assert.equal(row.source_license.adapted, true);
+});
+
+test("crypto display shows global assets, testnet environment and upstream credit", () => {
+  const row = fixture("crypto").body.events[1];
+  const text = formatEvent(row, { tz: "UTC" });
+  assert.match(text, /Ethereum upgrade \(ETH · Global\)  sepolia  prior 0  actual 0/);
+  assert.match(text, /Ethereum Foundation and ethereum.org contributors · CC-BY-4\.0 · adapted by Finance Calendar/);
+  assert.ok(text.includes(row.source_url) && text.includes(row.source_license.url));
+  const csv = eventsToCsv([row]);
+  assert.match(csv, /source_license/);
+  assert.match(csv, /ethereum/);
+  assert.match(csv, /CC-BY-4\.0/);
+});
+
+test("licensed schedules retain required linked provider credit in human output and local CSV", () => {
+  const row = { ...fixture("crypto").body.events[1], source_rights: null,
+    source_license: { id: "CC-BY-4.0", attribution: "Data: PatternPlus", attribution_url: "https://pattern.plus", url: "https://creativecommons.org/licenses/by/4.0/", terms_url: "https://pattern.plus/developers", notice: "Retain provider attribution.", adapted: true } };
+  const text = formatEvent(row, { tz: "UTC" });
+  assert.match(text, /Data: PatternPlus · CC-BY-4\.0 · adapted by Finance Calendar/);
+  assert.ok(text.includes("Attribution: https://pattern.plus"));
+  assert.ok(text.includes(row.source_license.url) && text.includes(row.source_license.terms_url));
+  assert.ok(text.includes(row.source_url) && text.includes(row.source_license.notice));
+  assert.ok(eventsToCsv([row]).includes("https://pattern.plus"));
+  assert.ok(!text.includes("independently verified"));
+});
+
+test("factual crypto output preserves source notices without inventing a licence or proposal outcome", () => {
+  const rights = { basis: "independently-normalized-facts", access_basis: "manual-review", attribution: "Test issuer factual schedule", source_url: "https://issuer.example/rights", terms_url: "https://issuer.example/terms", notice: "No publisher copyright licence is asserted." };
+  const row = { ...fixture("crypto").body.events[1], source_license: null, source_rights: rights, source_url: "https://issuer.example/schedule", discovery_url: "https://coinmarketcal.com/en/event/discovery-only", crypto: { event_type: "supply-projection", projected_circulating_supply: "3625742933.075554" } };
+  const text = formatEvent(row, { tz: "UTC" });
+  assert.ok(text.includes("Factual source: " + rights.attribution));
+  assert.ok(text.includes(row.source_url) && text.includes("Rights evidence: " + rights.source_url));
+  assert.ok(text.includes(rights.terms_url) && text.includes(rights.notice));
+  assert.ok(text.includes("Rights basis: independently-normalized-facts; not a publisher copyright licence."));
+  assert.ok(text.includes("Source access: manual-review"));
+  assert.ok(text.includes("Discovery (not verification): " + row.discovery_url));
+  assert.ok(text.includes("not a confirmed unlock or observed circulating supply"));
+  assert.ok(!text.includes("MIT") && !text.includes("CC-BY"));
+  assert.match(formatEvent({ ...row, crypto: { event_type: "governance-vote" } }), /Governance voting deadline; not a proposal outcome or execution\./);
+  const csv = eventsToCsv([row]);
+  assert.match(csv.split("\n")[0], /source_rights,discovery_url,observations,observation_status,observation_metric_id,observation_fields,source_reference_period,source_id,native_id,source_clock$/);
+  for (const value of [rights.attribution, rights.notice, row.discovery_url, "3625742933.075554"]) assert.ok(csv.includes(value));
+});
+
+function officialObservationRow() {
+  return { id: "synthetic-cpi", name: "Synthetic CPI", date: "2026-10-21", country: "GB", period: "2026-09", actual: 0,
+    source_id: "ons", native_id: "synthetic-native", source_reference_period: { date: "2026-09-01", formatted: "2026-09", frequency: "MONTHLY" },
+    data_stale: false, observation_status: "stale", observation_metric_id: "test-cpi", observation_fields: ["actual", "prior"], observations: [
+      { role: "actual", value: 0, unit: "% y/y", reference_period: "2026-09", source_id: "ons-observations-test", known_at: "2026-10-21T08:00:00Z", data_stale: false,
+        revision_history: [{ value: "0.1", known_at: "2026-10-20T08:00:00Z" }], source_url: "https://www.ons.gov.uk/synthetic-observation",
+        source_license: { spdx: "OGL-UK-3.0", attribution: "Source: Office for National Statistics", url: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" } },
+      { role: "prior", value: "0", unit: "% y/y", reference_period: "2026-08", data_stale: true, value_basis: "previous-reference-period-current-vintage" }] };
+}
+
+test("official observations display zero, precise periods, vintage caveats and independent stale status", () => {
+  const row = officialObservationRow(), text = formatEvent(row, { tz: "UTC" });
+  assert.ok(text.includes("Official actual: 0 % y/y · reference period 2026-09 · current observed vintage"));
+  assert.ok(text.includes("Official prior: 0 % y/y · reference period 2026-08"));
+  assert.ok(text.includes("Prior is the previous reference period at the current observed vintage, not the original first print."));
+  assert.ok(text.includes("Stale official prior observation; schedule freshness is independent."));
+  assert.ok(!text.includes("Stale source data") && !text.includes("Stale official actual observation"));
+  assert.ok(text.includes("Recorded value revisions: 1 (observed by Finance Calendar)."));
+  assert.ok(text.includes("not the publisher's first-print timestamp"));
+  assert.ok(text.includes(row.observations[0].source_url) && text.includes(row.observations[0].source_license.url));
+  assert.ok(text.includes("OGL-UK-3.0 · Source: Office for National Statistics"));
+});
+
+test("raw API JSON preserves official observation lineage without transformation", async () => {
+  const row = officialObservationRow();
+  const response = await api("/calendar", {}, { fetch: async () => ({ ok: true, json: async () => ({ events: [row] }) }) });
+  assert.deepEqual(response.events[0], row);
+});
+
+test("appended CSV observation columns round-trip nested revisions and native reference metadata", () => {
+  const row = { ...officialObservationRow(), source_clock: { clock: "06:00", timezone: null, role: "media-publication", verification: "timezone-unverified" } }, csv = eventsToCsv([row]);
+  // Parse the actual CSV quoting, including embedded JSON commas and quotes.
+  const records = [], values = [];
+  let value = "", quoted = false;
+  for (let i = 0; i < csv.length; i++) {
+    const ch = csv[i];
+    if (ch === '"') {
+      if (quoted && csv[i + 1] === '"') { value += '"'; i++; }
+      else quoted = !quoted;
+    } else if (!quoted && (ch === "," || ch === "\n")) {
+      values.push(value); value = "";
+      if (ch === "\n") { records.push(values.splice(0)); }
+    } else value += ch;
+  }
+  const result = Object.fromEntries(records[0].map((column, i) => [column, records[1][i]]));
+  assert.deepEqual(JSON.parse(result.observations), row.observations);
+  assert.deepEqual(JSON.parse(result.source_reference_period), row.source_reference_period);
+  assert.deepEqual(JSON.parse(result.source_clock), row.source_clock);
+  assert.deepEqual(JSON.parse(result.observation_fields), ["actual", "prior"]);
+  assert.equal(result.actual, "0");
+  assert.equal(result.native_id, row.native_id);
+  assert.equal(result.source_id, "ons");
+});
+
+test("estimated crypto windows are displayed as windows, never their index date", () => {
+  const row = fixture("crypto").body.events[0];
+  assert.equal(formatWhen(row, "Asia/Tokyo"), "2026-10-01–2026-12-31 (estimated window)");
+  assert.equal(formatWhen(row, "America/New_York"), "2026-10-01–2026-12-31 (estimated window)");
+  assert.match(eventsToCsv([row]), /date_window_start,date_window_end/);
+  assert.match(formatEvent(row), /estimated window/);
+});
+
+test("series targets use the complete estimated window instead of the date index", async () => {
+  installMockFetch();
+  const { series } = await api("/series", { category: "crypto", asset: "ethereum" });
+  const text = formatSeries(series[0]);
+  assert.match(text, /next target 2026-10-01–2026-12-31 \(estimated window\)$/);
+  assert.ok(!text.includes("next 2026-10-01"));
+  assert.match(formatSeries({ ...series[0], next_date_window_end: null }), /next target window tbc$/);
+  assert.match(formatSeries({ ...series[0], next_date_window_start: null, next_date_window_end: null }), /next 2026-10-01$/);
+});
+
+describe("buildUrl / param encoding", () => {
+  test("drops empty values, joins arrays, maps booleans", () => {
+    const u = buildUrl("/calendar", { from: "2026-10-19", to: undefined, country: ["US", "GB"], impact: "", include: null, limit: 50, flag: true, off: false });
+    assert.equal(u.origin + u.pathname, `${DEFAULT_BASE}/calendar`);
+    assert.equal(u.searchParams.get("from"), "2026-10-19");
+    assert.equal(u.searchParams.get("country"), "US,GB");
+    assert.equal(u.searchParams.get("limit"), "50");
+    assert.equal(u.searchParams.get("flag"), "1");
+    assert.equal(u.searchParams.has("to"), false);
+    assert.equal(u.searchParams.has("impact"), false);
+    assert.equal(u.searchParams.has("include"), false);
+    assert.equal(u.searchParams.has("off"), false);
+  });
+
+  test("honours FC_API_BASE and strips trailing slashes", () => {
+    process.env.FC_API_BASE = "https://api.financecalendar.com/v1/";
+    assert.equal(baseUrl(), "https://api.financecalendar.com/v1");
+    assert.equal(buildUrl("/today").href, "https://api.financecalendar.com/v1/today");
+    assert.equal(buildUrl("today", {}, "http://localhost:8080/x").href, "http://localhost:8080/x/today");
+  });
+});
+
+describe("api()", () => {
+  let calls;
+  beforeEach(() => { calls = installMockFetch(); });
+
+  test("returns parsed JSON and sends the User-Agent, no key by default", async () => {
+    delete process.env.FC_API_KEY;
+    const data = await api("/next", { series: "fomc" });
+    assert.equal(data.next.id, "fomc-rate-decision-october-2026");
+    assert.equal(calls[0].url, `${DEFAULT_BASE}/next?series=fomc`);
+    assert.equal(calls[0].headers["User-Agent"], USER_AGENT);
+    assert.equal(USER_AGENT, "financecalendar-mcp/0.2.0");
+    assert.equal(calls[0].headers["X-API-Key"], undefined);
+  });
+
+  test("sends X-API-Key from FC_API_KEY", async () => {
+    process.env.FC_API_KEY = "fc_env_key";
+    await api("/today");
+    assert.equal(calls[0].headers["X-API-Key"], "fc_env_key");
+  });
+
+  test("explicit apiKey option wins over the env var", async () => {
+    process.env.FC_API_KEY = "fc_env_key";
+    await api("/today", {}, { apiKey: "fc_explicit" });
+    assert.equal(calls[0].headers["X-API-Key"], "fc_explicit");
+  });
+
+  test("raw: true returns text (CSV)", async () => {
+    const csv = await api("/calendar", { format: "csv" }, { raw: true });
+    assert.match(csv, /^date,time_utc,time_et/);
+    assert.match(calls[0].headers.Accept, /text\/csv/);
+  });
+
+  test("surfaces the API error text and status for 400", async () => {
+    await assert.rejects(api("/calendar", { tz: "Mars/Olympus" }), (e) => {
+      assert.equal(e.status, 400);
+      assert.equal(e.message, "tz must be an IANA timezone such as Europe/London or Asia/Tokyo. (HTTP 400)");
+      return true;
+    });
+  });
+
+  test("surfaces 404 for an unknown series", async () => {
+    await assert.rejects(api("/series/zzz"), /Unknown series.*\(HTTP 404\)/);
+  });
+
+  test("429 carries Retry-After in the message and on the error", async () => {
+    await assert.rejects(api("/rate-limited"), (e) => {
+      assert.equal(e.status, 429);
+      assert.equal(e.retryAfter, 29535);
+      assert.match(e.message, /Daily limit of 2,000 keyless requests reached/);
+      assert.match(e.message, /HTTP 429 rate limit reached, retry after 29535s/);
+      return true;
+    });
+  });
+
+  test("non-JSON error body falls back to HTTP status", async () => {
+    globalThis.fetch = async () => new Response("<html>Bad gateway</html>", { status: 502, statusText: "Bad Gateway" });
+    await assert.rejects(api("/today"), (e) => {
+      assert.equal(e.status, 502);
+      assert.match(e.message, /HTTP 502/);
+      return true;
+    });
+  });
+
+  test("custom fetch option is used", async () => {
+    let seen;
+    const data = await api("/countries", {}, { fetch: async (u) => { seen = String(u); return toResponse(fixture("countries")); } });
+    assert.equal(seen, `${DEFAULT_BASE}/countries`);
+    assert.equal(data.countries[0].code, "US");
+  });
+});
+
+describe("formatting", () => {
+  const fomc = fixture("next_fomc").body.next;
+
+  test("formatEvent renders the documented one-line layout plus URL", () => {
+    assert.equal(
+      formatEvent(fomc, { tz: "America/New_York" }),
+      "Wed 28 Oct 14:00 ET  FOMC Rate Decision (US)  cons. Hold at 3.50-3.75%  prior Hold\nhttps://www.financecalendar.com/event/fomc-rate-decision-october-2026/"
+    );
+  });
+
+  test("times follow the requested zone", () => {
+    assert.equal(formatWhen(fomc, "Europe/London"), "Wed 28 Oct 18:00 GMT");
+    assert.equal(formatWhen(fomc, "Asia/Tokyo"), "Thu 29 Oct 03:00 GMT+9");
+    assert.equal(formatWhen(fomc, "UTC"), "Wed 28 Oct 18:00 UTC");
+  });
+
+  test("all-day holiday rows have no time and no URL line", () => {
+    const hol = fixture("today").body.market_holidays[0];
+    assert.equal(formatEvent(hol, { tz: "Europe/London" }), "Mon 19 Oct all day  HKEX closed: Day Following Chung Yeung Festival (HK)");
+  });
+
+  test("released rows show the actual", () => {
+    const row = fixture("history_us_cpi").body.events[0];
+    assert.match(formatEvent(row, { tz: "America/New_York" }), /^Wed 14 Oct 08:30 ET  US CPI \(US\)  period September 2026  cons\. 3\.0% y\/y  prior 3\.1% y\/y  actual 3\.0% y\/y\n/);
+  });
+
+  test("GDP estimate stages and catch-up reference periods distinguish otherwise identical names", () => {
+    const row = { name: "US GDP", date: "2026-10-29", country: "US", period: "3rd Quarter 2026", release_at_utc: "2026-10-29T12:30:00Z" };
+    const lines = ["advance", "second", "third"].map((release_stage) => formatEvent({ ...row, release_stage }, { tz: "UTC" }));
+    assert.equal(new Set(lines).size, 3);
+    assert.ok(lines.every((line) => line.includes("period 3rd Quarter 2026  stage ")));
+    assert.notEqual(formatEvent({ ...row, period: "January 2026" }), formatEvent({ ...row, period: "February 2026" }));
+  });
+
+  test("displayed details do not repeat a stage or period already in the name", () => {
+    const row = { name: "US GDP (Second Estimate), 3rd Quarter 2026", date: "2026-11-25", period: "3rd Quarter 2026", release_stage: "second" };
+    const before = JSON.stringify(row);
+    assert.equal(formatEvent(row, { tz: "UTC" }), "Wed 25 Nov time unknown  US GDP (Second Estimate), 3rd Quarter 2026");
+    assert.equal(JSON.stringify(row), before);
+    assert.match(formatEvent({ ...row, name: "Secondary GDP" }), /stage second$/);
+  });
+
+  test("date-only economic releases have unknown timing, while holidays stay all day", () => {
+    const row = { date: "2026-11-25", name: "US GDP", category: "economic-indicators", release_at_utc: null, all_day: true };
+    assert.equal(formatWhen(row, "Asia/Tokyo"), "Wed 25 Nov time unknown");
+    assert.equal(formatWhen({ ...row, category: "market-holidays" }, "Asia/Tokyo"), "Wed 25 Nov all day");
+    assert.match(formatEvent({ ...row, release_stage: "annual-update" }), /stage annual update$/);
+  });
+
+  test("publication windows render localized bounds without inventing an exact release time", () => {
+    const row = { date: "2026-11-18", name: "Japan release", release_at_utc: null, all_day: false, time_precision: "range",
+      time_window_start: "2026-11-18T12:00:00+09:00", time_window_end: "2026-11-18T12:15:00+09:00", time_role: "publication" };
+    const before = JSON.stringify(row);
+    assert.equal(formatWhen(row, "Asia/Tokyo"), "Wed 18 Nov 12:00–12:15 GMT+9");
+    assert.equal(formatWhen(row, "America/New_York"), "Tue 17 Nov 22:00–22:15 ET");
+    assert.equal(formatWhen({ ...row, time_window_end: "invalid" }, "UTC"), "Wed 18 Nov time unknown");
+    assert.equal(formatWhen({ ...row, time_window_start: "2026-11-18T12:00:00" }, "UTC"), "Wed 18 Nov time unknown");
+    assert.equal(JSON.stringify(row), before);
+  });
+
+  test("windows crossing midnight or a DST change show both dates and zone labels", () => {
+    assert.equal(formatWhen({ time_window_start: "2026-11-18T23:55:00Z", time_window_end: "2026-11-19T00:05:00Z" }, "UTC"),
+      "Wed 18 Nov 23:55 UTC–Thu 19 Nov 00:05 UTC");
+    assert.equal(formatWhen({ time_window_start: "2026-11-01T05:55:00Z", time_window_end: "2026-11-01T06:10:00Z" }, "America/New_York"),
+      "Sun 01 Nov 01:55 GMT-4–Sun 01 Nov 01:10 GMT-5");
+  });
+
+  test("auction close is labelled separately from result publication", () => {
+    const row = { name: "US Treasury Bill Auction", date: "2026-11-18", release_at_utc: "2026-11-18T16:30:00Z", time_role: "auction-close",
+      auction: { cusip: "912797AB1", high_rate: "4.050000", reopening: false } };
+    const before = JSON.stringify(row);
+    assert.match(formatEvent(row, { tz: "America/New_York" }), /11:30 ET  US Treasury Bill Auction  auction close$/);
+    assert.equal(JSON.stringify(row), before);
+  });
+
+  test("eventsToCsv quotes fields containing commas", () => {
+    const csv = eventsToCsv([{ date: "2026-10-22", name: "US Initial Jobless Claims: October 22, 2026", all_day: false, consensus: null }]);
+    const [header, row] = csv.trim().split("\n");
+    assert.match(header, /^date,time_utc,time_et,time_local,all_day,name/);
+    assert.match(row, /"US Initial Jobless Claims: October 22, 2026"/);
+    assert.match(row, /^2026-10-22,,,,false,/);
+  });
+});

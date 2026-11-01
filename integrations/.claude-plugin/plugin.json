@@ -1,0 +1,21 @@
+{
+  "name": "financecalendar",
+  "version": "0.1.0",
+  "description": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance.",
+  "author": {
+    "name": "Awareness Days Ltd",
+    "url": "https://www.financecalendar.com"
+  },
+  "homepage": "https://www.financecalendar.com/api/mcp/",
+  "repository": "https://github.com/awarenessdays/financecalendar-api",
+  "license": "MIT",
+  "keywords": [
+    "economic-calendar",
+    "finance",
+    "mcp",
+    "release-dates"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "icon": "./assets/icon.png"
+}

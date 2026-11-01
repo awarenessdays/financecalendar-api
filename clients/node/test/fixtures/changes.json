@@ -1,0 +1,919 @@
+{
+    "status": 200,
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300, s-maxage=300"
+    },
+    "body": {
+        "since": "2026-10-18T15:47:45+00:00",
+        "generated_at": "2026-10-19T12:00:00+00:00",
+        "count": 100,
+        "changes": [
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "hkex-chung-yeung-festival-2026",
+                "series_code": "holidays-hkex",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "china-gdp-october-2026",
+                "series_code": "cn-gdp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "canada-cpi-october-2026",
+                "series_code": "ca-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "nse-india-dussehra-2026",
+                "series_code": "holidays-nse",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "pboc-loan-prime-rate-october-2026",
+                "series_code": "pboc-lpr",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-labour-market-report-october-2026",
+                "series_code": "gb-jobs",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-cpi-inflation-october-2026",
+                "series_code": "gb-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-october-22-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "japan-cpi-october-2026",
+                "series_code": "jp-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-retail-sales-october-2026",
+                "series_code": "gb-retail-sales",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "germany-ifo-business-climate-october-2026",
+                "series_code": "de-ifo",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-consumer-confidence-october-2026",
+                "series_code": "us-consumer-confidence",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "australia-cpi-october-2026",
+                "series_code": "au-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "rbnz-rate-decision-october-2026",
+                "series_code": "rbnz",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bank-of-canada-rate-decision-october-2026",
+                "series_code": "boc",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "fomc-rate-decision-october-2026",
+                "series_code": "fomc",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-october-29-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "germany-cpi-flash-october-2026",
+                "series_code": "de-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "ecb-rate-decision-october-2026",
+                "series_code": "ecb",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bank-of-japan-rate-decision-october-2026",
+                "series_code": "boj",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "eurozone-gdp-flash-october-2026",
+                "series_code": "eu-gdp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "eurozone-unemployment-october-2026-30",
+                "series_code": "eu-unemployment",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "china-official-pmi-october-2026",
+                "series_code": "cn-pmi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "china-caixin-manufacturing-pmi-november-2026",
+                "series_code": "cn-caixin-pmi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-ism-manufacturing-pmi-november-2026",
+                "series_code": "us-ism-manufacturing",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "tse-jpx-culture-day-2026",
+                "series_code": "holidays-jpx",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "rba-rate-decision-november-2026",
+                "series_code": "rba",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "riksbank-rate-decision-november-2026",
+                "series_code": "riksbank",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "eurozone-flash-cpi-november-2026",
+                "series_code": "eu-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-adp-employment-report-november-2026",
+                "series_code": "us-adp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-ism-services-pmi-november-2026",
+                "series_code": "us-ism-services",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "norges-bank-rate-decision-november-2026",
+                "series_code": "norges",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bank-of-england-mpc-rate-decision-november-2026",
+                "series_code": "boe",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-november-5-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "canada-labour-force-survey-november-2026",
+                "series_code": "ca-jobs",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-employment-situation-non-farm-payrolls-november-2026",
+                "series_code": "us-nfp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "china-cpi-november-2026",
+                "series_code": "cn-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "nse-india-diwali-balipratipada-2026",
+                "series_code": "holidays-nse",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-cpi-report-november-2026",
+                "series_code": "us-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bond-market-veterans-day-2026",
+                "series_code": "holidays-sifma",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-gdp-november-2026",
+                "series_code": "gb-gdp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-november-12-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "eurozone-gdp-flash-november-2026",
+                "series_code": "eu-gdp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "japan-gdp-november-2026",
+                "series_code": "jp-gdp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "canada-cpi-november-2026",
+                "series_code": "ca-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-labour-market-report-november-2026",
+                "series_code": "gb-jobs",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-retail-sales-november-2026",
+                "series_code": "us-retail-sales",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-cpi-inflation-november-2026",
+                "series_code": "gb-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "fomc-minutes-november-2026",
+                "series_code": "fomc-minutes",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "australia-labour-force-november-2026",
+                "series_code": "au-jobs",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-november-19-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "japan-cpi-november-2026",
+                "series_code": "jp-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "pboc-loan-prime-rate-november-2026",
+                "series_code": "pboc-lpr",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-retail-sales-november-2026",
+                "series_code": "gb-retail-sales",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "tse-jpx-labor-thanksgiving-day-2026",
+                "series_code": "holidays-jpx",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "nse-india-guru-nanak-jayanti-2026",
+                "series_code": "holidays-nse",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "germany-ifo-business-climate-november-2026",
+                "series_code": "de-ifo",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-consumer-confidence-november-2026",
+                "series_code": "us-consumer-confidence",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "australia-cpi-november-2026",
+                "series_code": "au-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "beige-book-november-2026",
+                "series_code": "beige-book",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bond-market-thanksgiving-day-2026",
+                "series_code": "holidays-sifma",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "cme-futures-thanksgiving-day-2026-early-close",
+                "series_code": "holidays-cme",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "nyse-nasdaq-thanksgiving-day-2026",
+                "series_code": "holidays-nyse",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-november-26-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bond-market-day-after-thanksgiving-2026-early-close",
+                "series_code": "holidays-sifma",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "cme-futures-day-after-thanksgiving-2026-early-close",
+                "series_code": "holidays-cme",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "nyse-nasdaq-day-after-thanksgiving-2026-early-close",
+                "series_code": "holidays-nyse",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "germany-cpi-flash-november-2026",
+                "series_code": "de-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "china-official-pmi-november-2026",
+                "series_code": "cn-pmi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "china-caixin-manufacturing-pmi-december-2026",
+                "series_code": "cn-caixin-pmi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "eurozone-flash-cpi-december-2026",
+                "series_code": "eu-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-ism-manufacturing-pmi-december-2026",
+                "series_code": "us-ism-manufacturing",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "eurozone-unemployment-december-2026",
+                "series_code": "eu-unemployment",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-adp-employment-report-december-2026",
+                "series_code": "us-adp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-december-3-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-ism-services-pmi-december-2026",
+                "series_code": "us-ism-services",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "canada-labour-force-survey-december-2026",
+                "series_code": "ca-jobs",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "japan-gdp-december-2026",
+                "series_code": "jp-gdp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "rba-rate-decision-december-2026",
+                "series_code": "rba",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "rbnz-rate-decision-december-2026",
+                "series_code": "rbnz",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "china-cpi-december-2026",
+                "series_code": "cn-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bank-of-canada-rate-decision-december-2026",
+                "series_code": "boc",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "fomc-rate-decision-december-2026",
+                "series_code": "fomc",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "snb-rate-decision-december-2026",
+                "series_code": "snb",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-december-10-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-gdp-december-2026",
+                "series_code": "gb-gdp",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "canada-cpi-december-2026",
+                "series_code": "ca-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-labour-market-report-december-2026",
+                "series_code": "gb-jobs",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-cpi-inflation-december-2026",
+                "series_code": "gb-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "riksbank-rate-decision-december-2026",
+                "series_code": "riksbank",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "australia-labour-force-december-2026",
+                "series_code": "au-jobs",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "norges-bank-rate-decision-december-2026",
+                "series_code": "norges",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "germany-ifo-business-climate-december-2026",
+                "series_code": "de-ifo",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bank-of-england-mpc-rate-decision-december-2026",
+                "series_code": "boe",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "ecb-rate-decision-december-2026",
+                "series_code": "ecb",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "us-initial-jobless-claims-december-17-2026",
+                "series_code": "us-jobless-claims",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "japan-cpi-december-2026",
+                "series_code": "jp-cpi",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "bank-of-japan-rate-decision-december-2026",
+                "series_code": "boj",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "uk-retail-sales-december-2026",
+                "series_code": "gb-retail-sales",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            },
+            {
+                "at": "2026-10-19T12:00:00+00:00",
+                "id": "pboc-loan-prime-rate-december-2026",
+                "series_code": "pboc-lpr",
+                "change": "added",
+                "field": null,
+                "old": null,
+                "new": null
+            }
+        ],
+        "attribution": {
+            "source": "financecalendar.com",
+            "terms": "Free for any use with attribution: link to https://www.financecalendar.com",
+            "docs": "https://www.financecalendar.com/api/"
+        }
+    }
+}

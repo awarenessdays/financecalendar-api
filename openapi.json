@@ -1,0 +1,4581 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Finance Calendar API",
+    "version": "2.0.0",
+    "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
+    "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. No key needed; a free key raises the daily limit. Earnings dates are not included. Quota policy v1: Anonymous REST allows 250 requests/IP/day. New verified Free accounts allow 1,000 requests/account/day; existing allowances are retained. The hosted read-only MCP beta retains 2,000 requests/shared IP/day. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed.",
+    "termsOfService": "https://www.financecalendar.com/api/#attribution",
+    "contact": {
+      "url": "https://www.financecalendar.com/about/"
+    },
+    "license": {
+      "name": "Free with attribution",
+      "url": "https://www.financecalendar.com/api/#attribution"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.financecalendar.com/wp-json/fc/v1",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Calendar"
+    },
+    {
+      "name": "Series"
+    },
+    {
+      "name": "Markets"
+    },
+    {
+      "name": "Changes"
+    },
+    {
+      "name": "Keys"
+    },
+    {
+      "name": "Meta"
+    }
+  ],
+  "paths": {
+    "/calendar": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "calendar",
+        "summary": "Events in a date range",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "YYYY-MM-DD, default today (America/New_York).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "YYYY-MM-DD, default from + 14 days, at most 92 days after from.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "impact",
+            "in": "query",
+            "description": "high, medium or low; comma-separated for several.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          },
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code or alias (e.g. us-cpi, fomc, uk-cpi); comma-separated for several.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "holidays to add market-holiday rows to the economic rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "holidays"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "confirmed, estimated, released, rescheduled, cancelled; comma-separated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "1 to 500, default 100.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip this many rows (paging).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "json (default), csv (download) or ics (calendar subscription).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "json",
+                "csv",
+                "ics"
+              ]
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows, soonest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "to": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/today": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "today",
+        "summary": "Today's releases, NYSE status and exchange closures",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "impact",
+            "in": "query",
+            "description": "high, medium or low.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "holidays to add market-holiday rows to events (closures are always listed in market_holidays).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Today.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "market": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "market_holidays": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/week": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "week",
+        "summary": "This week (Monday to Sunday) or the next one",
+        "parameters": [
+          {
+            "name": "which",
+            "in": "query",
+            "description": "this (default) or next.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "this",
+                "next"
+              ]
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "impact",
+            "in": "query",
+            "description": "high, medium or low; comma-separated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          },
+          {
+            "name": "series",
+            "in": "query",
+            "description": "As for /calendar.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "holidays to add market-holiday rows.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "As for /calendar.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "json, csv or ics.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "json",
+                "csv",
+                "ics"
+              ]
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows, soonest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "to": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page."
+      }
+    },
+    "/next": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "operationId": "next",
+        "summary": "The next occurrence of a series",
+        "parameters": [
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Override the country for a generic series, e.g. uk. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Next event.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "series": {
+                      "type": "string"
+                    },
+                    "series_code": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "country": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "next": {
+                      "$ref": "#/components/schemas/Event"
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No upcoming event for that series."
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
+      }
+    },
+    "/series": {
+      "get": {
+        "tags": [
+          "Series"
+        ],
+        "operationId": "series",
+        "summary": "Every series the API covers, with its next date",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "description": "ISO alpha-2, comma-separated for several (US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK). uk and eurozone are accepted. Malaysia is supported as MY or malaysia; South Korea as KR, korea or south korea. Use /countries for populated coverage.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by economic-indicators, central-banks-monetary-policy, market-holidays or crypto. Crypto is global: country is null, and country filters exclude global rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "economic-indicators",
+                "central-banks-monetary-policy",
+                "market-holidays",
+                "crypto"
+              ]
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "description": "instance or holiday.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Series list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "series": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Series"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/series/{code}": {
+      "get": {
+        "tags": [
+          "Series"
+        ],
+        "operationId": "seriesDetail",
+        "summary": "One series: next, last, upcoming dates and history",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Series code or alias.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Series detail.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "series": {
+                      "$ref": "#/components/schemas/Series"
+                    },
+                    "next": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Event"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "last": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Event"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "upcoming": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "history": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "dataset": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "description": "Verified long-run history where we publish one (e.g. us-cpi, fomc)."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown series."
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
+      }
+    },
+    "/history": {
+      "get": {
+        "tags": [
+          "Series"
+        ],
+        "operationId": "history",
+        "summary": "Past releases of a series with consensus, prior and actual",
+        "parameters": [
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code or alias.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "YYYY-MM-DD.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Publisher-date upper bound. Defaults to the latest current publisher-local date among the series records. Explicit dates are retained; only elapsed records are returned.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "1 to 500, default 100.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA timezone; adds time_local to every row (e.g. Europe/London).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "required": false,
+            "description": "Canonical asset IDs, comma-separated (OR), e.g. ethereum or bitcoin. Obtain covered IDs from /series?category=crypto. Filters run before pagination and totals. Tickers such as BTC are not canonical IDs.",
+            "schema": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows, soonest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "to": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    },
+                    "attribution": {
+                      "$ref": "#/components/schemas/Attribution"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached."
+      }
+    },
+    "/holidays": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "holidays",
+        "summary": "Exchange holidays and early closes",
+        "parameters": [
+          {
+            "name": "exchange",
+            "in": "query",
+            "description": "nyse (default, same calendar as nasdaq), sifma, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse, or all.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Four-digit year.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Holidays.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exchange": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "holidays": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "exchange": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "closed",
+                              "early_close"
+                            ]
+                          },
+                          "close_time_local": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "close_time_et": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "description": "NYSE rows only."
+                          },
+                          "url": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/market-status": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "marketStatus",
+        "summary": "Is the exchange open right now?",
+        "parameters": [
+          {
+            "name": "exchange",
+            "in": "query",
+            "description": "nyse (default) or any exchange code; live open/closed for NYSE, holiday-aware for the rest.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exchange": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "tz": {
+                      "type": "string"
+                    },
+                    "open": {
+                      "type": "boolean"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "local_time": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "time_utc": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "session": {
+                      "type": "object",
+                      "properties": {
+                        "open": {
+                          "type": "string"
+                        },
+                        "close": {
+                          "type": "string"
+                        },
+                        "break": {
+                          "type": [
+                            "array",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "holiday_today": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "next_holiday": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/changes": {
+      "get": {
+        "tags": [
+          "Changes"
+        ],
+        "operationId": "changes",
+        "summary": "What changed: new dates, moved dates, consensus and actuals",
+        "parameters": [
+          {
+            "name": "since",
+            "in": "query",
+            "description": "ISO 8601 datetime (default: 24 hours ago; at most 30 days ago).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "series",
+            "in": "query",
+            "description": "Series code or alias.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "change",
+            "in": "query",
+            "description": "added, updated or removed.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "1 to 500, default 100.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque next_cursor from the preceding page; bound to its snapshot, since, filters and limit.",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Change log, newest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "since": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "changes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Change"
+                      }
+                    },
+                    "generated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Snapshot publication identifier; retained for compatibility."
+                    },
+                    "snapshot_generated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Immutable publication identifier binding this traversal."
+                    },
+                    "total": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Total retained changes matching since and filters in this snapshot."
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Continuation token, or null after the final page."
+                    }
+                  },
+                  "required": [
+                    "since",
+                    "generated_at",
+                    "snapshot_generated_at",
+                    "count",
+                    "total",
+                    "has_more",
+                    "next_cursor",
+                    "changes"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Daily allowance reached. Anonymous REST: 250 requests/IP/day; new Free accounts: 1,000 requests/account/day; existing account allowances retained. Hosted MCP beta: 2,000 requests/shared IP/day. Reset: 00:00 UTC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Snapshot changed during pagination. Restart with the original since and filters and deduplicate repeated changes; resync from the full snapshot if outside retention.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "docs": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Retained changes in stable snapshot order, newest first. Follow next_cursor until has_more is false; a single publication can exceed 500 changes with the same timestamp. Pass the cursor alone, or repeat the same since, series, change and limit. Cursors bind to snapshot_generated_at. On 409 restart with the original since and filters and deduplicate repeated changes; only advance the checkpoint after all pages complete. Since accepts YYYY-MM-DD or an ISO datetime with seconds and an explicit timezone; relative dates and timezone-less datetimes are rejected. Since is inclusive and normalized to whole UTC seconds. Beyond 30 days, resync from the full snapshot. Responses are not cached."
+      }
+    },
+    "/countries": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "countries",
+        "summary": "Countries covered, with series and event counts",
+        "responses": {
+          "200": {
+            "description": "Countries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "countries": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "status",
+        "summary": "Health: snapshot age, counts and publisher source health",
+        "responses": {
+          "200": {
+            "description": "Snapshot freshness and source-level collection health.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Snapshot availability and age check; consult source_health_summary separately for publisher failures."
+                    },
+                    "time_utc": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "snapshot": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "source_health": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SourceHealth"
+                      }
+                    },
+                    "source_health_summary": {
+                      "$ref": "#/components/schemas/SourceHealthSummary"
+                    },
+                    "api_version": {
+                      "type": "string"
+                    },
+                    "docs": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "observation_summary": {
+                      "$ref": "#/components/schemas/ObservationSummary"
+                    },
+                    "quality_reported": {
+                      "type": "boolean"
+                    },
+                    "quality": {
+                      "$ref": "#/components/schemas/DatasetQuality"
+                    },
+                    "collection": {
+                      "$ref": "#/components/schemas/CollectionContext"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "openapi",
+        "summary": "This document (also at /openapi.json on the edge host)",
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.1.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/keys": {
+      "post": {
+        "tags": [
+          "Keys"
+        ],
+        "operationId": "createKey",
+        "summary": "Retired anonymous API-key creation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "use_case": {
+                    "type": "string"
+                  },
+                  "website": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "403": {
+            "description": "Account required; create API keys from the verified account workspace."
+          },
+          "503": {
+            "description": "Quota policy unavailable; administrator review is required."
+          }
+        },
+        "deprecated": true,
+        "description": "Anonymous key creation is retired. Create and verify an account at https://www.financecalendar.com/account/?mode=register, then create an API key in the signed-in workspace. Existing issued keys continue to work with their existing allowances."
+      }
+    },
+    "/keys/me": {
+      "get": {
+        "tags": [
+          "Keys"
+        ],
+        "operationId": "keyInfo",
+        "summary": "Your tier, limit and usage today",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "description": "Optional free API key (raises the daily limit and identifies your app). Also accepted as ?api_key=.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Key info.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyUsage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, malformed or unknown key."
+          },
+          "403": {
+            "description": "Key revoked."
+          },
+          "503": {
+            "description": "Usage log could not be read; no zero usage is inferred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Requires a valid active key. Reading usage is not counted or capped. Counts are rate-gate attempts, including 429, not successful responses. The lifetime requests_total is unknown; use the explicit retained UTC-date window. Send X-API-Key, or use the legacy api_key query/Bearer alternatives.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "ApiKeyQuery": []
+          },
+          {
+            "ApiKeyBearer": []
+          }
+        ]
+      }
+    },
+    "/quality": {
+      "get": {
+        "tags": [
+          "Data quality"
+        ],
+        "operationId": "quality",
+        "summary": "Canonical dataset field coverage and explicit gaps",
+        "description": "Uses the same key, anonymous allowance and account quota as calendar. Reads the canonical engine report without inventing verification, source-publication latency or completeness. Legacy snapshots return reported=false and quality=null. as_of is rejected.",
+        "responses": {
+          "200": {
+            "description": "Current snapshot evidence, including explicit unsupported reporting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QualityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filter or unsupported as_of query."
+          },
+          "401": {
+            "description": "Malformed or unknown API key."
+          },
+          "403": {
+            "description": "Revoked API key."
+          },
+          "429": {
+            "description": "Shared API allowance exhausted."
+          },
+          "503": {
+            "description": "No usable canonical snapshot."
+          }
+        }
+      }
+    },
+    "/observations": {
+      "get": {
+        "tags": [
+          "Data quality"
+        ],
+        "operationId": "observations",
+        "summary": "Recorded validated official numerical evidence",
+        "description": "Current-vintage evidence endorsed by the engine field contract, including stale retained values and engine-observed revision_history. Empty output may mean unsupported or missing evidence; inspect reported and /quality. No historical first-print or as_of reconstruction. Entries are per event and role; observation_id can repeat where the same metric/period appears in several occurrences. Stable order is event ID, role, reference period and metric. Follow next_offset with identical filters and snapshot_generated_at; on 409 restart at zero. Uses standard API auth and quotas; JSON only.",
+        "parameters": [
+          {
+            "name": "series",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "One canonical series code or alias. Omit to inspect all series."
+          },
+          {
+            "name": "event_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "description": "Exact canonical event ID."
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "actual",
+                "prior"
+              ]
+            },
+            "description": "Actual or prior role."
+          },
+          {
+            "name": "reference_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "description": "Exact source reference-period identifier; no date conversion."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "description": "Evidence entries per page, 1–500; default 100."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000,
+              "default": 0
+            },
+            "description": "Zero-based offset, 0–1000000; default 0."
+          },
+          {
+            "name": "snapshot_generated_at",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Pass the prior page snapshot_generated_at to detect publication changes. A mismatch returns 409; restart at offset=0."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current snapshot evidence, including explicit unsupported reporting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservationsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filter or unsupported as_of query."
+          },
+          "401": {
+            "description": "Malformed or unknown API key."
+          },
+          "403": {
+            "description": "Revoked API key."
+          },
+          "429": {
+            "description": "Shared API allowance exhausted."
+          },
+          "503": {
+            "description": "No usable canonical snapshot."
+          },
+          "409": {
+            "description": "Snapshot changed during pagination; restart using current generation."
+          }
+        }
+      }
+    },
+    "/account/full-export": {
+      "get": {
+        "tags": [
+          "Business exports"
+        ],
+        "operationId": "downloadBusinessFullDataset",
+        "summary": "Download the complete current JSON dataset (Business)",
+        "description": "Requires an active Business subscription and an account-owned API key sent in X-API-Key or Bearer Authorization. URL API keys are not accepted for this download. Verified browser sessions use a WordPress REST nonce. Free, Pro and expired Business access are denied. The response is an attachment with private, no-store cache control.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "ApiKeyBearer": []
+          }
+        ],
+        "x-required-plan": "business",
+        "responses": {
+          "200": {
+            "description": "Exact current canonical dataset JSON attachment. Source evidence and attribution are preserved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Valid account authentication required."
+          },
+          "403": {
+            "description": "Active live Business subscription and verified account required."
+          },
+          "503": {
+            "description": "Account or dataset access could not be verified. Retry later."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Event": {
+        "type": "object",
+        "description": "One scheduled release, decision or market holiday.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable identifier (matches the page slug).",
+            "example": "us-cpi-report-november-2026"
+          },
+          "series_code": {
+            "type": "string",
+            "example": "us-cpi"
+          },
+          "series_name": {
+            "type": "string",
+            "example": "US CPI Report"
+          },
+          "name": {
+            "type": "string",
+            "description": "Short display name.",
+            "example": "US CPI"
+          },
+          "title": {
+            "type": "string",
+            "example": "US CPI Report November 2026"
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO country code, or null for global crypto events. Global is not a country code.",
+            "example": "US"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "economic-indicators",
+              "central-banks-monetary-policy",
+              "market-holidays",
+              "crypto"
+            ]
+          },
+          "impact": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              null
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Publisher calendar date, or the inclusive lower-bound index of date_window_start/end for an estimated month, quarter or year. A lower-bound index is not a confirmed occurrence date."
+          },
+          "release_at_utc": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Exact configured or published instant when available, retaining source seconds. Null for date-only, unknown-time, timed-range and approximate date-window schedules. This is schedule evidence, not proof an activation was observed."
+          },
+          "time_utc": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Alias of release_at_utc (v1 field)."
+          },
+          "time_et": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "HH:MM in America/New_York (v1 field)."
+          },
+          "time_local": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "HH:MM in the requested tz (only when ?tz= is given)."
+          },
+          "release_tz": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "America/New_York"
+          },
+          "all_day": {
+            "type": "boolean"
+          },
+          "period": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the data covers, when known."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "estimated",
+              "rescheduled",
+              "cancelled",
+              "released"
+            ]
+          },
+          "consensus": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Market consensus is not currently collected and this field is null. Do not infer a forecast from prior or actual values."
+          },
+          "prior": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The validated prior reference-period observation at its recorded source vintage; null when unsupported. A previous article value, a different metric, and an original first print are not interchangeable."
+          },
+          "actual": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A result backed by the implemented validated official observation contract, or the exact structured Treasury auction summary; null otherwise. Article metadata is not a numerical fallback. Zero is a value, and elapsed time does not establish that a result was collected."
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "% y/y"
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "source_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Preview and results page on financecalendar.com, when one exists."
+          },
+          "exchange": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Market-holiday rows only."
+          },
+          "holiday_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "closed",
+              "early_close",
+              null
+            ]
+          },
+          "close_time_local": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "starts_on": {
+            "type": "string",
+            "format": "date",
+            "description": "First day of a multi-day meeting (only when it differs from date)."
+          },
+          "note": {
+            "type": "string",
+            "description": "Source note, e.g. a date the official calendar moved."
+          },
+          "source_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Publisher connector identifier; null when provenance is unavailable."
+          },
+          "native_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Publisher release identifier, when supplied. Stable across date changes."
+          },
+          "release_stage": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Publisher-labelled release stage, e.g. advance, second, third or annual-update. Null when unspecified."
+          },
+          "time_precision": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "second/minute for configured or published exact timing; date for a day without confirmed time; range for a timed window; month/quarter/year for an estimated date window; unknown or null when unspecified. A schedule is not proof of observed activation.",
+            "enum": [
+              "minute",
+              "date",
+              "range",
+              "unknown",
+              "second",
+              "month",
+              "quarter",
+              "year",
+              null
+            ]
+          },
+          "last_verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
+          },
+          "data_stale": {
+            "type": "boolean",
+            "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
+          },
+          "stale_since": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "time_window_start": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Start of the publisher-announced release window, with timezone offset. This bound is not an exact publication instant."
+          },
+          "time_window_end": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "End of the publisher-announced release window, with timezone offset."
+          },
+          "time_role": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Meaning of the scheduled time or window, e.g. publication or auction-close. An auction close is not the publication time of auction results."
+          },
+          "auction": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Treasury auction security and result fields when available. Numerical values remain publisher decimal strings without unit conversion. Auction closing time is not result publication time.",
+            "properties": {
+              "cusip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "security_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "security_term": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "original_security_term": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "issue_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "maturity_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "high_rate": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "high_yield": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "high_discount_margin": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "bid_to_cover": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reopening": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "cash_management_bill": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            }
+          },
+          "data_quality": {
+            "$ref": "#/components/schemas/EventDataQuality"
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "actual",
+                    "prior"
+                  ]
+                },
+                "metric_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\\d|3[01]))?$",
+                  "description": "Explicit month YYYY-MM, or a weekly ending date YYYY-MM-DD. Inspect frequency and reference_period_kind; never infer this period from the announcement date."
+                },
+                "frequency": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "seasonal_adjustment": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "definition": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_series_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_dataset_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "source_api_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "measurement_basis_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "source_update_precision": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "edition_published_date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_updated_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "known_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "first_seen_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "last_checked_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value_basis": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reference_period_kind": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_publisher": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_calendar_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "source_document_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "edition_release_at_utc": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "edition_latest_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "edition_prior_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_release_at_utc": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "occurrence_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_prior_reference_period": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_document_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "vintage": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Exact decimal in the publisher measurement scale before canonical conversion. Payroll changes are published in thousands of jobs."
+                },
+                "source_unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_definition": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "conversion_factor": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Exact decimal multiplier from source_value to value; 1000 converts payroll thousands into canonical jobs. Never apply this factor a second time."
+                },
+                "conversion_method": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "identity",
+                    "multiply",
+                    null
+                  ]
+                },
+                "edition_fingerprint_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_native_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "occurrence_edition_fingerprint_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_documents": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "url",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    }
+                  },
+                  "description": "Exact publisher documents checked for the current numerical edition. The canonical manifest has edition_fingerprint_sha256."
+                },
+                "occurrence_source_documents": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "url",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    }
+                  },
+                  "description": "Original document manifest that verified this occurrence and its reference period. This binding remains separate from later numerical editions."
+                },
+                "publisher_reported_revisions": {
+                  "type": "array",
+                  "description": "Revisions explicitly reported in the publisher edition. Values retain the stated source unit; these are separate from engine-observed revision_history and do not establish original first prints.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "reference_period": {
+                        "type": "string",
+                        "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                      },
+                      "previous_value": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "change": {
+                        "type": "string"
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": [
+                          "up",
+                          "down",
+                          "unchanged"
+                        ]
+                      },
+                      "unit": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "historical_first_print": {
+                  "type": "boolean",
+                  "description": "False for current-vintage backfills; these are not the values originally known at historical releases."
+                },
+                "data_stale": {
+                  "type": "boolean"
+                },
+                "revision_history": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "unit": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "known_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "first_seen_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "source_updated_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "superseded_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "source_document_sha256": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Original evidence-document fingerprint when supplied by a document-based numerical source."
+                      },
+                      "source_value": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "source_unit": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "edition_fingerprint_sha256": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  },
+                  "description": "Earlier engine-observed values; no retrospective first-print claim."
+                },
+                "source_license": {
+                  "type": "object",
+                  "properties": {
+                    "spdx": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "attribution": {
+                      "type": "string"
+                    },
+                    "policy": {
+                      "type": "string"
+                    },
+                    "vintage_notice": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "source_rights": {
+                  "type": "object",
+                  "description": "Publisher attribution and public-domain policy evidence for results without an asserted upstream licence.",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "attribution": {
+                      "type": "string"
+                    },
+                    "policy": {
+                      "type": "string"
+                    },
+                    "vintage_notice": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Explicitly mapped official numerical observations. Values are source decimal strings, including zero. known_at/first_seen_at record engine observation, not the original publisher release. Prior is the previous reference period at the current observed vintage; consensus is never inferred."
+          },
+          "observation_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "current",
+              "stale",
+              null
+            ],
+            "description": "Numerical source status, independent of calendar timing verification."
+          },
+          "observation_metric_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observation_fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "actual",
+                "prior"
+              ]
+            },
+            "description": "Flat actual/prior fields populated by an exact official metric and reference-period match. Matching official values take precedence over article-derived values; the linked article text is not rewritten and consensus is never inferred."
+          },
+          "source_reference_period": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Publisher reference period or explicit publication-bundle description, separate from announcement date. Null when the source does not identify the measured period. A fiscal publication-month slot is an identity aid and must not be substituted for the measured month.",
+            "properties": {
+              "date": {
+                "type": "string"
+              },
+              "frequency": {
+                "type": "string"
+              },
+              "formatted": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "description": "Source-specific period kind, e.g. month, quarter, quarter-and-year, half-year, year, week-ending, month-range, fiscal-year or publication-bundle."
+              },
+              "week_ending": {
+                "type": "string"
+              },
+              "reference_month": {
+                "type": "string",
+                "description": "Explicit measured month as YYYY-MM; never inferred from a publication month."
+              },
+              "quarter": {
+                "type": "string"
+              },
+              "half_year": {
+                "type": "string"
+              },
+              "year": {
+                "type": "string"
+              },
+              "fiscal_year": {
+                "type": "string",
+                "description": "Explicit publisher fiscal-year label, e.g. 2024-25; distinct from a calendar year."
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Explicit source components for a combined reference period or publication bundle. A publication-bundle component may retain the original combined description; it is not a single headline metric."
+              }
+            }
+          },
+          "source_clock": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Raw publisher clock evidence, distinct from a verified release instant. If timezone is null, release_at_utc and time_local remain null; release_tz only identifies the calendar jurisdiction. Date precision does not imply an all-day event.",
+            "properties": {
+              "clock": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Publisher clock exactly normalised to HH:MM, where supplied."
+              },
+              "timezone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Explicitly verified clock timezone, otherwise null."
+              },
+              "role": {
+                "type": "string",
+                "description": "Meaning of the source clock, e.g. media-publication or date-only. ECOS availability is a separate clock."
+              },
+              "verification": {
+                "type": "string",
+                "description": "Evidence limitation, e.g. timezone-unverified or no-clock-published."
+              },
+              "source_url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "source_family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_publication_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_license": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Upstream attribution and licence requirements travel with each adapted record. Retain the original credit, attribution link, source link, licence URL, full notice and adaptation notice when redistributing.",
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "terms_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "attribution": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "attribution_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "description": "Required upstream attribution link where supplied, e.g. https://pattern.plus."
+              },
+              "notice": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Full upstream licence notice where required, e.g. the MIT copyright and permission notice."
+              },
+              "adapted": {
+                "type": "boolean"
+              }
+            }
+          },
+          "source_rights": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Provenance and access basis for independently normalised factual records. This is not a publisher copyright licence or permission claim; source_license remains null unless an actual upstream licence applies. Retain the attribution, evidence links and notice.",
+            "properties": {
+              "basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Documented factual normalisation or independently verified public-facts basis."
+              },
+              "access_basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "How primary evidence was accessed, e.g. manual review or an issuer-documented public API."
+              },
+              "reviewed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "attribution": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "description": "Primary-source or access documentation supporting this rights basis."
+              },
+              "terms_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "notice": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CryptoAsset"
+            },
+            "description": "Affected assets; empty for economic and exchange holiday rows."
+          },
+          "crypto": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "event_type": {
+                "type": "string",
+                "enum": [
+                  "options-expiry",
+                  "futures-expiry",
+                  "network-upgrade",
+                  "token-unlock",
+                  "supply-projection",
+                  "governance-vote",
+                  "halving"
+                ]
+              },
+              "exchange": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "network": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Network environment, e.g. mainnet, hoodi or sepolia. Testnet events are not mainnet activation dates."
+              },
+              "activation_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "scheduled",
+                  "target",
+                  null
+                ],
+                "description": "Configured activation schedule or roadmap target, not proof the network activation was observed."
+              },
+              "block_height": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "token_amount": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "description": "Scheduled quantity when supported by the primary source. Publisher decimal strings are retained; consult token_amount_basis for estimates or upper bounds. This is not proof of transfer or sale."
+              },
+              "token_amount_basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Evidence or qualification for token_amount, including issuer upper bounds where applicable."
+              },
+              "unlock_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Vesting schedule status; scheduled does not establish an observed token release."
+              },
+              "schedule_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Stable identifier of the independently normalised vesting schedule."
+              },
+              "installment": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Schedule installment index as emitted by the collector; no convention is implied across publishers."
+              },
+              "beneficiaries": {
+                "type": [
+                  "string",
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "Primary-source allocation group or groups; not individual token holders."
+              },
+              "date_basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Basis of the indexed date or estimated window, e.g. issuer-monthly-schedule or issuer-monthly-projection."
+              },
+              "projection_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Supply projection status, e.g. issuer-estimate. A projection is not a confirmed token unlock or observed circulating supply."
+              },
+              "projected_circulating_supply": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "description": "Issuer projected circulating supply. Decimal strings are preserved without rounding."
+              },
+              "projected_monthly_supply_change": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "description": "Change between issuer monthly projections; not an observed release or confirmed discrete unlock. Decimal strings are preserved."
+              },
+              "dao": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "space_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Canonical governance space identifier."
+              },
+              "proposal_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Upstream governance proposal identifier."
+              },
+              "proposal_title": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Short factual proposal label when available; null when omitted. Full proposal bodies are not distributed."
+              },
+              "voting_start": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "voting_end": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "Scheduled voting deadline. It does not establish proposal approval, rejection or execution."
+              },
+              "voting_state": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "pending",
+                  "active",
+                  "closed",
+                  null
+                ],
+                "description": "Voting window state, not a vote result."
+              },
+              "voting_type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Upstream voting method, e.g. basic, copeland, ranked-choice, single-choice or weighted; additional methods may appear."
+              },
+              "choice_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Number of available voting choices. Choice labels, votes and scores are not distributed."
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Upstream licensed schedule provider, when applicable. Provider evidence is not a claim of independent Finance Calendar verification."
+              },
+              "provider_token": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Token identifier within the provider dataset."
+              },
+              "provider_basis": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "Evidence classifications supplied by the licensed provider; retained as provider claims."
+              },
+              "provider_categories": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "Provider allocation categories."
+              }
+            }
+          },
+          "date_window_start": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive lower bound of an estimated date window. The date field is its index, not a confirmed occurrence date."
+          },
+          "date_window_end": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive upper bound of an estimated date window."
+          },
+          "verification_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Evidence checked for the stored schedule, e.g. official network configuration. May differ from the human-readable announcement in source_url."
+          },
+          "verification_method": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Verification basis, e.g. github-json for an official configuration fetch or manual for a reviewed roadmap."
+          },
+          "manually_reviewed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Fixed timestamp of human source review, when relevant; snapshot generation never advances this timestamp."
+          },
+          "discovery_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Optional discovery-page link, which may identify a calendar aggregator. It is not primary verification evidence or a licence claim; source_id, source_url and verification_url retain the independent primary-source provenance. Internal provider API payloads are not distributed."
+          }
+        }
+      },
+      "Series": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO country code, or null for global crypto events. Global is not a country code."
+          },
+          "category": {
+            "type": "string"
+          },
+          "impact": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recurrence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tier": {
+            "type": "integer"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "publisher": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hub": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "instance",
+              "holiday"
+            ]
+          },
+          "exchange": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "next": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "next_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "last": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "count": {
+            "type": "integer"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CryptoAsset"
+            },
+            "description": "Affected assets; empty for economic and exchange holiday rows."
+          },
+          "next_date_window_start": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
+          },
+          "next_date_window_end": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Inclusive bound of the next event estimated date window, when supplied. next_date is its lower-bound index, not a confirmed occurrence date."
+          }
+        }
+      },
+      "Change": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "change": {
+            "type": "string",
+            "enum": [
+              "added",
+              "updated",
+              "removed"
+            ]
+          },
+          "field": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "old": {
+            "type": [
+              "string",
+              "boolean",
+              "object",
+              "null",
+              "array"
+            ],
+            "description": "Previous or updated semantic value, including structured observations and revision history. Routine successful fetch timestamps do not create changes."
+          },
+          "new": {
+            "type": [
+              "string",
+              "boolean",
+              "object",
+              "null",
+              "array"
+            ],
+            "description": "Previous or updated semantic value, including structured observations and revision history. Routine successful fetch timestamps do not create changes."
+          }
+        }
+      },
+      "Attribution": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "terms": {
+            "type": "string"
+          },
+          "docs": {
+            "type": "string",
+            "format": "uri"
+          },
+          "source_licenses": {
+            "type": "string",
+            "description": "Records may retain additional original-source attribution and licence requirements."
+          },
+          "source_rights": {
+            "type": "string",
+            "description": "Independently normalised facts retain provenance and access-basis metadata without asserting a publisher copyright licence."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "docs": {
+            "type": "string"
+          }
+        }
+      },
+      "SourceHealth": {
+        "type": "object",
+        "properties": {
+          "source_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "success",
+              "degraded",
+              "failed",
+              "disabled",
+              null
+            ]
+          },
+          "count": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "scope": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "window_start": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "window_end": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "series_name": {
+                "type": "string"
+              },
+              "metric_id": {
+                "type": "string"
+              },
+              "series_code": {
+                "type": "string"
+              },
+              "lookback_months": {
+                "type": "integer"
+              }
+            }
+          },
+          "checked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "fetched_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Null if no successful live fetch occurred; checked-in schedules do not count as a fetch."
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Credential-safe collector diagnostic, without request URLs or response bodies."
+          }
+        }
+      },
+      "SourceHealthSummary": {
+        "type": "object",
+        "properties": {
+          "reported": {
+            "type": "boolean",
+            "description": "False for snapshots without source-health reporting; this means unknown, not healthy."
+          },
+          "total": {
+            "type": "integer"
+          },
+          "success": {
+            "type": "integer"
+          },
+          "degraded": {
+            "type": "integer"
+          },
+          "failed": {
+            "type": "integer"
+          },
+          "disabled": {
+            "type": "integer"
+          },
+          "stale_events": {
+            "type": "integer",
+            "description": "Events explicitly marked as retained last-good data during source outages."
+          }
+        }
+      },
+      "ObservationSummary": {
+        "type": "object",
+        "description": "Mapped numerical evidence only; current means collection succeeded, not first-print availability or real-time delivery.",
+        "properties": {
+          "rows_with_observations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "current_rows": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "stale_rows": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "official_actual_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "official_prior_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "mapped_metrics": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "FieldDataQuality": {
+        "type": "object",
+        "properties": {
+          "availability": {
+            "type": "string",
+            "enum": [
+              "available",
+              "unavailable",
+              "not_applicable"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "type": "string",
+            "enum": [
+              "validated_observation",
+              "structured_auction",
+              "none"
+            ]
+          },
+          "freshness": {
+            "type": "string",
+            "enum": [
+              "current_as_recorded",
+              "stale",
+              "unknown"
+            ]
+          },
+          "observation_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "known_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "metric_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reference_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "source_update_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "historical_first_print": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "first_seen_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_checked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "value_basis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision_basis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "availability",
+          "reason",
+          "evidence",
+          "freshness",
+          "observation_id",
+          "known_at"
+        ],
+        "additionalProperties": true
+      },
+      "EventDataQuality": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Versioned engine-observed field contract. Null for legacy snapshots. Collection verification and freshness are independent of schedule timing; capture timestamps are not publisher publication or API availability timestamps.",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "const": 1
+          },
+          "first_captured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "capture_basis": {
+            "type": "string",
+            "const": "engine-observed-contract"
+          },
+          "schedule": {
+            "type": "object",
+            "properties": {
+              "verification": {
+                "type": "string",
+                "enum": [
+                  "verified",
+                  "unverified"
+                ]
+              },
+              "stale": {
+                "type": "boolean"
+              }
+            }
+          },
+          "fields": {
+            "type": "object",
+            "properties": {
+              "actual": {
+                "$ref": "#/components/schemas/FieldDataQuality"
+              },
+              "prior": {
+                "$ref": "#/components/schemas/FieldDataQuality"
+              },
+              "consensus": {
+                "$ref": "#/components/schemas/FieldDataQuality"
+              }
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ScheduleCoverageCounts": {
+        "type": "object",
+        "properties": {
+          "verified": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unverified": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "stale": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "exact_time": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "date_only": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "time_window": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "date_window": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unknown_time": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "FieldCoverageCounts": {
+        "type": "object",
+        "properties": {
+          "present": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "available": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "validated_observations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "structured_summaries": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unavailable": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "not_applicable": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "stale": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unknown_freshness": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "missing_reasons": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "ObservationCoverageCounts": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unique_observations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rows_with_observations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "engine_observed_revisions": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "CoverageScope": {
+        "type": "object",
+        "properties": {
+          "records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/ScheduleCoverageCounts"
+          },
+          "fields": {
+            "type": "object",
+            "properties": {
+              "actual": {
+                "$ref": "#/components/schemas/FieldCoverageCounts"
+              },
+              "prior": {
+                "$ref": "#/components/schemas/FieldCoverageCounts"
+              },
+              "consensus": {
+                "$ref": "#/components/schemas/FieldCoverageCounts"
+              }
+            }
+          },
+          "observations": {
+            "$ref": "#/components/schemas/ObservationCoverageCounts"
+          }
+        }
+      },
+      "DatasetQuality": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Canonical full-snapshot field coverage. Counts describe available evidence and gaps, not release capture success, independent accuracy measurement, complete global coverage or a latency SLA.",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "const": 1
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scope": {
+            "type": "string",
+            "const": "full_dataset_field_coverage"
+          },
+          "records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/ScheduleCoverageCounts"
+          },
+          "fields": {
+            "type": "object",
+            "properties": {
+              "actual": {
+                "$ref": "#/components/schemas/FieldCoverageCounts"
+              },
+              "prior": {
+                "$ref": "#/components/schemas/FieldCoverageCounts"
+              },
+              "consensus": {
+                "$ref": "#/components/schemas/FieldCoverageCounts"
+              }
+            }
+          },
+          "observations": {
+            "$ref": "#/components/schemas/ObservationCoverageCounts"
+          },
+          "by_source": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CoverageScope"
+            }
+          },
+          "by_series": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CoverageScope"
+            }
+          },
+          "interpretation": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "QualityResponse": {
+        "type": "object",
+        "properties": {
+          "reported": {
+            "type": "boolean",
+            "description": "False means the snapshot has no supported versioned quality report; it does not mean healthy or complete."
+          },
+          "generated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/DatasetQuality"
+          },
+          "attribution": {
+            "$ref": "#/components/schemas/Attribution"
+          }
+        },
+        "required": [
+          "reported",
+          "generated_at",
+          "quality"
+        ]
+      },
+      "OfficialObservation": {
+        "type": "object",
+        "description": "Canonical engine-validated observation evidence retained without modifying publisher units, credits or document manifests. known_at is an engine capture timestamp. revision_history records engine-observed value changes, not guaranteed original first prints. Additional fields vary by source.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "actual",
+              "prior"
+            ]
+          },
+          "value": {
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "unit": {
+            "type": "string"
+          },
+          "metric_id": {
+            "type": "string"
+          },
+          "reference_period": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "known_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "first_seen_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source_updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source_update_precision": {
+            "type": "string"
+          },
+          "value_basis": {
+            "type": "string"
+          },
+          "data_stale": {
+            "type": "boolean"
+          },
+          "revision_history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "source_license": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
+          },
+          "source_rights": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ObservationEvidence": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "observation_id": {
+            "type": "string"
+          },
+          "observation": {
+            "$ref": "#/components/schemas/OfficialObservation"
+          }
+        },
+        "required": [
+          "event_id",
+          "series_code",
+          "event_date",
+          "observation_id",
+          "observation"
+        ]
+      },
+      "ObservationsResponse": {
+        "type": "object",
+        "properties": {
+          "reported": {
+            "type": "boolean",
+            "description": "Supported engine quality reporting is present; false on unsupported legacy snapshots."
+          },
+          "snapshot_generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "basis": {
+            "type": "string",
+            "const": "engine-observed-current-vintage"
+          },
+          "historical_first_print": {
+            "type": "boolean",
+            "const": false
+          },
+          "as_of_supported": {
+            "type": "boolean",
+            "const": false
+          },
+          "series_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "event_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reference_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "next_offset": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObservationEvidence"
+            }
+          },
+          "attribution": {
+            "$ref": "#/components/schemas/Attribution"
+          }
+        },
+        "required": [
+          "reported",
+          "snapshot_generated_at",
+          "basis",
+          "historical_first_print",
+          "as_of_supported",
+          "offset",
+          "limit",
+          "count",
+          "total",
+          "has_more",
+          "next_offset",
+          "observations"
+        ]
+      },
+      "CollectionContext": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Allowlisted collection cycle metadata. A numerical-only refresh does not reverify schedules; compare schedule_snapshot_at separately from snapshot generated_at.",
+        "properties": {
+          "version": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "mode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "schedule_snapshot_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "numerical_sources_checked": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "planned_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "cycle_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "KeyUsage": {
+        "type": "object",
+        "required": [
+          "key_prefix",
+          "email",
+          "tier",
+          "status",
+          "daily_limit",
+          "used_today",
+          "remaining_today",
+          "resets_at",
+          "created_at",
+          "last_used_at",
+          "requests_total",
+          "requests_total_basis",
+          "legacy_activity_samples",
+          "retained_requests",
+          "usage_window",
+          "last_30_days_since",
+          "last_30_days_by_endpoint"
+        ],
+        "properties": {
+          "key_prefix": {
+            "type": "string",
+            "description": "Display prefix, never the complete key."
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "tier": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active"
+            ]
+          },
+          "daily_limit": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "used_today": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Counted attempts today in UTC. Account aggregate for owned keys; this key otherwise. Includes rate-limited attempts."
+          },
+          "remaining_today": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resets_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Key creation time in UTC, YYYY-MM-DD HH:MM:SS."
+          },
+          "last_used_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Last recorded activity in UTC, YYYY-MM-DD HH:MM:SS; legacy updates may be cache-throttled for 60 seconds."
+          },
+          "requests_total": {
+            "type": "null",
+            "deprecated": true,
+            "description": "Unknown lifetime total. The old numeric field was cache-throttled and undercounted requests; it is now null."
+          },
+          "requests_total_basis": {
+            "type": "string",
+            "enum": [
+              "unavailable_legacy_counter_is_cache_throttled"
+            ]
+          },
+          "legacy_activity_samples": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Old cache-throttled counter retained for diagnosis; not a request total or elapsed-minute count."
+          },
+          "retained_requests": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "All attempts logged within usage_window, including rate-limit rejections. Not successful requests, unique users or a lifetime total."
+          },
+          "usage_window": {
+            "$ref": "#/components/schemas/KeyUsageWindow"
+          },
+          "last_30_days_since": {
+            "type": "string",
+            "format": "date",
+            "description": "Inclusive start of exactly 30 UTC dates including today."
+          },
+          "last_30_days_by_endpoint": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/EndpointUsage"
+            }
+          },
+          "quota_scope": {
+            "type": "string",
+            "enum": [
+              "account"
+            ],
+            "description": "Present for keys linked to a verified WordPress account. Daily usage and allowance cover all keys belonging to that account, including revoked keys."
+          },
+          "key_used_today": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "This key only. Present for account-owned keys."
+          },
+          "retained_requests_scope": {
+            "type": "string",
+            "enum": [
+              "key"
+            ],
+            "description": "Retained history continues to describe this key only."
+          }
+        }
+      },
+      "KeyUsageWindow": {
+        "type": "object",
+        "description": "Exactly 90 UTC dates including today, applied even if physical log pruning is late. A shorter observed history is not backfilled.",
+        "required": [
+          "from",
+          "to",
+          "days",
+          "timezone",
+          "basis",
+          "includes_rate_limited_attempts",
+          "all_time_total_available"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          },
+          "days": {
+            "type": "integer",
+            "enum": [
+              90
+            ]
+          },
+          "timezone": {
+            "type": "string",
+            "enum": [
+              "UTC"
+            ]
+          },
+          "basis": {
+            "type": "string",
+            "enum": [
+              "rate_limit_gate_attempts"
+            ]
+          },
+          "includes_rate_limited_attempts": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "all_time_total_available": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        }
+      },
+      "EndpointUsage": {
+        "type": "object",
+        "required": [
+          "endpoint",
+          "hits"
+        ],
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "hits": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "CryptoAsset": {
+        "type": "object",
+        "required": [
+          "id",
+          "symbol",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
+            "examples": [
+              "ethereum",
+              "bitcoin"
+            ]
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      },
+      "ApiKeyQuery": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "api_key"
+      },
+      "ApiKeyBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "fc_live_ key"
+      }
+    }
+  },
+  "x-attribution": {
+    "required": true,
+    "how": "A visible link to https://www.financecalendar.com near the data, or on your credits page."
+  },
+  "x-rate-limits": {
+    "keyless": {
+      "per": "ip",
+      "daily": 250
+    },
+    "free": {
+      "daily": 1000,
+      "scope": "account",
+      "existing_accounts_keep_allowance": true
+    },
+    "pro": {
+      "daily": 100000
+    },
+    "business": {
+      "daily": 1000000
+    },
+    "headers": [
+      "X-RateLimit-Limit",
+      "X-RateLimit-Remaining",
+      "X-RateLimit-Reset",
+      "X-RateLimit-Tier",
+      "Retry-After"
+    ],
+    "reset": "00:00 UTC",
+    "policy_state": "active",
+    "hosted_mcp": {
+      "per": "ip",
+      "daily": 2000,
+      "shared_between_users": true,
+      "counter_shared_with": "keyless"
+    }
+  },
+  "x-changelog": "https://www.financecalendar.com/api/changelog/"
+}

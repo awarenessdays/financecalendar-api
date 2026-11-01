@@ -1,0 +1,14 @@
+{
+  "name": "financecalendar",
+  "owner": {
+    "name": "Awareness Days Ltd"
+  },
+  "plugins": [
+    {
+      "name": "financecalendar",
+      "source": "./integrations",
+      "description": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance."
+    }
+  ],
+  "description": "Finance Calendar economic release data, hosted MCP tools and an accuracy-focused Agent Skill."
+}

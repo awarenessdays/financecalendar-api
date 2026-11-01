@@ -1,0 +1,32 @@
+name: FC plugin package check
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'integrations/**'
+      - '.github/workflows/fc-plugin-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Build the committed package twice and compare checksums
+        run: |
+          python integrations/build.py --out plugin-dist
+          python integrations/build.py --out /tmp/fc-plugin-repeat
+          cmp plugin-dist/SHA256SUMS /tmp/fc-plugin-repeat/SHA256SUMS
+      - uses: actions/upload-artifact@v6
+        with:
+          name: financecalendar-plugin-and-skill
+          path: plugin-dist/*
+          if-no-files-found: error
+          retention-days: 14
