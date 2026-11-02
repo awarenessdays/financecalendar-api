@@ -1,23 +1,36 @@
-"""Finance Calendar API from Python with only the standard library (or pip install financecalendar)."""
+"""Finance Calendar API with the standard library and a private FC_API_KEY."""
 import json
+import os
 import urllib.parse
 import urllib.request
 
 BASE = "https://www.financecalendar.com/wp-json/fc/v1"
+API_KEY = os.environ.get("FC_API_KEY", "").strip()
+if not API_KEY:
+    raise RuntimeError("Set FC_API_KEY to your account API key. Create and verify a Free account at https://www.financecalendar.com/account/.")
+
+
+class NoRedirects(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, response, code, message, headers, url):
+        return None
+
+
+opener = urllib.request.build_opener(NoRedirects())
 
 
 def get(path, **params):
     url = f"{BASE}{path}?{urllib.parse.urlencode({k: v for k, v in params.items() if v is not None})}"
-    req = urllib.request.Request(url, headers={"User-Agent": "my-app/1.0"})  # add "X-API-Key": "fc_live_..." for a higher limit
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return json.load(r)
+    req = urllib.request.Request(url, headers={"User-Agent": "my-app/1.0", "X-API-Key": API_KEY, "Accept": "application/json"})
+    with opener.open(req, timeout=20) as response:
+        return json.load(response)
 
 
 nxt = get("/next", series="fomc")["next"]
-print("Next Fed decision:", nxt["date"], nxt["time_et"], "ET", "|", nxt["consensus"] or "no consensus yet")
+print("Next Fed decision:", nxt["date"], nxt.get("time_et") or "time unknown", "ET", "| consensus", nxt.get("consensus"))
 
-for e in get("/calendar", impact="high", tz="Europe/London", limit=20)["events"]:
-    print(e["date"], e.get("time_local") or "all day", e["country"], e["name"], "| prior", e["prior"], "| consensus", e["consensus"])
+for event in get("/calendar", impact="high", tz="Europe/London", limit=20)["events"]:
+    clock = event.get("time_local") or ("all day" if event.get("all_day") else "time unknown")
+    print(event["date"], clock, event["country"], event["name"], "| prior", event.get("prior"), "| consensus", event.get("consensus"))
 
-for h in get("/holidays", exchange="lse", year=2027)["holidays"]:
-    print(h["date"], h["name"], h["status"])
+for holiday in get("/holidays", exchange="lse", year=2027)["holidays"]:
+    print(holiday["date"], holiday["name"], holiday["status"])

@@ -15,6 +15,15 @@ def run(client, *argv):
     return code, "\n".join(lines)
 
 
+def test_no_key_cli_returns_signup_error_before_network(monkeypatch,recorder,capsys):
+    from financecalendar import Client
+    monkeypatch.delenv("FC_API_KEY",raising=False)
+    with Client(transport=recorder.transport) as client:
+        assert main(["countries"],client=client)==1
+    captured=capsys.readouterr()
+    assert "HTTP 401" in captured.err and "FC_API_KEY" in captured.err and "account/" in captured.err
+    assert recorder.requests==[]
+
 def test_changes_preserve_zero_and_object_array_types():
     change = {"at": "2026-10-22T09:00:00Z", "change": "updated", "series_code": "example", "id": "example", "field": "actual", "old": 0, "new": False}
     assert format_change(change).endswith("actual: 0 -> false")

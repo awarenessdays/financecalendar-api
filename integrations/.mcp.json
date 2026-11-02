@@ -2,7 +2,10 @@
   "mcpServers": {
     "financecalendar": {
       "type": "http",
-      "url": "https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp"
+      "url": "https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp",
+      "headers": {
+        "X-API-Key": "${FC_API_KEY}"
+      }
     }
   }
 }

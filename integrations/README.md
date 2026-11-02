@@ -1,12 +1,14 @@
 # Finance Calendar plugin and skill
 
-A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles the public hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. No API key, package runtime or local server is required for this hosted setup.
+A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Create and verify a Finance Calendar account, then create an API key. Every request requires credentials.
+
+Set `FC_API_KEY` securely in your client environment. The manifests use an environment-expanded `X-API-Key` header. This setup requires a client that supports both custom headers and environment expansion; do not assume every plugin installer supports them. If unsupported, use the [local stdio setup](https://www.financecalendar.com/api/mcp/#install-the-mcp-server-from-source). Never replace the placeholder with a real key in committed files or put a key in a URL.
 
 The skill covers current release schedules, source attribution, unknown clocks/periods, numerical vintages, publication bundles and complete exports. It uses discovered countries/series instead of a fixed coverage promise.
 
 ## Downloads
 
-[Plugin and skill beta ZIPs with SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.0) are available for clients that accept package uploads. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Use the repository marketplace commands below for Codex or Claude Code. Upload and custom-connector availability depends on the client and workspace settings.
+Use the current repository source and authenticated configuration below. The [older 0.1.0 beta ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.0) predate required API keys and need their connection settings updated before use. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
 
 ## Claude Code
 
@@ -32,9 +34,7 @@ codex plugin add financecalendar@financecalendar
 
 For skill-only use, copy `integrations/skills/financecalendar` into your chosen project's `.agents/skills/` directory, retaining its `references/` folder. Connect the hosted server with your MCP settings or:
 
-```sh
-codex mcp add financecalendar --url https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
-```
+Configure the hosted URL `https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp` with an `X-API-Key` header read from `FC_API_KEY`. A URL-only connection will receive HTTP 401. Use local stdio if your client cannot attach the required header.
 
 Invoke `$financecalendar`, or ask a financial-event question that matches the skill. Installing the skill alone does not configure an MCP connection. Existing unrelated settings should be merged, not replaced.
 
@@ -44,6 +44,6 @@ Use [the hosted connector setup](https://www.financecalendar.com/api/mcp/). Publ
 
 ## Formats and validation
 
-`plugin.json` and `mcp.json` use the portable Agent Plugins format. `.claude-plugin/plugin.json` and `.mcp.json` provide the Claude Code format. They share one skill and one hosted endpoint, with explicit `streamable-http` versus `http` transport spelling for the two formats. There are no hooks, embedded credentials or local server commands.
+`plugin.json` and `mcp.json` use the portable Agent Plugins format. `.claude-plugin/plugin.json` and `.mcp.json` provide the Claude Code format. They share one skill and one hosted endpoint, with explicit `streamable-http` versus `http` transport spelling for the two formats. There are no hooks, embedded credentials or local server commands. Hosted transport validates the caller key for all protocol requests and forwards it for data calls; linked keys share the account allowance.
 
 Sources: [OpenAI plugin packaging](https://developers.openai.com/plugins/build/plugins), [Claude Code manifest reference](https://code.claude.com/docs/en/plugins-reference), [Claude Code marketplaces](https://code.claude.com/docs/en/plugin-marketplaces). Checked 22 October 2026. Validation and real transport tests do not by themselves prove a directory listing or installation in every account surface.

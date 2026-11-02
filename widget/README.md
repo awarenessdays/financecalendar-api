@@ -1,14 +1,22 @@
-# Finance Calendar widget
+# Finance Calendar website integration
 
-A drop-in economic calendar for any site. One script tag, no build step, attribution link included.
+The anonymous script-tag widget in earlier examples is no longer an available
+integration. All API routes, including widget code, require an active API key.
+Do not put a private key in public JavaScript, HTML attributes, a script URL or a
+calendar subscription URL.
 
-```html
-<div data-fc-widget data-country="US,GB" data-impact="high" data-days="7" data-title="This week's releases"></div>
-<script src="https://www.financecalendar.com/wp-json/fc/v1/widget" async></script>
-```
+For browser research, use the [Data explorer](https://www.financecalendar.com/data/).
+It includes filters, saved views, source evidence and matching/selected CSV or
+JSON exports with every verified Free, Pro or Business account. It uses native
+sign-in and does not require an API key or payment.
 
-Options (all optional): `data-country` (comma list), `data-impact` (high, medium, low), `data-series` (codes, comma list), `data-category`, `data-days` (1 to 92), `data-limit`, `data-tz` (defaults to the visitor's zone), `data-title`.
+To show calendar data in your own website, fetch the API from a server you
+control using `X-API-Key` from a private environment variable. Keep the key on
+that server, apply appropriate access controls to your own response, and preserve
+Finance Calendar attribution and record-specific source credits. This repository
+does not ship an authenticated browser widget or an OAuth flow.
 
-Several widgets on one page work. Call `FinanceCalendarWidget.init()` after adding one dynamically.
-
-Terms: free, including on commercial sites, as long as the Finance Calendar link in the widget stays visible.
+See the [server-side examples](../examples/) and
+[API reference](https://www.financecalendar.com/api/reference/). A complete current
+snapshot file download requires an active Business subscription; filtered API
+responses remain available within each plan's allowance.

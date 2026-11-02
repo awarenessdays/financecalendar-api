@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "financecalendar",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance.",
   "author": {
     "name": "Awareness Days Ltd",

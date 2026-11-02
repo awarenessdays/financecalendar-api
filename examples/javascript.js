@@ -1,20 +1,25 @@
-// Finance Calendar API from Node 18+ or the browser (CORS is open).
+// Finance Calendar API from server-side Node 20+. Keep credentials out of browsers.
 const BASE = "https://www.financecalendar.com/wp-json/fc/v1";
+const API_KEY = String(process.env.FC_API_KEY || "").trim();
+if (!API_KEY) throw new Error("Set FC_API_KEY to your account API key. Create and verify a Free account at https://www.financecalendar.com/account/.");
 
 async function get(path, params = {}) {
   const url = new URL(BASE + path);
   for (const [k, v] of Object.entries(params)) if (v != null) url.searchParams.set(k, v);
-  const r = await fetch(url); // add { headers: { "X-API-Key": "fc_live_..." } } for a higher limit
+  const r = await fetch(url, { headers: { "X-API-Key": API_KEY, Accept: "application/json" }, redirect: "error" });
   const data = await r.json();
   if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
   return data;
 }
 
-const { next } = await get("/next", { series: "us-cpi" });
-console.log("Next US CPI:", next.date, next.time_utc, "consensus", next.consensus);
+async function main() {
+  const { next } = await get("/next", { series: "us-cpi" });
+  console.log("Next US CPI:", next.date, next.release_at_utc ?? "time unknown", "consensus", next.consensus);
 
-const { events } = await get("/week", { impact: "high", tz: "America/New_York" });
-for (const e of events) console.log(e.date, e.time_local ?? "all day", e.country, e.name);
+  const { events } = await get("/week", { impact: "high", tz: "America/New_York" });
+  for (const e of events) console.log(e.date, e.time_local ?? (e.all_day ? "all day" : "time unknown"), e.country, e.name);
 
-const status = await get("/market-status", { exchange: "nyse" });
-console.log(status.label);
+  const status = await get("/market-status", { exchange: "nyse" });
+  console.log(status.label);
+}
+main().catch(error => { console.error(error.message); process.exitCode = 1; });

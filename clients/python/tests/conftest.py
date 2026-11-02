@@ -11,6 +11,12 @@ import pytest
 from financecalendar import Client
 
 FIXTURES = Path(__file__).parent / "fixtures"
+FIXTURE_KEY = "fc_live_0123456789abcdef0123456789abcdef"
+
+@pytest.fixture(autouse=True)
+def fixture_credential(monkeypatch):
+    # Every ordinary transport fixture represents an authenticated caller.
+    monkeypatch.setenv("FC_API_KEY", FIXTURE_KEY)
 
 
 def load(name: str) -> dict:
@@ -115,5 +121,5 @@ def recorder() -> Recorder:
 def client(recorder: Recorder, monkeypatch: pytest.MonkeyPatch) -> Client:
     monkeypatch.delenv("FC_API_KEY", raising=False)
     monkeypatch.delenv("FC_API_BASE", raising=False)
-    with Client(transport=recorder.transport) as c:
+    with Client(api_key=FIXTURE_KEY, transport=recorder.transport) as c:
         yield c

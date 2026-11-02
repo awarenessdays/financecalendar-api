@@ -27,11 +27,17 @@ export function buildUrl(path, params = {}, base) {
  */
 export async function api(path, params = {}, { apiKey, base, raw = false, fetch: fetchFn } = {}) {
   const url = buildUrl(path, params, base);
-  const key = apiKey || process.env.FC_API_KEY;
+  const key = String(apiKey || process.env.FC_API_KEY || "").trim();
+  if (!key) {
+    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Create a verified Free account and key at https://www.financecalendar.com/account/.");
+    error.status = 401;
+    error.retryAfter = null;
+    throw error;
+  }
   const headers = { "User-Agent": USER_AGENT, Accept: raw ? "text/csv, text/plain, */*" : "application/json" };
-  if (key) headers["X-API-Key"] = key;
+  headers["X-API-Key"] = key;
   const doFetch = fetchFn || globalThis.fetch;
-  const r = await doFetch(url, { headers });
+  const r = await doFetch(url, { headers, redirect: "error" });
   if (!r.ok) throw await errorFromResponse(r);
   return raw ? r.text() : r.json();
 }

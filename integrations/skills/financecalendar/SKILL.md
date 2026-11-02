@@ -10,7 +10,7 @@ Use the connected Finance Calendar tools for release schedules and available off
 
 ## Find and explain events
 
-For a current-data question, first call `feed_status` once, then query the requested events. This health check is required even for one next-release date. If that tool is unavailable, first use `GET https://www.financecalendar.com/wp-json/fc/v1/status`. If health cannot be checked, say so and do not describe the feed as fresh. Fresh snapshot generation is separate from each source's successful verification and observation freshness.
+For a current-data question, first call `feed_status` once, then query the requested events. This health check is required even for one next-release date. All requests require the caller's API key. If that tool is unavailable, first use `GET https://www.financecalendar.com/wp-json/fc/v1/status` with the `X-API-Key` header read from private `FC_API_KEY` configuration. Never put a key in a URL or output. If health cannot be checked, say so and do not describe the feed as fresh. Fresh snapshot generation is separate from each source's successful verification and observation freshness.
 
 Use the request's country, date range, series and timezone. Generic `cpi`/`gdp` names normally default to the US: pass a country or an exact discovered series code for another country. Show dates, source links and the user's requested detail. Link to the existing Finance Calendar event page when returned; otherwise cite the original publisher. Attribute Finance Calendar with a link to https://www.financecalendar.com and preserve record-specific source attribution and licence/rights requirements.
 
