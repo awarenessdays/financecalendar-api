@@ -5,9 +5,11 @@ Python client and CLI for the free [financecalendar.com API](https://www.finance
 A verified Finance Calendar account and API key are required for every API request,
 including status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/),
 then set `FC_API_KEY` or pass `Client(api_key=...)`. Missing credentials fail with
-an actionable HTTP401 error before any network request. New Free accounts include
-1,000 API requests per UTC day shared across account keys; existing accounts and
-issued keys retain their effective allowance. Pro and Business increase API allowance.
+an actionable HTTP401 error before any network request. Standard Free accounts include
+50 API requests per day and 500 per calendar month, shared across all account keys.
+Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day
+of the next calendar month. Older grandfathered accounts and keys retain their
+earlier allowance. Pro and Business increase API allowance.
 
 ```sh
 export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
