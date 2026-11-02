@@ -7,7 +7,7 @@ One package, two binaries:
 - `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
 - `financecalendar`: a CLI for your terminal and scripts.
 
-A verified Finance Calendar account and API key are required for every API request, including hosted MCP, status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/), then set `FC_API_KEY` for local clients. New Free accounts include 1,000 API requests per UTC day, shared across account keys. Existing accounts and issued keys retain their effective allowance; Pro and Business increase API allowance. No anonymous API allowance is available.
+A verified Finance Calendar account and API key are required for every API request, including hosted MCP, status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/), then set `FC_API_KEY` for local clients. Standard Free accounts include 50 API requests per day and 500 per calendar month, shared across all account keys. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Older grandfathered accounts and keys retain their earlier allowance. Pro and Business increase API allowance. No anonymous API allowance is available.
 
 ## Install the tested beta download
 
