@@ -16,10 +16,12 @@ The API and [previous beta client downloads](https://github.com/awarenessdays/fi
 
 Every API request requires an active API key, including status and OpenAPI.
 Create and verify a [Free account](https://www.financecalendar.com/account/?mode=register),
-then create a key in your workspace. New Free accounts include **1,000 API requests
-per UTC day**, Pro **100,000** and Business **1,000,000**, shared across each
-account's keys. Existing accounts and issued keys retain their effective earlier
+then create a key in your workspace. New Free accounts include **250 API requests per UTC day and 5,000 per calendar
+month**, Pro **100,000 per day** and Business **1,000,000 per day**, shared across each
+account's keys. Older grandfathered accounts and keys retain their earlier
 allowance; check `/keys/me`. Anonymous `POST /keys` creation is retired.
+
+Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
 The [Data explorer](https://www.financecalendar.com/data/) has the same browser
 features on Free, Pro and Business: search/filter calendar records and recorded

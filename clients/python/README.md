@@ -6,10 +6,12 @@ A verified Finance Calendar account and API key are required for every API reque
 including status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/),
 then set `FC_API_KEY` or pass `Client(api_key=...)`. Missing credentials fail with
 an actionable HTTP401 error before any network request. Standard Free accounts include
-50 API requests per day and 500 per calendar month, shared across all account keys.
+250 API requests per day and 5,000 per calendar month, shared across all account keys.
 Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day
 of the next calendar month. Older grandfathered accounts and keys retain their
 earlier allowance. Pro and Business increase API allowance.
+
+Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
 ```sh
 export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
