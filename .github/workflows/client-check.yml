@@ -1,0 +1,89 @@
+name: FC client checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'clients/**'
+      - '.github/workflows/client-check.yml'
+  push:
+    paths:
+      - 'clients/**'
+      - '.github/workflows/client-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '24']
+    defaults:
+      run:
+        working-directory: clients/node
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Check archive contents and install the packed CLI
+        run: |
+          npm pack --json > "$RUNNER_TEMP/fc-node-pack.json"
+          node --input-type=module - "$RUNNER_TEMP/fc-node-pack.json" <<'JS'
+          import fs from 'node:fs';
+          const pack = JSON.parse(fs.readFileSync(process.argv[2]))[0];
+          const expected = ['LICENSE', 'README.md', 'cli.js', 'lib.js', 'mcp.js', 'package.json'];
+          if (JSON.stringify(pack.files.map(file => file.path).sort()) !== JSON.stringify(expected.sort())) {
+            throw new Error('Unexpected package contents');
+          }
+          JS
+          archive=$(node -p 'JSON.parse(require("fs").readFileSync(process.argv[1]))[0].filename' "$RUNNER_TEMP/fc-node-pack.json")
+          npm install --prefix "$RUNNER_TEMP/fc-node-clean" --ignore-scripts "$PWD/$archive"
+          "$RUNNER_TEMP/fc-node-clean/node_modules/.bin/financecalendar" --help > "$RUNNER_TEMP/fc-node-help.txt"
+          grep -q 'economic calendar in your terminal' "$RUNNER_TEMP/fc-node-help.txt"
+
+  python:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.14']
+    defaults:
+      run:
+        working-directory: clients/python
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install '.[test,pandas]' twine
+      - run: python -m pytest -q
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: Check wheel contents and install the packed CLI
+        run: |
+          python <<'PY'
+          import pathlib
+          import zipfile
+          for path in pathlib.Path('dist').glob('*.whl'):
+              with zipfile.ZipFile(path) as archive:
+                  for name in archive.namelist():
+                      assert name.startswith(('financecalendar/', 'financecalendar-')), name
+                      assert not any(part.startswith('.') or part == '__pycache__' for part in pathlib.PurePosixPath(name).parts), name
+          PY
+          python -m venv "$RUNNER_TEMP/fc-python-clean"
+          "$RUNNER_TEMP/fc-python-clean/bin/python" -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/fc-python-clean/bin/financecalendar" --help > fc-python-help.txt
+          grep -q 'Economic calendar in your terminal' fc-python-help.txt
+          "$RUNNER_TEMP/fc-python-clean/bin/python" -c 'from financecalendar import Client; assert callable(Client.calendar)'

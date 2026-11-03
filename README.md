@@ -12,7 +12,7 @@ Economic releases, central bank decisions, selected crypto events and exchange h
 - **Python client and CLI:** [Python source and installation](clients/python/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and [previous beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-10-22) accept a configured API key. The existing archives are unchanged; use current source for the updated setup and missing-key errors. npm/PyPI registry publication remains pending.
+The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-03) accept a configured API key. The existing archives are unchanged; use current source for the updated setup and missing-key errors. npm/PyPI registry publication remains pending.
 
 Every API request requires an active API key, including status and OpenAPI.
 Create and verify a [Free account](https://www.financecalendar.com/account/?mode=register),

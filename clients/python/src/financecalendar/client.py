@@ -9,7 +9,7 @@ from urllib.parse import quote
 
 import httpx
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1"
 USER_AGENT = f"financecalendar-python/{__version__}"
