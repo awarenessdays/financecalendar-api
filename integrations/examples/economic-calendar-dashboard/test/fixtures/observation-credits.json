@@ -1,0 +1,124 @@
+{
+  "fixture_note": "Public economic-release excerpts from the repository data-contract-real fixture; observation licence and rights fields are retained verbatim. No customer data.",
+  "attribution": {
+    "source": "financecalendar.com",
+    "terms": "Free for any use with attribution: link to https://www.financecalendar.com",
+    "docs": "https://www.financecalendar.com/api/",
+    "source_licenses": "Records carrying source_license retain their original attribution, source link and licence requirements."
+  },
+  "events": [
+    {
+      "id": "uk-gdp-november-2025",
+      "name": "UK GDP November 2025",
+      "country": "GB",
+      "date": "2025-11-13",
+      "release_at_utc": "2025-11-13T07:00:00+00:00",
+      "time_precision": "minute",
+      "actual": "0.1",
+      "prior": "-0.2",
+      "unit": "% m/m",
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/releases/gdpmonthlyestimateukseptember2025",
+      "observations": [
+        {
+          "metric_id": "gb-gdp-monthly-mom-sa",
+          "role": "actual",
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ecyx/mgdp",
+          "source_api_url": "https://api.beta.ons.gov.uk/v1/data?uri=%2Feconomy%2Fgrossdomesticproductgdp%2Ftimeseries%2Fecyx%2Fmgdp",
+          "measurement_basis_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/bulletins/gdpmonthlyestimateuk/august2026",
+          "source_license": {
+            "spdx": "OGL-UK-3.0",
+            "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+            "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+          }
+        },
+        {
+          "metric_id": "gb-gdp-monthly-mom-sa",
+          "role": "prior",
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ecyx/mgdp",
+          "source_api_url": "https://api.beta.ons.gov.uk/v1/data?uri=%2Feconomy%2Fgrossdomesticproductgdp%2Ftimeseries%2Fecyx%2Fmgdp",
+          "measurement_basis_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/bulletins/gdpmonthlyestimateuk/august2026",
+          "source_license": {
+            "spdx": "OGL-UK-3.0",
+            "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+            "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+          }
+        }
+      ]
+    },
+    {
+      "id": "bls-published-us-unemployment-2026-10-02",
+      "name": "US Unemployment Rate: September 2026",
+      "country": "US",
+      "date": "2026-10-02",
+      "release_at_utc": "2026-10-02T12:30:00+00:00",
+      "time_precision": "minute",
+      "actual": "4.2",
+      "prior": "4.1",
+      "unit": "%",
+      "source_name": "U.S. Bureau of Labor Statistics",
+      "source_url": "https://www.bls.gov/news.release/empsit.nr0.htm",
+      "observations": [
+        {
+          "metric_id": "us-unemployment-rate-sa",
+          "role": "actual",
+          "source_url": "https://www.bls.gov/news.release/empsit.nr0.htm",
+          "source_rights": {
+            "url": "https://www.bls.gov/bls/linksite.htm",
+            "attribution": "Source: U.S. Bureau of Labor Statistics.",
+            "policy": "BLS public-domain material; cite the Bureau of Labor Statistics.",
+            "vintage_notice": "Current-edition vintage; earlier reference months are not original first-print releases."
+          }
+        },
+        {
+          "metric_id": "us-unemployment-rate-sa",
+          "role": "prior",
+          "source_url": "https://www.bls.gov/news.release/empsit.nr0.htm",
+          "source_rights": {
+            "url": "https://www.bls.gov/bls/linksite.htm",
+            "attribution": "Source: U.S. Bureau of Labor Statistics.",
+            "policy": "BLS public-domain material; cite the Bureau of Labor Statistics.",
+            "vintage_notice": "Current-edition vintage; earlier reference months are not original first-print releases."
+          }
+        }
+      ]
+    },
+    {
+      "id": "us-initial-jobless-claims-october-29-2026",
+      "name": "US Initial Jobless Claims: October 29, 2026",
+      "country": "US",
+      "date": "2026-10-29",
+      "release_at_utc": "2026-10-29T12:30:00+00:00",
+      "time_precision": "minute",
+      "actual": "194000",
+      "prior": "195000",
+      "unit": "claims",
+      "source_name": "U.S. Department of Labor, Employment and Training Administration",
+      "source_url": "https://www.dol.gov/ui/data.pdf",
+      "observations": [
+        {
+          "metric_id": "us-initial-claims-sa",
+          "role": "actual",
+          "source_url": "https://www.dol.gov/ui/data.pdf",
+          "source_rights": {
+            "url": "https://beta.dol.gov/about/notices/website-content-and-publication-practices/public-domain-copyright-trademarks-patents",
+            "attribution": "Source: U.S. Department of Labor.",
+            "policy": "U.S. Department of Labor public-domain and publication notice",
+            "vintage_notice": "Current-edition vintage; historical rows are not original first-print releases."
+          }
+        },
+        {
+          "metric_id": "us-initial-claims-sa",
+          "role": "prior",
+          "source_url": "https://www.dol.gov/ui/data.pdf",
+          "source_rights": {
+            "url": "https://beta.dol.gov/about/notices/website-content-and-publication-practices/public-domain-copyright-trademarks-patents",
+            "attribution": "Source: U.S. Department of Labor.",
+            "policy": "U.S. Department of Labor public-domain and publication notice",
+            "vintage_notice": "Current-edition vintage; historical rows are not original first-print releases."
+          }
+        }
+      ]
+    }
+  ]
+}
