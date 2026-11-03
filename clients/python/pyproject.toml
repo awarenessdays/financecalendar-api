@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "financecalendar"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python client and CLI for the financecalendar.com API: economic releases, central bank decisions and exchange holidays, free with attribution."
 readme = "README.md"
 license = "MIT"
