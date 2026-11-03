@@ -4,7 +4,7 @@
         "title": "Finance Calendar API",
         "version": "2.0.0",
         "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. An API key is required. Create and verify an account, then create a key in the account workspace. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. Quota policy v1: API keys are required for all programmatic data and metadata requests. New verified Free accounts allow 50 requests/account/day and 500 requests/account/calendar month; grandfathered allowances are retained.",
+        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. An API key is required. Create and verify an account, then create a key in the account workspace. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. Quota policy v1: API keys are required for all programmatic data and metadata requests. New verified Free accounts allow 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered allowances are retained.",
         "termsOfService": "https://www.financecalendar.com/api/#attribution",
         "contact": {
             "url": "https://www.financecalendar.com/about/"
@@ -245,7 +245,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -394,7 +394,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -598,7 +598,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -748,7 +748,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -876,7 +876,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1024,7 +1024,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1183,7 +1183,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1333,7 +1333,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1475,7 +1475,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1647,7 +1647,7 @@
                         }
                     },
                     "429": {
-                        "description": "Account allowance reached. Free: 50 requests/account/day and 500 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
+                        "description": "Account allowance reached. Free: 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered and paid allowances retained. All keys and hosted MCP data calls share the caller account limits. Response includes period, reset_at, upgrade_url and Retry-After.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1950,7 +1950,7 @@
                         }
                     }
                 },
-                "description": "Requires a valid active key. Reading usage is not counted or capped. Counts are rate-gate attempts, including 429, not successful responses. The lifetime requests_total is unknown; use the explicit retained UTC-date window. Send X-API-Key, or use the legacy api_key query/Bearer alternatives.",
+                "description": "Requires an active API key. Reading usage is authenticated and unmetered. Daily/monthly quota fields count admitted requests; raw retained history and endpoint counts remain attempts, including429 rejections. Outcome fields have the declared origin telemetry scope.",
                 "security": [
                     {
                         "ApiKey": []
@@ -2370,6 +2370,51 @@
                             "null"
                         ]
                     },
+                    "url": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri",
+                        "description": "Preview and results page on financecalendar.com, when one exists."
+                    },
+                    "exchange": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Market-holiday rows only."
+                    },
+                    "holiday_status": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "closed",
+                            "early_close",
+                            null
+                        ]
+                    },
+                    "close_time_local": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "starts_on": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "First day of a multi-day meeting (only when it differs from date)."
+                    },
+                    "note": {
+                        "type": "string",
+                        "description": "Source note, e.g. a date the official calendar moved."
+                    },
                     "source_id": {
                         "type": [
                             "string",
@@ -2408,6 +2453,25 @@
                             "year",
                             null
                         ]
+                    },
+                    "last_verified_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
+                    },
+                    "data_stale": {
+                        "type": "boolean",
+                        "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
+                    },
+                    "stale_since": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     },
                     "time_window_start": {
                         "type": [
@@ -2514,70 +2578,6 @@
                                 ]
                             }
                         }
-                    },
-                    "last_verified_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time",
-                        "description": "Last successful source verification. For verification_method=github-json this is the configuration fetch; for manual records it is the fixed human review time, also recorded in manually_reviewed_at. Snapshot generation is not source verification."
-                    },
-                    "data_stale": {
-                        "type": "boolean",
-                        "description": "True when last-good source data is retained through a collection failure, or a manual source review is overdue. False does not establish observed activation or comprehensive live coverage."
-                    },
-                    "stale_since": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "url": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "uri",
-                        "description": "Preview and results page on financecalendar.com, when one exists."
-                    },
-                    "exchange": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "description": "Market-holiday rows only."
-                    },
-                    "holiday_status": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "enum": [
-                            "closed",
-                            "early_close",
-                            null
-                        ]
-                    },
-                    "close_time_local": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "starts_on": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "First day of a multi-day meeting (only when it differs from date)."
-                    },
-                    "note": {
-                        "type": "string",
-                        "description": "Source note, e.g. a date the official calendar moved."
                     },
                     "data_quality": {
                         "$ref": "#/components/schemas/EventDataQuality"
@@ -4607,30 +4607,6 @@
                     }
                 }
             },
-            "CryptoAsset": {
-                "type": "object",
-                "required": [
-                    "id",
-                    "symbol",
-                    "name"
-                ],
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
-                        "examples": [
-                            "ethereum",
-                            "bitcoin"
-                        ]
-                    },
-                    "symbol": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                }
-            },
             "KeyUsage": {
                 "type": "object",
                 "required": [
@@ -4677,7 +4653,7 @@
                     "used_today": {
                         "type": "integer",
                         "minimum": 0,
-                        "description": "Counted attempts today in UTC. Account aggregate for owned keys; this key otherwise. Includes rate-limited attempts."
+                        "description": "Admitted requests today in UTC. Shared across account keys when owned; rejected429/authentication requests do not consume quota."
                     },
                     "remaining_today": {
                         "type": "integer",
@@ -4744,7 +4720,7 @@
                     "key_used_today": {
                         "type": "integer",
                         "minimum": 0,
-                        "description": "This key only. Present for account-owned keys."
+                        "description": "This key only: admitted requests today in UTC after quota accounting activation."
                     },
                     "retained_requests_scope": {
                         "type": "string",
@@ -4752,6 +4728,39 @@
                             "key"
                         ],
                         "description": "Retained history continues to describe this key only."
+                    },
+                    "quota_basis": {
+                        "type": "string",
+                        "enum": [
+                            "admitted_requests"
+                        ],
+                        "description": "Daily and monthly allowance use admissions; authentication and429 rejections do not consume quota."
+                    },
+                    "key_attempted_today": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Raw attempts by this key today in UTC, including rejected retries."
+                    },
+                    "attempted_today": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Raw attempts today in UTC, pooled across account keys when owned; this key otherwise. Excludes requests blocked beforeWordPress."
+                    },
+                    "successful_today": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Account-owned keys only: recorded2xx GET responses on the origin telemetry routes. Partial outcome coverage, not client delivery."
+                    },
+                    "blocked_today": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Account-owned keys only: recorded429 GET responses on the origin telemetry routes. Excludes edge blocks."
+                    },
+                    "outcome_scope": {
+                        "type": "string",
+                        "enum": [
+                            "origin_data_api_GET_outcomes"
+                        ]
                     },
                     "monthly_limit": {
                         "type": [
@@ -4767,7 +4776,7 @@
                             "null"
                         ],
                         "minimum": 0,
-                        "description": "Counted account attempts in the current UTC calendar month when a monthly limit applies. Includes revoked-key and rejected attempts."
+                        "description": "Admitted account requests in the current UTC calendar month. Includes admissions on revoked keys, excludes denied retries."
                     },
                     "remaining_this_month": {
                         "type": [
@@ -4853,6 +4862,30 @@
                     }
                 }
             },
+            "CryptoAsset": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "symbol",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Canonical asset ID; symbols are display labels, not stable IDs.",
+                        "examples": [
+                            "ethereum",
+                            "bitcoin"
+                        ]
+                    },
+                    "symbol": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
             "QuotaExceeded": {
                 "type": "object",
                 "required": [
@@ -4886,7 +4919,8 @@
                     "scope": {
                         "type": "string",
                         "enum": [
-                            "account"
+                            "account",
+                            "key"
                         ]
                     },
                     "limit": {
@@ -4948,8 +4982,8 @@
             "authentication_required": true
         },
         "free": {
-            "daily": 50,
-            "monthly": 500,
+            "daily": 250,
+            "monthly": 5000,
             "scope": "account",
             "existing_accounts_keep_allowance": false,
             "grandfathered_allowances_preserved": true
