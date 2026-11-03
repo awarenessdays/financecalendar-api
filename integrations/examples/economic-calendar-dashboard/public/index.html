@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A source-aware economic release dashboard built with the Finance Calendar API.">
+  <title>Release watchlist · Finance Calendar</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#events">Skip to release calendar</a>
+  <header class="masthead">
+    <a class="wordmark" href="https://www.financecalendar.com/" aria-label="Finance Calendar home">FINANCE<span>/</span>CALENDAR</a>
+    <span class="starter-label">Economic calendar starter</span>
+    <a class="docs-link" href="https://www.financecalendar.com/api/">API guide <span aria-hidden="true">↗</span></a>
+  </header>
+  <main>
+    <div id="demo-notice" class="demo-notice" hidden><strong>Demo data</strong><span>These dates and values are illustrative. This preview makes no API requests.</span></div>
+    <section class="page-heading" aria-labelledby="page-title">
+      <div><h1 id="page-title">Release watchlist</h1><p id="window-label">Loading the publisher-date window…</p><p class="date-note">Known times use the display time zone and can fall on an adjacent local date. Unknown-time records retain their publisher date.</p></div>
+      <button class="refresh-button" id="refresh" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 8A6.6 6.6 0 1 0 16 14M16.5 3.5V8H12"/></svg>Check for updates</button>
+    </section>
+    <section class="feed-state" aria-live="polite" aria-atomic="true">
+      <span id="state-label" class="state-label">Connecting</span>
+      <span id="freshness">Getting the first calendar view.</span>
+      <span class="cache-note">Shared 30-minute cache</span>
+    </section>
+    <div id="feed-error" class="feed-error" role="status" hidden></div>
+    <div class="workspace">
+      <aside class="view-panel" aria-label="Filter your release view">
+        <h2>Your view</h2>
+        <label class="search-label" for="search">Find a release</label>
+        <input id="search" type="search" aria-label="Find a release" placeholder="CPI, jobs, rate decision…" autocomplete="off">
+        <fieldset><legend>Markets</legend><div id="country-filters" class="filter-list"></div></fieldset>
+        <fieldset><legend>Impact</legend><div class="filter-list" id="impact-filters">
+          <label><input type="checkbox" name="impact" value="high" checked><span>High</span><i class="impact-marker high" aria-hidden="true"></i></label>
+          <label><input type="checkbox" name="impact" value="medium" checked><span>Medium</span><i class="impact-marker medium" aria-hidden="true"></i></label>
+          <label><input type="checkbox" name="impact" value="low" checked><span>Low</span><i class="impact-marker low" aria-hidden="true"></i></label>
+          <label><input type="checkbox" name="impact" value="unknown" checked><span>Not classified</span></label>
+        </div></fieldset>
+        <button type="button" class="clear-filters" id="clear-filters">Reset filters</button>
+        <div class="view-footnote"><strong id="timezone-label">Europe/London</strong><p>Known release times use this time zone. Unknown times stay unknown.</p></div>
+      </aside>
+      <section class="calendar-panel" id="events" aria-labelledby="calendar-title" tabindex="-1">
+        <div class="calendar-heading"><h2 id="calendar-title">Release calendar</h2><span id="result-count" role="status">Loading</span></div>
+        <nav class="date-rail" id="date-filters" aria-label="Filter by release date"></nav>
+        <p id="truncation" class="truncation" hidden></p>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col" class="time-column">Time</th><th scope="col" class="market-column">Market</th><th scope="col">Release</th><th scope="col" class="prior-column">Prior</th><th scope="col" class="value-column">Actual</th></tr></thead>
+          <tbody id="event-rows"><tr><td colspan="5" class="table-message">Loading calendar records…</td></tr></tbody>
+        </table></div>
+        <div class="calendar-key"><span>— Not recorded</span><span class="source-stale-key">Source freshness needs review</span><span>Select a release to inspect its source.</span></div>
+      </section>
+    </div>
+    <footer>
+      <p>Data from <a href="https://www.financecalendar.com/">Finance Calendar</a>. Preserve the publisher credits and reuse terms attached to each record.</p>
+      <p>This view shows recorded schedules and available observations. Coverage varies. It is not a live announcement feed or a point-in-time backtesting archive; consensus estimates are not currently collected.</p>
+      <p id="next-refresh" class="footer-refresh"></p>
+    </footer>
+  </main>
+  <dialog id="event-detail" aria-labelledby="detail-title">
+    <div class="detail-top"><span>Release details</span><button type="button" class="close-detail" id="close-detail" aria-label="Close release details">Close <span aria-hidden="true">×</span></button></div>
+    <div class="detail-body" id="detail-body"></div>
+  </dialog>
+</body>
+</html>
