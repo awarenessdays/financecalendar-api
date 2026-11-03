@@ -193,3 +193,7 @@ move, publication clock or missing measured period is inferred. Combined GDP
 publications retain their original component description and are not a single
 headline observation. Source health exposes held reference-year and identity
 ambiguities.
+
+## Build a working dashboard
+
+Start with the [economic calendar dashboard example](integrations/examples/economic-calendar-dashboard/README.md): a complete Node backend and responsive browser calendar. Preview the labelled demo without a key, then connect your verified account. Source details, missing-value handling and a shared 30-minute cache are included, along with a prompt for your coding assistant.

@@ -47,3 +47,7 @@ Use [the hosted connector setup](https://www.financecalendar.com/api/mcp/). Publ
 `plugin.json` and `mcp.json` use the portable Agent Plugins format. `.claude-plugin/plugin.json` and `.mcp.json` provide the Claude Code format. They share one skill and one hosted endpoint, with explicit `streamable-http` versus `http` transport spelling for the two formats. There are no hooks, embedded credentials or local server commands. Hosted transport validates the caller key for all protocol requests and forwards it for data calls; linked keys share the account allowance.
 
 Sources: [OpenAI plugin packaging](https://developers.openai.com/plugins/build/plugins), [Claude Code manifest reference](https://code.claude.com/docs/en/plugins-reference), [Claude Code marketplaces](https://code.claude.com/docs/en/plugin-marketplaces). Checked 22 October 2026. Validation and real transport tests do not by themselves prove a directory listing or installation in every account surface.
+
+## Working application example
+
+The [economic calendar dashboard starter](examples/economic-calendar-dashboard/README.md) includes a Node backend, responsive browser calendar, labelled demo mode and a shared 30-minute cache. Your API key stays on the server; browser filters work locally. Follow the README and its coding-assistant prompt to adapt the working app.
