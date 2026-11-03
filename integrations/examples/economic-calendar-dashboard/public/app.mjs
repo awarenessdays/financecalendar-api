@@ -139,6 +139,7 @@ function showDetail(event) {
   if (event.source_url) appendLink(fragment, event.source_url, 'Open publisher source', 'publisher-link');
   else fragment.append(make('p', 'No publisher link is recorded for this event.'));
   fragment.append(make('p', 'A fresh dashboard fetch does not establish that the publisher or every observation is current. Missing values remain missing.', 'source-note'));
+  if (!event.credits.length) fragment.append(make('p', 'No additional source-licence or rights notices were supplied for this record.', 'source-note'));
   for (const credit of event.credits) {
     if (credit.url) appendLink(fragment, credit.url, credit.label || 'Source evidence', 'credit-link');
     else {

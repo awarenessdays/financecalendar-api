@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
+import { readFile } from 'node:fs/promises';
 import { readConfig, createFeedStore, createDashboardServer, normaliseEvent, API_ENDPOINT, CACHE_MS } from '../server.mjs';
 import { eventTiming, validDate, shortDate, formatValue, statusBadge } from '../public/model.mjs';
 const SECRET = `fc_live_${'a'.repeat(32)}`;
@@ -95,6 +96,36 @@ test('complete licence and source-rights metadata survives normalisation without
   assert.ok(event.credits.some(credit => credit.text.includes('not a first-print archive')));
   assert.equal(event.credits.filter(credit => credit.text.startsWith('Required notice ')).length, 24);
   assert.ok(event.credits.every(credit => typeof credit.label === 'string' && credit.label.length > 0));
+});
+test('real-shaped nested observation licences, rights and evidence reach HTTP with metric and role context', async t => {
+  const fixture = JSON.parse(await readFile(new URL('./fixtures/observation-credits.json', import.meta.url), 'utf8'));
+  let calls = 0;
+  const base = await listening(t, { config: config(), now: () => initialTime, fetchImpl: async () => { calls++; return success(fixture.events); } });
+  const response = await fetch(base + '/api/events'), body = await response.json();
+  assert.equal(response.status, 200); assert.equal(body.state, 'fresh');
+  for (const [index, source] of fixture.events.entries()) {
+    const event = body.events[index];
+    assert.equal(event.actual, source.actual); assert.equal(event.prior, source.prior);
+    for (const observation of source.observations) {
+      const context = event.credits.filter(credit => credit.label.includes(observation.metric_id) && credit.label.includes(observation.role));
+      assert.ok(context.length > 0, 'observation context must identify the metric and actual/prior role');
+      for (const field of ['source_url', 'source_api_url', 'measurement_basis_url']) {
+        if (observation[field]) assert.ok(context.some(credit => credit.url === observation[field]), `retain ${field}`);
+      }
+      for (const rights of [observation.source_license, observation.source_rights].filter(Boolean)) {
+        for (const value of Object.values(rights)) assert.ok(context.some(credit => credit.text === String(value)), 'retain each supplied notice or licence field');
+      }
+    }
+  }
+  const again = await (await fetch(base + '/api/events')).json();
+  assert.deepEqual(again.events, body.events); assert.equal(calls, 1);
+});
+test('a successful calendar window does not require optional observation or rights metadata', async () => {
+  const event = release({ actual: null, prior: null, source_license: null, source_rights: null, observations: null });
+  const result = await createFeedStore({ config: config(), now: () => initialTime, fetchImpl: async () => success([event]) }).read();
+  assert.equal(result.state, 'fresh'); assert.equal(result.error, null);
+  assert.equal(result.events[0].actual, null); assert.equal(result.events[0].prior, null);
+  assert.deepEqual(result.events[0].credits, []);
 });
 test('numeric presentation never rounds a meaningful nonzero observation to zero', () => {
   for (const value of [0.000004, -0.000004, 0.0000000000000000000013, -0.0000000000000000000013, Number.MIN_VALUE, -Number.MIN_VALUE, Number.MAX_VALUE]) {

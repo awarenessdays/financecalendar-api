@@ -47,6 +47,16 @@ export function normaliseEvent(row, index) {
     { value: row.source_rights, path: ['Source rights'] },
     { value: row.source_license, path: ['Source licence'] },
   ];
+  // Numerical observations can carry a different publisher, evidence and reuse
+  // notice from the schedule itself. Preserve these with their metric and role
+  // rather than treating only event-level rights as the complete source credit.
+  for (const [index, observation] of (Array.isArray(row.observations) ? row.observations : []).entries()) {
+    if (!observation || typeof observation !== 'object' || Array.isArray(observation)) continue;
+    const path = [`Observation ${index + 1}`, ...[observation.metric_id, observation.role].filter(value => typeof value === 'string' && value.length)];
+    for (const [key, label] of [['source_license', 'Source licence'], ['source_rights', 'Source rights'], ['source_url', 'Source evidence'], ['source_api_url', 'Publisher API evidence'], ['measurement_basis_url', 'Measurement basis']]) {
+      pending.push({ value: observation[key], path: [...path, label] });
+    }
+  }
   const labels = { attribution_url: 'Attribution link', source_url: 'Source evidence', terms_url: 'Publisher terms', vintage_notice: 'Vintage notice', url: 'Link', policy: 'Policy' };
   while (pending.length) {
     const { value, path } = pending.pop();
