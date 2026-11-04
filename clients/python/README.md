@@ -1,11 +1,12 @@
 # financecalendar
 
-Python client and CLI for the free [financecalendar.com API](https://www.financecalendar.com/api/): scheduled economic releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
+Python client and CLI for the [financecalendar.com API](https://www.financecalendar.com/api/): scheduled economic releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
 
 A verified Finance Calendar account and API key are required for every API request,
-including status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/),
+including status and OpenAPI. Create an [account and key](https://www.financecalendar.com/account/), complete any
+subscription payment required by the [current signup offer](https://www.financecalendar.com/pricing/),
 then set `FC_API_KEY` or pass `Client(api_key=...)`. Missing credentials fail with
-an actionable HTTP401 error before any network request. Standard Free accounts include
+an actionable HTTP401 error before any network request. Existing standard Free accounts include
 250 API requests per day and 5,000 per calendar month, shared across all account keys.
 Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day
 of the next calendar month. Older grandfathered accounts and keys retain their
