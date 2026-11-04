@@ -1,13 +1,13 @@
 # financecalendar-mcp
 
-Economic calendar data for AI assistants and the terminal: scheduled releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Powered by the free [financecalendar.com API](https://www.financecalendar.com/api/). Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
+Economic calendar data for AI assistants and the terminal: scheduled releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Powered by the [financecalendar.com API](https://www.financecalendar.com/api/). Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
 
 One package, two binaries:
 
 - `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
 - `financecalendar`: a CLI for your terminal and scripts.
 
-A verified Finance Calendar account and API key are required for every API request, including hosted MCP, status and OpenAPI. Create a [Free account and key](https://www.financecalendar.com/account/), then set `FC_API_KEY` for local clients. Standard Free accounts include 250 API requests per day and 5,000 per calendar month, shared across all account keys. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Older grandfathered accounts and keys retain their earlier allowance. Pro and Business increase API allowance. No anonymous API allowance is available.
+A verified Finance Calendar account and API key are required for every API request, including hosted MCP, status and OpenAPI. Create an [account and key](https://www.financecalendar.com/account/), complete any subscription payment required by the [current signup offer](https://www.financecalendar.com/pricing/), then set `FC_API_KEY` for local clients. Existing standard Free accounts include 250 API requests per day and 5,000 per calendar month, shared across all account keys. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Older grandfathered accounts and keys retain their earlier allowance. Pro and Business increase API allowance. No anonymous API allowance is available.
 
 Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
