@@ -4,7 +4,7 @@
         "title": "Finance Calendar API",
         "version": "2.0.0",
         "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. An API key is required. Create and verify an account, then create a key in the account workspace. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. Quota policy v1: API keys are required for all programmatic data and metadata requests. New verified Free accounts allow 250 requests/account/day and 5,000 requests/account/calendar month; grandfathered allowances are retained.",
+        "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free for any use, commercial included, with attribution: a visible link to https://www.financecalendar.com wherever the data appears. An API key is required. Create and verify an account, then create a key in the account workspace. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. Quota policy v1: API keys are required for all programmatic data and metadata requests. During the new-account signup offer from 2026-11-04T14:26:23+00:00 to 2026-11-18T14:26:23+00:00, new accounts require confirmed payment for Starter, Pro or Business. Starter is US$9.99/year, billed upfront and renewing yearly until cancelled, with applicable tax included. Starter allows 250 requests/account/day and 5,000 requests/account/calendar month. Registration and email confirmation do not activate paid access. Existing Free accounts retain their applicable allowances; older grandfathered allowances are preserved. Check x-rate-limits.new_signup for the current offer state.",
         "termsOfService": "https://www.financecalendar.com/api/#attribution",
         "contact": {
             "url": "https://www.financecalendar.com/about/"
@@ -263,6 +263,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -412,6 +422,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -616,6 +636,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
@@ -766,6 +796,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
@@ -894,6 +934,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1042,6 +1092,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
@@ -1201,6 +1261,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
@@ -1351,6 +1421,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1493,6 +1573,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1684,6 +1774,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Retained changes in stable snapshot order, newest first. Follow next_cursor until has_more is false; a single publication can exceed 500 changes with the same timestamp. Pass the cursor alone, or repeat the same since, series, change and limit. Cursors bind to snapshot_generated_at. On 409 restart with the original since and filters and deduplicate repeated changes; only advance the checkpoint after all pages complete. Since accepts YYYY-MM-DD or an ISO datetime with seconds and an explicit timezone; relative dates and timezone-less datetimes are rejected. Since is inclusive and normalized to whole UTC seconds. Beyond 30 days, resync from the full snapshot. Responses are not cached.",
@@ -1728,6 +1828,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1807,6 +1917,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1842,6 +1962,16 @@
                     },
                     "401": {
                         "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1948,6 +2078,16 @@
                                 }
                             }
                         }
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Requires an active API key. Reading usage is authenticated and unmetered. Daily/monthly quota fields count admitted requests; raw retained history and endpoint counts remain attempts, including429 rejections. Outcome fields have the declared origin telemetry scope.",
@@ -2011,6 +2151,16 @@
                     },
                     "503": {
                         "description": "No usable canonical snapshot."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -2153,6 +2303,16 @@
                     },
                     "409": {
                         "description": "Snapshot changed during pagination; restart using current generation."
+                    },
+                    "402": {
+                        "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRequired"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -4638,7 +4798,14 @@
                         "format": "email"
                     },
                     "tier": {
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "free",
+                            "starter",
+                            "pro",
+                            "business"
+                        ],
+                        "description": "Effective active plan. A captured signup awaiting payment receives HTTP402 rather than a Free allowance."
                     },
                     "status": {
                         "type": "string",
@@ -4768,7 +4935,7 @@
                             "null"
                         ],
                         "minimum": 1,
-                        "description": "Free account calendar-month allowance, shared across all keys. Null for retained legacy or paid access."
+                        "description": "Free or Starter account calendar-month allowance, shared across all keys. Null for retained legacy, Pro or Business access."
                     },
                     "used_this_month": {
                         "type": [
@@ -4946,6 +5113,41 @@
                         "format": "uri"
                     }
                 }
+            },
+            "PaymentRequired": {
+                "type": "object",
+                "required": [
+                    "error",
+                    "code",
+                    "access_state",
+                    "account_url",
+                    "upgrade_url"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string",
+                        "enum": [
+                            "payment_required"
+                        ]
+                    },
+                    "access_state": {
+                        "type": "string",
+                        "enum": [
+                            "payment_required"
+                        ]
+                    },
+                    "account_url": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "upgrade_url": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                }
             }
         },
         "securitySchemes": {
@@ -4986,7 +5188,8 @@
             "monthly": 5000,
             "scope": "account",
             "existing_accounts_keep_allowance": false,
-            "grandfathered_allowances_preserved": true
+            "grandfathered_allowances_preserved": true,
+            "available": false
         },
         "pro": {
             "daily": 100000
@@ -5013,6 +5216,30 @@
             "authentication_required": true,
             "scope": "caller-account-or-existing-key",
             "shared_between_users": false
+        },
+        "starter": {
+            "daily": 250,
+            "monthly": 5000,
+            "scope": "account",
+            "paid": true
+        },
+        "new_signup": {
+            "state": "paid_signup",
+            "available": true,
+            "paid_signup_required": true,
+            "free_signup_available": false,
+            "plan": "starter",
+            "price": {
+                "unit_amount": 999,
+                "currency": "usd",
+                "interval": "year"
+            },
+            "daily_limit": 250,
+            "monthly_limit": 5000,
+            "starts_at": "2026-11-04T14:26:23+00:00",
+            "ends_at": "2026-11-18T14:26:23+00:00",
+            "account_url": "https://www.financecalendar.com/account/",
+            "upgrade_url": "https://www.financecalendar.com/account/?plan=starter&billing_interval=year"
         }
     },
     "x-changelog": "https://www.financecalendar.com/api/changelog/",
