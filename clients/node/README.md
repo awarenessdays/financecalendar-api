@@ -320,7 +320,7 @@ Text output explains this distinction and retains source credits; JSON and CSV
 retain the available lineage. Unknown consensus stays absent. See the
 [REST reference](https://www.financecalendar.com/api/reference/) for the contract.
 
-Current actual/prior fields require the supported official numerical evidence;
+Official-observation actual/prior fields require the supported official numerical evidence;
 article metadata is not a fallback. Provider consensus covers selected US JOLTS, ADP employment, ISM Services PMI and goods-and-services Trade Balance releases; other values may be null.
 BLS payroll `value` is already converted to jobs. `source_value` remains in
 `source_unit` thousands of jobs with `conversion_factor="1000"`; do not multiply
