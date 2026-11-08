@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+.cache/
+__pycache__/
+*.pyc
+FinanceCalendar-calendar.json
+watchlist.json

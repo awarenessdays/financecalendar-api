@@ -10,25 +10,27 @@ Economic releases, central bank decisions, selected crypto events and exchange h
 - **Codex and Claude Code:** [Plugin and portable Agent Skill](integrations/README.md)
 - **MCP server and CLI:** [Node source and installation](clients/node/README.md)
 - **Python client and CLI:** [Python source and installation](clients/python/README.md)
+- **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
 The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-03) accept a configured API key. The existing archives are unchanged; use current source for the updated setup and missing-key errors. npm/PyPI registry publication remains pending.
 
 Every API request requires an active API key, including status and OpenAPI.
-Create and verify a [Free account](https://www.financecalendar.com/account/?mode=register),
-then create a key in your workspace. New Free accounts include **250 API requests per UTC day and 5,000 per calendar
-month**, Pro **100,000 per day** and Business **1,000,000 per day**, shared across each
-account's keys. Older grandfathered accounts and keys retain their earlier
-allowance; check `/keys/me`. Anonymous `POST /keys` creation is retired.
+For a new account, [choose a paid plan](https://www.financecalendar.com/pricing/),
+register and confirm your email, complete payment, then create a key in your
+workspace. Creating an account does not charge you. Existing retained accounts
+and keys keep their confirmed access and allowances. Keys share the account's
+allowance; check `/keys/me` for your effective daily and monthly limits.
+Anonymous `POST /keys` creation is retired.
 
 Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
-The [Data explorer](https://www.financecalendar.com/data/) has the same browser
-features on Free, Pro and Business: search/filter calendar records and recorded
-observations, saved views and columns, source evidence, and matching/selected
-CSV or JSON exports within its displayed limits. It uses your verified account
-sign-in; no API key or payment is needed in the browser. Complete snapshot file
-downloads remain a separate Business feature.
+The [Data explorer](https://www.financecalendar.com/data/) provides search/filter,
+saved views, source evidence and matching/selected CSV or JSON exports within its
+displayed limits. It uses your verified account sign-in rather than an API key.
+New accounts require confirmed paid access; existing accounts retain their
+confirmed access. See [current plans](https://www.financecalendar.com/pricing/)
+for allowances and complete current snapshot downloads.
 
 ## Hosted connector
 

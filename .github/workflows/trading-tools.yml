@@ -1,0 +1,27 @@
+name: Trading-tool example checks
+on:
+  push:
+    paths:
+      - 'integrations/examples/trading-tools/**'
+      - '.github/workflows/trading-tools.yml'
+  pull_request:
+    paths:
+      - 'integrations/examples/trading-tools/**'
+      - '.github/workflows/trading-tools.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  examples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+      - name: Test Python and Node against local HTTP fixtures
+        run: python -m unittest discover -s integrations/examples/trading-tools/tests -p 'test_*.py'
