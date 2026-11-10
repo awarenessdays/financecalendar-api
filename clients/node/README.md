@@ -1,13 +1,15 @@
 # financecalendar-mcp
 
-Economic calendar data for AI assistants and the terminal: scheduled releases (CPI, jobs report, GDP, PCE...), central bank decisions (Fed, ECB, BoE, BoJ...) exchange holidays and source-backed crypto events. Powered by the [financecalendar.com API](https://www.financecalendar.com/api/). Availability varies by series: check each event's `status` and `source_url`; consensus and actual results are included where available.
+Bring economic-release dates, consensus forecasts and published results into AI assistants and terminal workflows. The [financecalendar.com API](https://www.financecalendar.com/api/) now includes provider consensus across **12 selected US headline release series**, with source-linked actual/prior values for covered records. The same API also supplies central bank decisions, exchange holidays and source-backed crypto events. Use each record’s metric, reference period and source evidence when comparing expectations with results.
 
 One package, two binaries:
 
 - `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
 - `financecalendar`: a CLI for your terminal and scripts.
 
-A verified Finance Calendar account and API key are required for every API request, including hosted MCP, status and OpenAPI. Create an [account and key](https://www.financecalendar.com/account/), complete any subscription payment required by the [current signup offer](https://www.financecalendar.com/pricing/), then set `FC_API_KEY` for local clients. Existing standard Free accounts include 250 API requests per day and 5,000 per calendar month, shared across all account keys. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Older grandfathered accounts and keys retain their earlier allowance. Pro and Business increase API allowance. No anonymous API allowance is available.
+The [public calendar is free to browse](https://www.financecalendar.com/events/). Programmatic API access requires an active paid plan, verified account and API key, including hosted MCP, status and OpenAPI. Create an [account and key](https://www.financecalendar.com/account/), activate your selected plan, then set `FC_API_KEY` for local clients.
+
+Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
 Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
@@ -293,7 +295,7 @@ console.log(formatEvent(next, { tz: "Europe/Frankfurt" }));
 
 ## Data terms
 
-The Free account plan supports commercial applications within its allowance, subject to applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+API access requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 
@@ -320,8 +322,7 @@ Text output explains this distinction and retains source credits; JSON and CSV
 retain the available lineage. Unknown consensus stays absent. See the
 [REST reference](https://www.financecalendar.com/api/reference/) for the contract.
 
-Official-observation actual/prior fields require the supported official numerical evidence;
-article metadata is not a fallback. Provider consensus covers selected US JOLTS, ADP employment, ISM Services PMI and goods-and-services Trade Balance releases; other values may be null.
+Provider consensus now spans **12 selected US headline release series**: US headline CPI, nonfarm payrolls, PPI, retail sales, PCE, ISM Manufacturing, industrial production, Conference Board Consumer Confidence, JOLTS, ADP employment, ISM Services PMI and goods-and-services Trade Balance. Actual and prior values combine validated official observations with matched provider data; validated official values retain precedence. Use each value’s metric, reference period, unit and source evidence to compare recorded forecasts with results. The existing calendar, history and series queries return the expanded records; no new tool or method is required. Check [current coverage](https://www.financecalendar.com/api/coverage/) or `/quality` for recorded availability, and preserve `null` when a value has no recorded evidence.
 BLS payroll `value` is already converted to jobs. `source_value` remains in
 `source_unit` thousands of jobs with `conversion_factor="1000"`; do not multiply
 the canonical value again. `publisher_reported_revisions` retains publisher units

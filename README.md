@@ -1,11 +1,11 @@
 # Finance Calendar API
 
-Economic releases, central bank decisions, selected crypto events and exchange holidays as JSON, CSV and ICS. The database combines direct official publisher feeds, checked-in schedules and explicitly licensed crypto data. Source verification, estimates and stale data are identified per record; consensus, prior and actual values are included where available. Snapshot updates run hourly, with coverage varying by source and series.
+Build release watchlists, compare recorded consensus forecasts with published results, and query economic schedules as JSON, CSV and ICS. Provider consensus now spans **12 selected US headline release series**, alongside source-linked actual/prior values. The calendar also covers central bank decisions, selected crypto events and exchange holidays. Records retain their metric, reference period, source verification, timing precision and freshness metadata. Snapshot builds run hourly; source freshness is reported separately.
 
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
-- **Full dataset export:** [Business account download](https://www.financecalendar.com/account/#fc-account-full-export). Active Business subscription required; full snapshots and capture history are not distributed in this source repository.
+- **Full dataset export:** [Scale account download](https://www.financecalendar.com/account/#fc-account-full-export). Active Scale subscription required; full snapshots and capture history are not distributed in this source repository.
 - **ChatGPT and Claude connector:** [Hosted MCP setup](https://www.financecalendar.com/api/mcp/) — authenticated HTTPS for clients supporting API-key headers.
 - **Codex and Claude Code:** [Plugin and portable Agent Skill](integrations/README.md)
 - **MCP server and CLI:** [Node source and installation](clients/node/README.md)
@@ -15,22 +15,16 @@ Economic releases, central bank decisions, selected crypto events and exchange h
 
 The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-03) accept a configured API key. The existing archives are unchanged; use current source for the updated setup and missing-key errors. npm/PyPI registry publication remains pending.
 
-Every API request requires an active API key, including status and OpenAPI.
-For a new account, [choose a paid plan](https://www.financecalendar.com/pricing/),
-register and confirm your email, complete payment, then create a key in your
-workspace. Creating an account does not charge you. Existing retained accounts
-and keys keep their confirmed access and allowances. Keys share the account's
-allowance; check `/keys/me` for your effective daily and monthly limits.
-Anonymous `POST /keys` creation is retired.
+The [public calendar is free to browse](https://www.financecalendar.com/events/). Programmatic API access requires an active paid plan and API key, including status and OpenAPI. [Choose a plan](https://www.financecalendar.com/pricing/), register and verify your email, complete payment, then create a key in your workspace. Creating an account does not charge you. Anonymous `POST /keys` creation is retired.
+
+Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
 Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
 The [Data explorer](https://www.financecalendar.com/data/) provides search/filter,
 saved views, source evidence and matching/selected CSV or JSON exports within its
 displayed limits. It uses your verified account sign-in rather than an API key.
-New accounts require confirmed paid access; existing accounts retain their
-confirmed access. See [current plans](https://www.financecalendar.com/pricing/)
-for allowances and complete current snapshot downloads.
+Active Starter, Build and Scale subscriptions include the Data explorer. Complete current snapshot downloads require Scale. See [current plans](https://www.financecalendar.com/pricing/) for billing options and allowances.
 
 ## Hosted connector
 
@@ -93,7 +87,7 @@ curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/changes"
 | `GET /countries` | Countries covered with counts |
 | `GET /status` | Snapshot age/counts and publisher-source health |
 | `GET /keys/me` | Key and shared-account usage; create keys in your verified account |
-| `GET /account/full-export` | Complete current JSON dataset; active Business subscription and Business API key header required |
+| `GET /account/full-export` | Complete current JSON dataset; active Scale subscription and Scale API key header required |
 
 Missing or invalid keys return HTTP 401; revoked keys or disallowed accounts return 403. Invalid parameters return HTTP 400 with an `error` message. Daily limits return HTTP 429 with `Retry-After`. Send credentials in headers rather than URLs, and do not expose them in browser code.
 
@@ -113,11 +107,13 @@ Keys created or linked in your [verified account](https://www.financecalendar.co
 
 ## Numerical evidence
 
-Current `actual` and `prior` fields require supported official observation evidence or an exact structured Treasury result summary; article metadata is not a fallback. Consensus estimates are not currently collected and remain null. Check reference periods, measurement units, source vintages and stale flags. BLS payroll values are already in jobs, while `source_value` retains thousands of jobs and the exact conversion factor. Publisher-reported revisions, engine-observed revisions and original first prints are distinct. See the [complete reference](https://www.financecalendar.com/api/reference/) for document manifests and occurrence bindings.
+Provider consensus coverage now spans **12 selected US headline release series**: US headline CPI, nonfarm payrolls, PPI, retail sales, PCE, ISM Manufacturing, industrial production, Conference Board Consumer Confidence, JOLTS, ADP employment, ISM Services PMI and goods-and-services Trade Balance. Actual and prior values combine validated official observations with matched provider data; validated official values retain precedence. Compare values with their metric, reference period, unit and source evidence. The existing `/calendar`, `/history` and series endpoints return the expanded records without new request paths.
+
+Check the [current coverage and source evidence](https://www.financecalendar.com/api/coverage/) or authenticated `/quality` report for recorded availability. Preserve `null` when a value has no recorded evidence. BLS payroll values are already in jobs, while `source_value` retains thousands of jobs and the exact conversion factor. Publisher-reported revisions, engine-observed revisions and original first prints are distinct. See the [complete reference](https://www.financecalendar.com/api/reference/) for document manifests and occurrence bindings.
 
 ## Data
 
-The complete current JSON export includes the loaded calendar window, series registry, exchange table, source evidence and 30-day change log. Full dataset downloads require an active Business subscription and are served through the authenticated account or full-export endpoint. This public repository contains developer tools, API schemas and small test fixtures, not full snapshots or their history.
+The complete current JSON export includes the loaded calendar window, series registry, exchange table, source evidence and 30-day change log. Full dataset downloads require an active Scale subscription and are served through the authenticated account or full-export endpoint. This public repository contains developer tools, API schemas and small test fixtures, not full snapshots or their history.
 
 Direct schedule connectors currently read BLS, ONS, BEA, Census, Federal
 Reserve G.17, DOL jobless claims, EIA energy releases, Treasury auctions,
@@ -143,7 +139,7 @@ add schedules without inventing macro results or consensus.
 import json, os, urllib.request
 request = urllib.request.Request(
     "https://www.financecalendar.com/wp-json/fc/v1/account/full-export",
-    headers={"X-API-Key": os.environ["FC_API_KEY"]},  # active Business account
+    headers={"X-API-Key": os.environ["FC_API_KEY"]},  # active Scale account
 )
 with urllib.request.urlopen(request, timeout=30) as response:
     cal = json.load(response)
@@ -152,7 +148,7 @@ print(cal["generated_at"], cal["counts"])
 
 ## Terms
 
-Access to complete dataset downloads requires Business. Reuse of lawfully obtained data remains permitted subject to applicable source terms and credits, with a visible link to https://www.financecalendar.com wherever the data appears (or on your app's credits page). Earnings dates are not included. See [DATA-TERMS.md](DATA-TERMS.md).
+Access to complete dataset downloads requires Scale. Reuse of lawfully obtained data remains permitted subject to applicable source terms and credits, with a visible link to https://www.financecalendar.com wherever the data appears (or on your app's credits page). Earnings dates are not included. See [DATA-TERMS.md](DATA-TERMS.md) and the current [API service terms](https://www.financecalendar.com/api/terms/).
 
 ## Issues
 
