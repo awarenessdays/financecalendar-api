@@ -1,6 +1,8 @@
 # Data terms
 
-Access to the complete current Finance Calendar dataset download requires an active Business subscription. Public API documentation, developer source code and bounded API responses retain their applicable access and allowance rules; see the [current plans](https://www.financecalendar.com/api/#plans). Full snapshots and historical capture files are not included in this public source repository.
+Access to the complete current Finance Calendar dataset download requires an active Scale subscription. Public API documentation, developer source code and bounded API responses retain their applicable access and allowance rules; see the [current plans](https://www.financecalendar.com/api/#plans). Full snapshots and historical capture files are not included in this public source repository.
+
+Current account and subscription terms: [API service terms](https://www.financecalendar.com/api/terms/).
 
 This access requirement does not revoke previously granted reuse permissions for lawfully obtained copies or change upstream source licences. Commercial reuse remains subject to Finance Calendar attribution and all additional source-specific terms carried by individual records.
 
