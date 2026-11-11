@@ -5,6 +5,6 @@ dependencies:
   tools:
     - type: "mcp"
       value: "financecalendar"
-      description: "Public Finance Calendar read-only MCP server"
+      description: "Authenticated Finance Calendar read-only MCP server; paid API access required"
       transport: "streamable_http"
       url: "https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp"

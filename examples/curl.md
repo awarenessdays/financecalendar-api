@@ -1,10 +1,16 @@
 # curl cheat sheet
 
-Create and verify a [Free account](https://www.financecalendar.com/account/?mode=register),
-then create an API key in your workspace. Every API request requires a valid key,
-including status and OpenAPI. Set your real key privately; never put it in a URL.
-New Free accounts include 1,000 daily requests, Pro 100,000 and Business 1,000,000,
-shared across account keys. Existing accounts and keys retain their effective allowance.
+[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+
+Starter is **US$9.99/year** for **1,000 requests per UTC day and 25,000 per UTC calendar month**; Build includes **100,000/day** and Scale **1,000,000/day**. Account keys share their paid allowance. Check [current plans](https://www.financecalendar.com/pricing/) and your account for effective prices and limits.
+
+Set `FC_API_KEY` privately and keep it out of URLs. This first request works within free access:
+
+```sh
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "https://www.financecalendar.com/wp-json/fc/v1/calendar?limit=10"
+```
+
+The following wider-date, non-calendar and export examples require the corresponding paid plan:
 
 ```bash
 export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
@@ -27,7 +33,7 @@ curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/status"
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/openapi"
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/keys/me"
 
-# Complete snapshot file: active Business subscription required.
+# Complete snapshot file: active Scale subscription required.
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/account/full-export" -o financecalendar-full.json
 ```
 
@@ -37,5 +43,5 @@ Do not work around that by exposing a secret in a subscription URL. A server you
 control can fetch authenticated data and publish an appropriately restricted feed.
 
 Use the [Data explorer](https://www.financecalendar.com/data/) for browser research
-and matching/selected CSV or JSON exports. It is included with every verified
-Free, Pro or Business account and does not require an API key or payment.
+and matching/selected CSV or JSON exports. It is included with active
+Starter, Build and Scale subscriptions and uses a verified account session rather than an API key. Finite free API access does not include the Data explorer.

@@ -3,9 +3,9 @@
 Canonical REST base: `https://www.financecalendar.com/wp-json/fc/v1`.
 Hosted MCP: `https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp` (Streamable HTTP; API key required for every request).
 
-Discover actual coverage with `/countries`, `/series` and `/status`. Consult [the complete API reference](https://www.financecalendar.com/api/reference/) or `/openapi` before adding parameters. MCP tool discovery gives the installed server's current schemas. Hosted results wrap canonical data in `structuredContent.data`; local stdio results use a different envelope.
+With paid access, discover actual coverage with `/countries`, `/series` and `/status`. For finite free access, use JSON `/calendar?limit=10` without a wider date or category filter; metadata routes are outside free scope. Consult [the complete API reference](https://www.financecalendar.com/api/reference/) or `/openapi` before adding parameters. MCP tool discovery gives the installed server's current schemas. Hosted results wrap canonical data in `structuredContent.data`; local stdio results use a different envelope.
 
-Useful authenticated GET queries:
+The following wider-date, non-calendar and export queries require paid access:
 
 ```text
 /next?series=cpi&country=IN
@@ -19,7 +19,7 @@ Replace placeholder dates with explicit requested dates, within 92 days per wind
 
 For change polling, retain the original `since` checkpoint until all pages complete. Follow `next_cursor` without changing bound filters or resending conflicting defaults. A snapshot-change HTTP 409 means restart that checkpoint and deduplicate consumed changes. Advance the checkpoint only after the complete interval is processed.
 
-[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-10-22) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
+[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-03) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
 
 ```sh
 financecalendar next in-cpi --json
@@ -28,4 +28,4 @@ financecalendar calendar --country KR --from YYYY-MM-DD --to YYYY-MM-DD --json
 
 Python `Client.iter_calendar` handles window chunking, pagination and stable-ID deduplication. Node/CLI commands expose individual pages; use explicit limits and offsets for a full export. `/week` and human overview output do not guarantee every matching record. Source installation and per-client configuration are documented in the public repository.
 
-Every REST and hosted MCP request requires your API key. Use X-API-Key or Bearer authorization in a header; never place credentials in a URL. New Free accounts include 250 requests/day and 5,000 per calendar month, Pro 100,000 and Business 1,000,000. Linked keys and hosted MCP data calls share the account allowance; older grandfathered accounts and keys retain their earlier allowance. Configure FC_API_KEY in your client environment. Hosted installation requires client support for environment-expanded custom headers; use local stdio otherwise. Inspect your usage response for the actual limit. Public endpoint access and recorded series availability do not establish enterprise uptime or comprehensive worldwide coverage.
+Every REST and hosted MCP request requires your API key. Use X-API-Key or Bearer authorization in a header; never place credentials in a URL. Free API access requires verified email and one key, lasts 48 hours from the first successful data request, and includes 25 successful requests in total with no card required; it never renews. It covers JSON /calendar, /today and /week only, at most 10 economic-release or central-bank-decision events per response within the previous seven days through the next two days in UTC. Other routes and formats require paid access. Starter is US$9.99/year with 1,000 requests/day and 25,000 per UTC calendar month; Build includes 100,000/day and Scale 1,000,000/day. Linked paid keys and hosted MCP calls share the paid account allowance; existing paid subscriptions retain their applicable terms. Configure FC_API_KEY in your client environment. Hosted installation requires client support for environment-expanded custom headers; use local stdio otherwise. Inspect your usage response for the actual limit. Public endpoint access and recorded series availability do not establish enterprise uptime or comprehensive worldwide coverage.

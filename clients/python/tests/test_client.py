@@ -258,7 +258,7 @@ def test_iter_calendar_stops_on_empty_page():
 
 def test_to_dataframe_is_lazy_and_reports_missing_pandas(monkeypatch):
     monkeypatch.setitem(sys.modules, "pandas", None)
-    with pytest.raises(ImportError, match=r"pip install financecalendar\[pandas\]"):
+    with pytest.raises(ImportError, match=r"python -m pip install pandas"):
         to_dataframe([])
 
 

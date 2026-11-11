@@ -2,11 +2,15 @@
 
 Bring economic-release dates, consensus forecasts and published results into Python, pandas and terminal workflows with the [financecalendar.com API](https://www.financecalendar.com/api/). Provider consensus now spans **12 selected US headline release series**, with source-linked actual/prior values for covered records. The same API also supplies central bank decisions, exchange holidays and source-backed crypto events. Use each record’s metric, reference period and source evidence when comparing expectations with results.
 
-The [public calendar is free to browse](https://www.financecalendar.com/events/). Programmatic API access requires an active paid plan, verified account and API key, including status and OpenAPI. Create an [account and key](https://www.financecalendar.com/account/), activate your selected plan, then set `FC_API_KEY` or pass `Client(api_key=...)`. Missing credentials fail with an actionable HTTP401 error before any network request.
+[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+
+The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status, OpenAPI and the wider examples below require a paid plan. Set `FC_API_KEY` securely or pass `Client(api_key=...)`. Missing credentials fail before any network request.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
-Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
+Finite free access counts successful data responses separately and expires after 48 hours or 25 successful requests, whichever comes first; its allowance never resets.
+
+For paid plans, daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
 ```sh
 export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
@@ -40,16 +44,23 @@ python -m venv .venv
 Use `.venv\Scripts\python` and `.venv\Scripts\financecalendar` on Windows.
 Install `".[pandas]"` instead of `.` for the optional DataFrame helper.
 
-After publication:
-
-```sh
-pip install financecalendar            # client + CLI
-pip install "financecalendar[pandas]"  # adds the DataFrame helper
-```
+The `financecalendar` name is not currently published on PyPI; use the tested wheel or source command above.
 
 Requires Python 3.10 or newer. The only runtime dependency is `httpx` (plus `tzdata` on Windows for timezone names).
 
 ## Quick start
+
+A first bounded request within free access:
+
+```python
+from financecalendar import Client
+
+with Client() as fc:  # reads your private FC_API_KEY
+    sample = fc.calendar(limit=10)
+    print(sample["events"])
+```
+
+The following `/next` example and the wider methods below require a paid plan:
 
 ```python
 from financecalendar import Client
@@ -232,7 +243,7 @@ https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 
 ## Data terms
 
-API access requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+API access outside the finite free JSON calendar scope requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 

@@ -11,6 +11,8 @@ node node/calendar-watchlist.mjs
 
 ## Set up a private key
 
+The seven-day watchlist and pagination require a paid plan. [Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan. For a first free request, use the authenticated `calendar?limit=10` example in the [repository README](../../../README.md).
+
 Get your key from [your Finance Calendar account](https://www.financecalendar.com/account/). Set `FC_API_KEY` in the process environment. The programs require the current `fc_live_` key format and check it before making a request. They do not accept a key in command-line arguments or URLs and do not automatically load `.env` files. `.env.example` contains a placeholder only.
 
 For an interactive **Bash** session, this avoids putting the key in shell history or displaying it:

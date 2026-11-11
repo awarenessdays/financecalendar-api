@@ -214,7 +214,7 @@ def format_change(c: dict[str, Any]) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="financecalendar", description="Economic calendar in your terminal. Data: financecalendar.com, free with attribution.")
+    p = argparse.ArgumentParser(prog="financecalendar", description="Economic calendar in your terminal. Free JSON API access: verified email and key, 48 hours, 25 total requests, no card required. Paid plans add wider access: https://www.financecalendar.com/account/?trial=1")
     p.add_argument("--version", action="version", version=f"financecalendar {__version__}")
 
     def add_global_options(parser: argparse.ArgumentParser, default: Any) -> None:

@@ -33,7 +33,7 @@ Environment:
   FC_API_KEY  required API key, sent as X-API-Key; create one at financecalendar.com/account/
   FC_API_BASE alternative base URL (default https://www.financecalendar.com/wp-json/fc/v1)
 
-Data: financecalendar.com, free with attribution. https://www.financecalendar.com/api/`;
+Data: financecalendar.com. Free JSON API access: verified email and key, 48 hours, 25 total requests, no card required. Paid plans add wider access. https://www.financecalendar.com/account/?trial=1`;
 
 const BOOL_FLAGS = new Set(["json", "csv", "next", "holidays", "help"]);
 

@@ -29,7 +29,7 @@ export async function api(path, params = {}, { apiKey, base, raw = false, fetch:
   const url = buildUrl(path, params, base);
   const key = String(apiKey || process.env.FC_API_KEY || "").trim();
   if (!key) {
-    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Create a verified Free account and key at https://www.financecalendar.com/account/.");
+    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Get verified free API access for 48 hours and 25 total JSON calendar requests at https://www.financecalendar.com/account/?trial=1, or choose a paid plan for wider access.");
     error.status = 401;
     error.retryAfter = null;
     throw error;
