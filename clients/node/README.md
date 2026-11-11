@@ -7,11 +7,15 @@ One package, two binaries:
 - `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
 - `financecalendar`: a CLI for your terminal and scripts.
 
-The [public calendar is free to browse](https://www.financecalendar.com/events/). Programmatic API access requires an active paid plan, verified account and API key, including hosted MCP, status and OpenAPI. Create an [account and key](https://www.financecalendar.com/account/), activate your selected plan, then set `FC_API_KEY` for local clients.
+[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+
+The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status, OpenAPI and the wider examples below require a paid plan. Set `FC_API_KEY` securely for local clients.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
-Daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
+Finite free access counts successful data responses separately and expires after 48 hours or 25 successful requests, whichever comes first; its allowance never resets.
+
+For paid plans, daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
 ## Install the tested beta download
 
@@ -109,15 +113,7 @@ npm link
 financecalendar --help
 ```
 
-For MCP today, configure `node` as the command and the absolute path to this
-checkout's `mcp.js` as its argument. The npm/npx configurations below apply after
-registry publication.
-
-After publication:
-
-```sh
-npm install -g financecalendar-mcp      # or run ad hoc with npx
-```
+For MCP, configure `node` as the command and the absolute path to this checkout's `mcp.js` as its argument, as shown below. The `financecalendar-mcp` name is not currently published on npm; use the tested download or source command above.
 
 Requires Node 20 or newer.
 
@@ -126,6 +122,8 @@ Unknown economic release times are labelled `time unknown`; exchange holidays
 retain `all day`. Raw JSON preserves the API fields unchanged.
 
 ## Local MCP server
+
+A free-access key can query the bounded JSON calendar tools only; other tools and hosted MCP require a paid plan. For the first free request, use `calendar` with `limit=10` and no wider date or category filters.
 
 ### Claude Desktop
 
@@ -136,21 +134,20 @@ your actual API key in a private local configuration:
 {
   "mcpServers": {
     "financecalendar": {
-      "command": "npx",
-      "args": ["-y", "financecalendar-mcp"],
+      "command": "node",
+      "args": ["/absolute/path/financecalendar-api/clients/node/mcp.js"],
       "env": { "FC_API_KEY": "fc_live_YOUR_ACTUAL_KEY" }
     }
   }
 }
 ```
 
-The npx example applies after registry publication; use the source command and
-absolute script path above today. Missing keys fail before any data request.
+Use the absolute path to your own source checkout. Missing keys fail before any data request; MCP tools outside the finite JSON calendar scope require paid access.
 
 ### Claude Code
 
 ```sh
-claude mcp add financecalendar -e FC_API_KEY=your-key -- npx -y financecalendar-mcp
+claude mcp add financecalendar -e FC_API_KEY=your-key -- node /absolute/path/financecalendar-api/clients/node/mcp.js
 ```
 
 ### Cursor
@@ -160,7 +157,7 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json`):
 ```json
 {
   "mcpServers": {
-    "financecalendar": { "command": "npx", "args": ["-y", "financecalendar-mcp"], "env": { "FC_API_KEY": "fc_live_YOUR_ACTUAL_KEY" } }
+    "financecalendar": { "command": "node", "args": ["/absolute/path/financecalendar-api/clients/node/mcp.js"], "env": { "FC_API_KEY": "fc_live_YOUR_ACTUAL_KEY" } }
   }
 }
 ```
@@ -295,7 +292,7 @@ console.log(formatEvent(next, { tz: "Europe/Frankfurt" }));
 
 ## Data terms
 
-API access requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+API access outside the finite free JSON calendar scope requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 

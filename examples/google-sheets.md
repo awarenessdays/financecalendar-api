@@ -5,8 +5,11 @@ required header; do not put a key in a formula or URL. You can export CSV from t
 [Data explorer](https://www.financecalendar.com/data/) and import it into Sheets,
 or use an Apps Script with a private user property.
 
-Create and verify a Free account, create a key in your Finance Calendar workspace,
-then open **Extensions → Apps Script** in your sheet. Add the code below. Run
+[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+
+Starter is **US$9.99/year** for **1,000 requests per UTC day and 25,000 per UTC calendar month**; Build includes **100,000/day** and Scale **1,000,000/day**. Account keys share their paid allowance. Check [current plans](https://www.financecalendar.com/pricing/) and your account for effective prices and limits.
+
+The Data explorer and CSV exports require an active paid subscription. The JSON example below can make a bounded first request with a free-access key. Open **Extensions → Apps Script** in your sheet, then run
 `setFinanceCalendarKey` once to store your key in your own user properties, then
 run `loadFinanceCalendar`. Only run code you trust; script editors can change
 what code does with your credentials. Never commit a real key or log it.
@@ -25,7 +28,7 @@ function loadFinanceCalendar() {
   const key = PropertiesService.getUserProperties().getProperty("FC_API_KEY");
   if (!key) throw new Error("Run setFinanceCalendarKey first.");
   const response = UrlFetchApp.fetch(
-    "https://www.financecalendar.com/wp-json/fc/v1/calendar?impact=high&tz=Europe/London&limit=100",
+    "https://www.financecalendar.com/wp-json/fc/v1/calendar?impact=high&tz=Europe/London&limit=10",
     {headers: {"X-API-Key": key, Accept: "application/json"}, muteHttpExceptions: true, followRedirects: false}
   );
   if (response.getResponseCode() !== 200) throw new Error("Finance Calendar HTTP " + response.getResponseCode() + ". Check your key and account allowance.");
@@ -36,12 +39,12 @@ function loadFinanceCalendar() {
     data.events.map(event => [event.date, event.name, event.country, event.actual, event.source_url].map(cell))
   );
   SpreadsheetApp.getActiveSheet().getRange(1, 1, rows.length, rows[0].length).setValues(rows);
-  if (data.total > data.events.length) SpreadsheetApp.getUi().alert("This page contains " + data.events.length + " of " + data.total + " matching records. Page with offset for more.");
+  if (data.total > data.events.length) SpreadsheetApp.getUi().alert("This page contains " + data.events.length + " of " + data.total + " matching records. This is a bounded view. A paid plan is needed for wider access; inspect your plan before requesting more records.");
 }
 ```
 
 A real zero stays a value; unavailable fields stay blank. Records are current
-recorded vintages, not original first prints. New Free accounts include 1,000 API
-requests per UTC day shared across their keys; existing accounts retain their
-effective allowance. Retain a visible link to https://www.financecalendar.com
+recorded vintages, not original first prints. Each successful free-access fetch
+uses one of the 25 total requests; the 48-hour allowance does not renew. Paid
+account keys share their plan allowance. Retain a visible link to https://www.financecalendar.com
 and the supplied source credits when sharing data.

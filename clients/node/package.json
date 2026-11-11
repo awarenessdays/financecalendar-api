@@ -1,7 +1,7 @@
 {
   "name": "financecalendar-mcp",
   "version": "0.2.1",
-  "description": "MCP server + CLI for financecalendar.com: economic releases, central bank decisions and market holidays, free with attribution",
+  "description": "Economic calendar MCP server and CLI. API key required; verified free JSON calendar access lasts 48 hours and 25 total requests. Hosted MCP requires a paid plan.",
   "type": "module",
   "bin": {
     "financecalendar": "cli.js",

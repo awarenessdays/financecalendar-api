@@ -7,8 +7,8 @@ calendar subscription URL.
 
 For browser research, use the [Data explorer](https://www.financecalendar.com/data/).
 It includes filters, saved views, source evidence and matching/selected CSV or
-JSON exports with every verified Free, Pro or Business account. It uses native
-sign-in and does not require an API key or payment.
+JSON exports with an active Starter, Build or Scale subscription. It uses native
+sign-in rather than an API key. Finite free API access does not include these browser tools.
 
 To show calendar data in your own website, fetch the API from a server you
 control using `X-API-Key` from a private environment variable. Keep the key on
@@ -18,5 +18,7 @@ does not ship an authenticated browser widget or an OAuth flow.
 
 See the [server-side examples](../examples/) and
 [API reference](https://www.financecalendar.com/api/reference/). A complete current
-snapshot file download requires an active Business subscription; filtered API
+snapshot file download requires an active Scale subscription; filtered API
 responses remain available within each plan's allowance.
+
+[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.

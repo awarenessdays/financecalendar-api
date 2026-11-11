@@ -1,7 +1,8 @@
-// Finance Calendar API from server-side Node 20+. Keep credentials out of browsers.
+// Paid-plan Finance Calendar API examples from server-side Node 20+. Keep credentials out of browsers.
+// For finite free access use authenticated calendar JSON with limit=10; see README.md.
 const BASE = "https://www.financecalendar.com/wp-json/fc/v1";
 const API_KEY = String(process.env.FC_API_KEY || "").trim();
-if (!API_KEY) throw new Error("Set FC_API_KEY to your account API key. Create and verify a Free account at https://www.financecalendar.com/account/.");
+if (!API_KEY) throw new Error("Set FC_API_KEY to your account API key. These wider-route examples need a paid plan. For 48-hour, 25-request free JSON calendar access with verified email and a key, visit https://www.financecalendar.com/account/?trial=1.");
 
 async function get(path, params = {}) {
   const url = new URL(BASE + path);

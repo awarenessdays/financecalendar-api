@@ -1,6 +1,8 @@
 # Finance Calendar plugin and skill
 
-A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Create and verify a Finance Calendar account, then create an API key. Every request requires credentials.
+A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Hosted MCP requires a verified account, active paid plan and API key. Every request requires credentials.
+
+[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
 
 Set `FC_API_KEY` securely in your client environment. The manifests use an environment-expanded `X-API-Key` header. This setup requires a client that supports both custom headers and environment expansion; do not assume every plugin installer supports them. If unsupported, use the [local stdio setup](https://www.financecalendar.com/api/mcp/#install-the-mcp-server-from-source). Never replace the placeholder with a real key in committed files or put a key in a URL.
 

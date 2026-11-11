@@ -102,7 +102,7 @@ class Client:
 
     def _request(self, path: str, params: dict[str, Any] | None = None, raw: bool = False) -> Any:
         if not self.api_key:
-            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key. Create a verified Free account and key at https://www.financecalendar.com/account/.")
+            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key. Get verified free API access for 48 hours and 25 total JSON calendar requests at https://www.financecalendar.com/account/?trial=1, or choose a paid plan for wider access.")
         headers = {"Accept": "text/csv, text/plain, */*"} if raw else None
         response = self._http.get(path, params=_clean_params(params or {}), headers=headers)
         if response.status_code >= 400:
@@ -271,12 +271,12 @@ class Client:
 def to_dataframe(events: list[dict[str, Any]] | dict[str, Any]) -> "Any":
     """Turn a list of event rows (or a calendar/history response) into a pandas DataFrame.
 
-    pandas is imported lazily; install it with `pip install financecalendar[pandas]`.
+    pandas is imported lazily; install it with `python -m pip install pandas` alongside this client.
     """
     try:
         import pandas as pd
     except ImportError as exc:  # pragma: no cover - exercised via sys.modules patch in tests
-        raise ImportError("to_dataframe needs pandas: pip install financecalendar[pandas]") from exc
+        raise ImportError("to_dataframe needs pandas: python -m pip install pandas") from exc
     if isinstance(events, dict):
         events = events.get("events") or []
     frame = pd.DataFrame(list(events))
