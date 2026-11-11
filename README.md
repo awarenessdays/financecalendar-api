@@ -8,9 +8,9 @@ Build release watchlists, compare recorded consensus forecasts with published re
 curl https://www.financecalendar.com/wp-json/fc/v1/week
 ```
 
-The free sandbox needs no key and no account. `/calendar`, `/today` and `/week` return the current week's economic release and central bank decision schedule as JSON: dates, times, impact ratings, countries, reference periods, status, source links and publisher credits. The sandbox allows 50 requests per address per UTC day, and every response includes a `sandbox` object that states the window and what an API key adds.
+The free sandbox needs no key and no account. `/calendar`, `/today` and `/week` return the economic release and central bank decision schedule for today and the next two days as JSON: dates, times, impact ratings, countries, reference periods, status, source links and publisher credits. The sandbox allows 50 requests per address per UTC day, and every response includes a `sandbox` object that states the window and what an API key adds.
 
-An API key adds consensus forecasts, actual and prior values, other weeks and history, CSV and ICS, hosted MCP, the CLI and Python client, and higher limits. Starter costs **US$9.99/year**; see [current plans](https://www.financecalendar.com/pricing/).
+An API key adds consensus forecasts, actual and prior values, later dates and history, CSV and ICS, hosted MCP, the CLI and Python client, and higher limits. Starter costs **US$9.99/year**; see [current plans](https://www.financecalendar.com/pricing/).
 
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
