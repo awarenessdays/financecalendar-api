@@ -4,7 +4,7 @@
     "title": "Finance Calendar API",
     "version": "2.0.0",
     "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-    "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. A free keyless sandbox answers /calendar, /today and /week for today and the next two days. Every other request requires a key. Personal and internal commercial use follow the standard plan; customer-facing embedded use and onward data distribution require separately agreed rights. See https://www.financecalendar.com/api/terms/ for applicable terms, earlier grants, attribution and source-specific rights. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. A paid Starter, Build or Scale subscription is required for API and account data access. Legacy Free access has ended. Existing verified paid subscriptions retain their paid allowances. Follow account_url or upgrade_url to activate a paid plan; existing API keys are retained.",
+    "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free economic calendar API access includes 25 successful data requests in total over 48 hours, starting with the first successful request. Verify your email at https://www.financecalendar.com/account/?trial=1 to get your API key; no card is required. Every request requires a key. Free access covers JSON GET /calendar, /today and /week only, up to 10 selected economic-release or central-bank-decision events per response, from the previous seven days through the next two days in UTC. Available consensus, actual and prior values and source credits are included; missing values remain null. The allowance does not renew. Other routes, formats and wider access require a paid plan. Starter, Build and Scale include API access for your own tools, apps and products, with attribution and applicable source terms. See https://www.financecalendar.com/api/terms/ for applicable terms, earlier grants, attribution and source-specific rights. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. A paid Starter, Build or Scale subscription is required outside the finite free API access scope and for browser Data explorer access. Existing verified paid subscriptions retain their paid allowances. Choose a paid plan explicitly when you need wider access; existing API keys are retained.",
     "termsOfService": "https://www.financecalendar.com/api/terms/",
     "contact": {
       "url": "https://www.financecalendar.com/about/"
@@ -293,7 +293,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "A paid plan is required when no active free API access covers this request. Start finite free access at https://www.financecalendar.com/account/?trial=1, or follow upgrade_url and complete payment for wider access.",
             "content": {
               "application/json": {
                 "schema": {
@@ -316,7 +316,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "description": "Free API access requires a verified account and API key and is limited to JSON, 25 successful requests in total over 48 hours from the first successful request, and up to 10 selected economic-release or central-bank-decision records per response. Dates must be within the previous seven days through the next two days in UTC. Missing recorded values remain null. Other categories, formats, routes and wider dates require a paid plan."
       }
     },
     "/today": {
@@ -483,7 +484,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "A paid plan is required when no active free API access covers this request. Start finite free access at https://www.financecalendar.com/account/?trial=1, or follow upgrade_url and complete payment for wider access.",
             "content": {
               "application/json": {
                 "schema": {
@@ -506,7 +507,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "description": "Free API access requires a verified account and API key and is limited to JSON, 25 successful requests in total over 48 hours from the first successful request, and up to 10 selected economic-release or central-bank-decision records per response. Dates must be within the previous seven days through the next two days in UTC. Missing recorded values remain null. Other categories, formats, routes and wider dates require a paid plan. Free access returns eligible releases for today without the paid market-status or holiday payload."
       }
     },
     "/week": {
@@ -728,7 +730,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "A paid plan is required when no active free API access covers this request. Start finite free access at https://www.financecalendar.com/account/?trial=1, or follow upgrade_url and complete payment for wider access.",
             "content": {
               "application/json": {
                 "schema": {
@@ -741,7 +743,7 @@
             "description": "Requested language is disabled or service unavailable."
           }
         },
-        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
+        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page. Free API access requires a verified account and API key and is limited to JSON, 25 successful requests in total over 48 hours from the first successful request, and up to 10 selected economic-release or central-bank-decision records per response. Dates must be within the previous seven days through the next two days in UTC. Missing recorded values remain null. Other categories, formats, routes and wider dates require a paid plan. For free access, the current week ends no later than two days from today; next-week requests are outside scope.",
         "security": [
           {
             "ApiKey": []
@@ -2286,7 +2288,7 @@
           }
         },
         "deprecated": true,
-        "description": "Anonymous key creation is retired. Create and verify an account, complete payment for a plan, then create or link an API key in the signed-in workspace. Existing key tokens are retained; legacy Free access has ended."
+        "description": "Anonymous key creation is unavailable. Verify an account and explicitly start free API access for one key, 48 hours and 25 total JSON calendar requests, or choose and pay for a plan. Create or manage keys in the signed-in workspace. Existing paid keys and allowances are retained."
       }
     },
     "/keys/me": {
@@ -2345,7 +2347,7 @@
             }
           }
         },
-        "description": "Requires an active API key. Usage inspection remains available without a paid entitlement, returning payment_required and zero allowance. Data requests require confirmed paid account access.",
+        "description": "Requires an active API key. Usage inspection remains available without a paid entitlement. Finite free API access uses its separate 48-hour, 25-successful-request allowance; inspect the signed-in account for its expiry and remaining requests. Other data requests require paid account access.",
         "security": [
           {
             "ApiKey": []
@@ -6590,5 +6592,38 @@
       "Owner-approved complete display catalogues after automated checks and sample review",
       "Private/account APIs and changes are excluded"
     ]
+  },
+  "x-free-api-access": {
+    "signup_url": "https://www.financecalendar.com/account/?trial=1",
+    "email_verification_required": true,
+    "authentication_required": true,
+    "card_required": false,
+    "duration_seconds": 172800,
+    "starts_on": "first_successful_data_request",
+    "total_successful_requests": 25,
+    "allowance_renews": false,
+    "active_keys": 1,
+    "maximum_events_per_response": 10,
+    "methods": [
+      "GET"
+    ],
+    "routes": [
+      "/calendar",
+      "/today",
+      "/week"
+    ],
+    "formats": [
+      "json"
+    ],
+    "window": {
+      "previous_days": 7,
+      "upcoming_days": 2,
+      "timezone": "UTC"
+    },
+    "categories": [
+      "economic-indicators",
+      "central-banks-monetary-policy"
+    ],
+    "paid_upgrade_url": "https://www.financecalendar.com/account/?plan=starter&billing_interval=year"
   }
 }
