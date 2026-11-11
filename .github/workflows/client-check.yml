@@ -5,16 +5,33 @@ on:
   pull_request:
     paths:
       - 'clients/**'
+      - 'openapi.json'
+      - 'scripts/check-trial-openapi.py'
+      - 'scripts/fixtures/trial-openapi-compatibility.json'
       - '.github/workflows/client-check.yml'
   push:
     paths:
       - 'clients/**'
+      - 'openapi.json'
+      - 'scripts/check-trial-openapi.py'
+      - 'scripts/fixtures/trial-openapi-compatibility.json'
       - '.github/workflows/client-check.yml'
 
 permissions:
   contents: read
 
 jobs:
+  openapi:
+    name: Trial OpenAPI compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python scripts/check-trial-openapi.py
+
   node:
     name: Node ${{ matrix.node }}
     runs-on: ubuntu-latest

@@ -256,6 +256,9 @@
                     },
                     "attribution": {
                       "$ref": "#/components/schemas/Attribution"
+                    },
+                    "trial": {
+                      "$ref": "#/components/schemas/TrialStatus"
                     }
                   }
                 }
@@ -293,7 +296,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required when no active free API access covers this request. Start finite free access at https://www.financecalendar.com/account/?trial=1, or follow upgrade_url and complete payment for wider access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -304,6 +307,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Trial expired/exhausted, request outside its scope, or access forbidden. Upgrade through the existing account checkout to continue.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrialAccessError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -317,7 +330,7 @@
             "ApiKeyQuery": []
           }
         ],
-        "description": "Free API access requires a verified account and API key and is limited to JSON, 25 successful requests in total over 48 hours from the first successful request, and up to 10 selected economic-release or central-bank-decision records per response. Dates must be within the previous seven days through the next two days in UTC. Missing recorded values remain null. Other categories, formats, routes and wider dates require a paid plan."
+        "description": "Free API access: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. "
       }
     },
     "/today": {
@@ -447,6 +460,9 @@
                     },
                     "attribution": {
                       "$ref": "#/components/schemas/Attribution"
+                    },
+                    "trial": {
+                      "$ref": "#/components/schemas/TrialStatus"
                     }
                   }
                 }
@@ -484,7 +500,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required when no active free API access covers this request. Start finite free access at https://www.financecalendar.com/account/?trial=1, or follow upgrade_url and complete payment for wider access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -495,6 +511,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Trial expired/exhausted, request outside its scope, or access forbidden. Upgrade through the existing account checkout to continue.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrialAccessError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -508,7 +534,7 @@
             "ApiKeyQuery": []
           }
         ],
-        "description": "Free API access requires a verified account and API key and is limited to JSON, 25 successful requests in total over 48 hours from the first successful request, and up to 10 selected economic-release or central-bank-decision records per response. Dates must be within the previous seven days through the next two days in UTC. Missing recorded values remain null. Other categories, formats, routes and wider dates require a paid plan. Free access returns eligible releases for today without the paid market-status or holiday payload."
+        "description": "Free API access: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. "
       }
     },
     "/week": {
@@ -693,6 +719,9 @@
                     },
                     "attribution": {
                       "$ref": "#/components/schemas/Attribution"
+                    },
+                    "trial": {
+                      "$ref": "#/components/schemas/TrialStatus"
                     }
                   }
                 }
@@ -730,7 +759,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required when no active free API access covers this request. Start finite free access at https://www.financecalendar.com/account/?trial=1, or follow upgrade_url and complete payment for wider access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -741,9 +770,19 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Trial expired/exhausted, request outside its scope, or access forbidden. Upgrade through the existing account checkout to continue.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrialAccessError"
+                }
+              }
+            }
           }
         },
-        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page. Free API access requires a verified account and API key and is limited to JSON, 25 successful requests in total over 48 hours from the first successful request, and up to 10 selected economic-release or central-bank-decision records per response. Dates must be within the previous seven days through the next two days in UTC. Missing recorded values remain null. Other categories, formats, routes and wider dates require a paid plan. For free access, the current week ends no later than two days from today; next-week requests are outside scope.",
+        "description": "Free API access: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
         "security": [
           {
             "ApiKey": []
@@ -909,7 +948,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1066,7 +1105,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1243,7 +1282,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1431,7 +1470,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1610,7 +1649,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1781,7 +1820,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1985,7 +2024,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2039,7 +2078,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2152,7 +2191,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2221,7 +2260,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2288,7 +2327,7 @@
           }
         },
         "deprecated": true,
-        "description": "Anonymous key creation is unavailable. Verify an account and explicitly start free API access for one key, 48 hours and 25 total JSON calendar requests, or choose and pay for a plan. Create or manage keys in the signed-in workspace. Existing paid keys and allowances are retained."
+        "description": "This legacy anonymous key-creation endpoint remains closed. Verify an account and create a limited free-access trial key through the trial account page, or complete the existing paid checkout and manage keys in the signed-in workspace."
       }
     },
     "/keys/me": {
@@ -2311,11 +2350,18 @@
         ],
         "responses": {
           "200": {
-            "description": "Key info.",
+            "description": "Paid/retained key usage, or the distinct finite-trial usage object.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KeyUsage"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/KeyUsage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TrialKeyUsage"
+                    }
+                  ]
                 }
               }
             }
@@ -2337,7 +2383,7 @@
             }
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2347,7 +2393,7 @@
             }
           }
         },
-        "description": "Requires an active API key. Usage inspection remains available without a paid entitlement. Finite free API access uses its separate 48-hour, 25-successful-request allowance; inspect the signed-in account for its expiry and remaining requests. Other data requests require paid account access.",
+        "description": "Inspect the presented active key. An enrolled trial key returns TrialKeyUsage, with its total 25-request budget, first-use clock and expiry; this status call consumes no trial data request. Paid keys retain KeyUsage. Retained unpaid keys without an enrolled trial report payment_required and zero paid allowance.",
         "security": [
           {
             "ApiKey": []
@@ -2410,7 +2456,7 @@
             "description": "API key validation or the dataset is temporarily unavailable. Retry; anonymous fallback is disabled."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2573,7 +2619,7 @@
             "description": "Snapshot changed during pagination; restart using current generation."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2720,7 +2766,7 @@
             "description": "Dataset, publication inventory or authentication unavailable."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2852,7 +2898,7 @@
             "description": "Dataset, publication inventory or authentication unavailable."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6427,6 +6473,107 @@
             "array"
           ]
         }
+      },
+      "TrialStatus": {
+        "type": "object",
+        "required": [
+          "state",
+          "total_limit",
+          "used",
+          "remaining",
+          "duration_seconds",
+          "started_at",
+          "expires_at",
+          "upgrade_url"
+        ],
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "Trial lifecycle; the account and key are retained after free access ends."
+          },
+          "total_limit": {
+            "type": "integer",
+            "const": 25
+          },
+          "used": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 25
+          },
+          "remaining": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 25
+          },
+          "duration_seconds": {
+            "type": "integer",
+            "const": 172800
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "First successful data response; null before first use."
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "converted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "event_limit": {
+            "type": "integer",
+            "const": 10
+          },
+          "upgrade_url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "TrialKeyUsage": {
+        "type": "object",
+        "required": [
+          "trial"
+        ],
+        "properties": {
+          "trial": {
+            "$ref": "#/components/schemas/TrialStatus"
+          }
+        },
+        "description": "Usage response for an enrolled trial key. Its lifetime budget does not reset daily or monthly."
+      },
+      "TrialAccessError": {
+        "type": "object",
+        "required": [
+          "code",
+          "error"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "upgrade_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "trial": {
+            "$ref": "#/components/schemas/TrialStatus"
+          }
+        }
       }
     },
     "securitySchemes": {
@@ -6595,35 +6742,28 @@
   },
   "x-free-api-access": {
     "signup_url": "https://www.financecalendar.com/account/?trial=1",
-    "email_verification_required": true,
-    "authentication_required": true,
-    "card_required": false,
+    "verified_email_required": true,
+    "api_key_required": true,
+    "duration_hours": 48,
     "duration_seconds": 172800,
-    "starts_on": "first_successful_data_request",
-    "total_successful_requests": 25,
-    "allowance_renews": false,
-    "active_keys": 1,
-    "maximum_events_per_response": 10,
-    "methods": [
-      "GET"
-    ],
-    "routes": [
-      "/calendar",
-      "/today",
-      "/week"
-    ],
+    "starts_at": "first_successful_data_request",
+    "total_requests": 25,
+    "max_events_per_response": 10,
     "formats": [
       "json"
     ],
+    "endpoints": [
+      "/fc/v1/calendar",
+      "/fc/v1/today",
+      "/fc/v1/week"
+    ],
     "window": {
       "previous_days": 7,
-      "upcoming_days": 2,
+      "next_days": 2,
       "timezone": "UTC"
     },
-    "categories": [
-      "economic-indicators",
-      "central-banks-monetary-policy"
-    ],
-    "paid_upgrade_url": "https://www.financecalendar.com/account/?plan=starter&billing_interval=year"
+    "card_required": false,
+    "automatic_charge": false,
+    "message": "Free API access: verify your email and create one API key. Use 25 JSON requests during 48 hours from your first successful data request, with up to 10 events per response. No card or automatic charge. Your account and key remain available for an optional paid upgrade."
   }
 }
