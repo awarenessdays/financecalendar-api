@@ -2,6 +2,16 @@
 
 Build release watchlists, compare recorded consensus forecasts with published results, and query economic schedules as JSON, CSV and ICS. Provider consensus now spans **12 selected US headline release series**, alongside source-linked actual/prior values. The calendar also covers central bank decisions, selected crypto events and exchange holidays. Records retain their metric, reference period, source verification, timing precision and freshness metadata. Snapshot builds run hourly; source freshness is reported separately.
 
+## Free economic calendar API: start without a key
+
+```sh
+curl https://www.financecalendar.com/wp-json/fc/v1/week
+```
+
+The free sandbox needs no key and no account. `/calendar`, `/today` and `/week` return the economic release and central bank decision schedule for today and the next two days as JSON: dates, times, impact ratings, countries, reference periods, status, source links and publisher credits. The sandbox allows 50 requests per address per UTC day, and every response includes a `sandbox` object that states the window and what an API key adds.
+
+An API key adds consensus forecasts, actual and prior values, later dates and history, CSV and ICS, hosted MCP, the CLI and Python client, and higher limits. Starter costs **US$9.99/year**; see [current plans](https://www.financecalendar.com/pricing/).
+
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
@@ -15,7 +25,7 @@ Build release watchlists, compare recorded consensus forecasts with published re
 
 The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-03) accept a configured API key. The existing archives are unchanged; use current source for the updated setup and missing-key errors. npm/PyPI registry publication remains pending.
 
-The [public calendar is free to browse](https://www.financecalendar.com/events/). Programmatic API access requires an active paid plan and API key, including status and OpenAPI. [Choose a plan](https://www.financecalendar.com/pricing/), register and verify your email, complete payment, then create a key in your workspace. Creating an account does not charge you. Anonymous `POST /keys` creation is retired.
+The [public calendar is free to browse](https://www.financecalendar.com/events/). Beyond the free sandbox, programmatic API access requires an active paid plan and API key, including status and OpenAPI. [Choose a plan](https://www.financecalendar.com/pricing/), register and verify your email, complete payment, then create a key in your workspace. Creating an account does not charge you. Anonymous `POST /keys` creation is retired.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
