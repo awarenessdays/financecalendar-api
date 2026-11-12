@@ -15,8 +15,13 @@ EXPECTED={
 }
 
 def validate_offer(offer):
-    assert offer['production_api']['paid_plan_required'] is True
-    assert offer['production_api']['renewable_free_tier'] is False
+    assert offer['version']==2
+    assert offer['production_api']['access_scopes']['numerical_data_and_tools']['paid_plan_required'] is True
+    free=offer['free_developer']
+    assert free['available'] is True and free['daily_limit']==10 and free['monthly_limit']==100
+    assert free['max_records_per_response']==20 and free['active_key_limit']==1
+    assert free['allowed_routes']==['/fc/v1/calendar','/fc/v1/today']
+    assert free['ongoing'] is True and free['card_required'] is False and free['automatic_charge'] is False
     for key,(daily,monthly,prices) in EXPECTED.items():
         plan=offer['plans'][key]
         assert plan['daily_limit']==daily and plan['monthly_limit']==monthly, key+' quota drift'
@@ -24,7 +29,7 @@ def validate_offer(offer):
         for interval,amount in prices.items():
             value=plan['prices'][interval]
             assert value['unit_amount']==amount and value['currency']=='usd' and value['interval']==interval, key+' price drift'
-    assert 'evaluation' not in offer, 'The withdrawn trial must not be advertised.'
+    assert offer['evaluation']=={'available':False,'retained_participants_honored':True}
     assert offer['sample']['max_records']==3 and offer['sample']['filtering'] is False and offer['sample']['pagination'] is False
 
 def main():
@@ -50,7 +55,7 @@ def main():
             if not path.is_file() or any(part in {'node_modules','tests','test','fixtures','dist','build','__pycache__'} for part in path.relative_to(ROOT).parts):continue
             if path.suffix not in {'.md','.py','.js','.toml','.json'}:continue
             text=path.read_text()
-            for stale in [r'250(?: API)? requests (?:per day|per UTC day)',r'(?<![0-9])5,000 (?:requests )?per (?:UTC )?calendar month',r'2,000 keyless',r'free with attribution']:
+            for stale in [r'250(?: API)? requests (?:per day|per UTC day)',r'(?<![0-9])5,000 (?:requests )?per (?:UTC )?calendar month',r'2,000 keyless',r'free with attribution',r'Finite free access is a bounded sample',r'finite JSON calendar scope']:
                 assert not re.search(stale,text,re.I), str(path.relative_to(ROOT))+' has obsolete commercial copy'
     if options.live_offer:
         url='https://www.financecalendar.com/wp-json/fc/v1/product-offer'
@@ -58,11 +63,11 @@ def main():
         with urllib.request.urlopen(request,timeout=30) as response:live=json.load(response)
         validate_offer(live)
         assert live['plans']==offer['plans'], 'Published source differs from canonical live offers.'
-    for mutate in [lambda x:x['plans']['starter'].update({'daily_limit':250}),lambda x:x['plans']['starter']['prices']['year'].update({'unit_amount':1999}),lambda x:x['production_api'].update({'renewable_free_tier':True}),lambda x:x.update({'evaluation':{'signup_url':'https://www.financecalendar.com/account/?trial=1'}})]:
+    for mutate in [lambda x:x['plans']['starter'].update({'daily_limit':250}),lambda x:x['plans']['starter']['prices']['year'].update({'unit_amount':1999}),lambda x:x['free_developer'].update({'monthly_limit':5000})]:
         candidate=deepcopy(offer);mutate(candidate)
         try:validate_offer(candidate)
         except AssertionError:continue
         raise AssertionError('A stale offer mutation was not rejected.')
-    print('Pricing/access consistency passed; stale quota, price and free-tier mutations rejected.')
+    print('Pricing/access consistency passed; stale paid quota/price and Free allowance mutations rejected.')
 
 if __name__=='__main__':main()

@@ -6,22 +6,26 @@ on:
     paths:
       - 'clients/**'
       - 'openapi.json'
+      - 'scripts/check-trial-openapi.py'
       - 'scripts/check-access-contract.py'
       - 'scripts/check-pricing-consistency.py'
       - 'README.md'
       - 'integrations/**'
       - 'examples/**'
+      - 'scripts/fixtures/free-developer-compatibility.json'
       - 'scripts/fixtures/paid-openapi-compatibility.json'
       - '.github/workflows/client-check.yml'
   push:
     paths:
       - 'clients/**'
       - 'openapi.json'
+      - 'scripts/check-trial-openapi.py'
       - 'scripts/check-access-contract.py'
       - 'scripts/check-pricing-consistency.py'
       - 'README.md'
       - 'integrations/**'
       - 'examples/**'
+      - 'scripts/fixtures/free-developer-compatibility.json'
       - 'scripts/fixtures/paid-openapi-compatibility.json'
       - '.github/workflows/client-check.yml'
 
@@ -30,7 +34,7 @@ permissions:
 
 jobs:
   openapi:
-    name: Paid access contract
+    name: Paid, retained trial and Free OpenAPI compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

@@ -214,7 +214,7 @@ def format_change(c: dict[str, Any]) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="financecalendar", description="Economic calendar in your terminal. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). https://www.financecalendar.com/pricing/")
+    p = argparse.ArgumentParser(prog="financecalendar", description="Economic calendar in your terminal. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). Ongoing Free Developer: schedule JSON, 100 successful responses/month, 10/day, one verified account key, no card. Only today/calendar schedule JSON within seven UTC dates, at most 20 records; other routes/formats require paid access. Do not add timezone or pagination flags to Free calls. https://www.financecalendar.com/pricing/")
     p.add_argument("--version", action="version", version=f"financecalendar {__version__}")
 
     def add_global_options(parser: argparse.ArgumentParser, default: Any) -> None:
@@ -242,7 +242,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
     s.add_argument("--category")
 
-    s = sub.add_parser("today", help="today's releases and NYSE status")
+    s = sub.add_parser("today", help="today's releases; paid access also includes NYSE status")
     s.add_argument("--country")
     s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
     s.add_argument("--category")
@@ -255,7 +255,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--impact")
     s.add_argument("--series")
 
-    s = sub.add_parser("calendar", help="events in a date range (max 92 days)")
+    s = sub.add_parser("calendar", help="events in a date range (paid: max 92 days; Free: seven UTC dates)")
     s.add_argument("--from", dest="from_")
     s.add_argument("--to")
     s.add_argument("--country")

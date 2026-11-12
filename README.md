@@ -4,15 +4,18 @@ Build release watchlists, compare recorded consensus forecasts with published re
 
 ## Affordable API access
 
-The [public economic calendar is free to browse](https://www.financecalendar.com/events/). Connect the recorded data to your app, notebook or AI tools with a paid plan:
+The [public economic calendar is free to browse](https://www.financecalendar.com/events/). Start with Starter for recorded forecasts, results and integration tools. A secondary ongoing Free Developer option supplies schedule JSON:
 
 | Plan | Price | Shared account allowance | Included access |
 |---|---|---|---|
 | Starter | **US$9.99/year**, paid yearly | **1,000 requests/UTC day; 25,000/UTC calendar month** | REST, MCP, CLI, Python, Data explorer and filtered CSV/JSON exports |
 | Build | **US$9.99/month** or **US$95.90/year** | **100,000 requests/UTC day** | Higher API capacity and the same recorded fields and tools |
 | Scale | **US$29/month** or **US$278.40/year** | **1,000,000 requests/UTC day** | Complete current dataset JSON download and larger integrations |
+| Free Developer | **US$0, ongoing** | **100 successful JSON responses/UTC month; at most 10/UTC day** | Schedule-only `/calendar` and `/today`, 7 UTC dates, 20 records, one key |
 
 Prices include applicable tax. Paid plans renew at the selected interval until cancelled; access continues to the end of the paid period. Existing contracts and effective account allowances are preserved. [Compare current plans](https://www.financecalendar.com/pricing/) or [choose Starter](https://www.financecalendar.com/account/?plan=starter&billing_interval=year). Creating an account does not charge you.
+
+Starter, Build and Scale can power customer-facing websites and apps, including paid products, within plan limits and applicable source terms. Free Developer also permits personal or customer-facing projects within its limited schedule scope; its data and capacity limits define the upgrade path.
 
 ### Inspect a public sample
 
@@ -24,9 +27,11 @@ curl --fail-with-body "https://www.financecalendar.com/wp-json/fc/v1/sample"
 
 The public sample contains at most three publisher-selected records. It is a fixed technical example, with no arbitrary filters, dates, pagination or full export. It does not grant ongoing production API access. [Sample guide](https://www.financecalendar.com/api/sample/) · [Machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer)
 
-### Make an authenticated request
+### Ongoing Free Developer schedules
 
-[Choose a paid plan](https://www.financecalendar.com/account/?plan=starter&billing_interval=year), confirm your email and complete secure checkout, then create an API key in your account.
+[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
+
+Already-enrolled evaluations retain their original 25-successful-request budget, 48-hour clock from first use and original scope. New trial enrolment is closed. Existing paid, legacy and custom access grants are preserved; no account is silently converted to Free Developer.
 
 Keep your key private, then make an authenticated request:
 
@@ -47,11 +52,13 @@ curl --fail-with-body \
 - **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and clients accept a configured API key. Install from current source for the latest setup guidance; the [dated beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-12) retain their release-time documentation. npm/PyPI registry publication remains pending.
+The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-free-developer-2026-11-12) accept a configured API key. These current archives include authenticated setup and the current pricing/access guide. npm/PyPI registry publication remains pending.
 
-The [public calendar is free to browse](https://www.financecalendar.com/events/). Programmatic data access requires an API key and an active paid plan, including status and hosted MCP; public sample and product-offer routes are separate inspection resources. [Choose a plan](https://www.financecalendar.com/pricing/), register and verify your email, then complete payment to activate paid access. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
+Programmatic data access requires a verified account and API key. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
+
+Free Developer counts successful committed HTTP 200 JSON responses, including valid empty results. Invalid/denied requests, quota errors and pre-commit failures do not count. Its account ledger survives key rotation, with UTC day/month resets. `GET /keys/me` is uncounted and reports a distinct `free_developer` usage object. Existing enrolled trials keep their separate original budgets and clocks.
 
 For paid plans, daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
@@ -70,7 +77,7 @@ X-API-Key: fc_live_YOUR_ACTUAL_KEY
 ```
 
 `Authorization: Bearer fc_live_YOUR_ACTUAL_KEY` is also accepted. Use an actual
-key in private client settings. Hosted data calls consume the same account
+key in private client settings. Hosted MCP requires paid access or an applicable retained grant. A custom local wrapper can use Free Developer’s permitted REST routes; installing a wrapper does not expand scope. Hosted data calls consume the same account
 allowance as direct REST; protocol initialization/discovery validates the key
 without consuming a data request. There is no shared anonymous MCP allowance.
 
@@ -83,7 +90,7 @@ current ChatGPT or Claude.ai account-level setup or directory approval.
 
 ## Quick start
 
-The examples below use your active paid account API key.
+The examples below use paid-plan routes and formats. For Free Developer, use the authenticated JSON calendar example above.
 
 ```bash
 export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
@@ -108,7 +115,7 @@ curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/changes"
 
 ## Endpoints
 
-This table describes paid-plan capabilities.
+This table describes paid-plan capabilities. Free Developer is limited to schedule-only JSON `/calendar` and `/today` within the 100/month, 10/day allowance and seven-date window above. It excludes figures, market status, holidays, crypto, history and the other data routes.
 
 | Endpoint | What it returns |
 |---|---|
@@ -131,7 +138,7 @@ Missing or invalid keys return HTTP 401; revoked keys or disallowed accounts ret
 
 ## Key usage
 
-`GET /keys/me` requires an active key and is uncounted. Paid and retained keys use the `KeyUsage` response described below, available even after the daily cap. `used_today` and `retained_requests` count rate-gate attempts, including 429 responses. `usage_window` explicitly covers 90 UTC dates including today; lifetime `requests_total` is null because the legacy counter was cache-throttled and is not reliable as a request total. `legacy_activity_samples` is diagnostic only. Successful origin responses are a separate metric. [Complete usage fields](https://www.financecalendar.com/api/reference/#schema-keyusage).
+`GET /keys/me` requires an active key and is uncounted. Free Developer returns `{ "free_developer": { ... } }` with UTC daily/monthly successful-response usage and its schedule window. An already-enrolled evaluation key returns a distinct `{ "trial": { ... } }` usage object with its 25-request total budget, first-use clock and expiry; the status request does not start the clock or consume a data request. Paid and retained keys keep the existing flat `KeyUsage` response described below, available even after the daily cap. `used_today` and `retained_requests` count rate-gate attempts, including 429 responses. `usage_window` explicitly covers 90 UTC dates including today; lifetime `requests_total` is null because the legacy counter was cache-throttled and is not reliable as a request total. `legacy_activity_samples` is diagnostic only. Successful origin responses are a separate metric. [Complete usage fields](https://www.financecalendar.com/api/reference/#schema-keyusage).
 
 Keys created or linked in your [verified account](https://www.financecalendar.com/account/) share one daily account allowance. For those keys, `quota_scope: "account"`, `used_today` and `remaining_today` cover every account key, including revoked keys. `key_used_today` describes the presented key; `retained_requests_scope: "key"` keeps retained history per key. Key rotation does not reset usage. Data responses include `X-RateLimit-Scope: account`. Existing unclaimed keys keep their previous per-key limits.
 

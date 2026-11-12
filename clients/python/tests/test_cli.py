@@ -15,6 +15,37 @@ def run(client, *argv):
     return code, "\n".join(lines)
 
 
+def test_free_schedule_commands_accept_omitted_paid_and_market_fields():
+    import json
+    import httpx
+    from financecalendar import Client
+
+    payload = {
+        "from": "2026-11-12", "to": "2026-11-12", "count": 1, "total": 1, "truncated": False,
+        "events": [{"id": "example-release", "series_code": "example", "name": "Example release",
+                    "country": "US", "category": "economic-indicators", "impact": "high",
+                    "date": "2026-11-12", "release_at_utc": "2026-11-12T13:30:00Z",
+                    "time_precision": "minute", "all_day": False, "status": "scheduled",
+                    "source_url": "https://example.org/release", "source_name": "Example publisher", "url": None}],
+        "generated_at": "2026-11-12T10:00:00Z", "attribution": {"source": "financecalendar.com"},
+        "free_developer": {"daily_limit": 10, "monthly_limit": 100, "max_events_per_response": 20},
+    }
+
+    def respond(request):
+        assert request.url.path.rsplit("/", 1)[-1] in {"today", "calendar"}
+        assert not request.url.query
+        assert request.headers["X-API-Key"] == "fixture-free-key"
+        return httpx.Response(200, json=payload)
+
+    with Client(api_key="fixture-free-key", transport=httpx.MockTransport(respond)) as client:
+        for command in ("today", "calendar"):
+            code, text = run(client, command)
+            assert code == 0 and "Example release (US)" in text
+            assert not any(label in text for label in ("cons.", "prior ", "actual ", "NYSE", "Exchange closures", "not available"))
+        code, text = run(client, "--json", "today")
+        assert code == 0 and json.loads(text) == payload
+
+
 def test_no_key_cli_returns_signup_error_before_network(monkeypatch,recorder,capsys):
     from financecalendar import Client
     monkeypatch.delenv("FC_API_KEY",raising=False)

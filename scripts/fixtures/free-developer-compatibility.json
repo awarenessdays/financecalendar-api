@@ -1,0 +1,1365 @@
+{
+  "purpose": "Owner-authorized ongoing Free Developer addition, 12 November2026. Prior paid and retained-trial response components and all existing route authentication remain protected. Descriptions and scope-aware branches reviewed separately.",
+  "paid_schema_sha256": {
+    "Event": "83c35be736d55229805058af0baf2176ca0978c031cf1c3a3414122edb44d355",
+    "Series": "fbcb67af47ece6afd8570ec687f491f5f4e3a933939d2cca96da1c0eab24a833",
+    "Change": "4739288ba8290295cd369728ecaeb106b4e080a6d8a30ae55589e213adaee6b2",
+    "Attribution": "85cc8a279e9536f0e012c7cecbf4e60976ea1256130c34ff70ddaae76e90d115",
+    "Error": "744deee44ef9af6759dee08e9cab9f4a989f8dc79ebf568c0cacf7d559007233",
+    "SourceHealth": "ea46233e36490f83890760cc5a2ce7612f7d93ac052a2fd60cfce602a489f243",
+    "SourceHealthSummary": "71f4e53c58abec804dc5e63b1c76ed81e2e26447754c1ff4d14caeb02b4fc644",
+    "ObservationSummary": "b05671bdb29abd04d05fed801700f96e6422b3fa537fad2a91fc528e64f586ea",
+    "FieldDataQuality": "f60f33ae85f26b2c19bd11317a1aed1c56109c0ba24997072f763e6d15354d33",
+    "EventDataQuality": "d0d4205a0e9f52ecba37395eb842921e4aa47fde26d1e6d28932b121e3e1d1c7",
+    "ScheduleCoverageCounts": "446816e46213d76f6798b337c65f87503e6b39e1d5ba20a72e0556103868c2dd",
+    "FieldCoverageCounts": "844cbed687f2abfbc814a9ec87581f6f43ca8bf4ce6fa0bc493f6889f50dd4cd",
+    "ObservationCoverageCounts": "192c1015990caac7c1808a7019dd72ad8d5061d0b9508b33e33e66ed5181a0ed",
+    "CoverageScope": "8f37a7d76f6b533680eabd542cec3cff61cdad108b3260625f310f817201977f",
+    "DatasetQuality": "1286c09ac3c842cbe9c9f3569f74867bcd27892de37faefb2d4649acb675e390",
+    "QualityResponse": "7790269edcc986c3c462def8d4e4c79356b8e5a2bb820de6cbd1e2973caf9768",
+    "OfficialObservation": "b6b909c1c3895cc6abee7fb6540bf5a73cea8ac379e20c385e07d98f7600922e",
+    "ObservationEvidence": "ae31fbf49825c582cf214d3f701bd9d1708c3d09510e8d08298177c5cdfbdeda",
+    "ObservationsResponse": "16bada015d6832687bdebb081e3757ea255663aee6dba167d4bfb090445af3c1",
+    "ReleaseMetricDataQuality": "6fdbbbd71ef0b2eafedbd64aee90c67455e36f6ea2d9fde3f6401ad1a42f5e80",
+    "ReleaseMetric": "199cbd563dfbb0b015fa32112602340a4d45b300702002cc745158a78e415606",
+    "ReleaseBundle": "3c063bd51c896ebed17a6b6e747b8b608229d6b0bb11237380ca9a06b3ed142e",
+    "ReleaseBundleSummary": "edd71751c0d405a8cb4f7e65e286a65fd30ea0b9a7f7d05babc18b1d4c81e5c6",
+    "CollectionContext": "d95c463d6f1199c38be6d2c67f2cb8426567ebf8c206c8c04d7acb436bec2f37",
+    "ValidatedEnrichmentEdition": "9da4ce1004c61d9f52b156a778c533eb263c52caa096f7da1dedb6e4ebbcefe1",
+    "ProviderObservation": "cee763490ac081afeb8f8fdadd9b3cbb6196456d49f5a2e81dc89043569cb857",
+    "KeyUsage": "ddf636ba8d9bd4a45398836561c5e1f596929cd5be86ad8cdc9a4dd0fca32546",
+    "KeyUsageWindow": "6d5db3eb30b00692b4a3f5567172275f7f8533fcb09073f82e3ee15da761c0f9",
+    "EndpointUsage": "301be5d4580c2720ccfedcab39ff3194bf9b4e0a4e28e9590fbde6c505cd6534",
+    "CryptoAsset": "eaa7fd8e74a8304285711c289c78a9de3951012d7949c0fd33d0ca49914401a9",
+    "QuotaUsageNotice": "2923374b72de6315d170a0d79ddcb10b810253979668dbb1df881cbaa21fca03",
+    "QuotaExceeded": "dd207ec1377a756e15af7a56a7bef23c2f1c895524e679ca6bbcd42d7180c0d8",
+    "PaymentRequired": "7ffa79f98802090d3547e7913c2da7336131a7b1d57810b732392ebef32458cb",
+    "LocalizedDisplay": "e7995c305959374f5125304a542c099062e7f4d00a3f829d6d47c74146b347de"
+  },
+  "trial_schema_sha256": {
+    "TrialStatus": "d7a66fb1bb2f1aaf4f4fc20e60ca33488acf1a5a1a0d3aa513fa4d8e58ef08e9",
+    "TrialKeyUsage": "deb940011830e69ef9976ced425d3ff164f3770d518a9590ea3d5e47973a797e",
+    "TrialAccessError": "5be5037188a34806dd613b083c79be205acee89f54d11aa5324dc0cce3a882e1"
+  },
+  "route_security": {
+    "/calendar": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/today": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/week": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/next": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/series": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/series/{code}": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/history": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/holidays": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/market-status": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/changes": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/countries": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/status": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/openapi": {
+      "get": []
+    },
+    "/keys": {
+      "post": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/keys/me": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/webhooks": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ],
+      "post": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/webhooks/{id}": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ],
+      "delete": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/webhooks/{id}/rotate": {
+      "post": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/webhooks/{id}/test": {
+      "post": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/enrichment/as-of": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/quality": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/observations": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/enrichment/history": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/enrichment/editions": {
+      "get": [
+        {
+          "ApiKey": []
+        },
+        {
+          "BearerAuth": []
+        },
+        {
+          "ApiKeyQuery": []
+        }
+      ]
+    },
+    "/sample": {
+      "get": []
+    },
+    "/product-offer": {
+      "get": []
+    }
+  },
+  "baseline_openapi_sha256": "e67ec86896138b7c860e63c6027cdd89a857490cfcd28006b2cfd8d9d68f8ce0",
+  "global_security_sha256": "ebe47bd1caad53f824ae037d07bfc2173f2a24f9ef49e2857c8ef423120dcbc6",
+  "security_schemes_sha256": "6d9b8fad8d8f07b16bd758e749d5ea9235eda43aced0fe9fe11d18499bf651ff",
+  "operation_contracts": {
+    "/calendar": {
+      "get": {
+        "operationId": "4249940d1aa423ea376e34e3ffa3399dabdd3257a3a160c78ac10ad9a92fa0f8",
+        "parameters": "d2e690005419b059cb4f6135bfec544fac8ce6280999aa9bfc18b75313d61f13",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "15f6b8c1d61d88e5435ce23228bcef5beb31273b210e4c9d3bf091369aa857db"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "eef2be03ebccc8d823a45e5d130878091b1cabfefe688c051ee8786440e43fa6"
+            }
+          }
+        }
+      }
+    },
+    "/today": {
+      "get": {
+        "operationId": "90d9362909f9a91f7e4487eaa3ce51877d6f638b870c55004207083590ee53dd",
+        "parameters": "c19d83178d0fc3b002972b9570b3092c651cfa4cc5d7e8959d8595bd1a4a8699",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "a8de722df3c5bc954724b98f5f8910a966e4dd49ec803ce91936af342c884a89"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "eef2be03ebccc8d823a45e5d130878091b1cabfefe688c051ee8786440e43fa6"
+            }
+          }
+        }
+      }
+    },
+    "/week": {
+      "get": {
+        "operationId": "ff6bd46ed72a91d3edc87b0068d3eed936385539fbdbf328f48dd29127c3274e",
+        "parameters": "18ef8e2f07490cf2cb343e7911274514ef98fdb8bb7c04011a97da14d74f8a8c",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "15f6b8c1d61d88e5435ce23228bcef5beb31273b210e4c9d3bf091369aa857db"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "eef2be03ebccc8d823a45e5d130878091b1cabfefe688c051ee8786440e43fa6"
+            }
+          }
+        }
+      }
+    },
+    "/next": {
+      "get": {
+        "operationId": "ca1733b5cdea2efcd28cb357b253498f97440592edd06d89895c4abcb5cfaae5",
+        "parameters": "8387a80c6735cf1e98768914a7e1c4d5591ba1018958944fb15e5bf90d9113d4",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "e1a2834cec905ff02b3a20583a0d76f107da85798cd593823f45c4d56587c1a8"
+            }
+          },
+          "404": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/series": {
+      "get": {
+        "operationId": "801a463b7793b35b7713be9d36663889e5d746691c5a7181fd5a5f9179bf2bce",
+        "parameters": "66cee0ea172bbaf8799120ebd0d1b64e4fda89cb80f68ec03e617effe408fdc4",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "8867843d40a68a8f20c534c9868bf62d8e63cdafa2e1386ecddd462e0ed6b048"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/series/{code}": {
+      "get": {
+        "operationId": "756d911156f86626680253e4ad97718fdad3cfb93cd45841f5c4521cf203fc53",
+        "parameters": "1ba5507bf68ba3ee7c3323997df6a680d3b6e47aa9527f28947382934b4b79a5",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "481565568f549d5d4d3a9bf1e136bbd1995a5630d8ea119e708dedf82222e02f"
+            }
+          },
+          "404": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/history": {
+      "get": {
+        "operationId": "bb36ccaec71d11614c756ea88170078c8d5cbe12115fa02c3a62acdea57bf167",
+        "parameters": "51947412882de2e2b51bdd05d153f3db12e742918d3d9b84b8ca7745e3cb17b4",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "0be78904034833e04828763675e9660c6f9c76a5692769a8537f1ee4a775c149"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/holidays": {
+      "get": {
+        "operationId": "d6c2594212d4bc13b5a5ad6de38ddfd293d2c488257a3ce6118e1ff74ec2674b",
+        "parameters": "e64e2143769b4a851ae1442c90d2310104e8028415270a4a9331c3cfc46fb236",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "6cc507ce81e7053b4ac5a4c630c4b79c01e562d2be53bfe50d551ab2628de87f"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/market-status": {
+      "get": {
+        "operationId": "54abc8e4425f7241dd751e6024c7bd4f745eca0b55b3af08670f59679143f9d7",
+        "parameters": "0a562927e92431430db59164c9362ab7f8e35f2e0682f06a30d5a132d27c3a86",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ed116c1b5722f744d1c58a93d220e50b22898cbae3141e9e6363b931d6b36fd2"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/changes": {
+      "get": {
+        "operationId": "1914b3c81072ec685b513a4497b8db642b0328afb8aeaede6dd78a6311879dbe",
+        "parameters": "31791de3fc0af5e5d5aa07741e947a940a5d9046519737d173317bcbee9a9b75",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "29cf30e8382cb2b552472e2be69a199ecd91d23d46f9a8c2d8bea0147902a602"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "409": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "472fa279f4e3b0a30fb47d5b781a080af97630a274401bbd5d64609bec817993"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/countries": {
+      "get": {
+        "operationId": "efc9d59ec440ef1a8b83c24e5ab80bd517949132c9e6d555550e1a801249559b",
+        "parameters": "425f4b3d318889266e91b116fa907d280162e60e2f9beddfd761047fced46280",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "3d4768ee6f677d6c69e886343704785d26bb598fbe4ce2d6202119565d0a1e73"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "operationId": "cfc31bcc34ed7f4cc7895026ae8a54f0494f73757e9f914d0f6ed90f9bc34f51",
+        "parameters": "425f4b3d318889266e91b116fa907d280162e60e2f9beddfd761047fced46280",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "67c2a03cb25c59bde5f5b48aea0a9be5d2422f8b2cb609b073372a23a2a80d12"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/openapi": {
+      "get": {
+        "operationId": "bfcc6a93e4f68d76543041bafc0ac2c7972b21523f62a7e7a0ba1ac825330e01",
+        "parameters": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "a2c799262a3ce3c19ef5cdd983bf3d12b43ab3c426227091b909dcb7054738c0"
+            }
+          }
+        }
+      }
+    },
+    "/keys": {
+      "post": {
+        "operationId": "a7f224b1280975f8ddbcc657f52d0b65a52c720f33a9a673979fd7201f3aacce",
+        "parameters": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "requestBody": "164a9facdc1995c7de850f96b15c9f9671802f01a9300a5df281b11b53a17818",
+        "responses": {
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/keys/me": {
+      "get": {
+        "operationId": "79b403a6259e57b34df327b8b7897d31e4faa5750fdd95feff2a72b87c82b61d",
+        "parameters": "a38a0a6c67dcb2035932d5ddd3379e903c492a6dc1dc90f19bff555123ddda79",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "3248dc246dca565a801ce19a887e23ff5a5c37237d04e2a8c457fdd61573cfc1"
+            }
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "d519c8f68b77e044585fd32636f78229fefb1ba0c42561d2f847b47be68a59f8"
+            }
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "get": {
+        "operationId": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "parameters": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "825c2cba2b1728e58ab82df94c2e4db9f964b97835f8a237cebee56cc7b38838"
+            }
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "parameters": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "requestBody": "e1f5920f540bc8cf9ce2686fd9fc3b8efa369dcc43ea60ee3988c59da2c15c6f",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "e3a3c29ae46a3a0895fffdc94e4bcfc9c590eb59cf77305799027fdd68a1345d"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "409": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}": {
+      "get": {
+        "operationId": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "parameters": "11f4b6fb4ccfbf7f52f58d6d88960438c5dcce46ada22a146e23a10966c2127c",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "404": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "parameters": "11f4b6fb4ccfbf7f52f58d6d88960438c5dcce46ada22a146e23a10966c2127c",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "404": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}/rotate": {
+      "post": {
+        "operationId": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "parameters": "11f4b6fb4ccfbf7f52f58d6d88960438c5dcce46ada22a146e23a10966c2127c",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}/test": {
+      "post": {
+        "operationId": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "parameters": "11f4b6fb4ccfbf7f52f58d6d88960438c5dcce46ada22a146e23a10966c2127c",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/enrichment/as-of": {
+      "get": {
+        "operationId": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "parameters": "4238238c14d6f990a334aae01ddeb152af80e78080f87e0881aba0ea825a58f3",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "647a0b08d0b5f91d76797613ecce78d31829a0a3639ad373c83206733810f98a"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "404": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/quality": {
+      "get": {
+        "operationId": "ff610fb106a3a1c1cedcc6589f563a9a1da99b391e061593d0965d58ddaddceb",
+        "parameters": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "c521817cf64b1aef15797762a45d385ad628cf79ed7b4f9092fe117b5575de34"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/observations": {
+      "get": {
+        "operationId": "7452664004dd0e224b42bd88e36148e152b0585b9c450745906cafe2854d2804",
+        "parameters": "cd8e4412edf6a2f02fa0863064ab8c314d98bc9f8233ccc608bab29ea8fdbd5e",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "4ac703008afd31dc0d687fe4b0f2a2d2cef33ca580cee9a3ec6abdb7c1b75705"
+            }
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "409": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/enrichment/history": {
+      "get": {
+        "operationId": "a63266d80a0939780d4ea0b18a673dd3b8557f459fdef91e69d41c7dcad98c46",
+        "parameters": "5f9638d8b1cc39f750c07fa77c62e4fd303472fa8502cd45f89c44e7edd1b31b",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "409": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/enrichment/editions": {
+      "get": {
+        "operationId": "73051793669f70eb1cd0e98a74b3d3e3b5a5e6b13660fc69d5a02874e97206de",
+        "parameters": "a50529bd28cfdb34ae5617b48957a662da9ec2b9b36b885b7c0af513b569a1f4",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "401": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "403": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "409": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "429": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "749954d7046956daf8c4b07bce2b318a59e02689e96326dcc2b0701126235472"
+            }
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "402": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {
+              "application/json": "ca00c4488683fe561b701c4428a4634863ef5237066d730c6f26a3daed71c0fd"
+            }
+          }
+        }
+      }
+    },
+    "/sample": {
+      "get": {
+        "operationId": "283d618e9fac2f5157fd336729f13a61ad1a7b2b71cc9f94e6d99535e2540f30",
+        "parameters": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "400": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          },
+          "503": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    },
+    "/product-offer": {
+      "get": {
+        "operationId": "c9b6cc3ea3a119646d092cbbb5937b48c83add1af291b281b7382f6af9bf695f",
+        "parameters": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "requestBody": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "responses": {
+          "200": {
+            "headers_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "content_schemas": {}
+          }
+        }
+      }
+    }
+  }
+}

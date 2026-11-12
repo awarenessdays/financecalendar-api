@@ -16,15 +16,13 @@ npm run demo
 
 Open [http://127.0.0.1:3010](http://127.0.0.1:3010). The **Demo data** notice is always visible in this mode. All release dates and values are invented illustrations. Demo mode never contacts the API, even if a key happens to be set.
 
-In the working Awareness Days repository, the equivalent folder is `fc-integrations/examples/economic-calendar-dashboard`.
-
 ## Run with your own API key
 
 [Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
-[Choose a paid plan](https://www.financecalendar.com/account/?plan=starter&billing_interval=year), confirm your email and complete secure checkout, then create an API key in your account.
+[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
 
-1. [Choose Starter or another paid plan](https://www.financecalendar.com/pricing/), confirm your email, complete checkout and create an API key. The default dashboard loads a 14-day window.
+1. [Choose Starter or another paid plan](https://www.financecalendar.com/pricing/), confirm your email, complete checkout and create an API key. The default dashboard loads a 14-day window and is outside the Free Developer date window.
 2. Stop the demo server with Ctrl+C.
 3. In the same example folder, read the key into your shell without placing it in shell history. Paste the key after `read`, then press Enter:
 
@@ -75,7 +73,7 @@ The backend always requests the fixed official `/wp-json/fc/v1/calendar` endpoin
 
 A single process shares one in-memory cache and one in-flight request across all visitors. The cache lasts **30 minutes**. Opening another tab, filtering or clicking **Check for updates** cannot force an upstream cache bypass. There is no background poller, automatic pagination or immediate retry loop. A check only fetches upstream if the cache or failure cooldown has expired.
 
-With one continuously running process, an always-used 30-minute cache makes at most **48 scheduled fetch opportunities per 24 hours**, approximately **1,440 per 30 days**. Starter includes **1,000 admitted requests/day and 25,000 per UTC calendar month**, shared across the account's REST, MCP and other integrations. Build and Scale add capacity. A cache fetch is one API request; it may return many records. Other apps on the same account share the allowance. Check your workspace for effective limits, including any grandfathered allowance.
+With one continuously running process, an always-used 30-minute cache makes at most **48 scheduled fetch opportunities per 24 hours**, approximately **1,440 per 30 days**. Starter includes **1,000 admitted requests/day and 25,000 per UTC calendar month**, shared across the account's REST, MCP and other integrations. Build and Scale add capacity; ongoing Free Developer has a separate 100-successful-response/month and 10/day budget, without figures or this dashboard’s wider date scope. A cache fetch is one API request; it may return many records. Other apps on the same account share the allowance. Check your workspace for effective limits, including any grandfathered allowance.
 
 The cache is deliberately simple: restarting the server empties it, and multiple server processes each have their own cache. Frequent restarts, deployments or replicas can increase consumption beyond that estimate. Keep one process for the starter; use a shared durable cache if you later run multiple replicas.
 

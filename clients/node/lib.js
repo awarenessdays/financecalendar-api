@@ -1,7 +1,7 @@
 // Shared HTTP client and formatting helpers for the financecalendar.com API.
 // Zero runtime dependencies: uses the global fetch available in Node 20+.
 
-export const VERSION = "0.2.2";
+export const VERSION = "0.2.3";
 export const DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1";
 export const USER_AGENT = `financecalendar-mcp/${VERSION}`;
 
@@ -29,7 +29,7 @@ export async function api(path, params = {}, { apiKey, base, raw = false, fetch:
   const url = buildUrl(path, params, base);
   const key = String(apiKey || process.env.FC_API_KEY || "").trim();
   if (!key) {
-    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Starter API access starts at US$9.99/year: https://www.financecalendar.com/pricing/. Create your account and complete payment: https://www.financecalendar.com/account/?plan=starter&billing_interval=year.");
+    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Starter US$9.99/year adds recorded forecasts/results and wider integrations. Ongoing Free Developer schedule JSON: 100 successful responses/month, 10/day, one key, no card. https://www.financecalendar.com/pricing/ Create your verified account key: https://www.financecalendar.com/account/?free=1.");
     error.status = 401;
     error.retryAfter = null;
     throw error;

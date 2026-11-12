@@ -4,7 +4,7 @@
     "title": "Finance Calendar API",
     "version": "2.0.0",
     "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-    "description": "Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$9.99/year. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Production data requests require a paid plan and an API key. Retain field-level source evidence and rights.",
+    "description": "Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$9.99/year. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key after email verification. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Programmatic data requires an API key and the entitlement for the requested scope. Retain field-level source evidence and rights.",
     "termsOfService": "https://www.financecalendar.com/api/terms/",
     "contact": {
       "url": "https://www.financecalendar.com/about/"
@@ -232,32 +232,42 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "from": {
-                      "type": "string",
-                      "format": "date"
-                    },
-                    "to": {
-                      "type": "string",
-                      "format": "date"
-                    },
-                    "count": {
-                      "type": "integer"
-                    },
-                    "total": {
-                      "type": "integer"
-                    },
-                    "events": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Event"
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "to": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "count": {
+                          "type": "integer"
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "events": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Event"
+                          }
+                        },
+                        "attribution": {
+                          "$ref": "#/components/schemas/Attribution"
+                        },
+                        "trial": {
+                          "$ref": "#/components/schemas/TrialStatus"
+                        }
                       }
                     },
-                    "attribution": {
-                      "$ref": "#/components/schemas/Attribution"
+                    {
+                      "$ref": "#/components/schemas/FreeDeveloperCalendarResponse"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -273,16 +283,23 @@
             }
           },
           "429": {
-            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset. Free Developer returns its scoped error and upgrade/reset context.",
             "content": {
               "application/json": {
                 "schema": {
                   "anyOf": [
                     {
-                      "$ref": "#/components/schemas/QuotaExceeded"
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/QuotaExceeded"
+                        },
+                        {
+                          "$ref": "#/components/schemas/Error"
+                        }
+                      ]
                     },
                     {
-                      "$ref": "#/components/schemas/Error"
+                      "$ref": "#/components/schemas/FreeDeveloperError"
                     }
                   ]
                 }
@@ -293,7 +310,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -304,6 +321,27 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access is outside the presented key’s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/TrialAccessError"
+                        }
+                      ]
+                    },
+                    {
+                      "$ref": "#/components/schemas/FreeDeveloperError"
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -316,7 +354,20 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "description": "Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour.  Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key after email verification. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms.",
+        "x-free-developer": {
+          "available": true,
+          "schema": {
+            "$ref": "#/components/schemas/FreeDeveloperCalendarResponse"
+          },
+          "formats": [
+            "json"
+          ],
+          "max_records": 20,
+          "pagination": false,
+          "paid_fields_omitted": true
+        }
       }
     },
     "/today": {
@@ -417,37 +468,47 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "date": {
-                      "type": "string",
-                      "format": "date"
-                    },
-                    "market": {
-                      "type": [
-                        "object",
-                        "null"
-                      ]
-                    },
-                    "count": {
-                      "type": "integer"
-                    },
-                    "events": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Event"
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "market": {
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "count": {
+                          "type": "integer"
+                        },
+                        "events": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Event"
+                          }
+                        },
+                        "market_holidays": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Event"
+                          }
+                        },
+                        "attribution": {
+                          "$ref": "#/components/schemas/Attribution"
+                        },
+                        "trial": {
+                          "$ref": "#/components/schemas/TrialStatus"
+                        }
                       }
                     },
-                    "market_holidays": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Event"
-                      }
-                    },
-                    "attribution": {
-                      "$ref": "#/components/schemas/Attribution"
+                    {
+                      "$ref": "#/components/schemas/FreeDeveloperCalendarResponse"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -463,16 +524,23 @@
             }
           },
           "429": {
-            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset. Free Developer returns its scoped error and upgrade/reset context.",
             "content": {
               "application/json": {
                 "schema": {
                   "anyOf": [
                     {
-                      "$ref": "#/components/schemas/QuotaExceeded"
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/QuotaExceeded"
+                        },
+                        {
+                          "$ref": "#/components/schemas/Error"
+                        }
+                      ]
                     },
                     {
-                      "$ref": "#/components/schemas/Error"
+                      "$ref": "#/components/schemas/FreeDeveloperError"
                     }
                   ]
                 }
@@ -483,7 +551,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -494,6 +562,27 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access is outside the presented key’s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/TrialAccessError"
+                        }
+                      ]
+                    },
+                    {
+                      "$ref": "#/components/schemas/FreeDeveloperError"
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -506,7 +595,20 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "description": "Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour.  Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key after email verification. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms.",
+        "x-free-developer": {
+          "available": true,
+          "schema": {
+            "$ref": "#/components/schemas/FreeDeveloperCalendarResponse"
+          },
+          "formats": [
+            "json"
+          ],
+          "max_records": 20,
+          "pagination": false,
+          "paid_fields_omitted": true
+        }
       }
     },
     "/week": {
@@ -691,6 +793,9 @@
                     },
                     "attribution": {
                       "$ref": "#/components/schemas/Attribution"
+                    },
+                    "trial": {
+                      "$ref": "#/components/schemas/TrialStatus"
                     }
                   }
                 }
@@ -728,7 +833,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -739,9 +844,30 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access is outside the presented key’s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/TrialAccessError"
+                        }
+                      ]
+                    },
+                    {
+                      "$ref": "#/components/schemas/FreeDeveloperError"
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
-        "description": "This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
+        "description": "Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
         "security": [
           {
             "ApiKey": []
@@ -752,7 +878,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/next": {
@@ -907,7 +1034,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -918,6 +1045,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
@@ -931,7 +1068,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/series": {
@@ -1064,7 +1202,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1075,6 +1213,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1087,7 +1235,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/series/{code}": {
@@ -1241,7 +1390,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1252,6 +1401,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
@@ -1265,7 +1424,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/history": {
@@ -1429,7 +1589,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1440,6 +1600,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "description": "Known exact instants become elapsed only after their scheduled time; timed windows remain current through their upper bound, and date-only records through their publisher-local date. Missing or malformed timing is not converted to midnight. Elapsed schedule time does not prove a result was published. Temporal responses are not cached.",
@@ -1453,7 +1623,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/holidays": {
@@ -1608,7 +1779,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1619,6 +1790,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1631,7 +1812,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/market-status": {
@@ -1779,7 +1961,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1790,6 +1972,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1802,7 +1994,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/changes": {
@@ -1983,11 +2176,21 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
                 }
               }
             }
@@ -2004,7 +2207,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/countries": {
@@ -2037,7 +2241,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2051,6 +2255,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2081,7 +2295,8 @@
               "default": "en"
             }
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/status": {
@@ -2150,7 +2365,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2164,6 +2379,16 @@
           },
           "503": {
             "description": "Requested language is disabled or service unavailable."
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2194,7 +2419,8 @@
               "default": "en"
             }
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/openapi": {
@@ -2256,14 +2482,21 @@
         },
         "responses": {
           "403": {
-            "description": "Account required; create API keys from the verified account workspace."
+            "description": "Account required; create API keys from the verified account workspace. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "503": {
             "description": "Quota policy unavailable; administrator review is required."
           }
         },
         "deprecated": true,
-        "description": "Anonymous key creation is retired. Create and verify an account, complete payment for a plan, then create or link an API key in the signed-in workspace. Existing key tokens are retained; legacy Free access has ended."
+        "description": "Anonymous key creation remains closed. Existing enrolled trial participants retain their original key and trial terms. Use the account page to inspect current Free Developer availability or activate a paid plan."
       }
     },
     "/keys/me": {
@@ -2286,11 +2519,25 @@
         ],
         "responses": {
           "200": {
-            "description": "Key info.",
+            "description": "Paid/retained usage, Free Developer usage, or an existing finite-trial grant.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KeyUsage"
+                  "anyOf": [
+                    {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/KeyUsage"
+                        },
+                        {
+                          "$ref": "#/components/schemas/TrialKeyUsage"
+                        }
+                      ]
+                    },
+                    {
+                      "$ref": "#/components/schemas/FreeDeveloperKeyUsage"
+                    }
+                  ]
                 }
               }
             }
@@ -2299,7 +2546,14 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "Key revoked."
+            "description": "Key revoked. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "503": {
             "description": "Usage log could not be read; no zero usage is inferred.",
@@ -2312,7 +2566,7 @@
             }
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2322,7 +2576,7 @@
             }
           }
         },
-        "description": "Requires an active API key. Usage inspection remains available without a paid entitlement, returning payment_required and zero allowance. Data requests require confirmed paid account access.",
+        "description": "Inspect the presented active key without consuming data allowance. Free Developer returns FreeDeveloperKeyUsage for its scoped successful-response counters; already enrolled trials retain TrialKeyUsage and their original first-use clock/budget. Paid keys retain KeyUsage.",
         "security": [
           {
             "ApiKey": []
@@ -2333,7 +2587,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "verified_account_key"
       }
     },
     "/webhooks": {
@@ -2444,13 +2699,20 @@
             }
           },
           "403": {
-            "description": "A paid account-owned key is required."
+            "description": "A paid account-owned key is required. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "401": {
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2459,7 +2721,8 @@
               }
             }
           }
-        }
+        },
+        "x-new-account-access": "paid_plan_required"
       },
       "post": {
         "summary": "Create a webhook subscription",
@@ -2607,11 +2870,21 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
                 }
               }
             }
@@ -2654,7 +2927,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2662,8 +2935,19 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
-        }
+        },
+        "x-new-account-access": "paid_plan_required"
       },
       "delete": {
         "summary": "Delete a webhook subscription",
@@ -2708,6 +2992,16 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           }
         }
       }
@@ -2745,11 +3039,21 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
                 }
               }
             }
@@ -2789,11 +3093,21 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access or allowance boundary. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
                 }
               }
             }
@@ -2985,7 +3299,14 @@
             "description": "Missing or invalid event_id, as_of or basis; a cutoff later than now; or an unsupported query key."
           },
           "403": {
-            "description": "A paid plan is required."
+            "description": "A paid plan is required. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "404": {
             "description": "The event is not an enriched canonical occurrence in the current publication."
@@ -2997,7 +3318,7 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3017,7 +3338,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/quality": {
@@ -3046,7 +3368,14 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "The API key is revoked or access is not permitted."
+            "description": "The API key is revoked or access is not permitted. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "429": {
             "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
@@ -3069,7 +3398,7 @@
             "description": "API key validation or the dataset is temporarily unavailable. Retry; anonymous fallback is disabled."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3089,7 +3418,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/observations": {
@@ -3206,7 +3536,14 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "The API key is revoked or access is not permitted."
+            "description": "The API key is revoked or access is not permitted. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "429": {
             "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
@@ -3232,7 +3569,7 @@
             "description": "Snapshot changed during pagination; restart using current generation."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3252,7 +3589,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/enrichment/history": {
@@ -3353,7 +3691,14 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "Revoked credentials, unverified account or active paid entitlement required."
+            "description": "Revoked credentials, unverified account or active paid entitlement required. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "409": {
             "description": "Publication or inventory changed; restart at offset zero without cursors."
@@ -3379,7 +3724,7 @@
             "description": "Dataset, publication inventory or authentication unavailable."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3399,7 +3744,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/enrichment/editions": {
@@ -3485,7 +3831,14 @@
             "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "Revoked credentials, unverified account or active paid entitlement required."
+            "description": "Revoked credentials, unverified account or active paid entitlement required. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "409": {
             "description": "Publication or inventory changed; restart at offset zero without cursors."
@@ -3511,7 +3864,7 @@
             "description": "Dataset, publication inventory or authentication unavailable."
           },
           "402": {
-            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3531,7 +3884,8 @@
           {
             "ApiKeyQuery": []
           }
-        ]
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/sample": {
@@ -3555,12 +3909,12 @@
     },
     "/product-offer": {
       "get": {
-        "summary": "Read current public prices and access allowances",
+        "summary": "Read current public prices and access scopes",
         "operationId": "getProductOffer",
         "security": [],
         "responses": {
           "200": {
-            "description": "Current public billing catalog, quotas and recorded sample."
+            "description": "Version 2 paid catalog and scoped Free Developer availability; retained trials are separate."
           }
         }
       }
@@ -7117,6 +7471,488 @@
             "array"
           ]
         }
+      },
+      "TrialStatus": {
+        "type": "object",
+        "required": [
+          "state",
+          "total_limit",
+          "used",
+          "remaining",
+          "duration_seconds",
+          "started_at",
+          "expires_at",
+          "upgrade_url"
+        ],
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "Trial lifecycle; the account and key are retained after free access ends."
+          },
+          "total_limit": {
+            "type": "integer",
+            "const": 25
+          },
+          "used": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 25
+          },
+          "remaining": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 25
+          },
+          "duration_seconds": {
+            "type": "integer",
+            "const": 172800
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "First successful data response; null before first use."
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "converted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "event_limit": {
+            "type": "integer",
+            "const": 10
+          },
+          "upgrade_url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "TrialKeyUsage": {
+        "type": "object",
+        "required": [
+          "trial"
+        ],
+        "properties": {
+          "trial": {
+            "$ref": "#/components/schemas/TrialStatus"
+          }
+        },
+        "description": "Usage response for an enrolled trial key. Its lifetime budget does not reset daily or monthly."
+      },
+      "TrialAccessError": {
+        "type": "object",
+        "required": [
+          "code",
+          "error"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "upgrade_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "trial": {
+            "$ref": "#/components/schemas/TrialStatus"
+          }
+        }
+      },
+      "FreeDeveloperCredit": {
+        "oneOf": [
+          {
+            "type": "string",
+            "maxLength": 2400
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "maxProperties": 24,
+            "properties": {
+              "spdx": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "attribution": {
+                "type": "string"
+              },
+              "policy": {
+                "type": "string"
+              },
+              "vintage_notice": {
+                "type": "string"
+              },
+              "license_url": {
+                "type": "string"
+              },
+              "attribution_url": {
+                "type": "string"
+              },
+              "notice": {
+                "type": "string"
+              },
+              "copyright": {
+                "type": "string"
+              },
+              "copyright_notice": {
+                "type": "string"
+              },
+              "terms": {
+                "type": "string"
+              },
+              "required_attribution": {
+                "type": "string"
+              },
+              "attributions": {
+                "type": "array",
+                "maxItems": 12,
+                "items": {
+                  "$ref": "#/components/schemas/FreeDeveloperCredit"
+                }
+              },
+              "license": {
+                "$ref": "#/components/schemas/FreeDeveloperCredit"
+              },
+              "rights": {
+                "$ref": "#/components/schemas/FreeDeveloperCredit"
+              }
+            }
+          }
+        ]
+      },
+      "FreeDeveloperKeyUsage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "free_developer"
+        ],
+        "properties": {
+          "free_developer": {
+            "$ref": "#/components/schemas/FreeDeveloperUsage"
+          }
+        }
+      },
+      "FreeDeveloperUsage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "plan",
+          "access_scope",
+          "quota_basis",
+          "daily_limit",
+          "monthly_limit",
+          "used_today",
+          "remaining_today",
+          "used_this_month",
+          "remaining_this_month",
+          "resets_at",
+          "monthly_resets_at",
+          "max_events_per_response",
+          "window",
+          "upgrade_url",
+          "resume_at_utc"
+        ],
+        "properties": {
+          "plan": {
+            "type": "string",
+            "const": "free_developer"
+          },
+          "access_scope": {
+            "type": "string",
+            "const": "schedule"
+          },
+          "quota_basis": {
+            "type": "string",
+            "const": "successful_json_responses"
+          },
+          "daily_limit": {
+            "type": "integer",
+            "const": 10
+          },
+          "monthly_limit": {
+            "type": "integer",
+            "const": 100
+          },
+          "used_today": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "remaining_today": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "used_this_month": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "remaining_this_month": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resets_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "monthly_resets_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "max_events_per_response": {
+            "type": "integer",
+            "const": 20
+          },
+          "window": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "timezone"
+            ],
+            "properties": {
+              "from": {
+                "type": "string",
+                "format": "date"
+              },
+              "to": {
+                "type": "string",
+                "format": "date"
+              },
+              "timezone": {
+                "type": "string",
+                "const": "UTC"
+              }
+            }
+          },
+          "upgrade_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "resume_at_utc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FreeDeveloperEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "series_code",
+          "name",
+          "country",
+          "category",
+          "impact",
+          "date",
+          "release_at_utc",
+          "time_precision",
+          "all_day",
+          "status",
+          "source_url",
+          "source_name",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "economic-indicators",
+              "central-banks-monetary-policy"
+            ]
+          },
+          "impact": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "release_at_utc": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "time_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "all_day": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_license": {
+            "$ref": "#/components/schemas/FreeDeveloperCredit"
+          },
+          "source_rights": {
+            "$ref": "#/components/schemas/FreeDeveloperCredit"
+          }
+        }
+      },
+      "FreeDeveloperCalendarResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from",
+          "to",
+          "count",
+          "total",
+          "truncated",
+          "events",
+          "generated_at",
+          "attribution",
+          "free_developer"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "events": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/FreeDeveloperEvent"
+            }
+          },
+          "generated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attribution": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "url",
+              "terms"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "const": "financecalendar.com"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "terms": {
+                "type": "string"
+              }
+            }
+          },
+          "free_developer": {
+            "$ref": "#/components/schemas/FreeDeveloperUsage"
+          }
+        }
+      },
+      "FreeDeveloperError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "error"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "upgrade_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "reset_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "free_developer": {
+            "$ref": "#/components/schemas/FreeDeveloperUsage"
+          }
+        }
       }
     },
     "securitySchemes": {
@@ -7150,18 +7986,28 @@
     "starter": {
       "per_day": 1000,
       "per_calendar_month": 25000,
+      "quota_basis": "admitted_requests",
       "scope": "account_shared_across_keys",
       "reset_timezone": "UTC"
     },
     "build": {
       "per_day": 100000,
       "per_calendar_month": null,
+      "quota_basis": "admitted_requests",
       "scope": "account_shared_across_keys",
       "reset_timezone": "UTC"
     },
     "scale": {
       "per_day": 1000000,
       "per_calendar_month": null,
+      "quota_basis": "admitted_requests",
+      "scope": "account_shared_across_keys",
+      "reset_timezone": "UTC"
+    },
+    "free_developer": {
+      "per_day": 10,
+      "per_calendar_month": 100,
+      "quota_basis": "successful_committed_origin_HTTP200_schedule_JSON_responses",
       "scope": "account_shared_across_keys",
       "reset_timezone": "UTC"
     }
@@ -7196,17 +8042,58 @@
     ]
   },
   "x-product-offer": {
-    "version": 1,
+    "version": 2,
     "currency": "USD",
-    "positioning": "Free public calendar. Affordable paid API.",
+    "positioning": "Free public calendar. Affordable paid API and scoped Free Developer schedules.",
     "public_calendar": {
       "price": 0,
       "url": "https://www.financecalendar.com/events/"
     },
     "production_api": {
-      "paid_plan_required": true,
       "api_key_required": true,
-      "renewable_free_tier": false
+      "access_scopes": {
+        "schedule_preview": {
+          "free_developer_available": true,
+          "routes": [
+            "/calendar",
+            "/today"
+          ]
+        },
+        "numerical_data_and_tools": {
+          "paid_plan_required": true
+        }
+      }
+    },
+    "free_developer": {
+      "available": true,
+      "label": "Free Developer",
+      "plan_id": "free_developer",
+      "access_scope": "schedule",
+      "signup_url": "https://www.financecalendar.com/account/?free=1",
+      "daily_limit": 10,
+      "monthly_limit": 100,
+      "max_events_per_response": 20,
+      "max_records_per_response": 20,
+      "active_key_limit": 1,
+      "quota_basis": "successful_json_responses",
+      "window": {
+        "from": "2026-11-12",
+        "to": "2026-11-18",
+        "timezone": "UTC"
+      },
+      "allowed_routes": [
+        "/fc/v1/calendar",
+        "/fc/v1/today"
+      ],
+      "formats": [
+        "json"
+      ],
+      "verified_email_required": true,
+      "api_key_required": true,
+      "ongoing": true,
+      "renewable": true,
+      "card_required": false,
+      "automatic_charge": false
     },
     "plans": {
       "starter": {
@@ -7215,6 +8102,7 @@
         "label": "Starter",
         "daily_limit": 1000,
         "monthly_limit": 25000,
+        "quota_basis": "admitted_requests",
         "prices": {
           "year": {
             "unit_amount": 999,
@@ -7231,6 +8119,7 @@
         "label": "Build",
         "daily_limit": 100000,
         "monthly_limit": null,
+        "quota_basis": "admitted_requests",
         "prices": {
           "month": {
             "unit_amount": 999,
@@ -7253,6 +8142,7 @@
         "label": "Scale",
         "daily_limit": 1000000,
         "monthly_limit": null,
+        "quota_basis": "admitted_requests",
         "prices": {
           "month": {
             "unit_amount": 2900,
@@ -7277,6 +8167,10 @@
       "filtering": false,
       "pagination": false
     },
+    "evaluation": {
+      "available": false,
+      "retained_participants_honored": true
+    },
     "quota_reset": {
       "daily": "00:00 UTC",
       "monthly": "start of UTC calendar month"
@@ -7289,6 +8183,6 @@
   "x-legacy-tier-identifiers": {
     "pro": "Build",
     "business": "Scale",
-    "free": "Historical identifier only; no recurring free production allowance."
+    "free": "Historical identifier; retained grants are separate from the scoped free_developer capability."
   }
 }
