@@ -22,9 +22,9 @@ In the working Awareness Days repository, the equivalent folder is `fc-integrati
 
 [Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
-[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan. For a first free request, use the authenticated `calendar?limit=10` example in the [repository README](../../../README.md); this dashboard’s default wider window requires a paid plan.
+[Choose a paid plan](https://www.financecalendar.com/account/?plan=starter&billing_interval=year), confirm your email and complete secure checkout, then create an API key in your account.
 
-1. [Choose Starter or another paid plan](https://www.financecalendar.com/pricing/), confirm your email, complete checkout and create an API key. The default dashboard loads a 14-day window and is outside finite free-access scope.
+1. [Choose Starter or another paid plan](https://www.financecalendar.com/pricing/), confirm your email, complete checkout and create an API key. The default dashboard loads a 14-day window.
 2. Stop the demo server with Ctrl+C.
 3. In the same example folder, read the key into your shell without placing it in shell history. Paste the key after `read`, then press Enter:
 
@@ -75,7 +75,7 @@ The backend always requests the fixed official `/wp-json/fc/v1/calendar` endpoin
 
 A single process shares one in-memory cache and one in-flight request across all visitors. The cache lasts **30 minutes**. Opening another tab, filtering or clicking **Check for updates** cannot force an upstream cache bypass. There is no background poller, automatic pagination or immediate retry loop. A check only fetches upstream if the cache or failure cooldown has expired.
 
-With one continuously running process, an always-used 30-minute cache makes at most **48 scheduled fetch opportunities per 24 hours**, approximately **1,440 per 30 days**. Starter includes **1,000 admitted requests/day and 25,000 per UTC calendar month**, shared across the account's REST, MCP and other integrations. Build and Scale add capacity; finite evaluation access is a separate 48-hour, 25-successful-request allowance and does not renew. A cache fetch is one API request; it may return many records. Other apps on the same account share the allowance. Check your workspace for effective limits, including any grandfathered allowance.
+With one continuously running process, an always-used 30-minute cache makes at most **48 scheduled fetch opportunities per 24 hours**, approximately **1,440 per 30 days**. Starter includes **1,000 admitted requests/day and 25,000 per UTC calendar month**, shared across the account's REST, MCP and other integrations. Build and Scale add capacity. A cache fetch is one API request; it may return many records. Other apps on the same account share the allowance. Check your workspace for effective limits, including any grandfathered allowance.
 
 The cache is deliberately simple: restarting the server empties it, and multiple server processes each have their own cache. Frequent restarts, deployments or replicas can increase consumption beyond that estimate. Keep one process for the starter; use a shared durable cache if you later run multiple replicas.
 

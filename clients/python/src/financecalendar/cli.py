@@ -214,7 +214,7 @@ def format_change(c: dict[str, Any]) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="financecalendar", description="Economic calendar in your terminal. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). Optional evaluation: verified email and key, 48 hours, 25 total JSON requests, no automatic charge. https://www.financecalendar.com/pricing/")
+    p = argparse.ArgumentParser(prog="financecalendar", description="Economic calendar in your terminal. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). https://www.financecalendar.com/pricing/")
     p.add_argument("--version", action="version", version=f"financecalendar {__version__}")
 
     def add_global_options(parser: argparse.ArgumentParser, default: Any) -> None:
