@@ -1,101 +1,100 @@
 #!/usr/bin/env python3
-"""Verify the finite-trial OpenAPI addition preserves the reviewed paid contract.
-
-The fixture records semantic hashes of the public spec immediately before the
-additive trial response branch. Only the explicitly documented extension points
-are removed for comparison; every other contract field remains hash-protected.
-No network access or third-party dependencies are required.
-"""
+"""Protect paid/trial contracts while verifying the additive Free Developer scope."""
 from copy import deepcopy
 from hashlib import sha256
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TRIAL_SCHEMAS = {'TrialStatus', 'TrialKeyUsage', 'TrialAccessError'}
-DATA_ROUTES = ('/calendar', '/today', '/week')
-TRIAL_REF = {'$ref': '#/components/schemas/TrialStatus'}
-PAID_USAGE_REF = {'$ref': '#/components/schemas/KeyUsage'}
-TRIAL_USAGE_REF = {'$ref': '#/components/schemas/TrialKeyUsage'}
+FREE_REFS = {
+    name: {'$ref': '#/components/schemas/' + name}
+    for name in ('FreeDeveloperCalendarResponse', 'FreeDeveloperKeyUsage', 'FreeDeveloperError')
+}
 
 
 def digest(value):
     return sha256(json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
 
 
-def check(condition, message):
-    if not condition:
-        raise AssertionError(message)
-
-
-def without_trial_addition(document):
-    """Remove only reviewed additive branches and their scoped explanations."""
-    result = deepcopy(document)
-    for name in TRIAL_SCHEMAS:
-        result['components']['schemas'].pop(name, None)
-    for path in DATA_ROUTES:
-        operation = result['paths'][path]['get']
-        operation['responses']['200']['content']['application/json']['schema']['properties'].pop('trial', None)
-        # Previously these 403 responses were absent or had descriptions only.
-        forbidden = operation['responses'].get('403')
-        if forbidden is not None:
-            forbidden.pop('content', None)
-            forbidden.pop('description', None)
-            if not forbidden:
-                operation['responses'].pop('403')
-    for path, method in [(path, 'get') for path in DATA_ROUTES] + [('/keys/me', 'get'), ('/keys', 'post')]:
-        result['paths'][path][method].pop('description', None)
-    usage = result['paths']['/keys/me']['get']['responses']['200']
-    usage['content']['application/json']['schema'] = deepcopy(PAID_USAGE_REF)
-    usage.pop('description', None)
-    for path in result['paths'].values():
-        for operation in path.values():
-            if isinstance(operation, dict):
-                operation.get('responses', {}).get('402', {}).pop('description', None)
-    result.pop('x-free-api-access', None)
-    return result
+def retained_schema(schema, path, method, status):
+    """Unwrap only the precisely authorized Free alternative for this response."""
+    allowed = None
+    if method == 'get' and status == '200':
+        if path in ('/calendar', '/today'):
+            allowed = FREE_REFS['FreeDeveloperCalendarResponse']
+        elif path == '/keys/me':
+            allowed = FREE_REFS['FreeDeveloperKeyUsage']
+    if status == '403' or (status == '429' and path in ('/calendar', '/today')):
+        allowed = FREE_REFS['FreeDeveloperError']
+    if allowed is not None and isinstance(schema, dict) and set(schema) == {'anyOf'}:
+        choices = schema['anyOf']
+        if len(choices) == 2 and choices.count(allowed) == 1:
+            schema = next(choice for choice in choices if choice != allowed)
+    # The serving-only trial presenter now retains its error as a singleton union.
+    # This is the same schema; no other wrapper or paid branch is normalized.
+    trial_error = {'$ref': '#/components/schemas/TrialAccessError'}
+    if path in ('/calendar', '/today', '/week') and method == 'get' and status == '403':
+        if schema == {'oneOf': [trial_error]}:
+            return trial_error
+    return schema
 
 
 def validate(document, baseline):
     schemas = document['components']['schemas']
-    check(set(schemas) == set(baseline['paid_schema_sha256']) | TRIAL_SCHEMAS, 'Only the three reviewed trial schemas may be added.')
     for name, expected in baseline['paid_schema_sha256'].items():
-        check(digest(schemas[name]) == expected, 'Existing paid schema changed: ' + name)
-    check(digest(schemas['KeyUsage']) == baseline['paid_schema_sha256']['KeyUsage'], 'Paid KeyUsage must remain unchanged.')
-    check(digest(schemas['Event']) == baseline['paid_schema_sha256']['Event'], 'Paid Event must remain unchanged.')
-    check(digest(without_trial_addition(document)) == baseline['contract_without_trial_sha256'], 'A path, security rule or contract field outside the additive trial branch changed.')
-
-    status = schemas['TrialStatus']
-    check(set(status['required']) >= {'state', 'total_limit', 'used', 'remaining', 'duration_seconds', 'started_at', 'expires_at', 'upgrade_url'}, 'Trial status must expose its budget and lifecycle.')
-    for field, value in [('total_limit', 25), ('duration_seconds', 172800), ('event_limit', 10)]:
-        check(status['properties'][field]['const'] == value, 'Incorrect trial limit: ' + field)
-    for field in ['started_at', 'expires_at']:
-        check(set(status['properties'][field]['type']) == {'string', 'null'} and status['properties'][field]['format'] == 'date-time', 'Trial clocks must be nullable before first use.')
-    check(schemas['TrialKeyUsage']['required'] == ['trial'] and schemas['TrialKeyUsage']['properties']['trial'] == TRIAL_REF, 'Trial usage must document its distinct trial envelope.')
-    check(set(schemas['TrialAccessError']['required']) == {'code', 'error'} and schemas['TrialAccessError']['properties']['trial'] == TRIAL_REF, 'Trial errors must retain their explicit error and optional trial status.')
-
-    for path in DATA_ROUTES:
+        assert digest(schemas[name]) == expected, 'Paid schema changed: ' + name
+    for name, expected in baseline['trial_schema_sha256'].items():
+        assert digest(schemas[name]) == expected, 'Retained trial schema changed: ' + name
+    assert digest(document['security']) == baseline['global_security_sha256'], 'Global authentication changed'
+    assert digest(document['components']['securitySchemes']) == baseline['security_schemes_sha256'], 'Authentication mechanisms changed'
+    for path, operations in baseline['route_security'].items():
+        assert path in document['paths'], 'Existing route removed: ' + path
+        for method, expected in operations.items():
+            assert document['paths'][path][method].get('security', document['security']) == expected, 'Route security changed: ' + path
+    for path, operations in baseline['operation_contracts'].items():
+        for method, contract in operations.items():
+            operation = document['paths'][path][method]
+            for key in ('operationId', 'parameters', 'requestBody'):
+                assert digest(operation.get(key)) == contract[key], 'Existing route input changed: ' + path + ' ' + key
+            for status, response_contract in contract['responses'].items():
+                assert status in operation['responses'], 'Existing response removed: ' + path + ' ' + status
+                response = operation['responses'][status]
+                assert digest(response.get('headers')) == response_contract['headers_sha256'], 'Response headers changed: ' + path
+                for media, expected in response_contract['content_schemas'].items():
+                    assert media in response.get('content', {}), 'Existing media type removed: ' + path + ' ' + media
+                    retained = retained_schema(response['content'][media].get('schema'), path, method, status)
+                    assert digest(retained) == expected, 'Paid/retained response changed: ' + path + ' ' + status
+    free = schemas['FreeDeveloperCalendarResponse']
+    assert free['additionalProperties'] is False
+    assert free['properties']['events']['maxItems'] == 20
+    event = schemas['FreeDeveloperEvent']
+    assert event['additionalProperties'] is False
+    assert not set(event['properties']) & {'actual', 'prior', 'consensus', 'observations', 'metrics', 'enrichment', 'field_evidence', 'forecast'}
+    for key, value in [('daily_limit', 10), ('monthly_limit', 100), ('max_events_per_response', 20)]:
+        assert schemas['FreeDeveloperUsage']['properties'][key]['const'] == value
+    for path in ('/calendar', '/today'):
         operation = document['paths'][path]['get']
-        schema = operation['responses']['200']['content']['application/json']['schema']
-        check(schema['properties']['trial'] == TRIAL_REF and 'trial' not in schema.get('required', []), 'Trial metadata is optional for paid data responses: ' + path)
-        check(operation['responses']['403']['content']['application/json']['schema'] == {'$ref': '#/components/schemas/TrialAccessError'}, 'Trial access failures need the documented error branch: ' + path)
-    usage = document['paths']['/keys/me']['get']['responses']['200']['content']['application/json']['schema']
-    check(usage == {'oneOf': [PAID_USAGE_REF, TRIAL_USAGE_REF]}, 'Usage must support the unchanged paid shape or the distinct trial shape.')
-    access = document['x-free-api-access']
-    check(access['total_requests'] == 25 and access['duration_seconds'] == 172800 and access['max_events_per_response'] == 10, 'Discovery metadata must match the trial response contract.')
-    check(access['api_key_required'] is True and access['verified_email_required'] is True and access['card_required'] is False and access['automatic_charge'] is False, 'Trial access and billing facts are inconsistent.')
-    check(document['info']['license']['name'] == 'Finance Calendar API terms and source attribution', 'The API label must not promise unrestricted free data.')
+        assert operation['x-free-developer']['schema'] == FREE_REFS['FreeDeveloperCalendarResponse']
+        assert FREE_REFS['FreeDeveloperCalendarResponse'] in operation['responses']['200']['content']['application/json']['schema']['anyOf']
+    assert FREE_REFS['FreeDeveloperKeyUsage'] in document['paths']['/keys/me']['get']['responses']['200']['content']['application/json']['schema']['anyOf']
+    assert document['x-product-offer']['evaluation'] == {'available': False, 'retained_participants_honored': True}
+    assert document['x-product-offer']['free_developer']['available'] is True
+    assert document['info']['license']['name'] == 'Finance Calendar API terms and source attribution'
 
 
 def main():
     document = json.loads((ROOT / 'openapi.json').read_text())
-    baseline = json.loads((ROOT / 'scripts/fixtures/trial-openapi-compatibility.json').read_text())
+    baseline = json.loads((ROOT / 'scripts/fixtures/free-developer-compatibility.json').read_text())
     validate(document, baseline)
-    # Prove the compatibility check detects changes outside the new branch.
     mutations = [
-        lambda value: value['components']['schemas']['Event'].update({'description': 'unreviewed paid event change'}),
-        lambda value: value.update({'security': []}),
-        lambda value: value['paths']['/keys/me']['get']['responses']['200']['content']['application/json'].update({'schema': {'$ref': '#/components/schemas/TrialKeyUsage'}}),
+        lambda value: value['components']['schemas']['Event'].update(description='unreviewed paid change'),
+        lambda value: value.update(security=[]),
+        lambda value: value['components']['schemas']['FreeDeveloperEvent']['properties'].update(actual={'type': 'number'}),
+        lambda value: value['components']['schemas']['FreeDeveloperUsage']['properties']['monthly_limit'].update(const=5000),
+        lambda value: value['components']['schemas']['TrialStatus']['properties']['total_limit'].update(const=100),
+        lambda value: value['paths']['/calendar']['get']['responses']['200']['content']['application/json'].update(schema=FREE_REFS['FreeDeveloperCalendarResponse']),
+        lambda value: value['paths']['/history']['get'].update(parameters=[]),
+        lambda value: value['components']['securitySchemes']['ApiKey'].update(name='Public-Key'),
     ]
     for mutate in mutations:
         candidate = deepcopy(document)
@@ -104,8 +103,8 @@ def main():
             validate(candidate, baseline)
         except AssertionError:
             continue
-        raise AssertionError('The compatibility check accepted an unreviewed contract mutation.')
-    print('Trial OpenAPI addition verified: existing paid schemas, paths and security preserved; three incompatible mutations rejected.')
+        raise AssertionError('Incompatible mutation accepted')
+    print('Paid/trial schemas, route inputs/responses and authentication preserved; Free closed projection/limits verified; eight incompatible mutations rejected.')
 
 
 if __name__ == '__main__':

@@ -42,7 +42,7 @@ async function initialised(apiKey) {
   const s = startServer(apiKey);
   const init = await s.send("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "0" } });
   assert.equal(init.result.serverInfo.name, "financecalendar");
-  assert.equal(init.result.serverInfo.version, "0.2.2");
+  assert.equal(init.result.serverInfo.version, "0.2.3");
   await s.send("notifications/initialized", {}, true);
   return s;
 }

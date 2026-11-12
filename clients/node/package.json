@@ -1,7 +1,7 @@
 {
   "name": "financecalendar-mcp",
-  "version": "0.2.2",
-  "description": "Economic calendar MCP server and CLI for the paid Finance Calendar API. Starter US$9.99/year, 1,000 requests/day and 25,000/month; account key required.",
+  "version": "0.2.3",
+  "description": "Economic calendar MCP server and CLI. Starter US$9.99/year adds recorded forecasts/results and hosted tools; ongoing Free Developer schedule JSON is available. Account key required.",
   "type": "module",
   "bin": {
     "financecalendar": "cli.js",

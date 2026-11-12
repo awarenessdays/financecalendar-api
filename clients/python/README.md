@@ -4,13 +4,13 @@ Bring economic-release dates, consensus forecasts and published results into Pyt
 
 [Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
-[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
 
 The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status and the wider data examples below require a paid plan. The public sample, product offer and OpenAPI document can be read directly without a key; SDK requests consistently use your configured account key. Set `FC_API_KEY` securely or pass `Client(api_key=...)`. Missing credentials fail before any network request.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
-Finite free access counts successful data responses separately and expires after 48 hours or 25 successful requests, whichever comes first; its allowance never resets.
+Free Developer counts successful committed HTTP 200 JSON schedule responses, including valid empty responses. Invalid or denied requests, quota errors and pre-commit server failures do not consume its allowance. Usage is shared by the account and survives key rotation; daily and monthly resets follow UTC. Already-enrolled evaluations retain their original 25-successful-request budget, 48-hour clock from first use and original scope. New trial enrolment is closed. Existing paid, legacy and custom access grants are preserved; no account is silently converted to Free Developer.
 
 For paid plans, daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
@@ -22,10 +22,10 @@ Use your real key and keep it private; never include it in a shared notebook or 
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-12). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-free-developer-2026-11-12). Use the direct package URL in your chosen environment:
 
 ```sh
-python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-2026-11-12/financecalendar-0.1.2-py3-none-any.whl
+python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-free-developer-2026-11-12/financecalendar-0.1.3-py3-none-any.whl
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
@@ -78,7 +78,7 @@ for e in week["events"]:
 
 Every method returns the API's JSON as plain dicts and lists.
 
-Events include nullable `period` and `release_stage` fields. Human CLI output
+Paid event responses include nullable `period` and `release_stage` fields. Human CLI output
 shows these details when provided, labels unknown economic release times
 `time unknown`, and retains `all day` for exchange holidays.
 
@@ -270,7 +270,7 @@ https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 
 ## Data terms
 
-API access outside the finite evaluation JSON calendar scope requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+Free Developer provides the bounded schedule scope above; richer data and wider features require a paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 

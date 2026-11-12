@@ -1,6 +1,6 @@
 {
   "name": "financecalendar",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Source-aware economic calendar tools for apps and AI. Paid API access starts at US$9.99/year; account key required for hosted MCP.",
   "author": {
     "name": "Awareness Days Ltd",

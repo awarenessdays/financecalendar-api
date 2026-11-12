@@ -4,7 +4,7 @@ A read-only economic-calendar integration for Codex and Claude Code. The plugin 
 
 [Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
-[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
 
 Set `FC_API_KEY` securely in your client environment. The manifests use an environment-expanded `X-API-Key` header. This setup requires a client that supports both custom headers and environment expansion; do not assume every plugin installer supports them. If unsupported, use the [local stdio setup](https://www.financecalendar.com/api/mcp/#local-mcp-server). Never replace the placeholder with a real key in committed files or put a key in a URL.
 
@@ -12,7 +12,7 @@ The skill covers current release schedules, source attribution, unknown clocks/p
 
 ## Downloads
 
-Use the current repository source and authenticated configuration below. The [current 0.1.2 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.2) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
+Use the current repository source and authenticated configuration below. The [current 0.1.3 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.3) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
 
 ## Claude Code
 
