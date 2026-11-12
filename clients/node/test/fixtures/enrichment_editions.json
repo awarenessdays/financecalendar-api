@@ -1,0 +1,17 @@
+{
+  "status": 200,
+  "headers": {"X-RateLimit-Remaining": "248"},
+  "body": {
+    "version": 1,
+    "event_id": "adp-2026-09",
+    "as_of_supported": false,
+    "next_offset": null,
+    "ledger_cursor": 3,
+    "publication_revision": 7,
+    "editions": [
+      {"edition_id": "survey-1", "provider_event_id": "900002", "value": "50000", "unit": "jobs", "reference_period": "2026-09", "release_reference_period": "2026-09", "source_reference_date": "2026-09-30", "historical_basis": "provider_archived", "provider_edition_id": "vintage-1", "forecast_type": "survey_consensus", "available_at": "2026-11-05T14:59:00Z", "received_at": "2026-11-05T15:01:00Z", "cutoff_verified": true},
+      {"edition_id": "actual-1", "provider_event_id": "900002", "value": "0", "unit": "jobs", "reference_period": "2026-09", "historical_basis": "engine_observed", "available_at": "2026-11-05T15:01:00Z", "received_at": "2026-11-05T15:01:00Z", "forecast_type": null},
+      {"edition_id": "actual-2", "provider_event_id": "900002", "value": "1000", "unit": "jobs", "reference_period": "2026-09", "historical_basis": "engine_observed", "available_at": "2026-11-06T15:01:00Z", "received_at": "2026-11-06T15:01:00Z", "forecast_type": null}
+    ]
+  }
+}

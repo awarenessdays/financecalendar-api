@@ -7,7 +7,7 @@
     {
       "name": "financecalendar",
       "source": "./integrations",
-      "description": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance."
+      "description": "Source-aware economic calendar tools. Paid API plans start at US$9.99/year; authenticated hosted MCP."
     }
   ],
   "description": "Finance Calendar economic release data, hosted MCP tools and an accuracy-focused Agent Skill."

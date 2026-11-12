@@ -17,6 +17,9 @@ Usage:
   financecalendar series [--country gb]
   financecalendar show <code>
   financecalendar history <series> [--limit 12]
+  financecalendar results <series> [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--limit 20] [--offset 0]
+  financecalendar editions <event_id> [--limit 20] [--offset 0]
+                            [--ledger-cursor N --publication-revision N] (both for offset > 0)
   financecalendar holidays [exchange] [year]
   financecalendar status [exchange]
   financecalendar changes [--since 2026-10-18T00:00:00Z] [--series ...] [--change updated] [--limit 100] [--cursor ...]
@@ -26,6 +29,7 @@ Options:
   --asset ID  canonical crypto asset ID, e.g. ethereum (not ticker ETH)
   --category crypto  crypto events only; no country filter for global events
   --json      raw API response on any command
+              results and editions always return JSON, including evidence and next_offset
   --tz ZONE   render times in an IANA zone (default: your local zone)
   --help      this message
 
@@ -33,7 +37,7 @@ Environment:
   FC_API_KEY  required API key, sent as X-API-Key; create one at financecalendar.com/account/
   FC_API_BASE alternative base URL (default https://www.financecalendar.com/wp-json/fc/v1)
 
-Data: financecalendar.com. Free JSON API access: verified email and key, 48 hours, 25 total requests, no card required. Paid plans add wider access. https://www.financecalendar.com/account/?trial=1`;
+Data: financecalendar.com. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). Optional evaluation: verified email and key, 48 hours, 25 total JSON requests. https://www.financecalendar.com/pricing/`;
 
 const BOOL_FLAGS = new Set(["json", "csv", "next", "holidays", "help"]);
 
@@ -55,6 +59,20 @@ export function parseArgs(argv) {
 
 function dateRangeLabel(from, to) {
   return `${from} to ${to}`;
+}
+
+function enrichmentParams(cmd, rest, flags) {
+  if (!rest[0] || rest.length !== 1) throw new Error(`${cmd} needs ${cmd === "results" ? "one series, e.g. financecalendar results us-adp" : "one canonical event ID, e.g. financecalendar editions adp-2026-09"}`);
+  const common = ["limit", "offset", "json", "ledger-cursor", "publication-revision"];
+  const allowed = new Set(cmd === "results" ? ["from", "to", ...common] : common);
+  for (const flag of Object.keys(flags)) {
+    if (!allowed.has(flag)) throw new Error(`${cmd} does not support --${flag}; as_of queries are unavailable.`);
+  }
+  const params = { limit: flags.limit, offset: flags.offset,
+    ledger_cursor: flags["ledger-cursor"], publication_revision: flags["publication-revision"] };
+  if (cmd === "results") Object.assign(params, { series: rest[0], from: flags.from, to: flags.to });
+  else params.event_id = rest[0];
+  return params;
 }
 
 export async function main(argv, out = console.log) {
@@ -133,6 +151,15 @@ export async function main(argv, out = console.log) {
       if (flags.json) return json(data), 0;
       out(`${data.series_code || rest[0]}: ${data.count} releases, ${dateRangeLabel(data.from, data.to)}\n`);
       out(data.events?.length ? fmt(data.events) : "No past releases in that range.");
+      return 0;
+    }
+    case "results": {
+      // Keep exact decimal strings, provenance and pagination together.
+      json(await api("/enrichment/history", enrichmentParams(cmd, rest, flags)));
+      return 0;
+    }
+    case "editions": {
+      json(await api("/enrichment/editions", enrichmentParams(cmd, rest, flags)));
       return 0;
     }
     case "holidays": {

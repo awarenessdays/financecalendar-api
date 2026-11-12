@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import os
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from typing import Any, Iterator
 from urllib.parse import quote
 
 import httpx
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1"
 USER_AGENT = f"financecalendar-python/{__version__}"
@@ -102,7 +102,7 @@ class Client:
 
     def _request(self, path: str, params: dict[str, Any] | None = None, raw: bool = False) -> Any:
         if not self.api_key:
-            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key. Get verified free API access for 48 hours and 25 total JSON calendar requests at https://www.financecalendar.com/account/?trial=1, or choose a paid plan for wider access.")
+            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key. Starter API access starts at US$9.99/year: https://www.financecalendar.com/pricing/. Optional evaluation: 48 hours from first use, 25 total JSON calendar requests, verified email and one key: https://www.financecalendar.com/account/?trial=1.")
         headers = {"Accept": "text/csv, text/plain, */*"} if raw else None
         response = self._http.get(path, params=_clean_params(params or {}), headers=headers)
         if response.status_code >= 400:
@@ -212,6 +212,104 @@ class Client:
         """Past releases of a series with consensus, prior and actual. Params: from_, to, limit, asset, tz."""
         return self._request("/history", {"series": series, **params})
 
+    def enrichment_history(self, series: str, **params: Any) -> dict[str, Any]:
+        """One page of evidenced economic results from the enrichment ledger.
+
+        Canonical series: us-jolts, us-adp, us-ism-services, us-trade-balance,
+        us-cpi, us-nfp, us-ppi, us-retail-sales, us-pce, us-ism-manufacturing,
+        us-industrial-production, us-consumer-confidence. Published evidence
+        varies by series, provider qualification and server activation.
+        Params: from_, to (release dates), limit (1..100), offset (0..999999),
+        ledger_cursor and publication_revision. Capture both returned pins on
+        the first page and reuse them with the same filters for offset > 0.
+        On HTTP 409 restart at offset=0 without the old pins. Selected editions retain exact
+        decimal strings and availability/receipt clocks; missing values stay
+        null. For accepted provider editions at a cutoff, use enrichment_as_of()
+        (REST /enrichment/as-of). This history method does not accept as_of and
+        does not establish complete original first-print history. Availability
+        follows the server's feature/access gate.
+        """
+        return self._request("/enrichment/history", {"series": series, **params})
+
+    def enrichment_editions(self, event_id: str, **params: Any) -> dict[str, Any]:
+        """One page of immutable accepted editions for a canonical event ID.
+
+        Params: limit (1..100), offset (0..999999), ledger_cursor and
+        publication_revision. Follow next_offset with the same event_id and
+        both pins returned on the first page; they are required for offset > 0.
+        On HTTP 409 restart at offset=0 without the old pins. The provider's available_at and Finance Calendar's
+        received_at have distinct meanings. Provider archives are labelled
+        separately from engine captures. For accepted provider editions at a
+        cutoff, use enrichment_as_of() (REST /enrichment/as-of). This editions
+        method does not accept as_of and does not establish complete original
+        first-print history.
+        """
+        return self._request("/enrichment/editions", {"event_id": event_id, **params})
+
+    def enrichment_as_of(self, event_id: str, as_of: str | datetime, basis: str | None = None) -> dict[str, Any]:
+        """What the accepted ledger had evidenced for one occurrence by a UTC cutoff.
+
+        as_of is an aware datetime or an ISO instant with seconds and an explicit
+        Z or +00:00 offset, not later than now. basis is engine_receipt (default:
+        when Finance Calendar received each edition) or provider_availability
+        (the evidenced provider time; provider-reported history has none and is
+        excluded, never backdated). The view covers provider editions in the
+        current canonical publication; official statistical observations are
+        outside it. It does not prove customer availability at the cutoff or
+        establish complete original first-print history. Available on Starter,
+        Build and Scale plans.
+        """
+        if isinstance(as_of, datetime):
+            if as_of.tzinfo is None:
+                raise ValueError("as_of needs an explicit timezone")
+            as_of = as_of.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+        return self._request("/enrichment/as-of", {"event_id": event_id, "as_of": as_of, "basis": basis})
+
+    # -- webhooks ----------------------------------------------------------
+
+    def _send(self, method: str, path: str, body: dict[str, Any] | None = None) -> Any:
+        if not self.api_key:
+            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key.")
+        response = self._http.request(method, path, json=body)
+        if response.status_code >= 400:
+            raise self._error(response)
+        return response.json()
+
+    def webhooks(self) -> dict[str, Any]:
+        """List this account's webhook subscriptions (secrets masked). Paid plans only."""
+        return self._request("/webhooks")
+
+    def create_webhook(self, url: str, events: list[str], series: list[str] | None = None) -> dict[str, Any]:
+        """Register a public https destination for the given delivery types.
+
+        events are drawn from result.published, schedule.cancelled,
+        schedule.rescheduled, consensus.updated and event.added; series optionally
+        restricts deliveries to canonical series codes. The signing secret is
+        returned once in subscription.secret: store it, it is masked afterwards.
+        Verify X-FC-Webhook-Signature as t=<unix seconds>,v1=HMAC-SHA256(secret,
+        t + "." + raw body). At most five subscriptions per account.
+        """
+        body: dict[str, Any] = {"url": url, "events": list(events)}
+        if series:
+            body["series"] = list(series)
+        return self._send("POST", "/webhooks", body)
+
+    def webhook(self, subscription_id: int) -> dict[str, Any]:
+        """One subscription with its 20 most recent deliveries."""
+        return self._request(f"/webhooks/{int(subscription_id)}")
+
+    def delete_webhook(self, subscription_id: int) -> dict[str, Any]:
+        """Delete a subscription; its pending deliveries are cancelled."""
+        return self._send("DELETE", f"/webhooks/{int(subscription_id)}")
+
+    def rotate_webhook_secret(self, subscription_id: int) -> dict[str, Any]:
+        """Issue a new signing secret (returned once) and resume a paused subscription."""
+        return self._send("POST", f"/webhooks/{int(subscription_id)}/rotate")
+
+    def test_webhook(self, subscription_id: int) -> dict[str, Any]:
+        """Queue a webhook.test delivery to the subscription's destination."""
+        return self._send("POST", f"/webhooks/{int(subscription_id)}/test")
+
     # -- markets -----------------------------------------------------------
 
     def holidays(self, exchange: str = "nyse", year: int | None = None) -> dict[str, Any]:
@@ -247,7 +345,9 @@ class Client:
         """Current snapshot quality, provenance and supported evidence coverage.
 
         Returns the server's complete nested report. This is an engine-observed
-        current snapshot, not historical first-print evidence; as_of is unsupported.
+        current snapshot, not historical first-print evidence. This report does
+        not accept as_of; use enrichment_as_of() for accepted provider editions
+        at a cutoff, a separate scope from current snapshot quality.
         Extra parameters are passed through using the normal API error handling.
         """
         return self._request("/quality", params)
@@ -258,8 +358,11 @@ class Client:
         Params: series, event_id, role, reference_period, limit, offset and
         snapshot_generated_at. Follow next_offset with the same filters and
         snapshot_generated_at; on HTTP 409 restart at offset=0. Nested source
-        lineage and engine-observed revisions are preserved. as_of and original
-        historical first-print reconstruction are unsupported.
+        lineage and engine-observed revisions are preserved. This observations
+        method does not accept as_of and does not establish original historical
+        first-print evidence. Use enrichment_as_of() for accepted provider
+        editions at a cutoff; official statistical observations are outside
+        that separate view.
         """
         return self._request("/observations", params)
 

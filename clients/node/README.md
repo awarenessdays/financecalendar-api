@@ -7,9 +7,11 @@ One package, two binaries:
 - `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
 - `financecalendar`: a CLI for your terminal and scripts.
 
-[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
-The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status, OpenAPI and the wider examples below require a paid plan. Set `FC_API_KEY` securely for local clients.
+[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+
+The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status and the wider data examples below require a paid plan. The public sample, product offer and OpenAPI document can be read directly without a key; SDK requests consistently use your configured account key. Set `FC_API_KEY` securely for local clients.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
@@ -19,10 +21,10 @@ For paid plans, daily and monthly quota usage counts admitted requests, not succ
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-03). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-12). Use the direct package URL in your chosen environment:
 
 ```sh
-npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-2026-11-03/financecalendar-mcp-0.2.1.tgz
+npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-2026-11-12/financecalendar-mcp-0.2.2.tgz
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
@@ -57,7 +59,7 @@ publisher. Check source health and say which values or dates are uncertain.”
 
 ### Hosted tools and output
 
-The hosted server provides the 11 tools listed below plus `feed_status()` for
+The hosted server provides the 13 tools listed below plus `feed_status()` for
 snapshot age, source health, stale records and numerical coverage. All are
 read-only. It does not expose the local briefing prompt or OpenAPI resource,
 tasks, sessions, server notifications or subscriptions. GET and DELETE return
@@ -80,8 +82,12 @@ API failures return `isError: true`; inspect `transport.api_status` even when
 the MCP HTTP response is 200. Local stdio tools return the API body directly,
 without this envelope.
 
-Hosted `calendar`, `history` and initial `changes` calls default to 20 rows and
-accept 1–50. Calendar supports `offset`. Continue changes with only `cursor`;
+`economic_results_history` returns 1–5 releases per call (default 5) in both
+local and hosted MCP, preserving complete edition evidence. Continue with
+`next_offset` and both first-page pins, `ledger_cursor` and
+`publication_revision`. Hosted `calendar`, `history`, `release_editions`
+and initial `changes` calls default to 20 rows and accept 1–50.
+Calendar supports `offset`. Continue changes with only `cursor`;
 do not inject a new limit. Overview tools bound large arrays to at most 50
 entries and can return fewer to meet the 120,000-byte encoded response cap.
 Partial results carry `truncation.fields`, original counts and recovery
@@ -123,7 +129,7 @@ retain `all day`. Raw JSON preserves the API fields unchanged.
 
 ## Local MCP server
 
-A free-access key can query the bounded JSON calendar tools only; other tools and hosted MCP require a paid plan. For the first free request, use `calendar` with `limit=10` and no wider date or category filters.
+A evaluation key can query the bounded JSON calendar tools only; other tools and hosted MCP require a paid plan. For the first free request, use `calendar` with `limit=10` and no wider date or category filters.
 
 ### Claude Desktop
 
@@ -173,6 +179,8 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json`):
 | `series_list(country?, category?, kind?, asset?)` | Every series with code, aliases and next date |
 | `series_detail(code, tz?, asset?)` | One series: next, last, upcoming, history, long-run dataset |
 | `history(series, from?, to?, limit?, tz?, asset?)` | Past releases with consensus, prior and actual |
+| `economic_results_history(series, from?, to?, limit?, offset?, ledger_cursor?, publication_revision?)` | Consensus and results across 12 US release series, with source and edition evidence |
+| `release_editions(event_id, limit?, offset?, ledger_cursor?, publication_revision?)` | Accepted numerical editions with reference periods, exact values and availability/receipt clocks |
 | `market_holidays(exchange?, year?)` | Exchange holidays and early closes (nyse, lse, cme, jpx...) |
 | `market_status(exchange?)` | Is the exchange open right now? |
 | `changes(since?, series?, change?, limit?, cursor?)` | A page of changes with explicit continuation metadata |
@@ -251,6 +259,8 @@ financecalendar calendar --from 2026-11-01 --to 2026-11-30 --csv > november.csv
 financecalendar series --country gb
 financecalendar show boe
 financecalendar history us-cpi --limit 12
+financecalendar results us-adp --from 2026-01-01 --limit 20
+financecalendar editions adp-2026-09 --limit 20 --offset 0
 financecalendar holidays lse 2027
 financecalendar status hkex
 financecalendar changes --since 2026-10-18T00:00:00Z
@@ -272,6 +282,20 @@ Wed 28 Oct 14:00 ET  FOMC Rate Decision (US)  cons. Hold at 3.50-3.75%  prior Ho
 https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 ```
 
+`results` and `editions` return JSON by default so decimal strings, null values,
+edition IDs and pagination stay together. Follow `next_offset` with the same
+filters plus `ledger_cursor` and `publication_revision` returned on the first
+page. Both pins are required when offset is above zero; pass CLI flags
+`--ledger-cursor` and `--publication-revision`. Ledger appends cannot enter a
+pinned traversal. A changed publication returns HTTP 409: restart at offset
+zero without old pins. The corresponding MCP tools use canonical series `us-jolts`, `us-adp`,
+`us-ism-services` and `us-trade-balance`; availability follows the enrichment
+service and account access gate. `available_at` and `received_at` distinguish
+recorded source availability from Finance Calendar receipt. Provider archives
+are labelled separately from engine captures. `as_of_supported` is false;
+these endpoints do not reconstruct an original first print. Calls use the same
+API key and quota rules as other data requests.
+
 ## Environment variables
 
 | Variable | Purpose |
@@ -292,7 +316,7 @@ console.log(formatEvent(next, { tz: "Europe/Frankfurt" }));
 
 ## Data terms
 
-API access outside the finite free JSON calendar scope requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+API access outside the finite evaluation JSON calendar scope requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 
@@ -319,7 +343,12 @@ Text output explains this distinction and retains source credits; JSON and CSV
 retain the available lineage. Unknown consensus stays absent. See the
 [REST reference](https://www.financecalendar.com/api/reference/) for the contract.
 
-Provider consensus now spans **12 selected US headline release series**: US headline CPI, nonfarm payrolls, PPI, retail sales, PCE, ISM Manufacturing, industrial production, Conference Board Consumer Confidence, JOLTS, ADP employment, ISM Services PMI and goods-and-services Trade Balance. Actual and prior values combine validated official observations with matched provider data; validated official values retain precedence. Use each value’s metric, reference period, unit and source evidence to compare recorded forecasts with results. The existing calendar, history and series queries return the expanded records; no new tool or method is required. Check [current coverage](https://www.financecalendar.com/api/coverage/) or `/quality` for recorded availability, and preserve `null` when a value has no recorded evidence.
+Expanded US coverage brings consensus forecasts and release results together for
+CPI, nonfarm payrolls, PPI, retail sales, headline PCE, ISM Manufacturing,
+industrial production, Consumer Confidence, JOLTS, ADP employment, ISM Services
+and goods-and-services Trade Balance. Inspect each value's source, reference
+period and recorded edition through its numerical evidence. Official observations
+retain priority for mapped actual/prior values.
 BLS payroll `value` is already converted to jobs. `source_value` remains in
 `source_unit` thousands of jobs with `conversion_factor="1000"`; do not multiply
 the canonical value again. `publisher_reported_revisions` retains publisher units

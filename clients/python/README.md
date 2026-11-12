@@ -2,9 +2,11 @@
 
 Bring economic-release dates, consensus forecasts and published results into Python, pandas and terminal workflows with the [financecalendar.com API](https://www.financecalendar.com/api/). Provider consensus now spans **12 selected US headline release series**, with source-linked actual/prior values for covered records. The same API also supplies central bank decisions, exchange holidays and source-backed crypto events. Use each record’s metric, reference period and source evidence when comparing expectations with results.
 
-[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
-The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status, OpenAPI and the wider examples below require a paid plan. Set `FC_API_KEY` securely or pass `Client(api_key=...)`. Missing credentials fail before any network request.
+[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+
+The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status and the wider data examples below require a paid plan. The public sample, product offer and OpenAPI document can be read directly without a key; SDK requests consistently use your configured account key. Set `FC_API_KEY` securely or pass `Client(api_key=...)`. Missing credentials fail before any network request.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
@@ -20,10 +22,10 @@ Use your real key and keep it private; never include it in a shared notebook or 
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-03). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-2026-11-12). Use the direct package URL in your chosen environment:
 
 ```sh
-python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-2026-11-03/financecalendar-0.1.1-py3-none-any.whl
+python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-2026-11-12/financecalendar-0.1.2-py3-none-any.whl
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
@@ -92,6 +94,8 @@ shows these details when provided, labels unknown economic release times
 | `series(**params)` | `GET /series` |
 | `series_detail(code, tz=None)` | `GET /series/{code}` |
 | `history(series, **params)` | `GET /history` |
+| `enrichment_history(series, **params)` | `GET /enrichment/history`; evidenced results with from_, to, limit, offset, ledger_cursor and publication_revision |
+| `enrichment_editions(event_id, **params)` | `GET /enrichment/editions`; accepted editions with limit, offset and both pagination pins |
 | `holidays(exchange="nyse", year=None)` | `GET /holidays` |
 | `market_status(exchange="nyse")` | `GET /market-status` |
 | `changes(since=None, **params)` | One page from `GET /changes`; accepts series, change, limit and cursor |
@@ -100,6 +104,29 @@ shows these details when provided, labels unknown economic release times
 | `quality(**params)` | `GET /quality`, the current snapshot's quality and evidence-coverage report |
 | `observations(**params)` | One page from `GET /observations`; accepts series, event_id, role, reference_period, limit, offset and snapshot_generated_at |
 | `openapi()` | `GET /openapi` |
+
+### Economic results and editions
+
+```python
+with Client() as fc:
+    results = fc.enrichment_history("us-adp", from_="2026-01-01", limit=20)
+    for release in results["releases"]:
+        print(release["actual"], release["consensus"], release["selected_editions"])
+        editions = fc.enrichment_editions(release["event_id"], limit=100)
+```
+
+These endpoints cover `us-jolts`, `us-adp`, `us-ism-services` and
+`us-trade-balance` when the enrichment service is enabled and accepted evidence
+is available. First pages return `ledger_cursor` and `publication_revision`.
+Follow `next_offset` with the same filters and both pins; they are required
+when offset is above zero. The ledger pin excludes later appends, while the
+publication pin prevents combining different published views. On HTTP 409,
+restart at offset zero without the old pins.
+Values retain exact decimal strings, nulls, reference periods and provenance.
+`available_at` describes recorded source availability; `received_at` records
+Finance Calendar's receipt. A provider archive is labelled separately from an
+engine capture. `as_of_supported` is false; these responses do not reconstruct
+an original first print. Normal account authentication and quota rules apply.
 
 ### Long ranges and paging
 
@@ -243,7 +270,7 @@ https://www.financecalendar.com/event/fomc-rate-decision-october-2026/
 
 ## Data terms
 
-API access outside the finite free JSON calendar scope requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
+API access outside the finite evaluation JSON calendar scope requires an active paid plan. Use is subject to the current [API service terms](https://www.financecalendar.com/api/terms/) and applicable source terms and credits. Include a visible link to [financecalendar.com](https://www.financecalendar.com) wherever the data appears. Retain each record's `source_license` requirements, including `attribution_url`, source and licence links, full notices and adaptation labels; PatternPlus records require [Data: PatternPlus](https://pattern.plus). Preserve `source_rights` attribution, evidence, access basis and notice for independently normalised facts. This rights metadata does not assert a publisher copyright licence. Earnings dates are not included. Full terms, rate limits and the changelog: [financecalendar.com/api](https://www.financecalendar.com/api/).
 
 ## Source and issues
 
@@ -272,7 +299,12 @@ Text output explains this distinction and retains source credits; JSON and CSV
 retain the available lineage. Unknown consensus stays absent. See the
 [REST reference](https://www.financecalendar.com/api/reference/) for the contract.
 
-Provider consensus now spans **12 selected US headline release series**: US headline CPI, nonfarm payrolls, PPI, retail sales, PCE, ISM Manufacturing, industrial production, Conference Board Consumer Confidence, JOLTS, ADP employment, ISM Services PMI and goods-and-services Trade Balance. Actual and prior values combine validated official observations with matched provider data; validated official values retain precedence. Use each value’s metric, reference period, unit and source evidence to compare recorded forecasts with results. The existing calendar, history and series queries return the expanded records; no new tool or method is required. Check [current coverage](https://www.financecalendar.com/api/coverage/) or `/quality` for recorded availability, and preserve `null` when a value has no recorded evidence.
+Expanded US coverage brings consensus forecasts and release results together for
+CPI, nonfarm payrolls, PPI, retail sales, headline PCE, ISM Manufacturing,
+industrial production, Consumer Confidence, JOLTS, ADP employment, ISM Services
+and goods-and-services Trade Balance. Inspect each value's source, reference
+period and recorded edition through its numerical evidence. Official observations
+retain priority for mapped actual/prior values.
 BLS payroll `value` is already converted to jobs. `source_value` remains in
 `source_unit` thousands of jobs with `conversion_factor="1000"`; do not multiply
 the canonical value again. `publisher_reported_revisions` retains publisher units

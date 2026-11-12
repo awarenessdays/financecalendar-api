@@ -1,7 +1,7 @@
 {
-  "purpose": "Compatibility proof for the additive finite-trial API response branches. Update only after an explicit review of a later paid contract change.",
+  "purpose": "Compatibility proof retaining paid response schemas while permitting the explicitly reviewed 12 November canonical pricing and public inspection operations. Later contract changes require explicit review.",
   "source_public_commit": "6bc656c3544312ff089556e16b58ed49b2c05835",
-  "contract_without_trial_sha256": "fd8e4f1703a823b980318f8ebb908192894e67904956c5b5166d98f66e8202ad",
+  "contract_without_trial_sha256": "4a54a78a1e642b39898af4af28d3eddd9538834e62c61435185da3ed0895e5e5",
   "paid_schema_sha256": {
     "Event": "83c35be736d55229805058af0baf2176ca0978c031cf1c3a3414122edb44d355",
     "Series": "fbcb67af47ece6afd8570ec687f491f5f4e3a933939d2cca96da1c0eab24a833",
@@ -37,5 +37,6 @@
     "QuotaExceeded": "dd207ec1377a756e15af7a56a7bef23c2f1c895524e679ca6bbcd42d7180c0d8",
     "PaymentRequired": "7ffa79f98802090d3547e7913c2da7336131a7b1d57810b732392ebef32458cb",
     "LocalizedDisplay": "e7995c305959374f5125304a542c099062e7f4d00a3f829d6d47c74146b347de"
-  }
+  },
+  "pricing_access_review": "2026-11-12: canonical paid offer, public sample/product-offer/OpenAPI inspection, preserved paid data schemas and production authentication."
 }

@@ -7,6 +7,10 @@ on:
       - 'clients/**'
       - 'openapi.json'
       - 'scripts/check-trial-openapi.py'
+      - 'scripts/check-pricing-consistency.py'
+      - 'README.md'
+      - 'integrations/**'
+      - 'examples/**'
       - 'scripts/fixtures/trial-openapi-compatibility.json'
       - '.github/workflows/client-check.yml'
   push:
@@ -14,6 +18,10 @@ on:
       - 'clients/**'
       - 'openapi.json'
       - 'scripts/check-trial-openapi.py'
+      - 'scripts/check-pricing-consistency.py'
+      - 'README.md'
+      - 'integrations/**'
+      - 'examples/**'
       - 'scripts/fixtures/trial-openapi-compatibility.json'
       - '.github/workflows/client-check.yml'
 
@@ -31,6 +39,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python scripts/check-trial-openapi.py
+      - run: python scripts/check-pricing-consistency.py
 
   node:
     name: Node ${{ matrix.node }}

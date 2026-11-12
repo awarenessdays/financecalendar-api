@@ -1,7 +1,7 @@
 {
   "name": "financecalendar",
-  "version": "0.1.1",
-  "description": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance.",
+  "version": "0.1.2",
+  "description": "Source-aware economic calendar tools for apps and AI. Paid API access starts at US$9.99/year; account key required for hosted MCP.",
   "author": {
     "name": "Awareness Days Ltd",
     "url": "https://www.financecalendar.com"

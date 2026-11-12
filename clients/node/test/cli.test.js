@@ -64,7 +64,7 @@ describe("CLI (child process with mocked fetch)", () => {
   test("--help prints usage and exits 0", () => {
     const r = cli(["--help"]);
     assert.equal(r.code, 0);
-    assert.match(r.out, /financecalendar 0\.2\.1/);
+    assert.match(r.out, /financecalendar 0\.2\.2/);
     assert.match(r.out, /FC_API_KEY/);
   });
 
@@ -75,7 +75,7 @@ describe("CLI (child process with mocked fetch)", () => {
       symlinkSync(join(ROOT, "cli.js"), executable);
       const result = spawnSync(process.execPath, [executable, "--help"], { encoding: "utf8" });
       assert.equal(result.status, 0, result.stderr);
-      assert.match(result.stdout, /financecalendar 0\.2\.1/);
+      assert.match(result.stdout, /financecalendar 0\.2\.2/);
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
@@ -167,6 +167,36 @@ describe("CLI (child process with mocked fetch)", () => {
     assert.equal(r.code, 1);
     assert.equal(r.out, "");
     assert.equal(r.err, "Error: tz must be an IANA timezone such as Europe/London or Asia/Tokyo. (HTTP 400)\n");
+  });
+
+  test("results and editions default to exact JSON with provenance and offset paging", () => {
+    const result = cli(["results", "us-adp", "--from", "2026-01-01", "--to", "2026-11-05", "--limit", "1", "--offset", "0"]);
+    assert.equal(result.code, 0, result.err);
+    const data = JSON.parse(result.out);
+    assert.equal(data.as_of_supported, false);
+    assert.equal(data.releases[0].actual, "0");
+    assert.equal(data.releases[0].selected_editions.consensus.forecast_type, "survey_consensus");
+    assert.equal(data.next_offset, 1);
+    const next = JSON.parse(cli(["results", "us-adp", "--limit", "1", "--offset", "1", "--ledger-cursor", String(data.ledger_cursor), "--publication-revision", String(data.publication_revision)]).out);
+    assert.equal(next.releases[0].consensus, null);
+    assert.equal(next.next_offset, null);
+    const editions = JSON.parse(cli(["editions", data.releases[0].event_id, "--limit", "1"]).out);
+    assert.equal(editions.editions[0].provider_edition_id, "vintage-1");
+    assert.notEqual(editions.editions[0].available_at, editions.editions[0].received_at);
+    assert.equal(editions.next_offset, 1);
+    const continued = cli(["editions", data.releases[0].event_id, "--limit", "1", "--offset", "1", "--ledger-cursor", String(editions.ledger_cursor), "--publication-revision", String(editions.publication_revision)]);
+    assert.equal(continued.code, 0, continued.err);
+    assert.equal(JSON.parse(continued.out).editions[0].value, "0");
+    assert.equal(cli(["results", "us-adp", "--offset", "1"]).code, 1);
+    assert.match(cli(["results", "us-adp", "--offset", "1", "--ledger-cursor", "3", "--publication-revision", "6"]).err, /HTTP 409/);
+  });
+
+  test("results commands require identity, API key and reject unsupported as-of flags", () => {
+    assert.match(cli(["results"]).err, /results needs one series/);
+    assert.match(cli(["editions"]).err, /editions needs one canonical event ID/);
+    assert.match(cli(["results", "us-adp", "--as-of", "2026-11-01"]).err, /does not support --as-of/);
+    assert.match(cli(["editions", "adp-2026-09", "--as_of", "2026-11-01"]).err, /does not support --as_of/);
+    assert.equal(cli(["results", "us-adp"], { FC_API_KEY: "" }).code, 1);
   });
 
   test("unknown command and missing argument are reported", () => {

@@ -5,11 +5,13 @@ required header; do not put a key in a formula or URL. You can export CSV from t
 [Data explorer](https://www.financecalendar.com/data/) and import it into Sheets,
 or use an Apps Script with a private user property.
 
-[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
+
+[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
 
 Starter is **US$9.99/year** for **1,000 requests per UTC day and 25,000 per UTC calendar month**; Build includes **100,000/day** and Scale **1,000,000/day**. Account keys share their paid allowance. Check [current plans](https://www.financecalendar.com/pricing/) and your account for effective prices and limits.
 
-The Data explorer and CSV exports require an active paid subscription. The JSON example below can make a bounded first request with a free-access key. Open **Extensions → Apps Script** in your sheet, then run
+The Data explorer and CSV exports require an active paid subscription. The JSON example below can make a bounded first request with a evaluation key. Open **Extensions → Apps Script** in your sheet, then run
 `setFinanceCalendarKey` once to store your key in your own user properties, then
 run `loadFinanceCalendar`. Only run code you trust; script editors can change
 what code does with your credentials. Never commit a real key or log it.

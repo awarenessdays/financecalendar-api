@@ -1,7 +1,7 @@
 // Shared HTTP client and formatting helpers for the financecalendar.com API.
 // Zero runtime dependencies: uses the global fetch available in Node 20+.
 
-export const VERSION = "0.2.1";
+export const VERSION = "0.2.2";
 export const DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1";
 export const USER_AGENT = `financecalendar-mcp/${VERSION}`;
 
@@ -29,7 +29,7 @@ export async function api(path, params = {}, { apiKey, base, raw = false, fetch:
   const url = buildUrl(path, params, base);
   const key = String(apiKey || process.env.FC_API_KEY || "").trim();
   if (!key) {
-    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Get verified free API access for 48 hours and 25 total JSON calendar requests at https://www.financecalendar.com/account/?trial=1, or choose a paid plan for wider access.");
+    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Starter API access starts at US$9.99/year: https://www.financecalendar.com/pricing/. Optional evaluation: 48 hours from first use, 25 total JSON calendar requests, verified email and one key: https://www.financecalendar.com/account/?trial=1.");
     error.status = 401;
     error.retryAfter = null;
     throw error;
@@ -156,6 +156,16 @@ export function formatEvent(e, { tz } = {}) {
   if (e.category === "market-holidays" && e.holiday_status === "early_close" && e.close_time_local) bits.push(`closes ${e.close_time_local} local`);
   const line = bits.filter(Boolean).join("  ");
   const lines = [line];
+  if (e.release_bundle?.version === 1 && Array.isArray(e.release_bundle.metrics)) {
+    for (const metric of e.release_bundle.metrics) {
+      const display = (field) => {
+        const quality = metric.data_quality?.fields?.[field];
+        if (metric[field] === null || metric[field] === undefined) return (quality?.reason || "not available").replaceAll("_", " ");
+        return String(metric[field]) + (metric.unit ? " " + metric.unit : "") + (quality?.freshness === "stale" ? " (stale retained evidence)" : "");
+      };
+      lines.push(`${metric.label || metric.metric_id}: actual ${display("actual")}; prior ${display("prior")}`);
+    }
+  }
   if (e.url) lines.push(e.url);
   if (e.data_stale) lines.push(`Stale source data${e.stale_since ? " since " + e.stale_since : ""}`);
   if (e.observation_status === "stale") lines.push("Official observation data stale; calendar freshness is reported separately.");
@@ -238,7 +248,7 @@ export function formatChange(c) {
   return `${c.at}  ${c.change.padEnd(7)} ${c.series_code.padEnd(16)} ${c.id}${what ? "  " + what : ""}`;
 }
 
-const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since", "source_rights", "discovery_url", "observations", "observation_status", "observation_metric_id", "observation_fields", "source_reference_period", "source_id", "native_id", "source_clock"];
+const CSV_COLUMNS = ["date", "time_utc", "time_et", "time_local", "all_day", "name", "title", "country", "category", "impact", "status", "consensus", "prior", "actual", "unit", "period", "series_code", "id", "url", "source_url", "assets", "crypto", "source_license", "time_precision", "date_window_start", "date_window_end", "verification_url", "verification_method", "manually_reviewed_at", "last_verified_at", "data_stale", "stale_since", "source_rights", "discovery_url", "observations", "observation_status", "observation_metric_id", "observation_fields", "source_reference_period", "source_id", "native_id", "source_clock", "release_bundle"];
 
 /** Build CSV locally from event rows (used when the API's own CSV is not requested). */
 export function eventsToCsv(events) {

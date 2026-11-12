@@ -1,4 +1,4 @@
-"""Paid-plan Finance Calendar API examples with a private FC_API_KEY. For finite free access use calendar JSON with limit=10."""
+"""Paid-plan Finance Calendar API examples with a private FC_API_KEY. For finite evaluation access use calendar JSON with limit=10."""
 import json
 import os
 import urllib.parse

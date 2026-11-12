@@ -4,7 +4,7 @@
     "title": "Finance Calendar API",
     "version": "2.0.0",
     "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-    "description": "Economic releases, decisions and exchange holidays with per-event publisher provenance and verification status. Coverage, consensus and results vary by source and series; inspect status, last_verified_at and data_stale before use. Cancelled releases remain in calendar/history responses but are excluded from next, upcoming and last pointers. Free economic calendar API access includes 25 successful data requests in total over 48 hours, starting with the first successful request. Verify your email at https://www.financecalendar.com/account/?trial=1 to get your API key; no card is required. Every request requires a key. Free access covers JSON GET /calendar, /today and /week only, up to 10 selected economic-release or central-bank-decision events per response, from the previous seven days through the next two days in UTC. Available consensus, actual and prior values and source credits are included; missing values remain null. The allowance does not renew. Other routes, formats and wider access require a paid plan. Starter, Build and Scale include API access for your own tools, apps and products, with attribution and applicable source terms. See https://www.financecalendar.com/api/terms/ for applicable terms, earlier grants, attribution and source-specific rights. Earnings dates are not included. Source-backed crypto events include network schedules, vesting installments, issuer supply projections and governance voting deadlines. Crypto rows use category=crypto, canonical assets, nullable country and impact, and confirmed or estimated timing. Calendar date ranges include overlapping estimated windows; history only includes a date window after its upper bound. Supply projections are not confirmed unlocks or observed circulation; voting deadlines are not proposal outcomes. Retain each record source_license requirements where present and source_rights attribution, evidence and notice for independently normalised facts. Rights metadata does not assert a publisher copyright licence. Aggregator discovery links are separate from independent primary verification; internal provider API evaluation data is not distributed. A paid Starter, Build or Scale subscription is required outside the finite free API access scope and for browser Data explorer access. Existing verified paid subscriptions retain their paid allowances. Choose a paid plan explicitly when you need wider access; existing API keys are retained.",
+    "description": "Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$9.99/year. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Production data requests require a paid plan and an API key. Optional limited evaluation: 48 hours from first successful request, 25 successful JSON requests total, previous seven through next two UTC days, up to ten records per response; verified email and one key required. No card or automatic charge. Retain field-level source evidence and rights.",
     "termsOfService": "https://www.financecalendar.com/api/terms/",
     "contact": {
       "url": "https://www.financecalendar.com/about/"
@@ -330,7 +330,7 @@
             "ApiKeyQuery": []
           }
         ],
-        "description": "Free API access: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. "
+        "description": "Optional limited JSON evaluation: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. "
       }
     },
     "/today": {
@@ -534,7 +534,7 @@
             "ApiKeyQuery": []
           }
         ],
-        "description": "Free API access: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. "
+        "description": "Optional limited JSON evaluation: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. "
       }
     },
     "/week": {
@@ -782,7 +782,7 @@
             }
           }
         },
-        "description": "Free API access: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
+        "description": "Optional limited JSON evaluation: an enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
         "security": [
           {
             "ApiKey": []
@@ -2255,32 +2255,9 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
-          },
-          "402": {
-            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaymentRequired"
-                }
-              }
-            }
           }
         },
-        "security": [
-          {
-            "ApiKey": []
-          },
-          {
-            "BearerAuth": []
-          },
-          {
-            "ApiKeyQuery": []
-          }
-        ]
+        "security": []
       }
     },
     "/keys": {
@@ -2394,6 +2371,690 @@
           }
         },
         "description": "Inspect the presented active key. An enrolled trial key returns TrialKeyUsage, with its total 25-request budget, first-use clock and expiry; this status call consumes no trial data request. Paid keys retain KeyUsage. Retained unpaid keys without an enrolled trial report payment_required and zero paid allowance.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ]
+      }
+    },
+    "/webhooks": {
+      "get": {
+        "summary": "List webhook subscriptions",
+        "description": "Paid plans only. Each delivery is a JSON POST with X-FC-Webhook-Id, X-FC-Webhook-Type, X-FC-Webhook-Timestamp, X-FC-Webhook-Attempt and X-FC-Webhook-Signature (t=<unix seconds>,v1=<hex HMAC-SHA256 of t + \".\" + raw body> with the subscription secret). Respond 2xx within 10 seconds; other responses are retried after 1, 5, 30 minutes, 2 and 12 hours, then marked dead. Fifty consecutive failures pause the subscription until its secret is rotated. Deliveries are at-least-once and carry an idempotent id. Deliveries are created when a canonical publication commits and are not a latency guarantee.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscriptions with masked secrets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subscriptions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "url": {
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "events": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "result.published",
+                                "schedule.cancelled",
+                                "schedule.rescheduled",
+                                "consensus.updated",
+                                "event.added"
+                              ]
+                            }
+                          },
+                          "series": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "active",
+                              "paused",
+                              "deleted"
+                            ]
+                          },
+                          "secret": {
+                            "type": "string",
+                            "description": "Shown in full only on creation and rotation; masked otherwise."
+                          },
+                          "failure_streak": {
+                            "type": "integer"
+                          },
+                          "last_delivery_at": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "last_http_status": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "type": "string"
+                          },
+                          "signature_scheme": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "limit": {
+                      "type": "integer"
+                    },
+                    "event_types": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A paid account-owned key is required."
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a webhook subscription",
+        "description": "url must be a public https destination. events lists the delivery types wanted. series optionally restricts deliveries to canonical series codes. At most 5 subscriptions per account. The secret is returned once. Paid plans only. Each delivery is a JSON POST with X-FC-Webhook-Id, X-FC-Webhook-Type, X-FC-Webhook-Timestamp, X-FC-Webhook-Attempt and X-FC-Webhook-Signature (t=<unix seconds>,v1=<hex HMAC-SHA256 of t + \".\" + raw body> with the subscription secret). Respond 2xx within 10 seconds; other responses are retried after 1, 5, 30 minutes, 2 and 12 hours, then marked dead. Fifty consecutive failures pause the subscription until its secret is rotated. Deliveries are at-least-once and carry an idempotent id. Deliveries are created when a canonical publication commits and are not a latency guarantee.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url",
+                  "events"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "result.published",
+                        "schedule.cancelled",
+                        "schedule.rescheduled",
+                        "consensus.updated",
+                        "event.added"
+                      ]
+                    }
+                  },
+                  "series": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The new subscription including its secret.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subscription": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "events": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "result.published",
+                              "schedule.cancelled",
+                              "schedule.rescheduled",
+                              "consensus.updated",
+                              "event.added"
+                            ]
+                          }
+                        },
+                        "series": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "paused",
+                            "deleted"
+                          ]
+                        },
+                        "secret": {
+                          "type": "string",
+                          "description": "Shown in full only on creation and rotation; masked otherwise."
+                        },
+                        "failure_streak": {
+                          "type": "integer"
+                        },
+                        "last_delivery_at": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "last_http_status": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        },
+                        "signature_scheme": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "secret_shown_once": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid url, events or series."
+          },
+          "409": {
+            "description": "Subscription limit reached."
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}": {
+      "get": {
+        "summary": "Webhook subscription detail and recent deliveries",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription and up to 20 recent deliveries."
+          },
+          "404": {
+            "description": "Not found for this account."
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a webhook subscription",
+        "description": "Pending deliveries are cancelled.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted."
+          },
+          "404": {
+            "description": "Not found for this account."
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "402": {
+            "description": "A paid plan is required. Legacy Free access has ended. Follow account_url or upgrade_url and complete payment to activate or renew access.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}/rotate": {
+      "post": {
+        "summary": "Rotate the signing secret",
+        "description": "Returns the new secret once and reactivates a paused subscription.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription with the new secret."
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}/test": {
+      "post": {
+        "summary": "Queue a test delivery",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A webhook.test delivery was queued."
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enrichment/as-of": {
+      "get": {
+        "summary": "Point-in-time enrichment view for one occurrence",
+        "description": "What the accepted ledger had evidenced for one canonical occurrence by a stated UTC cutoff, under an explicit historical basis. engine_receipt compares the cutoff with when Finance Calendar received each edition and is always available. provider_availability compares it with the evidenced provider availability time; provider-reported history has none and is excluded rather than backdated. The view covers provider editions in the current canonical publication only. Official statistical observations are outside it, and it does not prove that a customer could have retrieved the value at the cutoff. Paid plans only.",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": true,
+            "description": "UTC instant with seconds and an explicit Z or +00:00 offset, not later than now.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "basis",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "engine_receipt",
+                "provider_availability"
+              ],
+              "default": "engine_receipt"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Values and selected editions evidenced by the cutoff.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "integer",
+                      "const": 1
+                    },
+                    "event_id": {
+                      "type": "string"
+                    },
+                    "series_code": {
+                      "type": "string"
+                    },
+                    "release_at_utc": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "reference_period": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "unit": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "as_of": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "basis": {
+                      "type": "string",
+                      "enum": [
+                        "engine_receipt",
+                        "provider_availability"
+                      ]
+                    },
+                    "values": {
+                      "type": "object",
+                      "properties": {
+                        "consensus": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "actual": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "prior": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "consensus",
+                        "actual",
+                        "prior"
+                      ]
+                    },
+                    "selected_editions": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "editions_accepted": {
+                      "type": "integer"
+                    },
+                    "editions_considered": {
+                      "type": "integer"
+                    },
+                    "editions_after_cutoff": {
+                      "type": "integer"
+                    },
+                    "editions_without_availability": {
+                      "type": "integer"
+                    },
+                    "publication_revision": {
+                      "type": "integer"
+                    },
+                    "as_of_supported": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "history_basis": {
+                      "type": "string",
+                      "const": "published-editions-by-cutoff"
+                    },
+                    "scope": {
+                      "type": "string",
+                      "const": "enrichment_ledger_provider_editions"
+                    },
+                    "official_observations_included": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "customer_availability_at_cutoff_verified": {
+                      "type": "boolean",
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "event_id",
+                    "series_code",
+                    "as_of",
+                    "basis",
+                    "values",
+                    "selected_editions",
+                    "editions_accepted",
+                    "editions_considered",
+                    "editions_after_cutoff",
+                    "editions_without_availability",
+                    "publication_revision",
+                    "as_of_supported",
+                    "history_basis",
+                    "scope",
+                    "official_observations_included",
+                    "customer_availability_at_cutoff_verified"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid event_id, as_of or basis; a cutoff later than now; or an unsupported query key."
+          },
+          "403": {
+            "description": "A paid plan is required."
+          },
+          "404": {
+            "description": "The event is not an enriched canonical occurrence in the current publication."
+          },
+          "503": {
+            "description": "The ledger or publication is unavailable."
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. The separate verified-email free trial is limited to its documented JSON data routes and total allowance; it does not grant other paid features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "ApiKey": []
@@ -2646,7 +3307,7 @@
       "get": {
         "operationId": "enrichment_history",
         "summary": "Per-release survey consensus, actual and prior with selected immutable edition provenance.",
-        "description": "Requires active paid API entitlement and the existing shared allowance. Only exact editions in the accepted canonical publication are visible. History scalars and field_evidence match that publication, including preferred official values; selected_editions contains only scalar-matched provider evidence. Returns 503 until enrichment is enabled and storage ready. Missing evidence remains null. No arbitrary as_of query.",
+        "description": "Explore recorded release values and accepted provider editions with their exact publication evidence. Only exact editions in the accepted canonical publication are visible. History scalars and field_evidence match that publication, including preferred official values; selected_editions contains only scalar-matched provider evidence. These history and editions endpoints do not accept as_of; use /enrichment/as-of for captured-edition cutoff reads under engine_receipt or provider_availability. Unobserved original first prints are not reconstructed. Uses active paid API entitlement and the existing shared allowance. Returns 503 until enrichment is enabled and storage ready. Missing evidence remains null.",
         "parameters": [
           {
             "name": "series",
@@ -2793,7 +3454,7 @@
       "get": {
         "operationId": "enrichment_editions",
         "summary": "Accepted immutable editions for one canonical calendar occurrence.",
-        "description": "Requires active paid API entitlement and the existing shared allowance. Only exact editions in the accepted canonical publication are visible. History scalars and field_evidence match that publication, including preferred official values; selected_editions contains only scalar-matched provider evidence. Returns 503 until enrichment is enabled and storage ready. Missing evidence remains null. No arbitrary as_of query.",
+        "description": "Explore recorded release values and accepted provider editions with their exact publication evidence. Only exact editions in the accepted canonical publication are visible. History scalars and field_evidence match that publication, including preferred official values; selected_editions contains only scalar-matched provider evidence. These history and editions endpoints do not accept as_of; use /enrichment/as-of for captured-edition cutoff reads under engine_receipt or provider_availability. Unobserved original first prints are not reconstructed. Uses active paid API entitlement and the existing shared allowance. Returns 503 until enrichment is enabled and storage ready. Missing evidence remains null.",
         "parameters": [
           {
             "name": "event_id",
@@ -2919,6 +3580,37 @@
             "ApiKeyQuery": []
           }
         ]
+      }
+    },
+    "/sample": {
+      "get": {
+        "summary": "Inspect fixed recorded examples",
+        "description": "No filters, pagination or arbitrary queries. Publisher-selected records are frozen at captured_at and retain source credits.",
+        "operationId": "getRecordedSample",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Up to three recorded examples with capture timestamp, null-value semantics and source credits."
+          },
+          "400": {
+            "description": "Sample parameters are not supported."
+          },
+          "503": {
+            "description": "Recorded sample not available."
+          }
+        }
+      }
+    },
+    "/product-offer": {
+      "get": {
+        "summary": "Read current public prices and access allowances",
+        "operationId": "getProductOffer",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Current public billing catalog, quotas, sample and optional finite evaluation."
+          }
+        }
       }
     }
   },
@@ -6604,112 +7296,24 @@
     "how": "A visible link to https://www.financecalendar.com near the data, or on your credits page."
   },
   "x-rate-limits": {
-    "keyless": {
-      "available": false,
-      "daily": 0,
-      "authentication_required": true
-    },
-    "free": {
-      "daily": 0,
-      "available": false,
-      "monthly": 0,
-      "scope": "account",
-      "existing_accounts_keep_allowance": false,
-      "grandfathered_allowances_preserved": false,
-      "daily_limit": 0,
-      "monthly_limit": 0,
-      "legacy_free_ended": true
-    },
-    "pro": {
-      "daily": 100000
-    },
-    "business": {
-      "daily": 1000000
-    },
-    "headers": [
-      "X-RateLimit-Limit",
-      "X-RateLimit-Remaining",
-      "X-RateLimit-Reset",
-      "X-RateLimit-Tier",
-      "Retry-After",
-      "X-RateLimit-Usage-Level",
-      "X-RateLimit-Usage-Percent",
-      "X-RateLimit-Upgrade-URL",
-      "X-RateLimit-Scope",
-      "X-RateLimit-Daily-Reset",
-      "X-RateLimit-Monthly-Limit",
-      "X-RateLimit-Monthly-Remaining",
-      "X-RateLimit-Monthly-Reset"
-    ],
-    "reset": "00:00 UTC",
-    "new_signup": {
-      "state": "paid_signup",
-      "available": true,
-      "paid_signup_required": true,
-      "free_signup_available": false,
-      "plan": "starter",
-      "price": {
-        "unit_amount": 999,
-        "currency": "usd",
-        "interval": "year"
-      },
-      "daily_limit": 1000,
-      "monthly_limit": 25000,
-      "starter_offer": {
-        "state": "active",
-        "interval": "year",
-        "unit_amount": 999,
-        "currency": "usd",
-        "tax_behavior": "inclusive",
-        "daily_limit": 1000,
-        "monthly_limit": 25000,
-        "upgrade_url": "https://www.financecalendar.com/account/?plan=starter&billing_interval=year",
-        "cancel_notice": "Cancel anytime. Your access continues until the end of your paid billing period.",
-        "legacy_pricing": false,
-        "prices": {
-          "month": null,
-          "year": {
-            "unit_amount": 999,
-            "currency": "usd",
-            "interval": "year",
-            "tax_behavior": "inclusive"
-          }
-        },
-        "available_intervals": {
-          "month": false,
-          "year": true
-        },
-        "annual_discount_percent": 0,
-        "yearly_trial": false,
-        "annual_restore": true
-      },
-      "starts_at": "2026-11-04T14:26:23+00:00",
-      "ends_at": "2026-11-18T14:26:23+00:00",
-      "account_url": "https://www.financecalendar.com/account/",
-      "upgrade_url": "https://www.financecalendar.com/account/?plan=starter&billing_interval=year",
-      "enterprise_offer": {
-        "available": true,
-        "label": "Enterprise",
-        "contact_email": "alex@financecalendar.com",
-        "contact_url": "mailto:alex@financecalendar.com?subject=Finance%20Calendar%20Enterprise%20enquiry"
-      }
-    },
     "starter": {
-      "daily": 1000,
-      "monthly": 25000,
-      "scope": "account",
-      "paid": true,
-      "retained_paid_allowances_preserved": true,
-      "effective_allowance_url": "https://www.financecalendar.com/wp-json/fc/v1/keys/me"
+      "per_day": 1000,
+      "per_calendar_month": 25000,
+      "scope": "account_shared_across_keys",
+      "reset_timezone": "UTC"
     },
-    "policy_state": "active",
-    "monthly_reset": "00:00 UTC on the first day of the next calendar month",
-    "hosted_mcp": {
-      "authentication_required": true,
-      "scope": "caller-account-or-existing-key",
-      "shared_between_users": false
+    "build": {
+      "per_day": 100000,
+      "per_calendar_month": null,
+      "scope": "account_shared_across_keys",
+      "reset_timezone": "UTC"
     },
-    "legacy_free_ended": true
+    "scale": {
+      "per_day": 1000000,
+      "per_calendar_month": null,
+      "scope": "account_shared_across_keys",
+      "reset_timezone": "UTC"
+    }
   },
   "x-changelog": "https://www.financecalendar.com/api/changelog/",
   "security": [
@@ -6764,6 +7368,124 @@
     },
     "card_required": false,
     "automatic_charge": false,
-    "message": "Free API access: verify your email and create one API key. Use 25 JSON requests during 48 hours from your first successful data request, with up to 10 events per response. No card or automatic charge. Your account and key remain available for an optional paid upgrade."
+    "message": "Optional limited JSON evaluation: verify your email and create one API key. Use 25 JSON requests during 48 hours from your first successful data request, with up to 10 events per response. No card or automatic charge. Your account and key remain available for an optional paid upgrade."
+  },
+  "x-product-offer": {
+    "version": 1,
+    "currency": "USD",
+    "positioning": "Free public calendar. Affordable paid API.",
+    "public_calendar": {
+      "price": 0,
+      "url": "https://www.financecalendar.com/events/"
+    },
+    "production_api": {
+      "paid_plan_required": true,
+      "api_key_required": true,
+      "renewable_free_tier": false
+    },
+    "plans": {
+      "starter": {
+        "id": "starter",
+        "internal_id": "starter",
+        "label": "Starter",
+        "daily_limit": 1000,
+        "monthly_limit": 25000,
+        "prices": {
+          "year": {
+            "unit_amount": 999,
+            "currency": "usd",
+            "interval": "year",
+            "tax_behavior": "inclusive"
+          }
+        },
+        "full_dataset_export": false
+      },
+      "build": {
+        "id": "build",
+        "internal_id": "pro",
+        "label": "Build",
+        "daily_limit": 100000,
+        "monthly_limit": null,
+        "prices": {
+          "month": {
+            "unit_amount": 999,
+            "currency": "usd",
+            "interval": "month",
+            "tax_behavior": "inclusive"
+          },
+          "year": {
+            "unit_amount": 9590,
+            "currency": "usd",
+            "interval": "year",
+            "tax_behavior": "inclusive"
+          }
+        },
+        "full_dataset_export": false
+      },
+      "scale": {
+        "id": "scale",
+        "internal_id": "business",
+        "label": "Scale",
+        "daily_limit": 1000000,
+        "monthly_limit": null,
+        "prices": {
+          "month": {
+            "unit_amount": 2900,
+            "currency": "usd",
+            "interval": "month",
+            "tax_behavior": "inclusive"
+          },
+          "year": {
+            "unit_amount": 27840,
+            "currency": "usd",
+            "interval": "year",
+            "tax_behavior": "inclusive"
+          }
+        },
+        "full_dataset_export": true
+      }
+    },
+    "sample": {
+      "url": "https://www.financecalendar.com/wp-json/fc/v1/sample",
+      "publisher_selected": true,
+      "max_records": 3,
+      "filtering": false,
+      "pagination": false
+    },
+    "evaluation": {
+      "available": true,
+      "duration_hours": 48,
+      "starts_at": "first_successful_data_request",
+      "successful_requests_total": 25,
+      "max_records_per_response": 10,
+      "previous_utc_days": 7,
+      "next_utc_days": 2,
+      "formats": [
+        "json"
+      ],
+      "routes": [
+        "/calendar",
+        "/today",
+        "/week"
+      ],
+      "verified_email_required": true,
+      "api_key_required": true,
+      "card_required": false,
+      "automatic_charge": false,
+      "signup_url": "https://www.financecalendar.com/account/?trial=1"
+    },
+    "quota_reset": {
+      "daily": "00:00 UTC",
+      "monthly": "start of UTC calendar month"
+    },
+    "attribution": "Retain Finance Calendar attribution, publisher credits and applicable source rights.",
+    "pricing_url": "https://www.financecalendar.com/pricing/",
+    "terms_url": "https://www.financecalendar.com/api/terms/"
+  },
+  "x-product-offer-url": "https://www.financecalendar.com/wp-json/fc/v1/product-offer",
+  "x-legacy-tier-identifiers": {
+    "pro": "Build",
+    "business": "Scale",
+    "free": "Historical identifier only; no recurring free production allowance."
   }
 }

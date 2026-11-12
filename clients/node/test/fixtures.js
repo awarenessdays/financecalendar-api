@@ -40,6 +40,33 @@ export function fixtureFor(url) {
     case "/series": return fixture("series");
     case "/series/fomc": case "/series/fed": return fixture("series_detail_fomc");
     case "/history": return fixture("history_us_cpi");
+    case "/enrichment/history":
+    case "/enrichment/editions": {
+      if (q.has("as_of")) return { status: 400, headers: {}, body: { error: "unsupported_query" } };
+      const history = path.endsWith("/history");
+      const rec = fixture(history ? "enrichment_history" : "enrichment_editions");
+      // Synthetic provenance-heavy history exercises the real MCP page default.
+      if (history && q.get("series") === "us-jolts") {
+        const template = rec.body.releases[0];
+        rec.body.series_code = "us-jolts";
+        rec.body.releases = Array.from({ length: 12 }, (_, i) => ({
+          ...template, event_id: `synthetic-jolts-${i}`, series_code: "us-jolts",
+          selected_editions: { consensus: { ...template.selected_editions.consensus,
+            edition_id: `synthetic-survey-${i}`, evidence_note: "Synthetic evidence only. ".repeat(300) } },
+        }));
+      }
+      const field = history ? "releases" : "editions";
+      const offset = Number(q.get("offset") || 0), limit = Number(q.get("limit") || 50);
+      if (offset > 0 && (!q.has("ledger_cursor") || !q.has("publication_revision"))) return { status: 400, headers: {}, body: { error: "Both pagination pins are required for offset > 0." } };
+      if (q.has("publication_revision") && q.get("publication_revision") !== String(rec.body.publication_revision)) return { status: 409, headers: {}, body: { error: "fc_enrichment_publication_changed: restart at offset=0 without old pins." } };
+      if (history && ["us-cpi", "us-nfp", "us-ppi", "us-retail-sales", "us-pce", "us-ism-manufacturing", "us-industrial-production", "us-consumer-confidence"].includes(q.get("series"))) {
+        rec.body.series_code = q.get("series");
+        rec.body.releases = []; // Contract support never invents active coverage.
+      } else if (history && !["us-adp", "us-jolts"].includes(q.get("series"))) return { status: 400, headers: {}, body: { error: "series_required" } };
+      if (!history && !q.get("event_id")) return { status: 400, headers: {}, body: { error: "event_id_required" } };
+      return { ...rec, body: { ...rec.body, [field]: rec.body[field].slice(offset, offset + limit),
+        next_offset: offset + limit < rec.body[field].length ? offset + limit : null } };
+    }
     case "/holidays": return fixture(q.get("exchange") === "lse" ? "holidays_lse_2027" : "holidays_nyse");
     case "/market-status": return fixture(q.get("exchange") === "lse" ? "market_status_lse" : "market_status_nyse");
     case "/changes": {

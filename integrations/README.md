@@ -2,15 +2,17 @@
 
 A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Hosted MCP requires a verified account, active paid plan and API key. Every request requires credentials.
 
-[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
-Set `FC_API_KEY` securely in your client environment. The manifests use an environment-expanded `X-API-Key` header. This setup requires a client that supports both custom headers and environment expansion; do not assume every plugin installer supports them. If unsupported, use the [local stdio setup](https://www.financecalendar.com/api/mcp/#install-the-mcp-server-from-source). Never replace the placeholder with a real key in committed files or put a key in a URL.
+[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+
+Set `FC_API_KEY` securely in your client environment. The manifests use an environment-expanded `X-API-Key` header. This setup requires a client that supports both custom headers and environment expansion; do not assume every plugin installer supports them. If unsupported, use the [local stdio setup](https://www.financecalendar.com/api/mcp/#local-mcp-server). Never replace the placeholder with a real key in committed files or put a key in a URL.
 
 The skill covers current release schedules, source attribution, unknown clocks/periods, numerical vintages, publication bundles and complete exports. It uses discovered countries/series instead of a fixed coverage promise.
 
 ## Downloads
 
-Use the current repository source and authenticated configuration below. The [older 0.1.0 beta ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.0) predate required API keys and need their connection settings updated before use. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
+Use the current repository source and authenticated configuration below. The [current 0.1.2 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.2) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
 
 ## Claude Code
 
@@ -52,4 +54,4 @@ Sources: [OpenAI plugin packaging](https://developers.openai.com/plugins/build/p
 
 ## Working application example
 
-The [economic calendar dashboard starter](examples/economic-calendar-dashboard/README.md) includes a Node backend, responsive browser calendar, labelled demo mode and a shared 30-minute cache. Your API key stays on the server; browser filters work locally. Follow the README and its coding-assistant prompt to adapt the working app.
+The [economic calendar dashboard starter](examples/economic-calendar-dashboard/README.md) includes a Node backend, responsive browser calendar, explicit demo mode and a shared 30-minute cache. It keeps your API key on the server and performs browser filtering locally. Read its setup instructions and copy the coding-assistant prompt to adapt a working app.

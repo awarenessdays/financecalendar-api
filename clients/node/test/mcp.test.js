@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-const TOOLS = ["next_event", "calendar", "today", "week", "series_list", "series_detail", "history", "market_holidays", "market_status", "changes", "countries"];
+const TOOLS = ["next_event", "calendar", "today", "week", "series_list", "series_detail", "history", "economic_results_history", "release_editions", "market_holidays", "market_status", "changes", "countries"];
 
 /** Minimal JSON-RPC client over the server's stdio. */
 function startServer(apiKey="fc_live_0123456789abcdef0123456789abcdef") {
@@ -42,7 +42,7 @@ async function initialised(apiKey) {
   const s = startServer(apiKey);
   const init = await s.send("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "0" } });
   assert.equal(init.result.serverInfo.name, "financecalendar");
-  assert.equal(init.result.serverInfo.version, "0.2.1");
+  assert.equal(init.result.serverInfo.version, "0.2.2");
   await s.send("notifications/initialized", {}, true);
   return s;
 }
@@ -52,13 +52,13 @@ describe("MCP server over stdio", () => {
     const server=await initialised("");
     try {const response=await server.send("tools/call",{name:"countries",arguments:{}});assert.equal(response.result.isError,true);assert.match(response.result.content[0].text,/HTTP 401/);assert.match(response.result.content[0].text,/FC_API_KEY/);assert.match(response.result.content[0].text,/account\//);}finally{server.stop();}
   });
-  test("initialize + tools/list exposes the 11 tools with schemas", async () => {
+  test("initialize + tools/list exposes the 13 tools with schemas", async () => {
     const s = await initialised();
     try {
       const res = await s.send("tools/list", {});
       const names = res.result.tools.map((t) => t.name).sort();
       assert.deepEqual(names, [...TOOLS].sort());
-      assert.equal(res.result.tools.length, 11);
+      assert.equal(res.result.tools.length, 13);
       for (const t of res.result.tools) {
         assert.ok(t.description && t.description.length > 30, `${t.name} needs a description`);
         assert.equal(t.inputSchema.type, "object");
@@ -75,6 +75,30 @@ describe("MCP server over stdio", () => {
       assert.deepEqual(props("week"), ["asset", "category", "country", "impact", "include_holidays", "series", "tz", "which"]);
       assert.deepEqual(props("history"), ["asset", "from", "limit", "series", "to", "tz"]);
       assert.deepEqual(props("changes"), ["change", "cursor", "limit", "series", "since"]);
+      assert.deepEqual(props("economic_results_history"), ["from", "ledger_cursor", "limit", "offset", "publication_revision", "series", "to"]);
+      assert.deepEqual(props("release_editions"), ["event_id", "ledger_cursor", "limit", "offset", "publication_revision"]);
+      const results = res.result.tools.find((t) => t.name === "economic_results_history");
+      assert.equal(results.inputSchema.additionalProperties, false);
+      assert.deepEqual(results.inputSchema.properties.series.enum, ["us-jolts", "us-adp", "us-ism-services", "us-trade-balance", "us-cpi", "us-nfp", "us-ppi", "us-retail-sales", "us-pce", "us-ism-manufacturing", "us-industrial-production", "us-consumer-confidence"]);
+      assert.equal(results.inputSchema.properties.limit.maximum, 5);
+      assert.equal(results.inputSchema.properties.limit.default, 5);
+      assert.ok(!results.inputSchema.required.includes("limit"));
+      assert.equal(results.inputSchema.properties.offset.maximum, 999999);
+      assert.equal(results.inputSchema.properties.ledger_cursor.maximum, Number.MAX_SAFE_INTEGER);
+      assert.equal(results.inputSchema.properties.publication_revision.minimum, 1);
+      assert.match(results.description, /12 supported US headline series/);
+      assert.match(results.description, /missing values remain null/);
+      const editions = res.result.tools.find((t) => t.name === "release_editions");
+      for (const tool of [results, editions]) {
+        assert.match(tool.description, /REST \/enrichment\/as-of/);
+        assert.match(tool.description, /Python enrichment_as_of\(\)/);
+        assert.match(tool.description, /tool does not accept as_of/);
+        assert.match(tool.description, /does not establish complete original first-print history/);
+        assert.match(tool.description, /both first-page pins/);
+        assert.ok(!("as_of" in tool.inputSchema.properties));
+        assert.doesNotMatch(tool.description, /as_of queries.*unsupported/);
+      }
+      assert.match(editions.description, /Provider archives are labelled separately from engine captures/);
     } finally { s.stop(); }
   });
 
@@ -123,6 +147,65 @@ describe("MCP server over stdio", () => {
       const second = await s.send("tools/call", { name: "changes", arguments: { cursor: first.result.structuredContent.next_cursor } });
       assert.equal(second.result.structuredContent.has_more, false);
       assert.equal(second.result.structuredContent.count, 0);
+    } finally { s.stop(); }
+  });
+
+  test("economic results and release editions preserve exact provenance and offset metadata", async () => {
+    const s = await initialised();
+    try {
+      const first = await s.send("tools/call", { name: "economic_results_history", arguments: { series: "us-adp", from: "2026-01-01", to: "2026-11-05", limit: 1, offset: 0 } });
+      const data = first.result.structuredContent;
+      assert.deepEqual(JSON.parse(first.result.content[0].text), data);
+      assert.equal(data.as_of_supported, false);
+      assert.equal(data.releases[0].actual, "0");
+      assert.equal(data.next_offset, 1);
+      const second = await s.send("tools/call", { name: "economic_results_history", arguments: { series: "us-adp", limit: 1, offset: data.next_offset, ledger_cursor: data.ledger_cursor, publication_revision: data.publication_revision } });
+      assert.equal(second.result.structuredContent.releases[0].consensus, null);
+      assert.equal(second.result.structuredContent.next_offset, null);
+      const editions = await s.send("tools/call", { name: "release_editions", arguments: { event_id: data.releases[0].event_id, limit: 1 } });
+      const proof = editions.result.structuredContent.editions[0];
+      assert.equal(proof.provider_edition_id, "vintage-1");
+      assert.equal(proof.forecast_type, "survey_consensus");
+      assert.notEqual(proof.available_at, proof.received_at);
+      assert.equal(editions.result.structuredContent.next_offset, 1);
+      const missingPins = await s.send("tools/call", { name: "economic_results_history", arguments: { series: "us-adp", offset: 1 } });
+      assert.equal(missingPins.result.isError, true);
+      const changedPublication = await s.send("tools/call", { name: "release_editions", arguments: { event_id: "adp-2026-09", offset: 1, ledger_cursor: 3, publication_revision: 6 } });
+      assert.equal(changedPublication.result.isError, true);
+      assert.match(changedPublication.result.content[0].text, /HTTP 409/);
+      for (const series of ["us-cpi", "us-nfp", "us-ppi", "us-retail-sales", "us-pce", "us-ism-manufacturing", "us-industrial-production", "us-consumer-confidence"]) {
+        const staged = await s.send("tools/call", { name: "economic_results_history", arguments: { series } });
+        assert.equal(staged.result.isError, undefined);
+        assert.equal(staged.result.structuredContent.series_code, series);
+        assert.deepEqual(staged.result.structuredContent.releases, []);
+      }
+      for (const args of [{ series: "us-adp", as_of: "2026-11-01" }, { series: "us-adp", limit: 6 }, { series: "us-adp", offset: 1000000 }, { series: "us-core-cpi" }, { series: "us-adp", ledger_cursor: Number.MAX_SAFE_INTEGER + 1 }, { series: "us-adp", publication_revision: 0 }]) {
+        const invalid = await s.send("tools/call", { name: "economic_results_history", arguments: args });
+        assert.ok(invalid.error?.code === -32602 || invalid.result?.isError === true, JSON.stringify(invalid));
+      }
+    } finally { s.stop(); }
+  });
+
+  test("economic results default to five complete evidence rows and preserve pinned continuation", async () => {
+    const s = await initialised();
+    try {
+      const ids = [], sizes = [];
+      let offset = 0, pins = {};
+      do {
+        const response = await s.send("tools/call", { name: "economic_results_history", arguments: { series: "us-jolts", offset, ...pins } });
+        assert.notEqual(response.result.isError, true);
+        const data = response.result.structuredContent;
+        assert.deepEqual(JSON.parse(response.result.content[0].text), data);
+        assert.equal(data.ledger_cursor, 3);
+        assert.equal(data.publication_revision, 7);
+        assert.ok(data.releases.every((row) => row.selected_editions.consensus.evidence_note.length > 7000));
+        sizes.push(data.releases.length);
+        ids.push(...data.releases.map((row) => row.event_id));
+        offset = data.next_offset;
+        pins = { ledger_cursor: data.ledger_cursor, publication_revision: data.publication_revision };
+      } while (offset !== null);
+      assert.deepEqual(sizes, [5, 5, 2]);
+      assert.equal(new Set(ids).size, 12);
     } finally { s.stop(); }
   });
 

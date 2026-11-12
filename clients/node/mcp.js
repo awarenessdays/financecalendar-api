@@ -114,6 +114,47 @@ server.registerTool("history", {
   },
 }, run((args) => api("/history", args)));
 
+const resultSeries = z.enum(["us-jolts", "us-adp", "us-ism-services", "us-trade-balance", "us-cpi", "us-nfp", "us-ppi", "us-retail-sales", "us-pce", "us-ism-manufacturing", "us-industrial-production", "us-consumer-confidence"])
+  .describe("Twelve supported US headline series. Published evidence varies by series, provider qualification and server activation; inspect returned values and provenance.");
+const resultLimit = z.number().int().min(1).max(100).optional()
+  .describe("Rows per response, 1 to 100 (default 50). Follow next_offset with the same filters.");
+const evidenceHistoryLimit = z.number().int().min(1).max(5).default(5)
+  .describe("Releases per response, 1 to 5 (default 5), including complete edition evidence. Follow next_offset with the same filters and both first-page pins.");
+const resultOffset = z.number().int().min(0).max(999999).optional()
+  .describe("Page offset, 0 to 999999; use next_offset and both first-page pins (ledger_cursor, publication_revision) for offsets above zero.");
+const ledgerCursor = z.number().int().min(0).max(Number.MAX_SAFE_INTEGER).optional()
+  .describe("Ledger high-water pin returned on the first page. Required with publication_revision when offset > 0; reuse unchanged while paging.");
+const publicationRevision = z.number().int().min(1).max(Number.MAX_SAFE_INTEGER).optional()
+  .describe("Publication pin returned on the first page. Required with ledger_cursor when offset > 0. On HTTP 409 restart offset=0 without old pins.");
+
+server.registerTool("economic_results_history", {
+  title: "Economic results history",
+  description: "Explore recorded economic results for 12 supported US headline series, with exact consensus, actual and prior values where evidenced, and selected edition provenance. Dates filter releases; follow next_offset with the same filters and both first-page pins. Published evidence varies by series, account access, provider qualification and server activation; missing values remain null. For accepted provider editions at a cutoff, use the dedicated REST /enrichment/as-of endpoint or Python enrichment_as_of(). This history tool does not accept as_of and does not establish complete original first-print history.",
+  annotations: readOnly,
+  inputSchema: z.strictObject({
+    series: resultSeries,
+    from: date("Inclusive release date YYYY-MM-DD."),
+    to: date("Inclusive release date YYYY-MM-DD."),
+    limit: evidenceHistoryLimit,
+    offset: resultOffset,
+    ledger_cursor: ledgerCursor,
+    publication_revision: publicationRevision,
+  }),
+}, run((args) => api("/enrichment/history", args)));
+
+server.registerTool("release_editions", {
+  title: "Release editions",
+  description: "Inspect immutable accepted numerical editions for one canonical event ID, including reference period, exact value, survey/model distinction, source availability and Finance Calendar receipt clocks. Follow next_offset with the same event_id and both first-page pins. Provider archives are labelled separately from engine captures. For accepted provider editions at a cutoff, use the dedicated REST /enrichment/as-of endpoint or Python enrichment_as_of(). This editions tool does not accept as_of and does not establish complete original first-print history.",
+  annotations: readOnly,
+  inputSchema: z.strictObject({
+    event_id: z.string().min(1).max(512).describe("Canonical event ID from a calendar or economic_results_history response."),
+    limit: resultLimit,
+    offset: resultOffset,
+    ledger_cursor: ledgerCursor,
+    publication_revision: publicationRevision,
+  }),
+}, run((args) => api("/enrichment/editions", args)));
+
 server.registerTool("market_holidays", {
   title: "Market holidays",
   description: "Exchange holidays and early closes for an exchange (NYSE and Nasdaq by default) and year.",

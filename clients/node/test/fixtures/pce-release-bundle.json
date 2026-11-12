@@ -1,0 +1,594 @@
+{
+  "version": 1,
+  "generated_at": "2026-11-03T08:00:00Z",
+  "window": {
+    "from": "2026-01-01",
+    "to": "2027-01-01"
+  },
+  "events": [
+    {
+      "id": "synthetic-pce-release",
+      "series_code": "us-pce",
+      "series_name": "US Personal Income and Outlays (PCE)",
+      "name": "Synthetic multi-measure PCE release",
+      "country": "US",
+      "category": "economic-indicators",
+      "impact": "high",
+      "date": "2026-10-29",
+      "release_at_utc": "2026-10-29T12:30:00Z",
+      "release_tz": "America/New_York",
+      "all_day": false,
+      "status": "released",
+      "actual": "3.6",
+      "prior": "3.4",
+      "consensus": null,
+      "unit": "% y/y",
+      "source_id": "bea",
+      "source_name": "Synthetic official publisher",
+      "native_id": "bea:us-pce:september-2026",
+      "source_url": "https://example.invalid/synthetic-bea",
+      "release_stage": "release",
+      "time_precision": "minute",
+      "data_stale": false,
+      "last_verified_at": "2026-11-03T08:00:00Z",
+      "source_reference_period": {
+        "kind": "month",
+        "value": "2026-09"
+      },
+      "source_clock": {
+        "clock": "10:00",
+        "timezone": "Europe/London"
+      },
+      "source_family": "Synthetic CPI",
+      "source_publication_type": "statistical-release",
+      "source_license": {
+        "id": "synthetic",
+        "attribution": "Synthetic test fixture"
+      },
+      "source_rights": {
+        "access_basis": "synthetic"
+      },
+      "observations": [
+        {
+          "role": "actual",
+          "metric_id": "us-pce-price-index-yoy",
+          "reference_period": "2026-09",
+          "value": "3.6",
+          "unit": "% y/y",
+          "source_id": "bea-pce-observations",
+          "source_url": "https://example.invalid/synthetic-bea",
+          "definition": "Synthetic headline annual pce inflation, not published source facts.",
+          "frequency": "monthly",
+          "seasonal_adjustment": "seasonally-adjusted",
+          "known_at": "2026-11-03T08:00:00Z",
+          "first_seen_at": "2026-11-03T08:00:00Z",
+          "last_checked_at": "2026-11-03T08:00:00Z",
+          "data_stale": false,
+          "revision_history": [],
+          "historical_first_print": false,
+          "source_rights": {
+            "attribution": "Synthetic delivery test fixture; not published economic data."
+          }
+        },
+        {
+          "role": "prior",
+          "metric_id": "us-pce-price-index-yoy",
+          "reference_period": "2026-08",
+          "value": "3.4",
+          "unit": "% y/y",
+          "source_id": "bea-pce-observations",
+          "source_url": "https://example.invalid/synthetic-bea",
+          "definition": "Synthetic headline annual pce inflation, not published source facts.",
+          "frequency": "monthly",
+          "seasonal_adjustment": "seasonally-adjusted",
+          "known_at": "2026-11-03T08:00:00Z",
+          "first_seen_at": "2026-11-03T08:00:00Z",
+          "last_checked_at": "2026-11-03T08:00:00Z",
+          "data_stale": false,
+          "revision_history": [],
+          "historical_first_print": false,
+          "source_rights": {
+            "attribution": "Synthetic delivery test fixture; not published economic data."
+          }
+        }
+      ],
+      "observation_fields": [
+        "actual",
+        "prior"
+      ],
+      "observation_status": "current",
+      "observation_metric_id": "us-pce-price-index-yoy",
+      "data_quality": {
+        "version": 1,
+        "first_captured_at": "2026-10-19T12:00:00+00:00",
+        "last_changed_at": "2026-10-19T12:00:00+00:00",
+        "capture_basis": "engine-observed-contract",
+        "schedule": {
+          "verification": "verified",
+          "stale": false
+        },
+        "fields": {
+          "actual": {
+            "availability": "available",
+            "reason": null,
+            "evidence": "validated_observation",
+            "freshness": "current_as_recorded",
+            "observation_id": "obs_dc9cdfd47dc17bc7e5e35437",
+            "known_at": "2026-11-03T08:00:00Z",
+            "metric_id": "us-pce-price-index-yoy",
+            "reference_period": "2026-09",
+            "source_id": "bea-pce-observations",
+            "unit": "% y/y"
+          },
+          "prior": {
+            "availability": "available",
+            "reason": null,
+            "evidence": "validated_observation",
+            "freshness": "current_as_recorded",
+            "observation_id": "obs_a73e9d5ca191c94bb8092b27",
+            "known_at": "2026-11-03T08:00:00Z",
+            "metric_id": "us-pce-price-index-yoy",
+            "reference_period": "2026-08",
+            "source_id": "bea-pce-observations",
+            "unit": "% y/y"
+          },
+          "consensus": {
+            "availability": "unavailable",
+            "reason": "not_collected",
+            "evidence": "none",
+            "freshness": "unknown",
+            "observation_id": null,
+            "known_at": null
+          }
+        }
+      },
+      "period": "September 2026",
+      "release_bundle": {
+        "version": 1,
+        "primary_metric_id": "us-pce-price-index-yoy",
+        "expected_metric_ids": [
+          "us-pce-price-index-yoy",
+          "us-pce-price-index-mom",
+          "us-pce-core-price-index-yoy",
+          "us-pce-core-price-index-mom"
+        ],
+        "metrics": [
+          {
+            "metric_id": "us-pce-price-index-yoy",
+            "label": "Headline annual PCE inflation",
+            "unit": "% y/y",
+            "definition": "Synthetic headline annual pce inflation, not published source facts.",
+            "frequency": "monthly",
+            "seasonal_adjustment": "seasonally-adjusted",
+            "actual": "3.6",
+            "prior": "3.4",
+            "consensus": null,
+            "observations": [
+              {
+                "role": "actual",
+                "metric_id": "us-pce-price-index-yoy",
+                "reference_period": "2026-09",
+                "value": "3.6",
+                "unit": "% y/y",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic headline annual pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              },
+              {
+                "role": "prior",
+                "metric_id": "us-pce-price-index-yoy",
+                "reference_period": "2026-08",
+                "value": "3.4",
+                "unit": "% y/y",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic headline annual pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              }
+            ],
+            "data_quality": {
+              "version": 1,
+              "fields": {
+                "actual": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_dc9cdfd47dc17bc7e5e35437",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-price-index-yoy",
+                  "reference_period": "2026-09",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% y/y"
+                },
+                "prior": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_a73e9d5ca191c94bb8092b27",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-price-index-yoy",
+                  "reference_period": "2026-08",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% y/y"
+                },
+                "consensus": {
+                  "availability": "unavailable",
+                  "reason": "not_collected",
+                  "evidence": "none",
+                  "freshness": "unknown",
+                  "observation_id": null,
+                  "known_at": null
+                }
+              }
+            }
+          },
+          {
+            "metric_id": "us-pce-price-index-mom",
+            "label": "Headline monthly PCE inflation",
+            "unit": "% m/m",
+            "definition": "Synthetic headline monthly pce inflation, not published source facts.",
+            "frequency": "monthly",
+            "seasonal_adjustment": "seasonally-adjusted",
+            "actual": "0.5",
+            "prior": "0.4",
+            "consensus": null,
+            "observations": [
+              {
+                "role": "actual",
+                "metric_id": "us-pce-price-index-mom",
+                "reference_period": "2026-09",
+                "value": "0.5",
+                "unit": "% m/m",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic headline monthly pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              },
+              {
+                "role": "prior",
+                "metric_id": "us-pce-price-index-mom",
+                "reference_period": "2026-08",
+                "value": "0.4",
+                "unit": "% m/m",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic headline monthly pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              }
+            ],
+            "data_quality": {
+              "version": 1,
+              "fields": {
+                "actual": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_dcadd0931daf57e703528501",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-price-index-mom",
+                  "reference_period": "2026-09",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% m/m"
+                },
+                "prior": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_dc6f27d215f09edf28d220b6",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-price-index-mom",
+                  "reference_period": "2026-08",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% m/m"
+                },
+                "consensus": {
+                  "availability": "unavailable",
+                  "reason": "not_collected",
+                  "evidence": "none",
+                  "freshness": "unknown",
+                  "observation_id": null,
+                  "known_at": null
+                }
+              }
+            }
+          },
+          {
+            "metric_id": "us-pce-core-price-index-yoy",
+            "label": "Core annual PCE inflation",
+            "unit": "% y/y",
+            "definition": "Synthetic core annual pce inflation, not published source facts.",
+            "frequency": "monthly",
+            "seasonal_adjustment": "seasonally-adjusted",
+            "actual": "3.1",
+            "prior": "3.0",
+            "consensus": null,
+            "observations": [
+              {
+                "role": "actual",
+                "metric_id": "us-pce-core-price-index-yoy",
+                "reference_period": "2026-09",
+                "value": "3.1",
+                "unit": "% y/y",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic core annual pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              },
+              {
+                "role": "prior",
+                "metric_id": "us-pce-core-price-index-yoy",
+                "reference_period": "2026-08",
+                "value": "3.0",
+                "unit": "% y/y",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic core annual pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              }
+            ],
+            "data_quality": {
+              "version": 1,
+              "fields": {
+                "actual": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_9bb9b434f4c771a11d666f33",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-core-price-index-yoy",
+                  "reference_period": "2026-09",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% y/y"
+                },
+                "prior": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_1cac515fd6f954b741f48ff2",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-core-price-index-yoy",
+                  "reference_period": "2026-08",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% y/y"
+                },
+                "consensus": {
+                  "availability": "unavailable",
+                  "reason": "not_collected",
+                  "evidence": "none",
+                  "freshness": "unknown",
+                  "observation_id": null,
+                  "known_at": null
+                }
+              }
+            }
+          },
+          {
+            "metric_id": "us-pce-core-price-index-mom",
+            "label": "Core monthly PCE inflation",
+            "unit": "% m/m",
+            "definition": "Synthetic core monthly pce inflation, not published source facts.",
+            "frequency": "monthly",
+            "seasonal_adjustment": "seasonally-adjusted",
+            "actual": "0",
+            "prior": "0.3",
+            "consensus": null,
+            "observations": [
+              {
+                "role": "actual",
+                "metric_id": "us-pce-core-price-index-mom",
+                "reference_period": "2026-09",
+                "value": "0",
+                "unit": "% m/m",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic core monthly pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              },
+              {
+                "role": "prior",
+                "metric_id": "us-pce-core-price-index-mom",
+                "reference_period": "2026-08",
+                "value": "0.3",
+                "unit": "% m/m",
+                "source_id": "bea-pce-observations",
+                "source_url": "https://example.invalid/synthetic-bea",
+                "definition": "Synthetic core monthly pce inflation, not published source facts.",
+                "frequency": "monthly",
+                "seasonal_adjustment": "seasonally-adjusted",
+                "known_at": "2026-11-03T08:00:00Z",
+                "first_seen_at": "2026-11-03T08:00:00Z",
+                "last_checked_at": "2026-11-03T08:00:00Z",
+                "data_stale": false,
+                "revision_history": [],
+                "historical_first_print": false,
+                "source_rights": {
+                  "attribution": "Synthetic delivery test fixture; not published economic data."
+                }
+              }
+            ],
+            "data_quality": {
+              "version": 1,
+              "fields": {
+                "actual": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_41bb10440a99244434878d06",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-core-price-index-mom",
+                  "reference_period": "2026-09",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% m/m"
+                },
+                "prior": {
+                  "availability": "available",
+                  "reason": null,
+                  "evidence": "validated_observation",
+                  "freshness": "current_as_recorded",
+                  "observation_id": "obs_3d58f1f0386b3ea29c7ea221",
+                  "known_at": "2026-11-03T08:00:00Z",
+                  "metric_id": "us-pce-core-price-index-mom",
+                  "reference_period": "2026-08",
+                  "source_id": "bea-pce-observations",
+                  "unit": "% m/m"
+                },
+                "consensus": {
+                  "availability": "unavailable",
+                  "reason": "not_collected",
+                  "evidence": "none",
+                  "freshness": "unknown",
+                  "observation_id": null,
+                  "known_at": null
+                }
+              }
+            }
+          }
+        ],
+        "completeness": {
+          "expected_metrics": 4,
+          "actuals_available": 4,
+          "actuals_current": 4,
+          "priors_available": 4,
+          "complete_actuals": true,
+          "complete_with_priors": true
+        }
+      }
+    }
+  ],
+  "series": [
+    {
+      "code": "us-pce",
+      "name": "US Personal Income and Outlays (PCE)",
+      "aliases": [
+        "pce"
+      ],
+      "country": "US",
+      "category": "economic-indicators",
+      "count": 1
+    }
+  ],
+  "exchanges": {},
+  "counts": {
+    "events": 1,
+    "series": 1,
+    "holidays": 0,
+    "countries": 1
+  },
+  "changes": [],
+  "datasets": {},
+  "quality": {
+    "version": 1,
+    "generated_at": "2026-10-19T12:00:00+00:00",
+    "scope": "full_dataset_field_coverage",
+    "records": 1,
+    "schedule": {
+      "verified": 2,
+      "unverified": 1,
+      "stale": 0,
+      "exact_time": 3,
+      "date_only": 0,
+      "time_window": 0,
+      "date_window": 0,
+      "unknown_time": 0
+    },
+    "fields": {},
+    "observations": {
+      "entries": 8,
+      "unique_observations": 8,
+      "rows_with_observations": 1,
+      "engine_observed_revisions": 0
+    },
+    "by_source": {},
+    "by_series": {},
+    "interpretation": "Synthetic fixture: field coverage is not a release-latency or first-print claim.",
+    "release_bundles": {
+      "scope": "declared_bundle_field_coverage",
+      "releases": 1,
+      "expected_metrics": 4,
+      "actuals_available": 4,
+      "actuals_current": 4,
+      "priors_available": 4,
+      "complete_actual_bundles": 1,
+      "complete_with_priors_bundles": 1
+    }
+  },
+  "source_health": []
+}

@@ -1,10 +1,12 @@
 # curl cheat sheet
 
-[Free API access](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
+[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
+
+[Optional limited evaluation](https://www.financecalendar.com/account/?trial=1) includes **48 hours from your first successful data request and 25 successful requests in total**, with verified email, one API key and no card required. It returns JSON from `/calendar`, `/today` and `/week`, up to 10 economic releases or central bank decisions per response, from the previous seven days through the next two days in UTC. Real consensus, actual and prior values are included where recorded; missing values remain `null`. The allowance does not renew. Other routes, formats and wider access require a paid plan.
 
 Starter is **US$9.99/year** for **1,000 requests per UTC day and 25,000 per UTC calendar month**; Build includes **100,000/day** and Scale **1,000,000/day**. Account keys share their paid allowance. Check [current plans](https://www.financecalendar.com/pricing/) and your account for effective prices and limits.
 
-Set `FC_API_KEY` privately and keep it out of URLs. This first request works within free access:
+Set `FC_API_KEY` privately and keep it out of URLs. This first request works within evaluation access:
 
 ```sh
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "https://www.financecalendar.com/wp-json/fc/v1/calendar?limit=10"
@@ -44,4 +46,4 @@ control can fetch authenticated data and publish an appropriately restricted fee
 
 Use the [Data explorer](https://www.financecalendar.com/data/) for browser research
 and matching/selected CSV or JSON exports. It is included with active
-Starter, Build and Scale subscriptions and uses a verified account session rather than an API key. Finite free API access does not include the Data explorer.
+Starter, Build and Scale subscriptions and uses a verified account session rather than an API key. Finite limited API evaluation does not include the Data explorer.

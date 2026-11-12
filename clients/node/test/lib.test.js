@@ -77,7 +77,7 @@ test("factual crypto output preserves source notices without inventing a licence
   assert.ok(!text.includes("MIT") && !text.includes("CC-BY"));
   assert.match(formatEvent({ ...row, crypto: { event_type: "governance-vote" } }), /Governance voting deadline; not a proposal outcome or execution\./);
   const csv = eventsToCsv([row]);
-  assert.match(csv.split("\n")[0], /source_rights,discovery_url,observations,observation_status,observation_metric_id,observation_fields,source_reference_period,source_id,native_id,source_clock$/);
+  assert.match(csv.split("\n")[0], /source_rights,discovery_url,observations,observation_status,observation_metric_id,observation_fields,source_reference_period,source_id,native_id,source_clock,release_bundle$/);
   for (const value of [rights.attribution, rights.notice, row.discovery_url, "3625742933.075554"]) assert.ok(csv.includes(value));
 });
 
@@ -334,4 +334,19 @@ describe("formatting", () => {
     assert.match(row, /"US Initial Jobless Claims: October 22, 2026"/);
     assert.match(row, /^2026-10-22,,,,false,/);
   });
+});
+
+
+test("local CSV and human output retain complete multi-metric release bundles", async () => {
+  const fs = await import("node:fs");
+  const row = JSON.parse(fs.readFileSync(new URL("./fixtures/pce-release-bundle.json", import.meta.url), "utf8")).events[0];
+  const text = formatEvent(row);
+  assert.match(text, /Headline annual PCE inflation: actual 3.6 % y\/y; prior 3.4 % y\/y/);
+  assert.match(text, /Core monthly PCE inflation: actual 0 % m\/m; prior 0.3 % m\/m/);
+  const csv = eventsToCsv([row]);
+  assert.match(csv.split("\n")[0], /,release_bundle$/);
+  assert.ok(csv.includes('""us-pce-core-price-index-mom""'));
+  row.release_bundle.metrics[3].prior = null;
+  row.release_bundle.metrics[3].data_quality.fields.prior = { reason: "missing_validated_evidence" };
+  assert.match(formatEvent(row), /prior missing validated evidence/);
 });
