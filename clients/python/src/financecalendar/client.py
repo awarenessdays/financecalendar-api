@@ -102,7 +102,7 @@ class Client:
 
     def _request(self, path: str, params: dict[str, Any] | None = None, raw: bool = False) -> Any:
         if not self.api_key:
-            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key. Starter API access starts at US$9.99/year: https://www.financecalendar.com/pricing/. Optional evaluation: 48 hours from first use, 25 total JSON calendar requests, verified email and one key: https://www.financecalendar.com/account/?trial=1.")
+            raise FinanceCalendarError(401, "Finance Calendar requires an API key. Set FC_API_KEY or pass api_key. Starter API access starts at US$9.99/year: https://www.financecalendar.com/pricing/. Create your account and complete payment: https://www.financecalendar.com/account/?plan=starter&billing_interval=year.")
         headers = {"Accept": "text/csv, text/plain, */*"} if raw else None
         response = self._http.get(path, params=_clean_params(params or {}), headers=headers)
         if response.status_code >= 400:

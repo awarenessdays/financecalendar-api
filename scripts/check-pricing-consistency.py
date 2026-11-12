@@ -24,9 +24,7 @@ def validate_offer(offer):
         for interval,amount in prices.items():
             value=plan['prices'][interval]
             assert value['unit_amount']==amount and value['currency']=='usd' and value['interval']==interval, key+' price drift'
-    trial=offer['evaluation']
-    assert trial['duration_hours']==48 and trial['successful_requests_total']==25 and trial['max_records_per_response']==10
-    assert trial['starts_at']=='first_successful_data_request' and trial['card_required'] is False and trial['automatic_charge'] is False
+    assert 'evaluation' not in offer, 'The withdrawn trial must not be advertised.'
     assert offer['sample']['max_records']==3 and offer['sample']['filtering'] is False and offer['sample']['pagination'] is False
 
 def main():
@@ -60,7 +58,7 @@ def main():
         with urllib.request.urlopen(request,timeout=30) as response:live=json.load(response)
         validate_offer(live)
         assert live['plans']==offer['plans'], 'Published source differs from canonical live offers.'
-    for mutate in [lambda x:x['plans']['starter'].update({'daily_limit':250}),lambda x:x['plans']['starter']['prices']['year'].update({'unit_amount':1999}),lambda x:x['production_api'].update({'renewable_free_tier':True})]:
+    for mutate in [lambda x:x['plans']['starter'].update({'daily_limit':250}),lambda x:x['plans']['starter']['prices']['year'].update({'unit_amount':1999}),lambda x:x['production_api'].update({'renewable_free_tier':True}),lambda x:x.update({'evaluation':{'signup_url':'https://www.financecalendar.com/account/?trial=1'}})]:
         candidate=deepcopy(offer);mutate(candidate)
         try:validate_offer(candidate)
         except AssertionError:continue

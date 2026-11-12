@@ -1,4 +1,4 @@
-"""Paid-plan Finance Calendar API examples with a private FC_API_KEY. For finite evaluation access use calendar JSON with limit=10."""
+"""Finance Calendar API examples with a private paid-account FC_API_KEY."""
 import json
 import os
 import urllib.parse
@@ -7,7 +7,7 @@ import urllib.request
 BASE = "https://www.financecalendar.com/wp-json/fc/v1"
 API_KEY = os.environ.get("FC_API_KEY", "").strip()
 if not API_KEY:
-    raise RuntimeError("Set FC_API_KEY to your account API key. These wider-route examples need a paid plan. For 48-hour, 25-request free JSON calendar access with verified email and a key, visit https://www.financecalendar.com/account/?trial=1.")
+    raise RuntimeError("Set FC_API_KEY to your account API key. These wider-route examples need a paid plan. Choose a plan at https://www.financecalendar.com/account/?plan=starter&billing_interval=year, confirm your email and complete checkout, then create an API key.")
 
 
 class NoRedirects(urllib.request.HTTPRedirectHandler):

@@ -37,7 +37,7 @@ Environment:
   FC_API_KEY  required API key, sent as X-API-Key; create one at financecalendar.com/account/
   FC_API_BASE alternative base URL (default https://www.financecalendar.com/wp-json/fc/v1)
 
-Data: financecalendar.com. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). Optional evaluation: verified email and key, 48 hours, 25 total JSON requests. https://www.financecalendar.com/pricing/`;
+Data: financecalendar.com. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). https://www.financecalendar.com/pricing/`;
 
 const BOOL_FLAGS = new Set(["json", "csv", "next", "holidays", "help"]);
 
