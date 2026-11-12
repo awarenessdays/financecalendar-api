@@ -2,7 +2,7 @@
 
 Connect source-aware release data with an account key. Starter US$9.99/year;
 current pricing and source terms: https://www.financecalendar.com/pricing/.
-The public browser calendar is free. Optional API evaluation is finite.
+The public browser calendar is free to browse.
 """
 
 from .client import (
