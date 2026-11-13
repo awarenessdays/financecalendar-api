@@ -4,6 +4,7 @@ from copy import deepcopy
 from hashlib import sha256
 import json
 from pathlib import Path
+from approved_contract_additions import prior_schema, prior_parameters, prior_response, validate_properties
 
 ROOT = Path(__file__).resolve().parents[1]
 FREE_REFS = {
@@ -13,7 +14,7 @@ FREE_REFS = {
 FREE_EVENT_FIELDS = {
     'id', 'series_code', 'name', 'country', 'category', 'impact', 'date',
     'release_at_utc', 'time_precision', 'all_day', 'status', 'source_url',
-    'source_name', 'url', 'source_license', 'source_rights',
+    'source_name', 'url', 'source_license', 'source_rights', 'figures_available', 'result_available',
 }
 
 
@@ -41,13 +42,13 @@ def retained_schema(schema, path, method, status):
     if path in ('/calendar', '/today', '/week') and method == 'get' and status == '403':
         if schema == {'oneOf': [trial_error]}:
             return trial_error
-    return schema
+    return prior_response(path, method, status, schema)
 
 
 def validate(document, baseline):
     schemas = document['components']['schemas']
     for name, expected in baseline['paid_schema_sha256'].items():
-        assert digest(schemas[name]) == expected, 'Paid schema changed: ' + name
+        assert digest(prior_schema(name, schemas[name])) == expected, 'Paid schema changed: ' + name
     for name, expected in baseline['trial_schema_sha256'].items():
         assert digest(schemas[name]) == expected, 'Retained trial schema changed: ' + name
     assert digest(document['security']) == baseline['global_security_sha256'], 'Global authentication changed'
@@ -60,7 +61,8 @@ def validate(document, baseline):
         for method, contract in operations.items():
             operation = document['paths'][path][method]
             for key in ('operationId', 'parameters', 'requestBody'):
-                assert digest(operation.get(key)) == contract[key], 'Existing route input changed: ' + path + ' ' + key
+                value = prior_parameters(path, method, operation.get(key)) if key == 'parameters' else operation.get(key)
+                assert digest(value) == contract[key], 'Existing route input changed: ' + path + ' ' + key
             for status, response_contract in contract['responses'].items():
                 assert status in operation['responses'], 'Existing response removed: ' + path + ' ' + status
                 response = operation['responses'][status]
@@ -74,8 +76,10 @@ def validate(document, baseline):
     assert free['properties']['events']['maxItems'] == 20
     event = schemas['FreeDeveloperEvent']
     assert event['additionalProperties'] is False
+    validate_properties('FreeDeveloperEvent', event)
+    validate_properties('FreeDeveloperCalendarResponse', free)
     assert set(event['properties']) == FREE_EVENT_FIELDS, 'Free event allowlist changed'
-    assert set(free['properties']) == {'from', 'to', 'count', 'total', 'truncated', 'events', 'generated_at', 'attribution', 'free_developer'}, 'Free response allowlist changed'
+    assert set(free['properties']) == {'from', 'to', 'count', 'total', 'truncated', 'events', 'generated_at', 'attribution', 'free_developer', 'more_on_paid_plans'}, 'Free response allowlist changed'
     for key, value in [('daily_limit', 10), ('monthly_limit', 100), ('max_events_per_response', 20)]:
         assert schemas['FreeDeveloperUsage']['properties'][key]['const'] == value
     for path in ('/calendar', '/today'):
@@ -102,6 +106,9 @@ def main():
         lambda value: value['paths']['/calendar']['get']['responses']['200']['content']['application/json'].update(schema=FREE_REFS['FreeDeveloperCalendarResponse']),
         lambda value: value['paths']['/history']['get'].update(parameters=[]),
         lambda value: value['components']['securitySchemes']['ApiKey'].update(name='Public-Key'),
+        lambda value: value['components']['schemas']['Event']['properties']['forecasts'].update(type='number'),
+        lambda value: value['components']['schemas']['FreeDeveloperEvent']['properties']['figures_available'].update(const=False),
+        lambda value: next(parameter for parameter in value['paths']['/changes']['get']['parameters'] if parameter['name'] == 'fields')['schema'].update(type='number'),
     ]
     for mutate in mutations:
         candidate = deepcopy(document)
@@ -111,7 +118,7 @@ def main():
         except AssertionError:
             continue
         raise AssertionError('Incompatible mutation accepted')
-    print('Paid/trial schemas, route inputs/responses and authentication preserved; Free closed projection/limits verified; nine incompatible mutations rejected.')
+    print(f'Paid/trial schemas, route inputs/responses and authentication preserved; Free closed projection/limits verified; {len(mutations)} incompatible mutations rejected.')
 
 
 if __name__ == '__main__':

@@ -77,7 +77,13 @@ function renderRows() {
     name.append(button, meta); row.append(time, country, name);
     // One Free marker covers the forecast, consensus and previous figure together, so one tag spans both columns.
     if (event.figures_available && event.prior === null && !event.forecast) { const held = eventValue(null, event.unit, 'prior-column figures-held', true); held.colSpan = 2; row.append(held); }
-    else row.append(eventValue(event.prior, event.unit, 'prior-column'), eventValue(event.forecast?.value ?? null, event.forecast?.unit || event.unit, 'forecast-column'));
+    else {
+      const forecast = eventValue(event.forecast?.value ?? null, event.forecast?.unit || event.unit, 'forecast-column');
+      // Several measures can share one unit (for example headline and core CPI).
+      // Keep the chosen measure visible so the number cannot imply a different headline.
+      if (event.forecast?.measure) forecast.append(make('span', event.forecast.measure, 'forecast-measure'));
+      row.append(eventValue(event.prior, event.unit, 'prior-column'), forecast);
+    }
     row.append(eventValue(event.actual, event.unit, 'value-column', event.result_available)); fragment.append(row);
   }
   if (!events.length) {

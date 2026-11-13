@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { readFile } from 'node:fs/promises';
+import { runInNewContext } from 'node:vm';
 import { readConfig, createFeedStore, createDashboardServer, normaliseEvent, API_ENDPOINT, CACHE_MS } from '../server.mjs';
-import { eventTiming, validDate, shortDate, formatValue, statusBadge, freeView } from '../public/model.mjs';
+import { eventTiming, validDate, shortDate, formatValue, statusBadge, freeView, safeLink } from '../public/model.mjs';
 const SECRET = `fc_live_${'a'.repeat(32)}`;
 const config = (overrides = {}) => readConfig({ FC_API_KEY: SECRET, PORT: '0', ...overrides }, []);
 const initialTime = Date.parse('2026-11-03T08:00:00Z');
@@ -77,6 +78,33 @@ test('the release forecast is taken from the paid forecasts field and never inve
   assert.equal(normaliseEvent(release({ forecasts: [{ measure: 'x', value: null }, 'junk', { measure: 'y', value: '' }] }), 0).forecast, null);
   assert.equal(normaliseEvent(release({ forecasts: [{ measure: 'Zero', unit: '%', value: 0, source_families: 0 }] }), 0).forecast.value, 0);
   assert.equal(normaliseEvent(release({ forecast_available: true, figures_available: true }), 0).forecast, null);
+});
+test('the rendered forecast cell labels the selected measure when headline and core share a unit', async () => {
+  const source = (await readFile(new URL('../public/app.mjs', import.meta.url), 'utf8')).replace(/^import .*;\n/, '');
+  class Node {
+    children = []; attributes = {}; dataset = {}; textContent = '';
+    constructor(tag = 'div') { this.tag = tag; }
+    append(...nodes) { this.children.push(...nodes); }
+    replaceChildren(...nodes) { this.children = nodes; }
+    setAttribute(name, value) { this.attributes[name] = value; }
+    addEventListener() {}
+  }
+  const nodes = new Map();
+  const document = { createElement: tag => new Node(tag), createDocumentFragment: () => new Node('fragment'),
+    querySelector: key => { if (!nodes.has(key)) nodes.set(key, new Node()); return nodes.get(key); }, querySelectorAll: () => [] };
+  const event = normaliseEvent(release({ name: 'UK CPI', country: 'GB', unit: '% y/y', forecasts: [
+    { measure: 'Core CPI y/y', unit: '% y/y', value: '3.1' }, { measure: 'CPI y/y', unit: '% y/y', value: '2.9' },
+  ] }), 0);
+  runInNewContext(source + `\nstate.feed = fixture; state.countries = new Set(['GB']); renderRows();`, {
+    document, fixture: { events: [event], config: { timezone: 'Europe/London' } },
+    eventTiming, formatValue, freeView, safeLink, shortDate, statusBadge,
+    fetch: () => new Promise(() => {}), Intl, Date, console,
+  });
+  const all = node => [node, ...node.children.flatMap(all)];
+  const rendered = all(nodes.get('#event-rows'));
+  const cell = rendered.find(node => node.className?.includes('forecast-column'));
+  assert.ok(cell, 'A forecast cell is rendered');
+  assert.deepEqual(all(cell).filter(node => node.tag === 'span').map(node => node.textContent), ['3.1', '% y/y', 'Core CPI y/y']);
 });
 test('Free Developer markers are kept and the demo Free view removes every figure', async () => {
   const marked = normaliseEvent(release({ figures_available: true, result_available: 'yes' }), 0);
