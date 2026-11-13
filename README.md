@@ -17,6 +17,26 @@ Prices include applicable tax. Paid plans renew at the selected interval until c
 
 Starter, Build and Scale can power customer-facing websites and apps, including paid products, within plan limits and applicable source terms. Free Developer also permits personal or customer-facing projects within its limited schedule scope; its data and capacity limits define the upgrade path.
 
+### What each plan includes
+
+| Feature | Free Developer | Starter | Build | Scale |
+| --- | --- | --- | --- | --- |
+| Price | US$0, no card | US$9.99/year | US$9.99/month or US$95.90/year | US$29.00/month or US$278.40/year |
+| API requests | 100 successful responses per calendar month, up to 10 per day | 1,000 per day, 25,000 per calendar month | 100,000 per day | 1,000,000 per day |
+| Release dates, times and status | Yes: today to today+6 (UTC) | Yes: full calendar | Yes: full calendar | Yes: full calendar |
+| Calendar categories | Economic releases and central banks | All, including central bank speeches, exchange holidays and selected crypto events | All, including central bank speeches, exchange holidays and selected crypto events | All, including central bank speeches, exchange holidays and selected crypto events |
+| Release forecasts for 60 headline measures across 10 economies | No. Releases with figures on paid plans are marked | Yes | Yes | Yes |
+| Consensus, previous and actual figures | No. Releases with figures on paid plans are marked | Yes | Yes | Yes |
+| Release history | No | Yes | Yes | Yes |
+| Change feed and signed webhooks | No | Yes | Yes | Yes |
+| Formats | JSON | JSON, CSV and ICS | JSON, CSV and ICS | JSON, CSV and ICS |
+| Hosted MCP, CLI, Python client and Data explorer | REST routes /calendar and /today | Yes | Yes | Yes |
+| Records per response | Up to 20, no pagination | Up to 500, with pagination | Up to 500, with pagination | Up to 500, with pagination |
+| Complete current dataset download | No | No | No | Yes |
+| Customer-facing apps and products | Yes, within the Free scope and source terms | Yes, within plan and source terms | Yes, within plan and source terms | Yes, within plan and source terms |
+
+Prices and limits are the current offer at the time of writing. The [machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) and the [pricing page](https://www.financecalendar.com/pricing/#plan-comparison) are always current.
+
 ### Inspect a public sample
 
 Read the response fields, recorded values and source credits before registering:
