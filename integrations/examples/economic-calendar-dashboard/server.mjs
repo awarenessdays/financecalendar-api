@@ -84,7 +84,7 @@ export function normaliseEvent(row, index) {
     date: validDate(row.date), release_at_utc: isoInstant(row.release_at_utc), release_tz: text(row.release_tz, 100),
     time_precision: text(row.time_precision, 40) || 'unknown', all_day: row.all_day === true,
     time_window_start: text(row.time_window_start, 100), time_window_end: text(row.time_window_end, 100),
-    status: text(row.status, 80), actual: scalar(row.actual), prior: scalar(row.prior), forecast: forecastOf(row), unit: text(row.unit, 100), period: text(row.period, 200),
+    status: text(row.status, 80), actual: scalar(row.actual), prior: scalar(row.prior), forecast: forecastOf(row), figures_available: row.figures_available === true, result_available: row.result_available === true, unit: text(row.unit, 100), period: text(row.period, 200),
     source_name: text(row.source_name, 240), source_url: safeLink(row.source_url), page_url: safeLink(row.page_url || row.url),
     last_verified_at: isoInstant(row.last_verified_at), data_stale: typeof row.data_stale === 'boolean' ? row.data_stale : null,
     credits,
@@ -125,7 +125,7 @@ export function createFeedStore({ config, fetchImpl = globalThis.fetch, now = Da
     next_refresh_at: new Date(nextAttemptAt).toISOString(), cache_minutes: cacheMs / 60000,
     error: error ? { code: error.code, message: error.message, upstream_status: error.status } : null,
     config: { countries: [...config.countries], timezone: config.timeZone, days: config.days },
-    ...(cached ? structuredClone(cached) : { events: [], total: 0, truncated: false, window: null }),
+    ...(cached ? structuredClone(cached) : { events: [], total: 0, truncated: false, window: null, more_on_paid_plans: null }),
   });
   async function refresh() {
     lastAttemptAt = now(); nextAttemptAt = lastAttemptAt + cacheMs;
@@ -149,7 +149,8 @@ export function createFeedStore({ config, fetchImpl = globalThis.fetch, now = Da
       if (!body || !Array.isArray(body.events)) throw new FeedError('invalid_response', 'The calendar response did not contain an events list. The last available view is retained.');
       const events = body.events.slice(0, 500).map(normaliseEvent).filter(Boolean);
       const total = Number.isSafeInteger(body.total) && body.total >= events.length ? body.total : events.length;
-      cached = { events, total, truncated: total > events.length || body.events.length > 500, window: { from, to } };
+      cached = { events, total, truncated: total > events.length || body.events.length > 500, window: { from, to },
+        more_on_paid_plans: Number.isSafeInteger(body.more_on_paid_plans) && body.more_on_paid_plans >= 0 ? body.more_on_paid_plans : null };
       fetchedAt = now(); nextAttemptAt = fetchedAt + cacheMs; error = null;
     } catch (cause) {
       error = cause instanceof FeedError ? cause : new FeedError('connection', 'The calendar could not be reached. Check the server connection; the last available view is retained.');

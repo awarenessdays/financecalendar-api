@@ -8,7 +8,7 @@ export function demoCalendar(from) {
     ['US', 'Initial jobless claims', 1, '13:30', 'medium', 'cancelled', null, 218, 'thousand claims', null, 'US Department of Labor', 'https://www.dol.gov/'],
     ['GB', 'UK GDP monthly estimate', 2, null, 'high', 'estimated', null, null, '% m/m', 0.1, 'Office for National Statistics', 'https://www.ons.gov.uk/'],
     ['US', 'Consumer price index', 3, '13:30', 'high', 'confirmed', null, 0.3, '% m/m', 0.2, 'Bureau of Labor Statistics', 'https://www.bls.gov/'],
-    ['EU', 'Industrial production', 4, '10:00', 'medium', 'released', 0, -0.1, '% m/m', 0.1, 'Eurostat', 'https://ec.europa.eu/eurostat/'],
+    ['EU', 'Industrial production', 0, '10:00', 'medium', 'released', 0, -0.1, '% m/m', 0.1, 'Eurostat', 'https://ec.europa.eu/eurostat/'],
     ['GB', 'UK labour market release', 5, null, 'medium', 'rescheduled', null, null, '%', null, 'Office for National Statistics', 'https://www.ons.gov.uk/'],
   ];
   return { total: rows.length, events: rows.map(([country, name, offset, time, impact, status, actual, prior, unit, forecast, source_name, source_url], index) => ({
