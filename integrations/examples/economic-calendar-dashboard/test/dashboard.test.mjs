@@ -68,6 +68,16 @@ test('normalisation preserves zero, nulls, freshness and credits without arbitra
   const event = normaliseEvent(release({ actual: 0, prior: null, data_stale: true, source_url: 'javascript:alert(1)', private: SECRET, source_rights: { notice: 'Keep publisher evidence' } }), 0);
   assert.equal(event.actual, 0); assert.equal(event.prior, null); assert.equal(event.data_stale, true); assert.equal(event.source_url, null); assert.equal('private' in event, false); assert.ok(event.credits.some(item => item.text === 'Publisher credit')); assert.ok(event.credits.some(item => item.text === 'Keep publisher evidence'));
 });
+test('the release forecast is taken from the paid forecasts field and never invented', () => {
+  const forecasts = [{ measure: 'CPI y/y', unit: '% y/y', value: '3.7', source_families: 3, as_of: '2026-11-09T10:00:00+00:00' }, { measure: 'CPI m/m', unit: '% m/m', value: '0.3', source_families: 2, as_of: '2026-11-09T11:00:00+00:00' }];
+  const matched = normaliseEvent(release({ unit: '% m/m', forecasts }), 0).forecast;
+  assert.deepEqual(matched, { value: '0.3', measure: 'CPI m/m', unit: '% m/m', source_families: 2, as_of: '2026-11-09T11:00:00+00:00' });
+  assert.equal(normaliseEvent(release({ unit: 'jobs', forecasts }), 0).forecast.measure, 'CPI y/y');
+  assert.equal(normaliseEvent(release({}), 0).forecast, null); assert.equal(normaliseEvent(release({ forecasts: [] }), 0).forecast, null);
+  assert.equal(normaliseEvent(release({ forecasts: [{ measure: 'x', value: null }, 'junk', { measure: 'y', value: '' }] }), 0).forecast, null);
+  assert.equal(normaliseEvent(release({ forecasts: [{ measure: 'Zero', unit: '%', value: 0, source_families: 0 }] }), 0).forecast.value, 0);
+  assert.equal(normaliseEvent(release({ forecast_available: true, figures_available: true }), 0).forecast, null);
+});
 test('demo has explicit invented-data identity and never calls a network transport', async () => {
   const store = createFeedStore({ config: readConfig({ PORT: '0' }, ['--demo']), now: () => initialTime, fetchImpl: () => { throw new Error('Network must not run'); } });
   const result = await store.read(); assert.equal(result.demo, true); assert.equal(result.state, 'demo'); assert.ok(result.events.length > 0); assert.ok(result.events.every(event => event.credits.some(credit => credit.text.includes('invented'))));

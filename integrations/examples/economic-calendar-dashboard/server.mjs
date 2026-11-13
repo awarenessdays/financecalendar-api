@@ -37,6 +37,14 @@ export function readConfig(env = process.env, args = process.argv.slice(2)) {
 
 const text = (value, max = 500) => typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max) : null;
 const scalar = value => typeof value === 'number' && Number.isFinite(value) ? value : typeof value === 'string' ? value : null;
+// The release forecast shown for a record: the measure in the record's own unit when there is one, otherwise the first listed.
+const forecastOf = row => {
+  const list = Array.isArray(row.forecasts) ? row.forecasts.filter(item => item && typeof item === 'object' && scalar(item.value) !== null && String(item.value).length) : [];
+  const chosen = list.find(item => item.unit === row.unit) || list[0];
+  if (!chosen) return null;
+  return { value: scalar(chosen.value), measure: text(chosen.measure, 120), unit: text(chosen.unit, 100),
+    source_families: Number.isInteger(chosen.source_families) && chosen.source_families > 0 ? chosen.source_families : null, as_of: isoInstant(chosen.as_of) };
+};
 const isoInstant = value => typeof value === 'string' && validDate(value.slice(0, 10)) && /^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(value) && Number.isFinite(Date.parse(value)) ? value : null;
 
 export function normaliseEvent(row, index) {
@@ -76,7 +84,7 @@ export function normaliseEvent(row, index) {
     date: validDate(row.date), release_at_utc: isoInstant(row.release_at_utc), release_tz: text(row.release_tz, 100),
     time_precision: text(row.time_precision, 40) || 'unknown', all_day: row.all_day === true,
     time_window_start: text(row.time_window_start, 100), time_window_end: text(row.time_window_end, 100),
-    status: text(row.status, 80), actual: scalar(row.actual), prior: scalar(row.prior), unit: text(row.unit, 100), period: text(row.period, 200),
+    status: text(row.status, 80), actual: scalar(row.actual), prior: scalar(row.prior), forecast: forecastOf(row), unit: text(row.unit, 100), period: text(row.period, 200),
     source_name: text(row.source_name, 240), source_url: safeLink(row.source_url), page_url: safeLink(row.page_url || row.url),
     last_verified_at: isoInstant(row.last_verified_at), data_stale: typeof row.data_stale === 'boolean' ? row.data_stale : null,
     credits,

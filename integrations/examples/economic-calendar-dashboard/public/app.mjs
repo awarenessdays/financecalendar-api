@@ -57,7 +57,7 @@ function renderRows() {
   for (const event of events) {
     const timing = eventTiming(event, feed.config.timezone);
     if (timing.date !== previousDate) {
-      const row = make('tr', undefined, 'day-row'), heading = make('th'); heading.scope = 'rowgroup'; heading.colSpan = 5;
+      const row = make('tr', undefined, 'day-row'), heading = make('th'); heading.scope = 'rowgroup'; heading.colSpan = 6;
       heading.append(make('strong', shortDate(timing.date, { weekday: 'long' })));
       row.append(heading); fragment.append(row); previousDate = timing.date;
     }
@@ -72,7 +72,7 @@ function renderRows() {
     if (badge) meta.append(make('span', badge.label, `status-tag ${badge.tone}`));
     if (event.period) meta.append(make('span', event.period));
     if (event.data_stale === true) meta.append(make('span', 'Source review', 'freshness-flag'));
-    name.append(button, meta); row.append(time, country, name, eventValue(event.prior, event.unit, 'prior-column'), eventValue(event.actual, event.unit, 'value-column')); fragment.append(row);
+    name.append(button, meta); row.append(time, country, name, eventValue(event.prior, event.unit, 'prior-column'), eventValue(event.forecast?.value ?? null, event.forecast?.unit || event.unit, 'forecast-column'), eventValue(event.actual, event.unit, 'value-column')); fragment.append(row);
   }
   if (!events.length) {
     const row = make('tr'), cell = make('td', undefined, 'table-message'); cell.colSpan = 5;
@@ -132,7 +132,9 @@ function showDetail(event) {
   detailField(list, 'Time shown', `${timing.time}${timing.exact ? ` (${feed.config.timezone})` : ''}`);
   detailField(list, 'Time precision', event.time_precision);
   if (event.time_window_start || event.time_window_end) detailField(list, 'Recorded window', `${event.time_window_start || 'Unknown'} – ${event.time_window_end || 'Unknown'}`);
-  detailField(list, 'Status', statusBadge(event.status)?.label || event.status); detailField(list, 'Actual', formatValue(event.actual, event.unit)); detailField(list, 'Prior', formatValue(event.prior, event.unit));
+  detailField(list, 'Status', statusBadge(event.status)?.label || event.status); detailField(list, 'Actual', formatValue(event.actual, event.unit));
+  detailField(list, 'Forecast', event.forecast ? [formatValue(event.forecast.value, event.forecast.unit || event.unit), event.forecast.measure, event.forecast.source_families ? `${event.forecast.source_families} source${event.forecast.source_families === 1 ? '' : 's'}` : null, event.forecast.as_of ? `updated ${stamp(event.forecast.as_of)}` : null].filter(Boolean).join(' · ') : formatValue(null, event.unit));
+  detailField(list, 'Prior', formatValue(event.prior, event.unit));
   detailField(list, 'Source checked', stamp(event.last_verified_at));
   detailField(list, 'Source freshness', event.data_stale === true ? 'Marked stale; inspect publisher' : event.data_stale === false ? 'Not marked stale' : 'Not recorded');
   fragment.append(list, make('h3', event.source_name || 'Publisher source'));
