@@ -297,6 +297,27 @@ class Examples(unittest.TestCase):
         self.assertNotIn("EventSetTimer", four)
         self.assertNotIn("FILE_COMMON", four)
 
+    def test_metatrader_news_filter_sources(self):
+        include = (ROOT / "metatrader/FinanceCalendarNews.mqh").read_text()
+        four = (ROOT / "metatrader/FinanceCalendarNewsFilter.mq4").read_text()
+        five = (ROOT / "metatrader/FinanceCalendarNewsFilter.mq5").read_text()
+        self.assertEqual(four, five)
+        for source in (include, five):
+            for forbidden in ("OrderSend", "OrderClose", "OrderModify", "PositionClose", "CTrade", "FILE_COMMON", "api_key="):
+                self.assertNotIn(forbidden, source)
+        # Only parameters every plan accepts, including Free Developer.
+        self.assertIn('"?from=" + FcUtcDate(now) + "&to=" + FcUtcDate(now + 6 * 86400)', include)
+        self.assertIn('+ "&impact=" + g_fc_impact + "&limit=" + IntegerToString(g_fc_max_events);', include)
+        for parameter in ("status=", "offset=", "country=", "category=", "series=", "tz="):
+            self.assertNotIn(parameter, include)
+        self.assertIn("const int refresh_minutes = 180", include)
+        self.assertIn('#include "FinanceCalendarNews.mqh"', five)
+
+    def test_metatrader_news_filter_logic_offline(self):
+        runner = ROOT / "tests/mql/run_mql_tests.py"
+        result = subprocess.run([sys.executable, str(runner)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

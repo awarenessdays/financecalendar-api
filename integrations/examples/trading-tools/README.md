@@ -63,7 +63,7 @@ node node/calendar-watchlist.mjs --clear-cache
 
 ## MetaTrader 4 and 5 manual download
 
-`metatrader/FinanceCalendarFetch.mq4` and `.mq5` contain the same manual `OnStart` script using the documented seven-argument custom-header `WebRequest` overload. **The source has been reviewed but has not been compiled or run in MetaEditor/MetaTrader here.** This is a source example, not a verified trading terminal integration.
+`metatrader/FinanceCalendarFetch.mq4` and `.mq5` contain the same manual `OnStart` script using the documented seven-argument custom-header `WebRequest` overload. **The source compiles in MetaEditor for MQL4 and MQL5 but has not been run in a MetaTrader terminal here.** This is a source example, not a verified trading terminal integration.
 
 1. Copy the matching file to your terminal's `MQL4/Scripts` or `MQL5/Scripts` directory. Open it in MetaEditor and compile it locally.
 2. In the terminal, open Tools → Options → Expert Advisors and allow WebRequest for `https://www.financecalendar.com`.
@@ -73,6 +73,39 @@ node node/calendar-watchlist.mjs --clear-cache
 This deliberately demonstrates **one page, up to 500 records**. Inspect the JSON `count` and `total` before using it; it does not implement pagination, JSON interpretation, scheduling, a 15-minute cache or orders. For a complete paged watchlist, use the Python or Node program. A failed run does not certify any older file as current. Keep source attribution and check freshness/time precision before interpreting the data.
 
 The script stops on access errors, shows `Retry-After` on a 429 and makes no automatic repeat requests. Wait for that delay before manually running it again. MetaTrader WebRequest is synchronous, requires its URL allowlist, and is unavailable in indicators and the Strategy Tester. See the official [MQL4 WebRequest](https://docs.mql4.com/common/webrequest) and [MQL5 WebRequest](https://www.mql5.com/en/docs/network/webrequest) references.
+
+## MetaTrader 4 and 5 news filter
+
+`metatrader/FinanceCalendarNews.mqh` keeps the upcoming release schedule in your terminal and answers one question for your own Expert Advisor: is this symbol inside a quiet window around a scheduled release right now? `metatrader/FinanceCalendarNewsFilter.mq4` and `.mq5` are the same example Expert Advisor built on it. Neither file places, changes or closes orders.
+
+**The source compiles in MetaEditor for MQL4 and MQL5 with no errors or warnings, and its decisions are checked offline against recorded API responses. It has not been run on a trading terminal by the publisher.** Test it on a demo account before relying on it.
+
+1. Copy `FinanceCalendarNews.mqh` and the matching `FinanceCalendarNewsFilter` file into the same `MQL4/Experts` or `MQL5/Experts` folder and compile in MetaEditor.
+2. In the terminal, open Tools → Options → Expert Advisors and allow WebRequest for `https://www.financecalendar.com`.
+3. Attach the Expert Advisor to a chart and enter your key in `InpApiKey`. Do not publish or share a preset containing it.
+
+The chart shows the next release for the symbol and whether it is in a quiet window. The same state is published as the terminal global variable `FC_NEWS_BLOCK_<symbol>`: `1` inside a window, `0` clear, `-1` when no usable schedule is loaded. Another Expert Advisor can read it without including any code:
+
+```mql5
+bool quiet = GlobalVariableCheck("FC_NEWS_BLOCK_" + _Symbol) && GlobalVariableGet("FC_NEWS_BLOCK_" + _Symbol) == 1.0;
+```
+
+To use the include directly:
+
+```mql5
+#include "FinanceCalendarNews.mqh"
+int OnInit()  { FcNewsInit(InpApiKey); EventSetTimer(30); return INIT_SUCCEEDED; }
+void OnTimer() { FcNewsRefresh(); }
+// before opening a trade:
+string reason;
+if(FcNewsBlocked(_Symbol, 30, 30, reason)) return;   // 30 minutes before and after a release
+```
+
+**Requests and plans.** The filter makes one request per refresh. The default refresh is every 180 minutes, which is 8 requests a day and fits [Free Developer](https://www.financecalendar.com/account/?free=1) (10 successful responses per UTC day, 100 per UTC calendar month). Every chart in one terminal shares the same schedule file, so several charts still make one request. It asks for `from`, `to`, `impact` and `limit` only, which every plan accepts, and covers UTC today through the following six days. `InpImpact` accepts `high` or `high,medium`; Free Developer returns up to 20 releases per response, and the nearest ones are kept if a response is cut. A paid plan allows a higher `InpMaxEvents` and a shorter refresh.
+
+**What counts as a release.** A symbol is matched through its base and quote currencies: EURUSD watches the euro area, Germany and the United States; XAUUSD watches the United States. Covered currencies are USD, EUR, GBP, JPY, CAD, AUD, NZD, CHF, CNY/CNH, INR, KRW, MYR, HKD, NOK and SEK. Cancelled releases and releases without a published UTC time never open a window.
+
+**When something is wrong.** With no schedule, or one older than 26 hours, `FcNewsBlocked` answers false and `FcNewsReady()` answers false, so your own code decides whether to stand aside. A 401, 402 or 403 stops requests until the program is restarted. A 429 waits for `Retry-After`, with a 15-minute minimum. Other failures wait 15 minutes. The key is sent in a header and is never written to the schedule file or the log.
 
 ## Run the offline checks
 
