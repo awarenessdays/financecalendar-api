@@ -1,0 +1,81 @@
+name: MetaTrader compile
+# Compiles the MetaTrader news-filter sources with MetaEditor's own command-line compiler,
+# for MQL5 and MQL4, on a Windows runner. A compile is not a terminal run: WebRequest and
+# timer behaviour still need a demo-account check in a real terminal.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'integrations/examples/trading-tools/metatrader/**'
+      - '.github/workflows/metatrader-compile.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      SOURCES: integrations/examples/trading-tools/metatrader
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install MetaTrader 5
+        shell: pwsh
+        run: |
+          Invoke-WebRequest 'https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe' -OutFile "$env:RUNNER_TEMP\mt5setup.exe"
+          Start-Process "$env:RUNNER_TEMP\mt5setup.exe" -ArgumentList '/auto'
+          $editor = 'C:\Program Files\MetaTrader 5\metaeditor64.exe'
+          foreach ($i in 1..90) { if (Test-Path $editor) { break }; Start-Sleep -Seconds 5 }
+          Start-Sleep -Seconds 20
+          Get-Process terminal64, mt5setup -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          if (-not (Test-Path $editor)) { throw 'MetaEditor 5 was not installed' }
+          "MT5_EDITOR=$editor" >> $env:GITHUB_ENV
+
+      - name: Install MetaTrader 4
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          Invoke-WebRequest 'https://download.mql5.com/cdn/web/metaquotes.software.corp/mt4/mt4setup.exe' -OutFile "$env:RUNNER_TEMP\mt4setup.exe"
+          Start-Process "$env:RUNNER_TEMP\mt4setup.exe" -ArgumentList '/auto'
+          $found = $null
+          foreach ($i in 1..90) {
+            $found = Get-ChildItem 'C:\Program Files (x86)', 'C:\Program Files' -Filter metaeditor.exe -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($found) { break }; Start-Sleep -Seconds 5
+          }
+          Start-Sleep -Seconds 20
+          Get-Process terminal, mt4setup -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          if ($found) { "MT4_EDITOR=$($found.FullName)" >> $env:GITHUB_ENV; "Found $($found.FullName)" } else { 'MetaEditor 4 was not installed' }
+
+      - name: Compile
+        shell: pwsh
+        run: |
+          function Compile($editor, $label, $file) {
+            $work = Join-Path $env:RUNNER_TEMP $label
+            New-Item -ItemType Directory -Force $work | Out-Null
+            Copy-Item "$env:SOURCES\*" $work
+            $target = Join-Path $work $file
+            $log = Join-Path $work 'compile.log'
+            Start-Process $editor -ArgumentList "/compile:`"$target`"", "/log:`"$log`"" -Wait
+            "===== $label : $file ====="
+            if (-not (Test-Path $log)) { "no compile log written"; return $false }
+            $text = Get-Content $log -Raw -Encoding Unicode
+            $text
+            $built = Test-Path ([IO.Path]::ChangeExtension($target, $(if ($file -like '*.mq5') { 'ex5' } else { 'ex4' })))
+            return ($text -match '(?m)\b0 errors?\b') -and $built
+          }
+          $results = [ordered]@{}
+          $results['MQL5 news filter'] = Compile $env:MT5_EDITOR 'mql5' 'FinanceCalendarNewsFilter.mq5'
+          $results['MQL5 fetch script'] = Compile $env:MT5_EDITOR 'mql5-fetch' 'FinanceCalendarFetch.mq5'
+          if ($env:MT4_EDITOR) {
+            $results['MQL4 news filter'] = Compile $env:MT4_EDITOR 'mql4' 'FinanceCalendarNewsFilter.mq4'
+            $results['MQL4 fetch script'] = Compile $env:MT4_EDITOR 'mql4-fetch' 'FinanceCalendarFetch.mq4'
+          } else {
+            $results['MQL4 (MetaEditor 4 unavailable)'] = $false
+          }
+          "## MetaEditor compile" >> $env:GITHUB_STEP_SUMMARY
+          foreach ($name in $results.Keys) { "- $name : $(if ($results[$name]) { 'compiled, 0 errors' } else { 'FAILED' })" >> $env:GITHUB_STEP_SUMMARY }
+          $results.GetEnumerator() | ForEach-Object { "$($_.Key) = $($_.Value)" }
+          if ($results.Values -contains $false) { exit 1 }
