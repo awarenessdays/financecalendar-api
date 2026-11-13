@@ -12,7 +12,6 @@ typedef std::string string;
 typedef unsigned short ushort;
 typedef unsigned char uchar;
 typedef unsigned int uint;
-typedef unsigned long long ulong;
 typedef long long datetime;
 template <class T> struct Array {
    std::vector<T> v;
@@ -73,7 +72,7 @@ inline int FileOpen(const string &name, int flags) {
    if(flags & FILE_WRITE) t_files[name] = "";
    t_handles[t_next] = {name, flags}; return t_next++;
 }
-inline ulong FileSize(int h) { return t_files[t_handles[h].first].size(); }
+inline unsigned long long FileSize(int h) { return t_files[t_handles[h].first].size(); }
 template <class T> inline uint FileReadArray(int h, Array<T> &a, int start, int count) {
    const string &d = t_files[t_handles[h].first]; a.v.assign(d.begin(), d.begin() + std::min((size_t)count, d.size())); return (uint)a.v.size();
 }
