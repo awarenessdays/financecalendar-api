@@ -68,3 +68,12 @@ export function statusBadge(status) {
   };
   return Object.hasOwn(badges, status) ? badges[status] : null;
 }
+
+// Demo only: what the same records look like on the Free Developer schedule. Figures are removed and
+// replaced by the markers a Free response carries; the first `limit` releases are kept and the rest counted.
+export function freeView(feed, limit = 5) {
+  const ordered = [...feed.events].sort((a, b) => `${a.date || ''}${a.release_at_utc || ''}`.localeCompare(`${b.date || ''}${b.release_at_utc || ''}`));
+  const events = ordered.slice(0, limit).map(event => ({ ...event, actual: null, prior: null, forecast: null,
+    figures_available: event.prior !== null || Boolean(event.forecast), result_available: event.actual !== null }));
+  return { ...feed, events, total: events.length, truncated: false, more_on_paid_plans: Math.max(0, feed.events.length - events.length) };
+}

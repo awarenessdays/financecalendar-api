@@ -1,8 +1,8 @@
-import { eventTiming, formatValue, safeLink, shortDate, statusBadge } from './model.mjs';
+import { eventTiming, formatValue, freeView, safeLink, shortDate, statusBadge } from './model.mjs';
 
 const $ = selector => document.querySelector(selector);
 const marketNames = { US: 'United States', GB: 'United Kingdom', EU: 'Euro area', CA: 'Canada', AU: 'Australia', JP: 'Japan', unknown: 'Not classified' };
-const state = { feed: null, countries: new Set(), impacts: new Set(['high', 'medium', 'low', 'unknown']), date: 'all', search: '', loaded: false };
+const state = { feed: null, countries: new Set(), impacts: new Set(['high', 'medium', 'low', 'unknown']), date: 'all', search: '', loaded: false, plan: 'paid', source: null };
 const make = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined && text !== null) node.textContent = String(text); if (className) node.className = className; return node; };
 const countLabel = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`;
 
@@ -39,8 +39,10 @@ function renderDates() {
   }
   $('#date-filters').replaceChildren(fragment);
 }
-function eventValue(value, unit, className) {
+function eventValue(value, unit, className, onPaidPlans = false) {
   const cell = make('td', undefined, `${className} value${value === null ? ' missing' : ''}`);
+  // A Free Developer response marks releases whose figures a paid plan returns.
+  if (value === null && onPaidPlans) { cell.append(make('span', 'Paid plans', 'paid-tag')); cell.setAttribute('aria-label', 'Included with paid plans'); return cell; }
   cell.append(make('span', formatValue(value)));
   if (value !== null && unit) cell.append(make('span', unit, 'value-unit'));
   if (value === null) cell.setAttribute('aria-label', 'Not recorded');
@@ -72,10 +74,14 @@ function renderRows() {
     if (badge) meta.append(make('span', badge.label, `status-tag ${badge.tone}`));
     if (event.period) meta.append(make('span', event.period));
     if (event.data_stale === true) meta.append(make('span', 'Source review', 'freshness-flag'));
-    name.append(button, meta); row.append(time, country, name, eventValue(event.prior, event.unit, 'prior-column'), eventValue(event.forecast?.value ?? null, event.forecast?.unit || event.unit, 'forecast-column'), eventValue(event.actual, event.unit, 'value-column')); fragment.append(row);
+    name.append(button, meta); row.append(time, country, name);
+    // One Free marker covers the forecast, consensus and previous figure together, so one tag spans both columns.
+    if (event.figures_available && event.prior === null && !event.forecast) { const held = eventValue(null, event.unit, 'prior-column figures-held', true); held.colSpan = 2; row.append(held); }
+    else row.append(eventValue(event.prior, event.unit, 'prior-column'), eventValue(event.forecast?.value ?? null, event.forecast?.unit || event.unit, 'forecast-column'));
+    row.append(eventValue(event.actual, event.unit, 'value-column', event.result_available)); fragment.append(row);
   }
   if (!events.length) {
-    const row = make('tr'), cell = make('td', undefined, 'table-message'); cell.colSpan = 5;
+    const row = make('tr'), cell = make('td', undefined, 'table-message'); cell.colSpan = 6;
     cell.append(make('p', feed.state === 'unavailable' ? 'No calendar data is available yet. Check the connection message above.' : 'No releases match this view.'));
     if (feed.events.length) { const clear = make('button', 'Reset filters'); clear.type = 'button'; clear.dataset.reset = 'true'; cell.append(clear); }
     row.append(cell); fragment.append(row);
@@ -87,7 +93,13 @@ function render() {
   renderDates(); renderRows();
 }
 function applyFeed(feed) {
+  state.source = feed;
+  if (feed.demo && state.plan === 'free') feed = freeView(feed);
   state.feed = feed;
+  $('#plan-switch').hidden = !feed.demo;
+  document.querySelectorAll('#plan-switch button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.plan === state.plan)));
+  $('#paid-more').hidden = !(feed.more_on_paid_plans > 0);
+  $('#paid-more-count').textContent = feed.more_on_paid_plans > 0 ? `${countLabel(feed.more_on_paid_plans, 'more release')} in this window on paid plans.` : '';
   $('#demo-notice').hidden = !feed.demo;
   $('#timezone-label').textContent = feed.config.timezone;
   $('#window-label').textContent = feed.window ? `Publisher dates: ${shortDate(feed.window.from)} – ${shortDate(feed.window.to, { year: 'numeric' })}. Times: ${feed.config.timezone}.` : `${feed.config.days}-day publisher-date window. Times: ${feed.config.timezone}.`;
@@ -110,7 +122,7 @@ async function load() {
   } catch {
     $('#state-label').textContent = state.feed ? 'Cached view retained' : 'Dashboard unavailable'; $('#state-label').dataset.state = 'unavailable';
     $('#feed-error').hidden = false; $('#feed-error').textContent = 'The dashboard could not load its calendar view. Check that the local server is running, then check for updates again.';
-    if (!state.feed) { const row = make('tr'), cell = make('td', 'Calendar records are unavailable.', 'table-message'); cell.colSpan = 5; row.append(cell); $('#event-rows').replaceChildren(row); }
+    if (!state.feed) { const row = make('tr'), cell = make('td', 'Calendar records are unavailable.', 'table-message'); cell.colSpan = 6; row.append(cell); $('#event-rows').replaceChildren(row); }
   } finally { $('#refresh').disabled = false; }
 }
 function resetFilters() {
@@ -132,9 +144,11 @@ function showDetail(event) {
   detailField(list, 'Time shown', `${timing.time}${timing.exact ? ` (${feed.config.timezone})` : ''}`);
   detailField(list, 'Time precision', event.time_precision);
   if (event.time_window_start || event.time_window_end) detailField(list, 'Recorded window', `${event.time_window_start || 'Unknown'} – ${event.time_window_end || 'Unknown'}`);
-  detailField(list, 'Status', statusBadge(event.status)?.label || event.status); detailField(list, 'Actual', formatValue(event.actual, event.unit));
+  detailField(list, 'Status', statusBadge(event.status)?.label || event.status); const paid = 'Included with paid plans';
+  detailField(list, 'Actual', event.actual === null && event.result_available ? paid : formatValue(event.actual, event.unit));
   detailField(list, 'Forecast', event.forecast ? [formatValue(event.forecast.value, event.forecast.unit || event.unit), event.forecast.measure, event.forecast.source_families ? `${event.forecast.source_families} source${event.forecast.source_families === 1 ? '' : 's'}` : null, event.forecast.as_of ? `updated ${stamp(event.forecast.as_of)}` : null].filter(Boolean).join(' · ') : formatValue(null, event.unit));
   detailField(list, 'Prior', formatValue(event.prior, event.unit));
+  if (event.figures_available && event.prior === null && !event.forecast) detailField(list, 'Figures', 'A forecast or previous figure is held. ' + paid + '.');
   detailField(list, 'Source checked', stamp(event.last_verified_at));
   detailField(list, 'Source freshness', event.data_stale === true ? 'Marked stale; inspect publisher' : event.data_stale === false ? 'Not marked stale' : 'Not recorded');
   fragment.append(list, make('h3', event.source_name || 'Publisher source'));
@@ -159,6 +173,7 @@ $('#impact-filters').addEventListener('change', event => { const input = event.t
 $('#date-filters').addEventListener('click', event => { const button = event.target.closest('button[data-date]'); if (!button) return; state.date = button.dataset.date; render(); [...$('#date-filters').children].find(node => node.dataset.date === state.date)?.focus({ preventScroll: true }); });
 $('#event-rows').addEventListener('click', event => { if (event.target.closest('[data-reset]')) return resetFilters(); const button = event.target.closest('button[data-event-index]'); if (button) showDetail(state.feed.events[Number(button.dataset.eventIndex)]); });
 $('#clear-filters').addEventListener('click', resetFilters);
+$('#plan-switch').addEventListener('click', event => { const button = event.target.closest('button[data-plan]'); if (!button || !state.source) return; state.plan = button.dataset.plan; state.loaded = false; applyFeed(state.source); });
 $('#refresh').addEventListener('click', load);
 $('#close-detail').addEventListener('click', () => $('#event-detail').close());
 $('#event-detail').addEventListener('click', event => { if (event.target === $('#event-detail')) { const box = $('#event-detail').getBoundingClientRect(); if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) $('#event-detail').close(); } });

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { readFile } from 'node:fs/promises';
 import { readConfig, createFeedStore, createDashboardServer, normaliseEvent, API_ENDPOINT, CACHE_MS } from '../server.mjs';
-import { eventTiming, validDate, shortDate, formatValue, statusBadge } from '../public/model.mjs';
+import { eventTiming, validDate, shortDate, formatValue, statusBadge, freeView } from '../public/model.mjs';
 const SECRET = `fc_live_${'a'.repeat(32)}`;
 const config = (overrides = {}) => readConfig({ FC_API_KEY: SECRET, PORT: '0', ...overrides }, []);
 const initialTime = Date.parse('2026-11-03T08:00:00Z');
@@ -77,6 +77,16 @@ test('the release forecast is taken from the paid forecasts field and never inve
   assert.equal(normaliseEvent(release({ forecasts: [{ measure: 'x', value: null }, 'junk', { measure: 'y', value: '' }] }), 0).forecast, null);
   assert.equal(normaliseEvent(release({ forecasts: [{ measure: 'Zero', unit: '%', value: 0, source_families: 0 }] }), 0).forecast.value, 0);
   assert.equal(normaliseEvent(release({ forecast_available: true, figures_available: true }), 0).forecast, null);
+});
+test('Free Developer markers are kept and the demo Free view removes every figure', async () => {
+  const marked = normaliseEvent(release({ figures_available: true, result_available: 'yes' }), 0);
+  assert.equal(marked.figures_available, true); assert.equal(marked.result_available, false); assert.equal(normaliseEvent(release({}), 0).figures_available, false);
+  const store = createFeedStore({ config: readConfig({ PORT: '0' }, ['--demo']), now: () => initialTime, fetchImpl: () => { throw new Error('Network must not run'); } });
+  const paid = await store.read(), free = freeView(paid);
+  assert.ok(paid.events.some(event => event.forecast) && paid.events.some(event => event.prior !== null));
+  assert.equal(free.events.length, 5); assert.equal(free.more_on_paid_plans, paid.events.length - 5);
+  assert.ok(free.events.every(event => event.actual === null && event.prior === null && event.forecast === null));
+  assert.ok(free.events.some(event => event.figures_available)); assert.equal(paid.events.length, 8); assert.equal(paid.more_on_paid_plans, null);
 });
 test('demo has explicit invented-data identity and never calls a network transport', async () => {
   const store = createFeedStore({ config: readConfig({ PORT: '0' }, ['--demo']), now: () => initialTime, fetchImpl: () => { throw new Error('Network must not run'); } });

@@ -84,6 +84,7 @@ Rejected quota/authentication requests do not consume the admitted allowance. Ad
 ## Data and attribution
 
 - The Forecast column shows the release forecast from the paid `forecasts` field: the measure in the record's own unit when there is one, with its source count and update time in the detail panel. Free Developer responses carry no forecast, so the column shows `—`.
+- Demo mode has a Free Developer / Paid plans switch. The Free view shows what the free schedule returns for the same releases: dates and times, with a `Paid plans` tag where a figure or result is held and a count of further releases on paid plans. With a real Free Developer key the same tags come from the `figures_available`, `result_available` and `more_on_paid_plans` markers in the response.
 - A missing actual, forecast or prior value stays `—`; a numeric zero stays `0`. Nonzero numbers retain meaningful precision, using scientific notation for very small or large magnitudes; numeric strings retain their exact text.
 - A timestamp is used for local clock conversion only when `time_precision` explicitly indicates a minute or second. Unknown or date-only timing is not turned into midnight. Estimated dates and recorded windows remain labelled.
 - `data_stale` is displayed separately from the dashboard's own fetch age. A newly fetched response does not establish a newly verified publisher record.

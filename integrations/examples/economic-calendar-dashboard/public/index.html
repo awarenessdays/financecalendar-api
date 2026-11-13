@@ -18,6 +18,7 @@
   </header>
   <main>
     <div id="demo-notice" class="demo-notice" hidden><strong>Demo data</strong><span>These dates and values are illustrative. This preview makes no API requests.</span></div>
+    <div id="plan-switch" class="plan-switch" role="group" aria-label="Compare what each plan returns" hidden><span>See what each plan returns:</span><button type="button" data-plan="free" aria-pressed="false">Free Developer</button><button type="button" data-plan="paid" aria-pressed="true">Paid plans</button></div>
     <section class="page-heading" aria-labelledby="page-title">
       <div><h1 id="page-title">Release watchlist</h1><p id="window-label">Loading the publisher-date window…</p><p class="date-note">Known times use the display time zone and can fall on an adjacent local date. Unknown-time records retain their publisher date.</p></div>
       <button class="refresh-button" id="refresh" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 8A6.6 6.6 0 1 0 16 14M16.5 3.5V8H12"/></svg>Check for updates</button>
@@ -47,11 +48,12 @@
         <div class="calendar-heading"><h2 id="calendar-title">Release calendar</h2><span id="result-count" role="status">Loading</span></div>
         <nav class="date-rail" id="date-filters" aria-label="Filter by release date"></nav>
         <p id="truncation" class="truncation" hidden></p>
+        <p id="paid-more" class="paid-more" hidden><span id="paid-more-count"></span> <a href="https://www.financecalendar.com/pricing/" target="_blank" rel="noopener noreferrer">Compare plans</a></p>
         <div class="table-wrap"><table>
           <thead><tr><th scope="col" class="time-column">Time</th><th scope="col" class="market-column">Market</th><th scope="col">Release</th><th scope="col" class="prior-column">Prior</th><th scope="col" class="forecast-column">Forecast</th><th scope="col" class="value-column">Actual</th></tr></thead>
           <tbody id="event-rows"><tr><td colspan="6" class="table-message">Loading calendar records…</td></tr></tbody>
         </table></div>
-        <div class="calendar-key"><span>— Not recorded</span><span class="source-stale-key">Source freshness needs review</span><span>Select a release to inspect its source.</span></div>
+        <div class="calendar-key"><span>— Not recorded</span><span><i class="paid-tag">Paid plans</i> Figure held; included with Starter, Build and Scale</span><span class="source-stale-key">Source freshness needs review</span><span>Select a release to inspect its source.</span></div>
       </section>
     </div>
     <footer>
