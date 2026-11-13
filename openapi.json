@@ -4,7 +4,7 @@
     "title": "Finance Calendar API",
     "version": "2.0.0",
     "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-    "description": "Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$9.99/year. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key after email verification. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Programmatic data requires an API key and the entitlement for the requested scope. Retain field-level source evidence and rights.",
+    "description": "Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$9.99/year. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key after email verification. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Programmatic data requires an API key and the entitlement for the requested scope. Retain field-level source evidence and rights. Finance Calendar is operated by Awareness Days Ltd, the company behind AwarenessDays.com. The company was incorporated on 20 December 2017 (UK company 11118824). The Finance Calendar API launched on 31 August 2026, as recorded in its changelog. Company incorporation, API launch and individual documentation publication dates describe different things. Use paid API access to explore past releases and curated historical datasets. GET /history returns elapsed release records retained in the current snapshot; dates and populated figures vary by series. The dataset for US CPI includes 78 curated records with reference periods from 2020-01 to 2026-07 in the dataset field of GET /series/us-cpi. The dataset for FOMC decisions includes 54 curated records with decision dates from 2020-01-29 to 2026-07-29 in the dataset field of GET /series/fomc. These curated datasets are separate from /history. GET /observations exposes recorded numerical evidence with its own reference periods. Captured-edition and as-of reads use accepted recorded evidence; historical backfill is not an original first-print or complete point-in-time archive. Free Developer supplies upcoming schedules; history requires paid access.",
     "termsOfService": "https://www.financecalendar.com/api/terms/",
     "contact": {
       "url": "https://www.financecalendar.com/about/"
@@ -2056,6 +2056,26 @@
             }
           },
           {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated change field names. Only updated changes to these fields are returned, plus every added and removed event. Up to 25 names; cannot be combined with exclude. Example: release_at_utc,date,status,actual,consensus,prior.",
+            "schema": {
+              "type": "string",
+              "maxLength": 1700
+            }
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated change field names to leave out of updated changes. Up to 25 names; cannot be combined with fields. Example: data_quality,data_stale.",
+            "schema": {
+              "type": "string",
+              "maxLength": 1700
+            }
+          },
+          {
             "name": "cursor",
             "in": "query",
             "required": false,
@@ -2103,6 +2123,20 @@
                     },
                     "has_more": {
                       "type": "boolean"
+                    },
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Present when a fields filter is active: the normalised field names."
+                    },
+                    "exclude": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Present when an exclude filter is active: the normalised field names."
                     },
                     "next_cursor": {
                       "type": [
@@ -2196,7 +2230,7 @@
             }
           }
         },
-        "description": "Retained changes in stable snapshot order, newest first. Follow next_cursor until has_more is false; a single publication can exceed 500 changes with the same timestamp. Pass the cursor alone, or repeat the same since, series, change and limit. Cursors bind to snapshot_generated_at. On 409 restart with the original since and filters and deduplicate repeated changes; only advance the checkpoint after all pages complete. Since accepts YYYY-MM-DD or an ISO datetime with seconds and an explicit timezone; relative dates and timezone-less datetimes are rejected. Since is inclusive and normalized to whole UTC seconds. Beyond 30 days, resync from the full snapshot. Responses are not cached.",
+        "description": "Retained changes in stable snapshot order, newest first. Follow next_cursor until has_more is false; a single publication can exceed 500 changes with the same timestamp. Pass the cursor alone, or repeat the same since, series, change, limit, fields and exclude. To follow schedule and value changes without evidence bookkeeping, pass fields=release_at_utc,date,status,actual,consensus,prior or exclude=data_quality,data_stale; field filters apply to updated changes, while added and removed events are always returned (narrow those with change). Cursors bind to snapshot_generated_at. On 409 restart with the original since and filters and deduplicate repeated changes; only advance the checkpoint after all pages complete. Since accepts YYYY-MM-DD or an ISO datetime with seconds and an explicit timezone; relative dates and timezone-less datetimes are rejected. Since is inclusive and normalized to whole UTC seconds. Beyond 30 days, resync from the full snapshot. Responses are not cached.",
         "security": [
           {
             "ApiKey": []
@@ -4758,6 +4792,23 @@
             },
             "description": "Explicitly mapped official numerical observations. Values are source decimal strings, including zero. known_at/first_seen_at record engine observation, not the original publisher release. Prior is the previous reference period at the current observed vintage; consensus is never inferred."
           },
+          "actual_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "available",
+              "scheduled",
+              "pending",
+              "missing",
+              "withheld",
+              "not_collected",
+              "not_applicable",
+              null
+            ],
+            "description": "Plain reading of the actual value, derived from data_quality.fields.actual and the publisher schedule. available: a validated actual is recorded. scheduled: the release has not yet happened. pending: the scheduled release passed within the last 72 hours and no validated actual is recorded yet. missing: more than 72 hours have passed without one. withheld: the publisher released the report but explicitly did not publish this measurement (reason comparison_period_unavailable); the value stays null. not_collected: Finance Calendar does not collect a result for this series. not_applicable: no result exists (holidays, speeches, cancelled releases). null: the record has no evidence contract or an ambiguous schedule. pending and missing never assert that the publisher released a value; see data_quality.fields.actual.reason."
+          },
           "observation_status": {
             "type": [
               "string",
@@ -5312,6 +5363,68 @@
             ],
             "description": "Explicit source date evidence or reviewed provider month-label mapping used to fill a missing reporting month. No reporting month is inferred from release timing."
           },
+          "forecasts": {
+            "type": "array",
+            "description": "Finance Calendar blended forecasts for stated measures of this release: the median of market forecasts collected from public calendars before the release, frozen at the release time. A blend of collected forecasts, not an economist survey. Separate from consensus, prior and actual. Empty when fewer than the required number of independent source families is held. Paid plans only.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "measure": {
+                  "type": "string",
+                  "description": "The measure forecast, for example \"CPI m/m\"."
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Forecast as a decimal string in unit."
+                },
+                "previous": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Previous value of the same measure as shown with the collected forecasts."
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "finance_calendar_blend"
+                  ]
+                },
+                "basis": {
+                  "type": "string",
+                  "enum": [
+                    "collected_market_forecasts"
+                  ]
+                },
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "median"
+                  ]
+                },
+                "source_families": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Independent source families behind the value. Calendars that carry the same numbers count once."
+                },
+                "includes_calendar_consensus": {
+                  "type": "boolean",
+                  "description": "True when the consensus field of this event is the same measure and joined the median."
+                },
+                "as_of": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time",
+                  "description": "When an input to this forecast last changed. Never later than the release."
+                }
+              }
+            }
+          },
           "display": {
             "$ref": "#/components/schemas/LocalizedDisplay"
           }
@@ -5690,7 +5803,20 @@
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "description": "Machine-readable absence reason. comparison_period_unavailable means the publisher explicitly did not publish this metric because the required comparison period is unavailable; it is separate from a collection outage."
+          },
+          "explanation": {
+            "type": "string",
+            "description": "Publisher-supported explanation of an unavailable value. An explanation does not supply a numerical actual."
+          },
+          "comparison_reference_period": {
+            "type": "string",
+            "pattern": "^\\d{4}-(?:0[1-9]|1[0-2])$",
+            "description": "Unavailable comparison month required for this metric, distinct from the release's measured reference month."
+          },
+          "publisher_notice": {
+            "$ref": "#/components/schemas/PublisherResultNotice"
           },
           "evidence": {
             "type": "string",
@@ -5804,6 +5930,72 @@
           "observation_id",
           "known_at"
         ],
+        "additionalProperties": true
+      },
+      "PublisherResultNotice": {
+        "type": "object",
+        "description": "Validated official publication evidence explaining an unavailable metric. A released report can have no numerical actual. This notice is not a numerical observation, an original first print, or proof of historical API availability; the field retains evidence=none and known_at=null. Routine check timestamps are not included.",
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "source_publisher": {
+            "type": "string"
+          },
+          "edition_release_at_utc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "edition_reference_period": {
+            "type": "string",
+            "pattern": "^\\d{4}-(?:0[1-9]|1[0-2])$"
+          },
+          "edition_published_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "source_documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "source_document_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "edition_fingerprint_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "occurrence_native_id": {
+            "type": "string"
+          },
+          "data_stale": {
+            "type": "boolean",
+            "description": "Whether the retained notice lacks a current successful source check; independent of schedule staleness."
+          },
+          "first_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "First Finance Calendar capture of this notice, not the publisher's original availability time or a numerical observation time."
+          }
+        },
         "additionalProperties": true
       },
       "EventDataQuality": {
@@ -7850,6 +8042,16 @@
           },
           "source_rights": {
             "$ref": "#/components/schemas/FreeDeveloperCredit"
+          },
+          "figures_available": {
+            "type": "boolean",
+            "const": true,
+            "description": "Present when Finance Calendar holds a forecast, consensus or previous figure for this release. The figures are included with Starter, Build and Scale; see free_developer.upgrade_url."
+          },
+          "result_available": {
+            "type": "boolean",
+            "const": true,
+            "description": "Present when the reported result for this release is held. Results are included with Starter, Build and Scale; see free_developer.upgrade_url."
           }
         }
       },
@@ -7886,6 +8088,11 @@
           },
           "truncated": {
             "type": "boolean"
+          },
+          "more_on_paid_plans": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Further releases matching these dates and filters that a paid plan returns: releases beyond this response and other calendar categories. See free_developer.upgrade_url."
           },
           "events": {
             "type": "array",
@@ -8077,8 +8284,8 @@
       "active_key_limit": 1,
       "quota_basis": "successful_json_responses",
       "window": {
-        "from": "2026-11-12",
-        "to": "2026-11-18",
+        "from": "2026-11-13",
+        "to": "2026-11-19",
         "timezone": "UTC"
       },
       "allowed_routes": [
@@ -8177,9 +8384,171 @@
     },
     "attribution": "Retain Finance Calendar attribution, publisher credits and applicable source rights.",
     "pricing_url": "https://www.financecalendar.com/pricing/",
-    "terms_url": "https://www.financecalendar.com/api/terms/"
+    "terms_url": "https://www.financecalendar.com/api/terms/",
+    "provider_context": {
+      "operator": {
+        "name": "Awareness Days Ltd",
+        "company_number": "11118824",
+        "incorporated_on": "2017-12-20",
+        "registry_url": "https://find-and-update.company-information.service.gov.uk/company/11118824",
+        "related_publisher": {
+          "name": "AwarenessDays.com",
+          "url": "https://www.awarenessdays.com/"
+        }
+      },
+      "api": {
+        "launched_on": "2026-08-31",
+        "launch_source_url": "https://www.financecalendar.com/api/changelog/"
+      }
+    },
+    "history_coverage": {
+      "available": true,
+      "snapshot_generated_at": "2026-11-13T08:42:17+00:00",
+      "release_event_history": {
+        "endpoint": "/history?series={code}",
+        "basis": "elapsed_release_records_in_current_snapshot",
+        "record_count": 2929,
+        "release_dates": {
+          "from": "2025-11-01",
+          "to": "2026-11-13"
+        },
+        "declared_snapshot_window": {
+          "from": "2025-11-13",
+          "to": "2027-12-18"
+        },
+        "fixed_retention_guarantee": false
+      },
+      "curated_datasets": [
+        {
+          "series_code": "us-cpi",
+          "label": "US CPI",
+          "endpoint": "/series/us-cpi",
+          "response_field": "dataset",
+          "record_count": 78,
+          "reference_periods": {
+            "from": "2020-01",
+            "to": "2026-07"
+          },
+          "release_dates": {
+            "from": "2020-02-13",
+            "to": "2026-08-12"
+          },
+          "continuous_or_complete_history_guaranteed": false
+        },
+        {
+          "series_code": "fomc",
+          "label": "FOMC decisions",
+          "endpoint": "/series/fomc",
+          "response_field": "dataset",
+          "record_count": 54,
+          "reference_periods": {
+            "from": null,
+            "to": null
+          },
+          "release_dates": {
+            "from": "2020-01-29",
+            "to": "2026-07-29"
+          },
+          "continuous_or_complete_history_guaranteed": false
+        }
+      ],
+      "numerical_observations": {
+        "endpoint": "/observations",
+        "available": true,
+        "series_count": 18,
+        "varies_by_series_metric_and_source": true
+      },
+      "captured_editions": {
+        "history_endpoint": "/enrichment/history",
+        "cutoff_endpoint": "/enrichment/as-of",
+        "basis": "accepted_recorded_editions_only",
+        "original_first_print_archive": false
+      },
+      "coverage_url": "https://www.financecalendar.com/api/coverage/#history-availability"
+    }
   },
   "x-product-offer-url": "https://www.financecalendar.com/wp-json/fc/v1/product-offer",
+  "x-provider-context": {
+    "operator": {
+      "name": "Awareness Days Ltd",
+      "company_number": "11118824",
+      "incorporated_on": "2017-12-20",
+      "registry_url": "https://find-and-update.company-information.service.gov.uk/company/11118824",
+      "related_publisher": {
+        "name": "AwarenessDays.com",
+        "url": "https://www.awarenessdays.com/"
+      }
+    },
+    "api": {
+      "launched_on": "2026-08-31",
+      "launch_source_url": "https://www.financecalendar.com/api/changelog/"
+    }
+  },
+  "x-history-coverage": {
+    "available": true,
+    "snapshot_generated_at": "2026-11-13T08:42:17+00:00",
+    "release_event_history": {
+      "endpoint": "/history?series={code}",
+      "basis": "elapsed_release_records_in_current_snapshot",
+      "record_count": 2929,
+      "release_dates": {
+        "from": "2025-11-01",
+        "to": "2026-11-13"
+      },
+      "declared_snapshot_window": {
+        "from": "2025-11-13",
+        "to": "2027-12-18"
+      },
+      "fixed_retention_guarantee": false
+    },
+    "curated_datasets": [
+      {
+        "series_code": "us-cpi",
+        "label": "US CPI",
+        "endpoint": "/series/us-cpi",
+        "response_field": "dataset",
+        "record_count": 78,
+        "reference_periods": {
+          "from": "2020-01",
+          "to": "2026-07"
+        },
+        "release_dates": {
+          "from": "2020-02-13",
+          "to": "2026-08-12"
+        },
+        "continuous_or_complete_history_guaranteed": false
+      },
+      {
+        "series_code": "fomc",
+        "label": "FOMC decisions",
+        "endpoint": "/series/fomc",
+        "response_field": "dataset",
+        "record_count": 54,
+        "reference_periods": {
+          "from": null,
+          "to": null
+        },
+        "release_dates": {
+          "from": "2020-01-29",
+          "to": "2026-07-29"
+        },
+        "continuous_or_complete_history_guaranteed": false
+      }
+    ],
+    "numerical_observations": {
+      "endpoint": "/observations",
+      "available": true,
+      "series_count": 18,
+      "varies_by_series_metric_and_source": true
+    },
+    "captured_editions": {
+      "history_endpoint": "/enrichment/history",
+      "cutoff_endpoint": "/enrichment/as-of",
+      "basis": "accepted_recorded_editions_only",
+      "original_first_print_archive": false
+    },
+    "coverage_url": "https://www.financecalendar.com/api/coverage/#history-availability"
+  },
   "x-legacy-tier-identifiers": {
     "pro": "Build",
     "business": "Scale",

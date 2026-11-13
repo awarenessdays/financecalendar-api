@@ -83,13 +83,14 @@ Rejected quota/authentication requests do not consume the admitted allowance. Ad
 
 ## Data and attribution
 
-- A missing actual or prior value stays `—`; a numeric zero stays `0`. Nonzero numbers retain meaningful precision, using scientific notation for very small or large magnitudes; numeric strings retain their exact text.
+- The Forecast column shows the release forecast from the paid `forecasts` field: the measure in the record's own unit when there is one, with its source count and update time in the detail panel. Free Developer responses carry no forecast, so the column shows `—`.
+- A missing actual, forecast or prior value stays `—`; a numeric zero stays `0`. Nonzero numbers retain meaningful precision, using scientific notation for very small or large magnitudes; numeric strings retain their exact text.
 - A timestamp is used for local clock conversion only when `time_precision` explicitly indicates a minute or second. Unknown or date-only timing is not turned into midnight. Estimated dates and recorded windows remain labelled.
 - `data_stale` is displayed separately from the dashboard's own fetch age. A newly fetched response does not establish a newly verified publisher record.
 - Cancelled and rescheduled releases have explicit status badges. A `Released` status does not establish that an actual value was captured.
 - Each release opens a source panel with its available publisher link, recorded verification time, full source credits and reuse terms. Event-level and nested observation licences, rights and evidence links are retained; observation credits identify the metric and actual/prior role where supplied. Attribution links, source-rights evidence, policy and vintage notices are retained without a character or entry-count cutoff. Missing optional rights metadata remains missing. The upstream JSON response remains bounded to 4 MiB. The UI uses text nodes and validates link protocols.
 - Finance Calendar and upstream publisher credits remain visible. The software does not relicense source data; retain applicable `source_license` and `source_rights` notices if you reuse the records elsewhere.
-- Coverage varies. The recorded dataset is not a point-in-time first-print archive; provider consensus covers 12 selected US headline series where recorded, and missing values remain null. A schedule entry or an elapsed date does not guarantee a captured actual value.
+- Coverage varies. The recorded dataset is not a point-in-time first-print archive; release forecasts cover headline measures across 10 economies and provider consensus covers 12 selected US headline series where recorded, on paid plans; missing values remain null. A schedule entry or an elapsed date does not guarantee a captured actual value.
 
 The application has no account database, payment flow, analytics or tracking. It reads the configured calendar and presents it. If you expose it beyond localhost, add the ordinary deployment controls appropriate to your own application, including HTTPS and protection for your server environment.
 
