@@ -13,3 +13,5 @@
 
 .plan-switch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 18px;font-size:13px}.plan-switch button{padding:6px 14px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font-weight:600}.plan-switch button[aria-pressed="true"]{background:var(--violet);border-color:var(--violet);color:#fff}
 .paid-tag{display:inline-block;padding:2px 7px;border:1px solid var(--violet);border-radius:999px;color:var(--violet);font-size:10px;font-style:normal;font-weight:700;letter-spacing:.02em;white-space:nowrap}.figures-held{text-align:center}.paid-more{margin:12px 22px;font-size:13px;font-weight:600}
+
+.forecast-measure{display:block;font-size:9px;line-height:1.4;color:var(--muted);white-space:normal;max-width:17ch;margin:5px 0 0 auto}

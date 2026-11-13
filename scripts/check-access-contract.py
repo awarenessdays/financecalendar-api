@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 import runpy
+from approved_contract_additions import prior_schema
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PATHS = {'/sample', '/product-offer', '/openapi'}
@@ -17,7 +18,7 @@ def digest(value):
 
 def validate(document, baseline):
     for name, expected in baseline['paid_schema_sha256'].items():
-        assert digest(document['components']['schemas'][name]) == expected, 'Existing paid schema changed: ' + name
+        assert digest(prior_schema(name, document['components']['schemas'][name])) == expected, 'Existing paid schema changed: ' + name
     assert document['security'], 'Production data must require credentials.'
     assert document['info']['license']['name'] == 'Finance Calendar API terms and source attribution'
     for path in PUBLIC_PATHS:

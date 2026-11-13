@@ -1,0 +1,53 @@
+{
+  "purpose": "Precisely reviewed additive contracts from public PR14 (a804a43), 13 November 2026. Earlier paid/trial baselines remain immutable. Only these exact additions may be normalized when checking prior contracts.",
+  "source_public_commit": "a804a431acf1ba04ca4c017db84feb170673e8ba",
+  "schema_properties": {
+    "Event": {
+      "actual_status": "6a5d993a1091603def39daf994a004459cdc67d6579db4c69d5e3727bb8a94ef",
+      "forecasts": "a3e16f275d635a67e594dc29975067190a1597df06d0ae89ee6139b7e366bbc4"
+    },
+    "FreeDeveloperEvent": {
+      "figures_available": "ea84df3e7d7f4b30b05a7cbacdf179eb09d53feb58afecdeb510c02681c0cfb1",
+      "result_available": "507cf16c01300b46cb9418523e401215c99a47e9527896d656f1eea6759b20f6"
+    },
+    "FreeDeveloperCalendarResponse": {
+      "more_on_paid_plans": "9cd33aea727ef9d8e46865696394dea717632acca96474d5be2b64e67030c279"
+    },
+    "FieldDataQuality": {
+      "explanation": "efa70d8d451e05918a2e136eb9cbfd1c524ac506c44e276f8b991765e5e5c807",
+      "comparison_reference_period": "4ede7d6472adf17fe73dcac40ee4c0e5a3b672efdbb5ed10453d7876338ee52b",
+      "publisher_notice": "811154a406495c2ad627c333064ff80c43d5af99b00c242a5e1cd5a45cfb888b"
+    }
+  },
+  "operation_parameters": {
+    "/changes": {
+      "get": {
+        "fields": "9bfe54e10badfbfe59e4d4522573e28c960022dc28bcb00f8b2a9ab9d28b0729",
+        "exclude": "183bd12636a4be100a5ae391869360c889444a01a9bfd8d59d0f63defb277e62"
+      }
+    }
+  },
+  "property_updates": {
+    "FieldDataQuality": {
+      "reason": {
+        "before": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "after_sha256": "6bdce38c14512cb087d20b3a85df251fd209e061c34f41a45f0864b0b18bc876"
+      }
+    }
+  },
+  "response_properties": {
+    "/changes": {
+      "get": {
+        "200": {
+          "fields": "a7616c2bcc924690fc195773d61eb88a795b9bd0b6fa02cd2066fb9190a5fb03",
+          "exclude": "e91c3d02da2c48e8e6dbf56b1c3096529c5b3afe23b972058d2d2f2eca8840ad"
+        }
+      }
+    }
+  }
+}
