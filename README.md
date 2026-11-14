@@ -100,7 +100,7 @@ curl --fail-with-body \
 - **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-free-developer-2026-11-12) accept a configured API key. These current archives include authenticated setup and the current pricing/access guide. npm/PyPI registry publication remains pending.
+The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-history-2026-11-14) accept a configured API key. These archives include authenticated setup, historical archive traversal and the current pricing/access guide. npm/PyPI registry publication remains pending.
 
 Programmatic data access requires a verified account and API key. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
 
@@ -129,12 +129,14 @@ key in private client settings. Hosted MCP requires paid access or an applicable
 allowance as direct REST; protocol initialization/discovery validates the key
 without consuming a data request. There is no shared anonymous MCP allowance.
 
-The server does not implement OAuth. Use a header-capable MCP client; a platform
-that only offers no authentication or OAuth cannot use this hosted setup. The
-[local stdio server](clients/node/README.md) accepts `FC_API_KEY` instead.
-[Setup and full reference](https://www.financecalendar.com/api/mcp/). Existing
-platform smoke results predate this authentication change and do not establish
-current ChatGPT or Claude.ai account-level setup or directory approval.
+Compatible Claude, ChatGPT and other Streamable HTTP clients can use OAuth
+account linking. Sign in on financecalendar.com and approve read-only
+`calendar:read` access; optional `offline_access` permits token renewal. Revoke
+access in [connected-assistant settings](https://www.financecalendar.com/?fc_oauth_connections=1).
+Header-capable clients can use their own API-key or bearer header instead. The
+[local stdio server](clients/node/README.md) reads `FC_API_KEY`.
+[Setup and full reference](https://www.financecalendar.com/api/mcp/). Platform
+policies and directory listings remain separate from endpoint support.
 
 ## Quick start
 
@@ -174,6 +176,9 @@ This table describes paid-plan capabilities. Free Developer is limited to schedu
 | `GET /series` | Every series with code, aliases, country, tier and next date |
 | `GET /series/{code}` | One series: next, last, upcoming, history, verified dataset where published |
 | `GET /history` | Past releases of a series, with consensus, prior and actual where available |
+| `GET /history/observations` | Exact archived observations by measured reference-period start date; paginated, source-linked and version pinned |
+| `GET /history/releases` | Evidenced dated publications; original values and clocks remain null when unknown |
+| `GET /history/coverage` | Actual per-source/metric counts and period bounds; paginated |
 | `GET /holidays` | Exchange holidays and early closes for 12 exchanges (`exchange=nyse\|sifma\|cme\|lse\|tsx\|asx\|hkex\|euronext\|jpx\|six\|xetra\|nse\|all`) |
 | `GET /market-status` | Is the exchange open right now (session, breaks, early closes, holidays) |
 | `GET /changes` | Lossless cursor-paginated change log for the last 30 days (`since=`, `limit=`, `cursor=`); restart the original checkpoint on snapshot-change HTTP 409 |
@@ -189,6 +194,39 @@ Missing or invalid keys return HTTP 401; revoked keys or disallowed accounts ret
 `GET /keys/me` requires an active key and is uncounted. Free Developer returns `{ "free_developer": { ... } }` with UTC daily/monthly successful-response usage and its schedule window. An already-enrolled evaluation key returns a distinct `{ "trial": { ... } }` usage object with its 25-request total budget, first-use clock and expiry; the status request does not start the clock or consume a data request. Paid and retained keys keep the existing flat `KeyUsage` response described below, available even after the daily cap. `used_today` and `retained_requests` count rate-gate attempts, including 429 responses. `usage_window` explicitly covers 90 UTC dates including today; lifetime `requests_total` is null because the legacy counter was cache-throttled and is not reliable as a request total. `legacy_activity_samples` is diagnostic only. Successful origin responses are a separate metric. [Complete usage fields](https://www.financecalendar.com/api/reference/#schema-keyusage).
 
 Keys created or linked in your [verified account](https://www.financecalendar.com/account/) share one daily account allowance. For those keys, `quota_scope: "account"`, `used_today` and `remaining_today` cover every account key, including revoked keys. `key_used_today` describes the presented key; `retained_requests_scope: "key"` keeps retained history per key. Key rotation does not reset usage. Data responses include `X-RateLimit-Scope: account`. Existing unclaimed keys keep their previous per-key limits.
+
+## Historical economic data
+
+Explore long-run inflation, employment and growth observations alongside evidenced
+publication dates. Paid API access includes the separate historical archive;
+[check measured coverage](https://www.financecalendar.com/api/coverage/) and start
+with `GET /history/coverage` to choose an exact metric and available period.
+
+The initial official-source roster contains 21 metrics from BLS, ONS, ECB,
+Eurostat, Statistics Canada and ABS. Many observation series extend into 2006;
+coverage and latest periods vary. Dated ONS publication records are supplied
+separately, with values left unknown when an original result was not collected.
+Use the [history guide](docs/history.md) for the measured definitions, paging,
+source credits and complete export examples.
+
+- `GET /history/observations`: exact decimal values by measured reference-period
+  start date; `metric_id` or `series_code` required.
+- `GET /history/releases`: evidenced publication records by publisher release
+  date, with unknown clocks and results preserved as null.
+- `GET /history/coverage`: paginated counts and actual earliest/latest periods
+  for each source, metric and record kind.
+
+Repeat the original filters and limit with `next_cursor` to retrieve every page.
+A changed archive revision returns 409; discard the partial export and restart.
+`as_of` selects evidence held by Finance Calendar by its server receipt bound;
+it does not turn a newly imported historical value into knowledge FC held years
+ago. Current-vintage backfills are labelled and do not establish original prints
+or historical forecast cutoffs.
+
+[Python and CLI downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-history-2026-11-14)
+include archive methods and complete traversal. The Node package adds three local
+stdio MCP tools. The hosted MCP tool catalogue is unchanged; call these archive
+routes through REST, Python, the CLI or local MCP.
 
 ## Examples
 

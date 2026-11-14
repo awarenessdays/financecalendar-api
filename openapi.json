@@ -3952,6 +3952,375 @@
           }
         }
       }
+    },
+    "/history/observations": {
+      "get": {
+        "operationId": "archive_observations",
+        "tags": [
+          "Historical archive"
+        ],
+        "summary": "Historical observations",
+        "description": "Independent long-run archive; dates filter the start of the measured reference period. Supply series_code or metric_id. Decimal values remain strings and unknowns remain null. Inspect vintage_basis and source evidence. Current-vintage backfills do not establish original first prints, contemporaneous consensus or intraday backtesting availability.",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "series_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "metric_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "description": ""
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Opaque revision-pinned continuation. Repeat all original filters and limit. HTTP 409 requires restarting the complete traversal."
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive start of the measured reference period."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive start of the measured reference period."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": ""
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact UTC cutoff (seconds, optional microseconds, Z). Selects the FC durable evidence receipt bound, not historical market availability or source-vintage time."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One complete page; follow next_cursor until null.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FCHistoryPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or mismatched filters/cursor"
+          },
+          "401": {
+            "description": "Missing or malformed key"
+          },
+          "403": {
+            "description": "Access not entitled"
+          },
+          "409": {
+            "description": "Archive changed; discard partial traversal and restart"
+          },
+          "429": {
+            "description": "Shared allowance exhausted"
+          },
+          "503": {
+            "description": "Archive not ready or temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/history/releases": {
+      "get": {
+        "operationId": "archive_releases",
+        "tags": [
+          "Historical archive"
+        ],
+        "summary": "Historical releases",
+        "description": "Independent long-run archive; dates filter the publisher release calendar date. Supply series_code or metric_id. Decimal values remain strings and unknowns remain null. Inspect vintage_basis and source evidence. Current-vintage backfills do not establish original first prints, contemporaneous consensus or intraday backtesting availability.",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "series_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "metric_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "description": ""
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Opaque revision-pinned continuation. Repeat all original filters and limit. HTTP 409 requires restarting the complete traversal."
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive publisher release calendar date."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive publisher release calendar date."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": ""
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact UTC cutoff (seconds, optional microseconds, Z). Selects the FC durable evidence receipt bound, not historical market availability or source-vintage time."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One complete page; follow next_cursor until null.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FCHistoryPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or mismatched filters/cursor"
+          },
+          "401": {
+            "description": "Missing or malformed key"
+          },
+          "403": {
+            "description": "Access not entitled"
+          },
+          "409": {
+            "description": "Archive changed; discard partial traversal and restart"
+          },
+          "429": {
+            "description": "Shared allowance exhausted"
+          },
+          "503": {
+            "description": "Archive not ready or temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/history/coverage": {
+      "get": {
+        "operationId": "archive_coverage",
+        "tags": [
+          "Historical archive"
+        ],
+        "summary": "Historical coverage",
+        "description": "Measured stored history by source, series and exact metric. Coverage dates, values and release/original-print depth are separate. No configured target is presented as achieved history.",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "series_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "metric_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "description": ""
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Opaque revision-pinned continuation. Repeat all original filters and limit. HTTP 409 requires restarting the complete traversal."
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "observations",
+                "releases"
+              ]
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One complete page; follow next_cursor until null.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FCHistoryPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or mismatched filters/cursor"
+          },
+          "401": {
+            "description": "Missing or malformed key"
+          },
+          "403": {
+            "description": "Access not entitled"
+          },
+          "409": {
+            "description": "Archive changed; discard partial traversal and restart"
+          },
+          "429": {
+            "description": "Shared allowance exhausted"
+          },
+          "503": {
+            "description": "Archive not ready or temporarily unavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -8158,6 +8527,308 @@
           },
           "free_developer": {
             "$ref": "#/components/schemas/FreeDeveloperUsage"
+          }
+        }
+      },
+      "FCHistoryRecord": {
+        "type": "object",
+        "required": [
+          "id",
+          "reference_period",
+          "value",
+          "vintage_basis",
+          "metric_id"
+        ],
+        "properties": {
+          "source_vintage_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_vintage_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_published_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "release_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "release_at_utc": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "time_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "consensus": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "consensus_available_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "available_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "availability_basis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "metric_id": {
+            "type": "string"
+          },
+          "source_series_id": {
+            "type": "string"
+          },
+          "reference_period": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "period_start": {
+            "type": "string"
+          },
+          "period_end": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "seasonal_adjustment": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "evidence_sha256": {
+            "type": "string"
+          },
+          "source_captured_at": {
+            "type": "string"
+          },
+          "first_seen_at": {
+            "type": "string"
+          },
+          "fc_observed_at": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "description": "Exact decimal text; zero is distinct from null."
+          },
+          "vintage_basis": {
+            "type": "string",
+            "enum": [
+              "current_vintage"
+            ],
+            "description": "The initial reviewed source roster supplies current-vintage observations or dated release metadata. Original-print and source-vintage collectors require separate reviewed mappings."
+          },
+          "historical_first_print": {
+            "const": false,
+            "description": "Initial reviewed collectors do not endorse first-print coverage."
+          },
+          "archive_version": {
+            "type": "integer"
+          },
+          "source_license": {
+            "type": "object"
+          },
+          "source_rights": {
+            "type": "object"
+          },
+          "derivation": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        }
+      },
+      "FCHistoryCoverage": {
+        "type": "object",
+        "required": [
+          "record_count",
+          "distinct_period_count"
+        ],
+        "description": "Measured scope including record_count, distinct_period_count, populated_values, first_period/last_period, first_release/last_release, source licence and FC receipt window. Gaps/expected_count are null until supported by an authoritative inventory.",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "metric_id": {
+            "type": "string"
+          },
+          "record_count": {
+            "type": "integer"
+          },
+          "distinct_period_count": {
+            "type": "integer"
+          },
+          "populated_values": {
+            "type": "integer"
+          },
+          "historical_first_print_records": {
+            "type": "integer"
+          },
+          "consensus_cutoff_records": {
+            "type": "integer"
+          },
+          "first_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_release": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_release": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_fc_capture": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "latest_fc_capture": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "gaps": {
+            "type": [
+              "array",
+              "null"
+            ]
+          }
+        }
+      },
+      "FCHistoryPage": {
+        "type": "object",
+        "required": [
+          "schema_version",
+          "archive_revision",
+          "rows",
+          "count",
+          "has_more",
+          "next_cursor",
+          "as_of_basis"
+        ],
+        "properties": {
+          "schema_version": {
+            "const": 1
+          },
+          "archive_revision": {
+            "type": "integer"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "as_of": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "as_of_basis": {
+            "const": "fc_evidence_commit_observed_bound"
+          },
+          "filters": {
+            "type": "object"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FCHistoryRecord"
+                },
+                {
+                  "$ref": "#/components/schemas/FCHistoryCoverage"
+                }
+              ]
+            }
           }
         }
       }

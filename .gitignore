@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+clients/python/dist/
+clients/python/build/
+clients/python/*.egg-info/
+clients/node/*.tgz
+history-export.json
+history-export.json.manifest.json

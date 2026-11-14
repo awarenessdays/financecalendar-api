@@ -22,10 +22,10 @@ Use your real key and keep it private; never include it in a shared notebook or 
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-free-developer-2026-11-12). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-history-2026-11-14). Use the direct package URL in your chosen environment:
 
 ```sh
-python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-free-developer-2026-11-12/financecalendar-0.1.3-py3-none-any.whl
+python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-history-2026-11-14/financecalendar-0.1.4-py3-none-any.whl
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
@@ -365,3 +365,24 @@ GDP publications may bundle multiple quarterly/annual estimate components;
 these retain their original description and do not imply one headline result.
 Reference-year conflicts and indistinguishable release identities are held for
 review. Inspect per-source health and the verified fiscal-year horizon.
+
+## Historical archive CLI
+
+This release includes archive commands and complete traversal against the live
+historical API. Use your paid or applicable retained API key.
+
+```sh
+financecalendar history-coverage --source-id ons --all
+financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --from 2006-01-01 --to 2026-11-14 --limit 100 --all
+financecalendar archive-releases --series-code gb-cpi --from 2016-01-01 --to 2026-11-14 --limit 100
+```
+
+Each command returns JSON with exact decimal strings, nulls, source/vintage
+metadata, archive revision and continuation. Observation date bounds apply to
+the measured reference-period start; release bounds apply to publication dates.
+One page is returned by default. Continue with `--cursor` and identical original
+filters/limit. `--all` buffers every page before printing: a changed revision,
+invalid continuation or request failure produces no partial success. The
+optional `--as-of` uses FC's durable-evidence receipt bound and does not establish
+original market availability. Check `history-coverage` for actual stored depth;
+these clients do not promise twenty years for every metric.

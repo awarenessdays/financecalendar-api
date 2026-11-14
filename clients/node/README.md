@@ -21,10 +21,10 @@ For paid plans, daily and monthly quota usage counts admitted requests, not succ
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-free-developer-2026-11-12). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-history-2026-11-14). Use the direct package URL in your chosen environment:
 
 ```sh
-npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-free-developer-2026-11-12/financecalendar-mcp-0.2.3.tgz
+npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-history-2026-11-14/financecalendar-mcp-0.2.4.tgz
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
@@ -37,19 +37,15 @@ The public beta connects over HTTPS without installing this package. Server URL:
 https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
 ```
 
-Use **Streamable HTTP** with your own credential on every HTTP request:
+Use **Streamable HTTP** with OAuth account linking in Claude, ChatGPT or another compatible client. Sign in on financecalendar.com and approve read-only `calendar:read` access. Optional `offline_access` permits token renewal without changing data or billing permissions. Revoke a connection in [connected-assistant settings](https://www.financecalendar.com/?fc_oauth_connections=1).
+
+API-key clients can send a private credential on every POST:
 
 ```text
 X-API-Key: fc_live_YOUR_ACTUAL_KEY
 ```
 
-`Authorization: Bearer fc_live_YOUR_ACTUAL_KEY` is also accepted. Replace the
-example with a real key; never put keys in URLs or shared configuration files.
-This server does not implement OAuth. Choose a client that supports a custom
-API-key or bearer header. A connector limited to “No authentication” or OAuth
-cannot access this endpoint; use the local stdio client instead. Platform and
-workspace policies still govern custom connectors. No directory listing or
-one-click ChatGPT/Claude compatibility is implied.
+`Authorization: Bearer fc_live_YOUR_ACTUAL_KEY` is also accepted. Replace the example with a real key; never put keys in URLs or shared configuration. Local stdio uses `FC_API_KEY`. Platform and workspace policies govern custom connections; directory listing is separate.
 
 For a header-capable HTTP MCP client, configure the server URL above and the
 credential securely. Do not leave authentication empty. A missing or invalid
@@ -59,8 +55,7 @@ publisher. Check source health and say which values or dates are uncertain.”
 
 ### Hosted tools and output
 
-The hosted server provides the 13 tools listed below plus `feed_status()` for
-snapshot age, source health, stale records and numerical coverage. All are
+The hosted server provides the 13 established shared tools plus `feed_status()`; the three historical archive tools below are local stdio tools. `feed_status()` reports snapshot age, source health, stale records and numerical coverage. All are
 read-only. It does not expose the local briefing prompt or OpenAPI resource,
 tasks, sessions, server notifications or subscriptions. GET and DELETE return
 405; Streamable HTTP requests use POST and receive JSON, without an SSE stream.
@@ -99,10 +94,8 @@ and deduplicating. Requests are limited to 32,768 bytes; unknown arguments are
 rejected.
 
 Every hosted protocol POST, including initialize, ping and tools/list, validates
-your API credential. Tool calls forward only your key to the canonical REST API
-and consume the same account allowance as direct API calls. Protocol discovery
-itself does not consume a data request. No shared server key, anonymous proxy
-allowance or OAuth flow is supplied. Respect account rate headers and
+your API credential. Tool calls use the linked account or private key for canonical API reads and consume the same account allowance as direct API calls. Protocol discovery
+itself does not consume a data request. No shared anonymous proxy allowance is supplied. Respect account rate headers and
 `Retry-After`. Cookies and unrelated client headers are not forwarded.
 See the [MCP reference](https://www.financecalendar.com/api/mcp/).
 
@@ -380,3 +373,31 @@ GDP publications may bundle multiple quarterly/annual estimate components;
 these retain their original description and do not imply one headline result.
 Reference-year conflicts and indistinguishable release identities are held for
 review. Inspect per-source health and the verified fiscal-year horizon.
+
+## Historical archive clients
+
+This release adds historical archive commands and three local stdio MCP tools
+for the live archive API. Use your paid or applicable retained API key. The
+hosted MCP catalogue is unchanged.
+
+```sh
+financecalendar history-coverage --source-id ons --all
+financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --from 2006-01-01 --to 2026-11-14 --limit 100 --all
+financecalendar archive-releases --series-code gb-cpi --from 2016-01-01 --to 2026-11-14 --limit 100
+```
+
+These commands always return JSON, preserving exact decimal strings, nulls,
+source evidence and receipt metadata. Observation dates filter the measured
+reference-period start; release dates filter the publisher's publication date.
+Default output is one complete page with `next_cursor`. Repeat identical filters
+and limit alongside `--cursor`. `--all` buffers the whole pinned traversal and
+prints only after completion; any error or changed revision fails without a
+partial success. An `--as-of` cutoff selects FC durable-evidence receipt bounds,
+not original first prints or what the market knew twenty years ago.
+
+The local stdio tools are `historic_observations`, `historic_releases` and
+`history_coverage`. Each makes one request, defaults to 20 rows and accepts at
+most 50. They preserve the server's entire page and continuation token; they do
+not loop or silently trim rows. Inspect coverage before selecting dates. The
+hosted catalog generator explicitly excludes these tools until its dispatcher
+and payload policy receive a separate verified release.
