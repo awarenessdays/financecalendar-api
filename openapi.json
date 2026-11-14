@@ -9074,7 +9074,14 @@
             "tax_behavior": "inclusive"
           }
         },
-        "full_dataset_export": false
+        "full_dataset_export": false,
+        "official_history": {
+          "plan": "starter",
+          "label": "Starter",
+          "lookback_years": 1,
+          "range_basis": "rolling_UTC_calendar_years",
+          "unlimited": false
+        }
       },
       "build": {
         "id": "build",
@@ -9097,7 +9104,14 @@
             "tax_behavior": "inclusive"
           }
         },
-        "full_dataset_export": false
+        "full_dataset_export": false,
+        "official_history": {
+          "plan": "build",
+          "label": "Build",
+          "lookback_years": 10,
+          "range_basis": "rolling_UTC_calendar_years",
+          "unlimited": false
+        }
       },
       "scale": {
         "id": "scale",
@@ -9120,7 +9134,14 @@
             "tax_behavior": "inclusive"
           }
         },
-        "full_dataset_export": true
+        "full_dataset_export": true,
+        "official_history": {
+          "plan": "scale",
+          "label": "Scale",
+          "lookback_years": null,
+          "range_basis": "rolling_UTC_calendar_years",
+          "unlimited": true
+        }
       }
     },
     "sample": {
@@ -9220,9 +9241,590 @@
         "basis": "accepted_recorded_editions_only",
         "original_first_print_archive": false
       },
+      "official_archive": {
+        "available": true,
+        "archive_revision": 25,
+        "observations": {
+          "endpoint": "/history/observations",
+          "record_count": 5074,
+          "metric_count": 21,
+          "reference_periods": {
+            "from": "2006-01-01",
+            "to": "2026-10-31"
+          },
+          "metrics": [
+            {
+              "source_id": "bls",
+              "series_code": "us-unemployment",
+              "metric_id": "us-unemployment-rate-sa",
+              "source_series_id": "LNS14000000",
+              "source_license": {
+                "id": "US-PUBLIC-DOMAIN",
+                "url": "https://www.bls.gov/bls/linksite.htm",
+                "attribution": "Source: U.S. Bureau of Labor Statistics."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-10-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "statcan",
+              "series_code": "ca-retail-sales",
+              "metric_id": "ca-retail-sales-mom-sa",
+              "source_series_id": "1446859483",
+              "source_license": {
+                "id": "STATCAN-OPEN",
+                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+              },
+              "record_count": 115,
+              "distinct_period_count": 115,
+              "populated_values": 115,
+              "first_period": "2017-02-01",
+              "last_period": "2026-08-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "bls",
+              "series_code": "us-cpi",
+              "metric_id": "us-cpi-all-items-index-nsa",
+              "source_series_id": "CUUR0000SA0",
+              "source_license": {
+                "id": "US-PUBLIC-DOMAIN",
+                "url": "https://www.bls.gov/bls/linksite.htm",
+                "attribution": "Source: U.S. Bureau of Labor Statistics."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-10-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "statcan",
+              "series_code": "ca-cpi",
+              "metric_id": "ca-cpi-all-items-mom-nsa",
+              "source_series_id": "41690973",
+              "source_license": {
+                "id": "STATCAN-OPEN",
+                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "bls",
+              "series_code": "us-cpi",
+              "metric_id": "us-cpi-all-items-mom-sa",
+              "source_series_id": "CUSR0000SA0",
+              "source_license": {
+                "id": "US-PUBLIC-DOMAIN",
+                "url": "https://www.bls.gov/bls/linksite.htm",
+                "attribution": "Source: U.S. Bureau of Labor Statistics."
+              },
+              "record_count": 248,
+              "distinct_period_count": 248,
+              "populated_values": 248,
+              "first_period": "2006-01-01",
+              "last_period": "2026-10-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "bls",
+              "series_code": "us-nfp",
+              "metric_id": "us-nonfarm-payrolls-monthly-change-sa",
+              "source_series_id": "CES0000000001",
+              "source_license": {
+                "id": "US-PUBLIC-DOMAIN",
+                "url": "https://www.bls.gov/bls/linksite.htm",
+                "attribution": "Source: U.S. Bureau of Labor Statistics."
+              },
+              "record_count": 250,
+              "distinct_period_count": 250,
+              "populated_values": 250,
+              "first_period": "2006-01-01",
+              "last_period": "2026-10-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ecb",
+              "series_code": "eu-cpi",
+              "metric_id": "eu-hicp-all-items-yoy-changing-composition-nsa",
+              "source_series_id": "ICP.M.U2.N.000000.4.ANR",
+              "source_license": {
+                "id": "ECB-REUSE",
+                "url": "https://www.ecb.europa.eu/services/using-our-site/disclaimer/html/index.en.html",
+                "attribution": "Source: European Central Bank. Original data are freely available from the ECB; Finance Calendar calculations are identified separately."
+              },
+              "record_count": 240,
+              "distinct_period_count": 240,
+              "populated_values": 240,
+              "first_period": "2006-01-01",
+              "last_period": "2025-12-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "abs",
+              "series_code": "au-employment",
+              "metric_id": "au-employment-monthly-change-sa",
+              "source_series_id": "LF/M3.3.1599.20.AUS.M",
+              "source_license": {
+                "id": "CC-BY-4.0",
+                "url": "https://creativecommons.org/licenses/by/4.0/",
+                "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ons",
+              "series_code": "gb-cpi",
+              "metric_id": "gb-cpi-core-yoy",
+              "source_series_id": "DKO8",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "statcan",
+              "series_code": "ca-gdp",
+              "metric_id": "ca-gdp-monthly-mom-sa",
+              "source_series_id": "65201210",
+              "source_license": {
+                "id": "STATCAN-OPEN",
+                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+              },
+              "record_count": 248,
+              "distinct_period_count": 248,
+              "populated_values": 248,
+              "first_period": "2006-01-01",
+              "last_period": "2026-08-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "bls",
+              "series_code": "us-nfp",
+              "metric_id": "us-average-hourly-earnings-mom-sa",
+              "source_series_id": "CES0500000003",
+              "source_license": {
+                "id": "US-PUBLIC-DOMAIN",
+                "url": "https://www.bls.gov/bls/linksite.htm",
+                "attribution": "Source: U.S. Bureau of Labor Statistics."
+              },
+              "record_count": 247,
+              "distinct_period_count": 247,
+              "populated_values": 247,
+              "first_period": "2006-04-01",
+              "last_period": "2026-10-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ons",
+              "series_code": "gb-cpi",
+              "metric_id": "gb-cpi-all-items-yoy",
+              "source_series_id": "D7G7",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "bls",
+              "series_code": "us-cpi",
+              "metric_id": "us-cpi-core-yoy-nsa",
+              "source_series_id": "CUUR0000SA0L1E",
+              "source_license": {
+                "id": "US-PUBLIC-DOMAIN",
+                "url": "https://www.bls.gov/bls/linksite.htm",
+                "attribution": "Source: U.S. Bureau of Labor Statistics."
+              },
+              "record_count": 248,
+              "distinct_period_count": 248,
+              "populated_values": 248,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "statcan",
+              "series_code": "ca-cpi",
+              "metric_id": "ca-cpi-all-items-yoy-nsa",
+              "source_series_id": "41690973",
+              "source_license": {
+                "id": "STATCAN-OPEN",
+                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ons",
+              "series_code": "gb-gdp",
+              "metric_id": "gb-gdp-monthly-mom-sa",
+              "source_series_id": "ECYX",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "bls",
+              "series_code": "us-cpi",
+              "metric_id": "us-cpi-all-items-yoy-nsa",
+              "source_series_id": "CUUR0000SA0",
+              "source_license": {
+                "id": "US-PUBLIC-DOMAIN",
+                "url": "https://www.bls.gov/bls/linksite.htm",
+                "attribution": "Source: U.S. Bureau of Labor Statistics."
+              },
+              "record_count": 248,
+              "distinct_period_count": 248,
+              "populated_values": 248,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ons",
+              "series_code": "gb-retail-sales",
+              "metric_id": "gb-retail-sales-volume-mom-sa",
+              "source_series_id": "J5EC",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "abs",
+              "series_code": "au-unemployment",
+              "metric_id": "au-unemployment-rate-sa",
+              "source_series_id": "LF/M13.3.1599.20.AUS.M",
+              "source_license": {
+                "id": "CC-BY-4.0",
+                "url": "https://creativecommons.org/licenses/by/4.0/",
+                "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
+              },
+              "record_count": 249,
+              "distinct_period_count": 249,
+              "populated_values": 249,
+              "first_period": "2006-01-01",
+              "last_period": "2026-09-30",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "statcan",
+              "series_code": "ca-unemployment",
+              "metric_id": "ca-unemployment-rate-sa",
+              "source_series_id": "2062815",
+              "source_license": {
+                "id": "STATCAN-OPEN",
+                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+              },
+              "record_count": 250,
+              "distinct_period_count": 250,
+              "populated_values": 250,
+              "first_period": "2006-01-01",
+              "last_period": "2026-10-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "statcan",
+              "series_code": "ca-employment",
+              "metric_id": "ca-employment-monthly-change-sa",
+              "source_series_id": "2062811",
+              "source_license": {
+                "id": "STATCAN-OPEN",
+                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+              },
+              "record_count": 250,
+              "distinct_period_count": 250,
+              "populated_values": 250,
+              "first_period": "2006-01-01",
+              "last_period": "2026-10-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "eurostat",
+              "series_code": "eu-cpi",
+              "metric_id": "eu-hicp-all-items-yoy-ea20-coicop1999-nsa",
+              "source_series_id": "prc_hicp_manr:EA20:CP00:RCH_A",
+              "source_license": {
+                "id": "EUROSTAT-REUSE",
+                "url": "https://ec.europa.eu/eurostat/help/copyright-notice",
+                "attribution": "Source: Eurostat. Changes and calculations by Finance Calendar are identified separately."
+              },
+              "record_count": 240,
+              "distinct_period_count": 240,
+              "populated_values": 240,
+              "first_period": "2006-01-01",
+              "last_period": "2025-12-31",
+              "first_release": null,
+              "last_release": null,
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            }
+          ]
+        },
+        "release_metadata": {
+          "endpoint": "/history/releases",
+          "metric_link_count": 402,
+          "metric_count": 4,
+          "unique_release_count": null,
+          "release_dates": {
+            "from": "2017-10-19",
+            "to": "2026-11-12"
+          },
+          "metrics": [
+            {
+              "source_id": "ons",
+              "series_code": "gb-retail-sales",
+              "metric_id": "gb-retail-sales-volume-mom-sa",
+              "source_series_id": "J5EC",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 91,
+              "distinct_period_count": 91,
+              "populated_values": 0,
+              "first_period": "2017-09-01",
+              "last_period": "2026-09-30",
+              "first_release": "2017-10-19",
+              "last_release": "2026-10-23",
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ons",
+              "series_code": "gb-gdp",
+              "metric_id": "gb-gdp-monthly-mom-sa",
+              "source_series_id": "ECYX",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 101,
+              "distinct_period_count": 101,
+              "populated_values": 0,
+              "first_period": "2018-05-01",
+              "last_period": "2026-09-30",
+              "first_release": "2018-07-10",
+              "last_release": "2026-11-12",
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ons",
+              "series_code": "gb-cpi",
+              "metric_id": "gb-cpi-core-yoy",
+              "source_series_id": "DKO8",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 105,
+              "distinct_period_count": 105,
+              "populated_values": 0,
+              "first_period": "2018-01-01",
+              "last_period": "2026-09-30",
+              "first_release": "2018-02-13",
+              "last_release": "2026-10-21",
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            },
+            {
+              "source_id": "ons",
+              "series_code": "gb-cpi",
+              "metric_id": "gb-cpi-all-items-yoy",
+              "source_series_id": "D7G7",
+              "source_license": {
+                "id": "OGL-UK-3.0",
+                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+              },
+              "record_count": 105,
+              "distinct_period_count": 105,
+              "populated_values": 0,
+              "first_period": "2018-01-01",
+              "last_period": "2026-09-30",
+              "first_release": "2018-02-13",
+              "last_release": "2026-10-21",
+              "gaps": null,
+              "expected_count": null,
+              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+            }
+          ]
+        },
+        "coverage_endpoint": "/history/coverage",
+        "basis": "current_vintage_official_observations_and_recorded_release_metadata",
+        "original_first_print_archive": false,
+        "historical_pre_release_consensus_archive": false,
+        "as_of_basis": "fc_evidence_commit_observed_bound",
+        "customer_availability_at_cutoff_proven": false
+      },
       "coverage_url": "https://www.financecalendar.com/api/coverage/#history-availability"
     },
-    "data_scope_summary": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release.",
+    "official_history_packages": {
+      "starter": {
+        "plan": "starter",
+        "label": "Starter",
+        "lookback_years": 1,
+        "range_basis": "rolling_UTC_calendar_years",
+        "unlimited": false
+      },
+      "build": {
+        "plan": "build",
+        "label": "Build",
+        "lookback_years": 10,
+        "range_basis": "rolling_UTC_calendar_years",
+        "unlimited": false
+      },
+      "scale": {
+        "plan": "scale",
+        "label": "Scale",
+        "lookback_years": null,
+        "range_basis": "rolling_UTC_calendar_years",
+        "unlimited": true
+      }
+    },
+    "data_scope_summary": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. The new official archive includes 1 year with Starter, 10 years with Build and all available history with Scale. Available dates vary by measure. These archive limits are separate from existing release history and curated datasets.",
     "package_faq": [
       {
         "question": "Is there an ongoing free economic calendar API?",
@@ -9230,7 +9832,7 @@
       },
       {
         "question": "Does Starter include international forecasts and numerical data?",
-        "answer": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. These paid capabilities include customer-facing apps within the plan allowances, attribution and applicable source terms."
+        "answer": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. The new official archive includes 1 year with Starter, 10 years with Build and all available history with Scale. Available dates vary by measure. These archive limits are separate from existing release history and curated datasets. These paid capabilities include customer-facing apps within the plan allowances, attribution and applicable source terms."
       }
     ],
     "plan_comparison": {
@@ -9577,6 +10179,40 @@
           }
         },
         {
+          "id": "official_history",
+          "group": "data",
+          "feature": "Official observation archive",
+          "note": "Plan windows use rolling UTC calendar years. Check each measure’s stored and accessible dates; source coverage varies. Existing release history and curated datasets are separate.",
+          "values": {
+            "free_developer": "No",
+            "starter": "1 year",
+            "build": "10 years",
+            "scale": "All available"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "starter": {
+              "label": "1 year",
+              "detail": "",
+              "included": null
+            },
+            "build": {
+              "label": "10 years",
+              "detail": "",
+              "included": null
+            },
+            "scale": {
+              "label": "All available",
+              "detail": "",
+              "included": null
+            }
+          }
+        },
+        {
           "id": "changes",
           "group": "tools",
           "feature": "Change feed and webhooks",
@@ -9862,6 +10498,564 @@
       "cutoff_endpoint": "/enrichment/as-of",
       "basis": "accepted_recorded_editions_only",
       "original_first_print_archive": false
+    },
+    "official_archive": {
+      "available": true,
+      "archive_revision": 25,
+      "observations": {
+        "endpoint": "/history/observations",
+        "record_count": 5074,
+        "metric_count": 21,
+        "reference_periods": {
+          "from": "2006-01-01",
+          "to": "2026-10-31"
+        },
+        "metrics": [
+          {
+            "source_id": "bls",
+            "series_code": "us-unemployment",
+            "metric_id": "us-unemployment-rate-sa",
+            "source_series_id": "LNS14000000",
+            "source_license": {
+              "id": "US-PUBLIC-DOMAIN",
+              "url": "https://www.bls.gov/bls/linksite.htm",
+              "attribution": "Source: U.S. Bureau of Labor Statistics."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-10-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "statcan",
+            "series_code": "ca-retail-sales",
+            "metric_id": "ca-retail-sales-mom-sa",
+            "source_series_id": "1446859483",
+            "source_license": {
+              "id": "STATCAN-OPEN",
+              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+            },
+            "record_count": 115,
+            "distinct_period_count": 115,
+            "populated_values": 115,
+            "first_period": "2017-02-01",
+            "last_period": "2026-08-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "bls",
+            "series_code": "us-cpi",
+            "metric_id": "us-cpi-all-items-index-nsa",
+            "source_series_id": "CUUR0000SA0",
+            "source_license": {
+              "id": "US-PUBLIC-DOMAIN",
+              "url": "https://www.bls.gov/bls/linksite.htm",
+              "attribution": "Source: U.S. Bureau of Labor Statistics."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-10-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "statcan",
+            "series_code": "ca-cpi",
+            "metric_id": "ca-cpi-all-items-mom-nsa",
+            "source_series_id": "41690973",
+            "source_license": {
+              "id": "STATCAN-OPEN",
+              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "bls",
+            "series_code": "us-cpi",
+            "metric_id": "us-cpi-all-items-mom-sa",
+            "source_series_id": "CUSR0000SA0",
+            "source_license": {
+              "id": "US-PUBLIC-DOMAIN",
+              "url": "https://www.bls.gov/bls/linksite.htm",
+              "attribution": "Source: U.S. Bureau of Labor Statistics."
+            },
+            "record_count": 248,
+            "distinct_period_count": 248,
+            "populated_values": 248,
+            "first_period": "2006-01-01",
+            "last_period": "2026-10-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "bls",
+            "series_code": "us-nfp",
+            "metric_id": "us-nonfarm-payrolls-monthly-change-sa",
+            "source_series_id": "CES0000000001",
+            "source_license": {
+              "id": "US-PUBLIC-DOMAIN",
+              "url": "https://www.bls.gov/bls/linksite.htm",
+              "attribution": "Source: U.S. Bureau of Labor Statistics."
+            },
+            "record_count": 250,
+            "distinct_period_count": 250,
+            "populated_values": 250,
+            "first_period": "2006-01-01",
+            "last_period": "2026-10-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ecb",
+            "series_code": "eu-cpi",
+            "metric_id": "eu-hicp-all-items-yoy-changing-composition-nsa",
+            "source_series_id": "ICP.M.U2.N.000000.4.ANR",
+            "source_license": {
+              "id": "ECB-REUSE",
+              "url": "https://www.ecb.europa.eu/services/using-our-site/disclaimer/html/index.en.html",
+              "attribution": "Source: European Central Bank. Original data are freely available from the ECB; Finance Calendar calculations are identified separately."
+            },
+            "record_count": 240,
+            "distinct_period_count": 240,
+            "populated_values": 240,
+            "first_period": "2006-01-01",
+            "last_period": "2025-12-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "abs",
+            "series_code": "au-employment",
+            "metric_id": "au-employment-monthly-change-sa",
+            "source_series_id": "LF/M3.3.1599.20.AUS.M",
+            "source_license": {
+              "id": "CC-BY-4.0",
+              "url": "https://creativecommons.org/licenses/by/4.0/",
+              "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ons",
+            "series_code": "gb-cpi",
+            "metric_id": "gb-cpi-core-yoy",
+            "source_series_id": "DKO8",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "statcan",
+            "series_code": "ca-gdp",
+            "metric_id": "ca-gdp-monthly-mom-sa",
+            "source_series_id": "65201210",
+            "source_license": {
+              "id": "STATCAN-OPEN",
+              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+            },
+            "record_count": 248,
+            "distinct_period_count": 248,
+            "populated_values": 248,
+            "first_period": "2006-01-01",
+            "last_period": "2026-08-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "bls",
+            "series_code": "us-nfp",
+            "metric_id": "us-average-hourly-earnings-mom-sa",
+            "source_series_id": "CES0500000003",
+            "source_license": {
+              "id": "US-PUBLIC-DOMAIN",
+              "url": "https://www.bls.gov/bls/linksite.htm",
+              "attribution": "Source: U.S. Bureau of Labor Statistics."
+            },
+            "record_count": 247,
+            "distinct_period_count": 247,
+            "populated_values": 247,
+            "first_period": "2006-04-01",
+            "last_period": "2026-10-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ons",
+            "series_code": "gb-cpi",
+            "metric_id": "gb-cpi-all-items-yoy",
+            "source_series_id": "D7G7",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "bls",
+            "series_code": "us-cpi",
+            "metric_id": "us-cpi-core-yoy-nsa",
+            "source_series_id": "CUUR0000SA0L1E",
+            "source_license": {
+              "id": "US-PUBLIC-DOMAIN",
+              "url": "https://www.bls.gov/bls/linksite.htm",
+              "attribution": "Source: U.S. Bureau of Labor Statistics."
+            },
+            "record_count": 248,
+            "distinct_period_count": 248,
+            "populated_values": 248,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "statcan",
+            "series_code": "ca-cpi",
+            "metric_id": "ca-cpi-all-items-yoy-nsa",
+            "source_series_id": "41690973",
+            "source_license": {
+              "id": "STATCAN-OPEN",
+              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ons",
+            "series_code": "gb-gdp",
+            "metric_id": "gb-gdp-monthly-mom-sa",
+            "source_series_id": "ECYX",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "bls",
+            "series_code": "us-cpi",
+            "metric_id": "us-cpi-all-items-yoy-nsa",
+            "source_series_id": "CUUR0000SA0",
+            "source_license": {
+              "id": "US-PUBLIC-DOMAIN",
+              "url": "https://www.bls.gov/bls/linksite.htm",
+              "attribution": "Source: U.S. Bureau of Labor Statistics."
+            },
+            "record_count": 248,
+            "distinct_period_count": 248,
+            "populated_values": 248,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ons",
+            "series_code": "gb-retail-sales",
+            "metric_id": "gb-retail-sales-volume-mom-sa",
+            "source_series_id": "J5EC",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "abs",
+            "series_code": "au-unemployment",
+            "metric_id": "au-unemployment-rate-sa",
+            "source_series_id": "LF/M13.3.1599.20.AUS.M",
+            "source_license": {
+              "id": "CC-BY-4.0",
+              "url": "https://creativecommons.org/licenses/by/4.0/",
+              "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
+            },
+            "record_count": 249,
+            "distinct_period_count": 249,
+            "populated_values": 249,
+            "first_period": "2006-01-01",
+            "last_period": "2026-09-30",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "statcan",
+            "series_code": "ca-unemployment",
+            "metric_id": "ca-unemployment-rate-sa",
+            "source_series_id": "2062815",
+            "source_license": {
+              "id": "STATCAN-OPEN",
+              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+            },
+            "record_count": 250,
+            "distinct_period_count": 250,
+            "populated_values": 250,
+            "first_period": "2006-01-01",
+            "last_period": "2026-10-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "statcan",
+            "series_code": "ca-employment",
+            "metric_id": "ca-employment-monthly-change-sa",
+            "source_series_id": "2062811",
+            "source_license": {
+              "id": "STATCAN-OPEN",
+              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
+            },
+            "record_count": 250,
+            "distinct_period_count": 250,
+            "populated_values": 250,
+            "first_period": "2006-01-01",
+            "last_period": "2026-10-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "eurostat",
+            "series_code": "eu-cpi",
+            "metric_id": "eu-hicp-all-items-yoy-ea20-coicop1999-nsa",
+            "source_series_id": "prc_hicp_manr:EA20:CP00:RCH_A",
+            "source_license": {
+              "id": "EUROSTAT-REUSE",
+              "url": "https://ec.europa.eu/eurostat/help/copyright-notice",
+              "attribution": "Source: Eurostat. Changes and calculations by Finance Calendar are identified separately."
+            },
+            "record_count": 240,
+            "distinct_period_count": 240,
+            "populated_values": 240,
+            "first_period": "2006-01-01",
+            "last_period": "2025-12-31",
+            "first_release": null,
+            "last_release": null,
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          }
+        ]
+      },
+      "release_metadata": {
+        "endpoint": "/history/releases",
+        "metric_link_count": 402,
+        "metric_count": 4,
+        "unique_release_count": null,
+        "release_dates": {
+          "from": "2017-10-19",
+          "to": "2026-11-12"
+        },
+        "metrics": [
+          {
+            "source_id": "ons",
+            "series_code": "gb-retail-sales",
+            "metric_id": "gb-retail-sales-volume-mom-sa",
+            "source_series_id": "J5EC",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 91,
+            "distinct_period_count": 91,
+            "populated_values": 0,
+            "first_period": "2017-09-01",
+            "last_period": "2026-09-30",
+            "first_release": "2017-10-19",
+            "last_release": "2026-10-23",
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ons",
+            "series_code": "gb-gdp",
+            "metric_id": "gb-gdp-monthly-mom-sa",
+            "source_series_id": "ECYX",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 101,
+            "distinct_period_count": 101,
+            "populated_values": 0,
+            "first_period": "2018-05-01",
+            "last_period": "2026-09-30",
+            "first_release": "2018-07-10",
+            "last_release": "2026-11-12",
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ons",
+            "series_code": "gb-cpi",
+            "metric_id": "gb-cpi-core-yoy",
+            "source_series_id": "DKO8",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 105,
+            "distinct_period_count": 105,
+            "populated_values": 0,
+            "first_period": "2018-01-01",
+            "last_period": "2026-09-30",
+            "first_release": "2018-02-13",
+            "last_release": "2026-10-21",
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          },
+          {
+            "source_id": "ons",
+            "series_code": "gb-cpi",
+            "metric_id": "gb-cpi-all-items-yoy",
+            "source_series_id": "D7G7",
+            "source_license": {
+              "id": "OGL-UK-3.0",
+              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
+            },
+            "record_count": 105,
+            "distinct_period_count": 105,
+            "populated_values": 0,
+            "first_period": "2018-01-01",
+            "last_period": "2026-09-30",
+            "first_release": "2018-02-13",
+            "last_release": "2026-10-21",
+            "gaps": null,
+            "expected_count": null,
+            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
+          }
+        ]
+      },
+      "coverage_endpoint": "/history/coverage",
+      "basis": "current_vintage_official_observations_and_recorded_release_metadata",
+      "original_first_print_archive": false,
+      "historical_pre_release_consensus_archive": false,
+      "as_of_basis": "fc_evidence_commit_observed_bound",
+      "customer_availability_at_cutoff_proven": false
     },
     "coverage_url": "https://www.financecalendar.com/api/coverage/#history-availability"
   },
