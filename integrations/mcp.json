@@ -4,8 +4,19 @@
     "financecalendar": {
       "type": "streamable-http",
       "url": "https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp",
-      "headers": {
-        "X-API-Key": "${FC_API_KEY}"
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": {
+              "mode": "dcr"
+            },
+            "baseScopes": [
+              "calendar:read",
+              "offline_access"
+            ]
+          }
+        }
       }
     }
   }

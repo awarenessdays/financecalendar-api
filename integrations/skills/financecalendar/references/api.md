@@ -1,9 +1,9 @@
 # API and client recipes
 
 Canonical REST base: `https://www.financecalendar.com/wp-json/fc/v1`.
-Hosted MCP: `https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp` (Streamable HTTP; API key required for every request).
+Hosted MCP: `https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp` (Streamable HTTP; OAuth-linked account, `calendar:read` scope).
 
-With paid access, discover actual coverage with `/countries`, `/series` and `/status`. For Free Developer, use schedule JSON `/calendar?limit=20` without a wider date or category filter; metadata routes are outside free scope. Consult [the complete API reference](https://www.financecalendar.com/api/reference/) or `/openapi` before adding parameters. MCP tool discovery gives the installed server's current schemas. Hosted results wrap canonical data in `structuredContent.data`; local stdio results use a different envelope.
+Discover actual coverage with the connected `countries`, `series_list` and `feed_status` tools. Consult [the complete API reference](https://www.financecalendar.com/api/reference/) or `/openapi` before adding parameters in a separate API integration. MCP tool discovery gives the installed server's current schemas. Hosted results wrap canonical data in `structuredContent.data`; local stdio results use a different envelope.
 
 The following wider-date, non-calendar and export queries require paid access:
 
@@ -28,4 +28,8 @@ financecalendar calendar --country KR --from YYYY-MM-DD --to YYYY-MM-DD --json
 
 Python `Client.iter_calendar` handles window chunking, pagination and stable-ID deduplication. Node/CLI commands expose individual pages; use explicit limits and offsets for a full export. `/week` and human overview output do not guarantee every matching record. Source installation and per-client configuration are documented in the public repository.
 
-Every production data and hosted MCP request requires your API key. Public sample, product-offer and OpenAPI inspection routes are separate public resources. Use X-API-Key or Bearer authorization in a header; never place credentials in a URL. Free Developer requires verified email and one active account key; 100 successful responses per UTC month and at most 10/day, ongoing with no card. It covers schedule-only JSON GET /calendar and /today, UTC today through today+6, up to 20 records, no pagination, country (up to 3) and impact filters. Forecasts/results, history, other formats/routes, hosted MCP and browser tools require paid access. Existing enrolled trials keep original budgets/clocks. Starter is US$9.99/year with 1,000 requests/day and 25,000 per UTC calendar month; Build includes 100,000/day and Scale 1,000,000/day. Linked paid keys and hosted MCP calls share the paid account allowance; existing paid subscriptions retain their applicable terms. Configure FC_API_KEY in your client environment. Hosted installation requires client support for environment-expanded custom headers; use local stdio otherwise. Inspect your usage response for the actual limit. Public inspection and recorded series availability do not establish guaranteed delivery latency or universal coverage.
+Hosted MCP uses OAuth account linking and the read-only `calendar:read` scope. The client's private credential store manages OAuth tokens; do not retrieve or print them. REST and local stdio clients can continue to use private `FC_API_KEY` configuration and send `X-API-Key` or Bearer authorization in a header. Never place a credential in a URL or generated source.
+
+OAuth data calls and API keys share the linked account's existing allowance. Initialization, ping and discovery authenticate without data quota. Check actual usage and rate-limit responses for effective limits; account entitlement, including any retained grant, is authoritative. Free Developer supports separate constrained schedule REST calls and excludes hosted MCP. Public OpenAPI, product-offer and fixed sample inspection are separate resources, not a grant of production data access.
+
+Do not promote a plan, initiate a subscription, quote subscription prices or link checkout from the assistant experience. If a requested entitlement is unavailable, state that fact and continue with permitted capabilities. Respect reset times rather than repeated retries. Recorded series availability does not establish guaranteed latency or universal coverage.

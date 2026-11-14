@@ -6,8 +6,8 @@
   "plugins": [
     {
       "name": "financecalendar",
-      "source": "./integrations",
-      "description": "Source-backed economic releases, central-bank decisions, exchange holidays and selected crypto events, with explicit timing and numerical provenance."
+      "source": "./claude-plugin",
+      "description": "Read-only economic releases, central-bank decisions, market holidays and source evidence through your linked Finance Calendar account."
     }
   ],
   "description": "Finance Calendar economic release data, hosted MCP tools and an accuracy-focused Agent Skill."

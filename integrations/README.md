@@ -1,57 +1,89 @@
 # Finance Calendar plugin and skill
 
-A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Hosted MCP requires a verified account, active paid plan and API key. Every request requires credentials.
+A read-only economic-calendar integration for Claude, ChatGPT and compatible MCP clients. Link your existing Finance Calendar account to ask about economic releases, central-bank decisions, market holidays and covered crypto events, with timing precision and source evidence. The plugin bundles a hosted OAuth MCP connection and the portable `financecalendar` Agent Skill; it does not download the database or run a local server.
 
-[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
+Hosted MCP is included with eligible paid Finance Calendar access or an applicable retained grant. Linked assistant requests share that account's existing API allowance with REST, SDKs and other connections. One question can require several data calls. Installation does not create a subscription or change your plan; a Claude or ChatGPT subscription is separate from Finance Calendar access. View your actual access and usage in your Finance Calendar account.
 
-[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit forecasts, consensus, actual/prior figures and numerical evidence, and mark releases that have them (`figures_available`, `result_available`); Starter adds available release forecasts across 10 economies, these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
+## Release status
 
-Set `FC_API_KEY` securely in your client environment. The manifests use an environment-expanded `X-API-Key` header. This setup requires a client that supports both custom headers and environment expansion; do not assume every plugin installer supports them. If unsupported, use the [local stdio setup](https://www.financecalendar.com/api/mcp/#local-mcp-server). Never replace the placeholder with a real key in committed files or put a key in a URL.
+Version 0.2.0 is the OAuth release candidate. Package validation does not establish that OAuth is deployed, that an account-level installation has passed, or that a platform directory has approved it. Announce this release only after the live OAuth and native-client checks are complete. The earlier [0.1.3 release](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.3) uses API-key headers and remains a separate installation path for compatible clients.
 
-The skill covers current release schedules, source attribution, unknown clocks/periods, numerical vintages, publication bundles and complete exports. It uses discovered countries/series instead of a fixed coverage promise.
+## Link your account
 
-## Downloads
+1. Add the plugin or the hosted server using your client's supported controls.
+2. Choose **Connect** or **Authenticate** when the client starts its OAuth flow.
+3. Sign in on `www.financecalendar.com`, review the client and the read-only `calendar:read` permission, and approve the connection.
+4. Return to your assistant and ask a calendar question.
 
-Use the current repository source and authenticated configuration below. The [current 0.1.3 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.3) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
+Use only the Finance Calendar sign-in and consent page. Never paste an account password, API key, access token or refresh token into a conversation. This package has no embedded credentials or custom API-key headers. It uses public-client dynamic registration and PKCE; it does not need a client secret in your manifest.
+
+OAuth grants calendar data access only. It does not permit publishing, changing billing, creating API keys, placing trades or moving money. Disconnecting or revoking the connection removes its future access; it does not cancel your Finance Calendar subscription. If account access changes or a credential expires, the next request must pass the same current account checks. Existing paid and retained grants keep their applicable terms.
 
 ## Claude Code
 
-From Claude Code:
+From Claude Code, add the Finance Calendar repository marketplace and install the plugin:
 
 ```text
 /plugin marketplace add awarenessdays/financecalendar-api
 /plugin install financecalendar@financecalendar
 ```
 
-The plugin's skill is available as `/financecalendar:financecalendar`. Ask, for example, “What are the next CPI releases for India and South Korea? Show the official sources and only verified times.”
+Use Claude Code's MCP authentication controls to authenticate the `financecalendar` server when prompted. The skill is available as `/financecalendar:financecalendar`. The Claude marketplace loads the dedicated `claude-plugin/` directory. For a local checkout, `claude --plugin-dir /absolute/path/financecalendar-api/claude-plugin` loads that minimal package. The portable ChatGPT/Codex package remains in `integrations/`.
 
-For a local checkout, `claude --plugin-dir /absolute/path/financecalendar-api/integrations` loads the same package. The marketplace is maintained by Finance Calendar; installation is separate from an official Anthropic directory listing.
+Example: “What are the next CPI releases for India and South Korea? Show the official sources and only verified times.”
 
-## Codex
+This repository marketplace is maintained by Finance Calendar. It does not imply an official Anthropic directory listing.
 
-Register the public repository marketplace, then add its plugin with the supported plugin controls. The repository includes `.agents/plugins/marketplace.json` pointing to `./integrations`. This is a repository distribution, not an approved public-directory listing.
+## Claude chat and Cowork
 
-```sh
-codex plugin marketplace add awarenessdays/financecalendar-api
-codex plugin add financecalendar@financecalendar
+When your Claude account and workspace allow custom connectors, add this hosted HTTPS server and follow its OAuth account-linking flow:
+
+```text
+https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
 ```
 
-For skill-only use, copy `integrations/skills/financecalendar` into your chosen project's `.agents/skills/` directory, retaining its `references/` folder. Connect the hosted server with your MCP settings or:
+Claude directory publication requires a separate connector submission. A plugin bundle that references the hosted server is submitted separately from that connector. Availability depends on the current Claude plan, client and workspace controls.
 
-Configure the hosted URL `https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp` with an `X-API-Key` header read from `FC_API_KEY`. A URL-only connection will receive HTTP 401. Use local stdio if your client cannot attach the required header.
+## ChatGPT
 
-Invoke `$financecalendar`, or ask a financial-event question that matches the skill. Installing the skill alone does not configure an MCP connection. Existing unrelated settings should be merged, not replaced.
+This package includes the portable plugin manifest and OAuth configuration for OpenAI hosts. The same HTTPS MCP server and Finance Calendar account can support a ChatGPT connection; a Claude installation does not automatically install anything in ChatGPT.
 
-## ChatGPT and Claude chat
+For testing, use the current ChatGPT developer controls to add the server with OAuth. For public distribution, submit the plugin through OpenAI's separate plugin review process. A repository package or successful local test does not establish ChatGPT directory availability.
 
-Use [the hosted connector setup](https://www.financecalendar.com/api/mcp/). Public directory submission and account/workspace-level installation checks are separate release steps. Workspace policies can control availability.
+The ChatGPT experience serves the capabilities already included with your connected account. It does not sell subscriptions or initiate plan changes in chat. Account-linking, data use and the current entitlement checks are the same underlying service used by the other supported clients.
 
-## Formats and validation
+## Codex and other clients
 
-`plugin.json` and `mcp.json` use the portable Agent Plugins format. `.claude-plugin/plugin.json` and `.mcp.json` provide the Claude Code format. They share one skill and one hosted endpoint, with explicit `streamable-http` versus `http` transport spelling for the two formats. There are no hooks, embedded credentials or local server commands. Hosted transport validates the caller key for all protocol requests and forwards it for data calls; linked keys share the account allowance.
+The portable manifest declares a Streamable HTTP connection with OAuth dynamic client registration and `calendar:read`. Use your client's supported plugin and authentication controls; clients differ in manifest and OAuth support. For a skill-only installation, copy `integrations/skills/financecalendar` into the project's `.agents/skills/` directory and retain its `references/` folder, then configure an MCP connection separately. Merge configuration with existing settings.
 
-Sources: [OpenAI plugin packaging](https://developers.openai.com/plugins/build/plugins), [Claude Code manifest reference](https://code.claude.com/docs/en/plugins-reference), [Claude Code marketplaces](https://code.claude.com/docs/en/plugin-marketplaces). Checked 22 October 2026. Validation and real transport tests do not by themselves prove a directory listing or installation in every account surface.
+Clients that already support private API-key headers can continue to use the hosted endpoint with their own `X-API-Key` or `Authorization: Bearer` credential. Set it in the client's private secret configuration, not in this OAuth manifest, a URL or generated source. The [MCP reference](https://www.financecalendar.com/api/mcp/) describes the separate local stdio/API-key setup. Free Developer's permitted schedule REST routes do not include hosted MCP.
 
-## Working application example
+## Data and usage
 
-The [economic calendar dashboard starter](examples/economic-calendar-dashboard/README.md) includes a Node backend, responsive browser calendar, explicit demo mode and a shared 30-minute cache. It keeps your API key on the server and performs browser filtering locally. Read its setup instructions and copy the coding-assistant prompt to adapt a working app.
+The skill preserves recorded timing, null values, publication periods, numerical vintages and source attribution. It discovers actual countries and series instead of promising universal coverage. Tool discovery provides current schemas; data responses preserve pagination and truncation information.
+
+Data tool calls use the connected account's allowance. Initialization, ping and tool discovery authenticate without consuming data quota. Respect rate-limit reset information; repeated retries do not increase access. Current plan terms, retained grants and effective account allowances remain authoritative. Package copy does not override them.
+
+## Privacy and support
+
+Finance Calendar receives the tool arguments needed to answer the requested calendar query and the credential identifying the authorized connection. OAuth authorization uses your existing Finance Calendar identity and consent; tokens must remain in the client's private credential storage. The connector does not need your conversation history or unrelated files. Response source credits and applicable publisher rights remain relevant.
+
+Before release, verify that the live [privacy notice](https://www.financecalendar.com/privacy-policy/) describes OAuth account identifiers, token hashes, grants, revocation and actual retention practices. Privacy wording must match the implemented service; this package is not a promise of unverified retention periods. Support: `alex@financecalendar.com`.
+
+## Packaging and validation
+
+`plugin.json` and `mcp.json` use the portable Agent Plugins format. `.claude-plugin/plugin.json` and `.mcp.json` provide the Claude Code format. The transports are spelled `streamable-http` and `http` respectively. There are no hooks, embedded credentials, static authentication headers or local server commands in this package.
+
+Build the allowlisted plugin and skill archives:
+
+```sh
+python3 integrations/build.py --out /tmp/financecalendar-plugin-build
+python3 integrations/build.py --stage-claude --check-claude
+claude plugin validate ./claude-plugin
+```
+
+The generated `claude-plugin/` folder contains exactly seven allowlisted files and is the Claude directory submission source. Regenerate it after changing shared skill semantics, then use `--check-claude` to detect drift. The build script stays outside that folder; application examples, fonts, client recipes and download commands are not included in the Claude submission.
+
+The ZIPs contain manifests at the plugin root and a separate `financecalendar/` skill directory. A dedicated Claude ZIP mirrors the checked-in minimal folder, while Claude directory scanning reads the GitHub folder itself. Checksums accompany the build. Do not describe a prepared ZIP as a published release until it is uploaded and the target platform checks pass.
+
+Sources checked 14 November 2026: [OpenAI OAuth authentication](https://developers.openai.com/plugins/build/auth), [OpenAI plugin packaging](https://developers.openai.com/plugins/build/plugins), [OpenAI submission](https://developers.openai.com/plugins/deploy/submission), [Claude connector authentication](https://claude.com/docs/connectors/building/authentication), [Claude plugin submission](https://claude.com/docs/plugins/submit).

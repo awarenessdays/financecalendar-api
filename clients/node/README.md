@@ -11,7 +11,7 @@ One package, two binaries:
 
 [Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit forecasts, consensus, actual/prior figures and numerical evidence, and mark releases that have them (`figures_available`, `result_available`); Starter adds release forecasts across 10 economies, these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
 
-The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status and the wider data examples below require a paid plan. The public sample, product offer and OpenAPI document can be read directly without a key; SDK requests consistently use your configured account key. Set `FC_API_KEY` securely for local clients.
+The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status and the wider data examples below require eligible paid access or an applicable retained grant. The public sample, product offer and OpenAPI document can be read directly without a key; SDK requests consistently use your configured account key. Set `FC_API_KEY` securely for local clients.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
@@ -37,23 +37,12 @@ The public beta connects over HTTPS without installing this package. Server URL:
 https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
 ```
 
-Use **Streamable HTTP** with your own credential on every HTTP request:
+Use **Streamable HTTP** and **OAuth account linking** in Claude, ChatGPT or another compatible hosted client. Sign in on `www.financecalendar.com`, review the client and read-only `calendar:read` permission, then approve the connection. Optional `offline_access` lets the client renew its connection. Hosted access requires an existing verified account with eligible paid access or an applicable retained grant. Linking does not create a subscription, change your plan or add quota.
 
-```text
-X-API-Key: fc_live_YOUR_ACTUAL_KEY
-```
+Existing header-capable HTTP MCP clients can continue to send their own private `X-API-Key` or `Authorization: Bearer` credential on every POST. Configure it in the client's private authentication settings; never put credentials in URLs, shared configuration files or a conversation. Platform and workspace policies still govern custom connectors. No directory listing or automatic installation in another platform is implied.
 
-`Authorization: Bearer fc_live_YOUR_ACTUAL_KEY` is also accepted. Replace the
-example with a real key; never put keys in URLs or shared configuration files.
-This server does not implement OAuth. Choose a client that supports a custom
-API-key or bearer header. A connector limited to “No authentication” or OAuth
-cannot access this endpoint; use the local stdio client instead. Platform and
-workspace policies still govern custom connectors. No directory listing or
-one-click ChatGPT/Claude compatibility is implied.
+A missing or invalid credential returns HTTP 401; revoked or disallowed accounts return an access error. Reauthenticate an expired OAuth connection through the client's sign-in flow. Review or revoke linked assistants in your [Finance Calendar connection settings](https://www.financecalendar.com/?fc_oauth_connections=1). Disconnecting does not cancel your subscription or revoke unrelated API keys. The local stdio package below uses `FC_API_KEY` in its private process environment; hosted OAuth does not change the local package's authentication.
 
-For a header-capable HTTP MCP client, configure the server URL above and the
-credential securely. Do not leave authentication empty. A missing or invalid
-credential returns HTTP401; revoked or disallowed accounts return403.
 Try: “Find the next UK CPI release, show its time in Europe/London and cite its
 publisher. Check source health and say which values or dates are uncertain.”
 
@@ -99,11 +88,13 @@ and deduplicating. Requests are limited to 32,768 bytes; unknown arguments are
 rejected.
 
 Every hosted protocol POST, including initialize, ping and tools/list, validates
-your API credential. Tool calls forward only your key to the canonical REST API
-and consume the same account allowance as direct API calls. Protocol discovery
-itself does not consume a data request. No shared server key, anonymous proxy
-allowance or OAuth flow is supplied. Respect account rate headers and
-`Retry-After`. Cookies and unrelated client headers are not forwarded.
+the OAuth account link or private caller API key. Data tool calls retain that
+caller's account identity at the canonical REST API and consume the same account
+allowance as direct API calls. Initialization, ping and tool discovery do not
+consume data quota. No shared customer credential or anonymous proxy allowance is
+provided. Respect account rate headers and `Retry-After`. Cookies and unrelated
+client headers are not forwarded. OAuth connections do not consume ordinary
+personal API-key slots.
 See the [MCP reference](https://www.financecalendar.com/api/mcp/).
 
 ## Install from source
@@ -129,7 +120,7 @@ retain `all day`. Raw JSON preserves the API fields unchanged.
 
 ## Local MCP server
 
-A Free Developer key can call the bounded JSON `/calendar` and `/today` routes through curl, Python, the CLI or a custom local MCP wrapper. Hosted MCP and wider data tools require a paid plan. For a first Free request, use `calendar` with `limit=20` and no timezone, category or pagination parameters.
+A Free Developer key can call the bounded JSON `/calendar` and `/today` routes through curl, Python, the CLI or a custom local MCP wrapper. Hosted MCP and wider data tools require eligible paid access or an applicable retained grant. For a first Free request, use `calendar` with `limit=20` and no timezone, category or pagination parameters.
 
 ### Claude Desktop
 
