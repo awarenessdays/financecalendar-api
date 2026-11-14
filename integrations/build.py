@@ -25,8 +25,12 @@ def validate(root=ROOT):
     for filename,kind in [('mcp.json','streamable-http'),('.mcp.json','http')]:
         doc=json.loads((root/filename).read_text());assert set(doc['mcpServers'])=={'financecalendar'}
         server=doc['mcpServers']['financecalendar'];assert server['type']==kind and server['url']==ENDPOINT
-        assert set(server)<= {'type','url','headers'}
-        assert server['headers']=={'X-API-Key':'${FC_API_KEY}'}
+        assert set(server)<= {'type','url','extensions'}
+        assert 'headers' not in server
+        if filename=='mcp.json':
+            assert server['extensions']['com.openai']['auth']=={'type':'oauth','client':{'mode':'dcr'},'baseScopes':['calendar:read','offline_access']}
+        else:
+            assert set(server)=={'type','url'}
     for name in FILES:
         p=root/name
         assert p.is_file() and not p.is_symlink() and p.resolve().is_relative_to(root.resolve())
@@ -50,7 +54,7 @@ def main():
     plugin=archive(opts.out/f'financecalendar-plugin-{version}.zip',[(name,ROOT/name) for name in FILES])
     prefix='skills/financecalendar/'
     skill=archive(opts.out/f'financecalendar-skill-{version}.zip', [('financecalendar/'+name.removeprefix(prefix),ROOT/name) for name in FILES if name.startswith(prefix)])
-    report={'version':version,'transport':'hosted Streamable HTTP, no local commands or embedded credentials','files':[plugin,skill],
+    report={'version':version,'transport':'hosted Streamable HTTP with OAuth account linking, no local commands or embedded credentials','files':[plugin,skill],
             'scope':'Static packaging/containment checks; not a claim of a directory listing or account-level model evaluation.'}
     (opts.out/'SHA256SUMS').write_text(''.join(f"{x['sha256']}  {x['name']}\n" for x in report['files']))
     (opts.out/'verification.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
