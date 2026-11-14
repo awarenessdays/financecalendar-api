@@ -31,6 +31,7 @@ Starter, Build and Scale can power customer-facing websites and apps, including 
 | Release forecasts | No | Yes | Yes | Yes |
 | Consensus, prior and actual | No | Yes | Yes | Yes |
 | Release history | No | Yes | Yes | Yes |
+| Official observation archive | No | 1 year | 10 years | All available |
 | Change feed and webhooks | No | Yes | Yes | Yes |
 | Formats | JSON | JSON, CSV, ICS | JSON, CSV, ICS | JSON, CSV, ICS |
 | REST, CLI and Python | Yes | Yes | Yes | Yes |
@@ -53,6 +54,8 @@ Release forecasts: Forecast coverage maps 60 headline measures across 10 economi
 Consensus, prior and actual: Schedule rows mark figures available on paid plans. Recorded figures vary by series and release; missing values stay null.
 
 Release history: Retained release records and curated datasets vary by series; see coverage for their date ranges.
+
+Official observation archive: Plan windows use rolling UTC calendar years. Check each measure’s stored and accessible dates; source coverage varies. Existing release history and curated datasets are separate.
 
 Change feed and webhooks: Signed webhooks notify your integration when calendar updates are published.
 
