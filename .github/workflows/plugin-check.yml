@@ -5,7 +5,9 @@ on:
   push:
     paths:
       - 'integrations/**'
-      - '.github/workflows/fc-plugin-check.yml'
+      - 'claude-plugin/**'
+      - '.claude-plugin/marketplace.json'
+      - '.github/workflows/plugin-check.yml'
 
 permissions:
   contents: read

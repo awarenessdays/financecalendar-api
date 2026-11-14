@@ -28,7 +28,7 @@ From Claude Code, add the Finance Calendar repository marketplace and install th
 /plugin install financecalendar@financecalendar
 ```
 
-Use Claude Code's MCP authentication controls to authenticate the `financecalendar` server when prompted. The skill is available as `/financecalendar:financecalendar`. For a local checkout, `claude --plugin-dir /absolute/path/financecalendar-api/integrations` loads this package.
+Use Claude Code's MCP authentication controls to authenticate the `financecalendar` server when prompted. The skill is available as `/financecalendar:financecalendar`. The Claude marketplace loads the dedicated `claude-plugin/` directory. For a local checkout, `claude --plugin-dir /absolute/path/financecalendar-api/claude-plugin` loads that minimal package. The portable ChatGPT/Codex package remains in `integrations/`.
 
 Example: “What are the next CPI releases for India and South Korea? Show the official sources and only verified times.”
 
@@ -78,9 +78,12 @@ Build the allowlisted plugin and skill archives:
 
 ```sh
 python3 integrations/build.py --out /tmp/financecalendar-plugin-build
-claude plugin validate ./integrations
+python3 integrations/build.py --stage-claude --check-claude
+claude plugin validate ./claude-plugin
 ```
 
-The ZIPs contain manifests at the plugin root and a separate `financecalendar/` skill directory. Checksums accompany the build. Do not describe a prepared ZIP as a published release until it is uploaded and the target platform checks pass.
+The generated `claude-plugin/` folder contains exactly seven allowlisted files and is the Claude directory submission source. Regenerate it after changing shared skill semantics, then use `--check-claude` to detect drift. The build script stays outside that folder; application examples, fonts, client recipes and download commands are not included in the Claude submission.
+
+The ZIPs contain manifests at the plugin root and a separate `financecalendar/` skill directory. A dedicated Claude ZIP mirrors the checked-in minimal folder, while Claude directory scanning reads the GitHub folder itself. Checksums accompany the build. Do not describe a prepared ZIP as a published release until it is uploaded and the target platform checks pass.
 
 Sources checked 14 November 2026: [OpenAI OAuth authentication](https://developers.openai.com/plugins/build/auth), [OpenAI plugin packaging](https://developers.openai.com/plugins/build/plugins), [OpenAI submission](https://developers.openai.com/plugins/deploy/submission), [Claude connector authentication](https://claude.com/docs/connectors/building/authentication), [Claude plugin submission](https://claude.com/docs/plugins/submit).

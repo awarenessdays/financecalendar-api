@@ -93,8 +93,9 @@ curl --fail-with-body \
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
 - **Full dataset export:** [Scale account download](https://www.financecalendar.com/account/#fc-account-full-export). Active Scale subscription required; full snapshots and capture history are not distributed in this source repository.
-- **ChatGPT and Claude connector:** [Hosted MCP setup](https://www.financecalendar.com/api/mcp/) — authenticated HTTPS for clients supporting API-key headers.
-- **Codex and Claude Code:** [Plugin and portable Agent Skill](integrations/README.md)
+- **ChatGPT and Claude connector:** [Hosted MCP setup](https://www.financecalendar.com/api/mcp/) — OAuth account linking, with private API-key headers retained for compatible clients.
+- **Claude:** [Minimal OAuth plugin](claude-plugin/README.md)
+- **ChatGPT, Codex and other clients:** [Portable plugin and Agent Skill](integrations/README.md)
 - **MCP server and CLI:** [Node source and installation](clients/node/README.md)
 - **Python client and CLI:** [Python source and installation](clients/python/README.md)
 - **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)

@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "financecalendar",
-      "source": "./integrations",
+      "source": "./claude-plugin",
       "description": "Read-only economic releases, central-bank decisions, market holidays and source evidence through your linked Finance Calendar account."
     }
   ],
