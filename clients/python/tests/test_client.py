@@ -13,8 +13,8 @@ from conftest import Recorder, load, FIXTURE_KEY
 
 
 def test_version():
-    assert __version__ == "0.1.3"
-    assert USER_AGENT == "financecalendar-python/0.1.3"
+    assert __version__ == "0.1.4"
+    assert USER_AGENT == "financecalendar-python/0.1.4"
 
 
 # -- construction and env defaults -------------------------------------------

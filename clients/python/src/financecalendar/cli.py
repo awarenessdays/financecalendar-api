@@ -286,6 +286,22 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--to")
     s.add_argument("--limit", type=int)
 
+    for command, label in (("archive-observations", "reference-period start"), ("archive-releases", "publisher publication"), ("history-coverage", None)):
+        s = sub.add_parser(command, help="historical archive JSON by " + label + " date" if label else "measured historical coverage JSON")
+        s.add_argument("--metric-id", help="exact reviewed metric ID")
+        s.add_argument("--series-code", help="exact public series code")
+        s.add_argument("--source-id", help="original-source identifier")
+        s.add_argument("--limit", type=int, default=100, help="rows per page, 1 to 500")
+        s.add_argument("--cursor", help="repeat original filters and limit with the returned opaque cursor")
+        s.add_argument("--all", action="store_true", help="buffer every pinned page and print only a complete export")
+        if label:
+            s.add_argument("--from", dest="from_", help=f"inclusive {label} date YYYY-MM-DD")
+            s.add_argument("--to", help=f"inclusive {label} date YYYY-MM-DD")
+            s.add_argument("--order", choices=["asc", "desc"])
+            s.add_argument("--as-of", help="FC durable-evidence receipt cutoff in UTC, not original market availability")
+        else:
+            s.add_argument("--kind", choices=["observations", "releases"])
+
     s = sub.add_parser("holidays", help="exchange holidays")
     s.add_argument("exchange", nargs="?", default="nyse")
     s.add_argument("year", nargs="?", type=int)
@@ -367,6 +383,25 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
     if cmd == "history":
         data = client.history(args.series, from_=args.from_, to=args.to, limit=args.limit, asset=args.asset, tz=tz)
         return _emit(args, out, data, lambda: f"{data.get('series_code') or args.series}: {data['count']} releases, {data['from']} to {data['to']}\n\n" + (fmt(data["events"]) if data.get("events") else "No past releases in that range."))
+    if cmd in {"archive-observations", "archive-releases", "history-coverage"}:
+        if not 1 <= args.limit <= 500:
+            raise ValueError("Archive --limit must be from 1 to 500")
+        if args.tz is not None:
+            raise ValueError("Archive date filters retain their documented basis; --tz is not supported")
+        coverage = cmd == "history-coverage"
+        if not coverage and not (args.metric_id or args.series_code):
+            raise ValueError(f"{cmd} needs --metric-id ID or --series-code CODE")
+        if args.all and args.cursor:
+            raise ValueError("--all starts at the first page; omit --cursor")
+        params = dict(metric_id=args.metric_id, series_code=args.series_code, source_id=args.source_id, limit=args.limit, cursor=args.cursor)
+        if coverage:
+            params["kind"] = args.kind
+            read = client.history_coverage
+        else:
+            params.update(from_=args.from_, to=args.to, order=args.order, as_of=args.as_of)
+            read = client.archive_observations if cmd == "archive-observations" else client.archive_releases
+        out(json.dumps(_archive_output(read, params, complete=args.all), indent=2))
+        return 0
     if cmd == "holidays":
         data = client.holidays(args.exchange, year=args.year)
         return _emit(args, out, data, lambda: f"{data['exchange'].upper()} holidays ({data['count']})\n\n" + "\n".join(format_holiday(h) for h in data["holidays"]))
@@ -403,6 +438,36 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
 def _emit(args: argparse.Namespace, out: Callable[[str], None], data: Any, human: Callable[[], str]) -> int:
     out(json.dumps(data, indent=2) if args.json else human())
     return 0
+
+
+def _archive_output(read: Callable[..., dict[str, Any]], params: dict[str, Any], *, complete: bool) -> dict[str, Any]:
+    """Retain page metadata and never print a partial multi-page success."""
+    collected: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    first: dict[str, Any] | None = None
+    for page_number in range(10000):
+        page = read(**params)
+        rows, revision, cursor = page.get("rows"), page.get("archive_revision"), page.get("next_cursor")
+        if (not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows)
+                or not isinstance(revision, int) or isinstance(revision, bool) or revision < 0
+                or page.get("count") != len(rows) or not isinstance(page.get("has_more"), bool)
+                or cursor is not None and (not isinstance(cursor, str) or not cursor or len(cursor) > 2048)
+                or page["has_more"] != (cursor is not None) or cursor is not None and not rows):
+            raise FinanceCalendarError(502, "Malformed historical archive page; export is incomplete")
+        if first is None:
+            first = page
+        if revision != first["archive_revision"]:
+            raise FinanceCalendarError(409, "Historical archive changed; discard the partial export and restart")
+        if not complete:
+            return page
+        collected.extend(rows)
+        if cursor is None:
+            return {**first, "rows": collected, "count": len(collected), "has_more": False, "next_cursor": None, "pages": page_number + 1}
+        if cursor in seen or cursor == params.get("cursor"):
+            raise FinanceCalendarError(502, "Historical archive cursor repeated; export is incomplete")
+        seen.add(cursor)
+        params = {**params, "cursor": cursor}
+    raise FinanceCalendarError(502, "Historical archive traversal exceeded 10000 pages; no complete export was produced")
 
 
 def main(argv: list[str] | None = None, client: Client | None = None, out: Callable[[str], None] = print) -> int:

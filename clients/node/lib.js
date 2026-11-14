@@ -1,7 +1,7 @@
 // Shared HTTP client and formatting helpers for the financecalendar.com API.
 // Zero runtime dependencies: uses the global fetch available in Node 20+.
 
-export const VERSION = "0.2.3";
+export const VERSION = "0.2.4";
 export const DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1";
 export const USER_AGENT = `financecalendar-mcp/${VERSION}`;
 
@@ -62,6 +62,46 @@ export async function errorFromResponse(r) {
   err.retryAfter = retryAfter ? Number(retryAfter) : null;
   err.body = body;
   return err;
+}
+
+/** One complete archive page, retaining exact decimal strings and receipt basis.
+ * A page is never silently sliced: MCP callers can follow its original cursor.
+ */
+export function validateArchivePage(page) {
+  if (!page || typeof page !== "object" || Array.isArray(page)
+    || !Number.isSafeInteger(page.archive_revision) || page.archive_revision < 0
+    || !Array.isArray(page.rows) || page.rows.some((row) => !row || typeof row !== "object" || Array.isArray(row))
+    || page.count !== page.rows.length || typeof page.has_more !== "boolean"
+    || !(page.next_cursor === null || typeof page.next_cursor === "string" && page.next_cursor.length > 0 && page.next_cursor.length <= 2048)
+    || page.has_more !== (page.next_cursor !== null) || page.has_more && page.rows.length === 0) {
+    throw new Error("Malformed historical archive page; discard the partial traversal and restart.");
+  }
+  return page;
+}
+
+export async function archivePage(kind, params = {}, options = {}) {
+  if (!["observations", "releases", "coverage"].includes(kind)) throw new Error("Archive kind must be observations, releases or coverage.");
+  return validateArchivePage(await api(`/history/${kind}`, params, options));
+}
+
+/** Buffer a complete, revision-consistent export before callers emit output.
+ * Errors, repeated cursors and revision changes never return a partial success.
+ */
+export async function collectArchive(kind, params = {}, options = {}) {
+  if (params.cursor) throw new Error("Complete archive traversal starts at the first page; omit cursor.");
+  const rows = [], cursors = new Set();
+  let first, cursor;
+  for (let pageNumber = 0; pageNumber < 10000; pageNumber++) {
+    const page = await archivePage(kind, { ...params, cursor }, options);
+    if (!first) first = page;
+    if (page.archive_revision !== first.archive_revision) throw new Error("Historical archive revision changed; discard the partial traversal and restart.");
+    rows.push(...page.rows);
+    if (page.next_cursor === null) return { ...first, count: rows.length, rows, has_more: false, next_cursor: null, pages: pageNumber + 1 };
+    if (cursors.has(page.next_cursor)) throw new Error("Historical archive cursor repeated; discard the partial traversal and restart.");
+    cursors.add(page.next_cursor);
+    cursor = page.next_cursor;
+  }
+  throw new Error("Historical archive traversal exceeded 10000 pages; no complete export was produced.");
 }
 
 // ---------------------------------------------------------------------------

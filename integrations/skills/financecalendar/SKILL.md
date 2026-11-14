@@ -1,6 +1,6 @@
 ---
 name: financecalendar
-description: Use Finance Calendar to find scheduled economic releases, central-bank decisions, exchange holidays and covered crypto events, or build calendar integrations with its API, MCP tools, SDKs and CLI. Use for financial-event dates and source-backed release data, not personal calendar management.
+description: Use Finance Calendar to find scheduled economic releases, central-bank decisions, exchange holidays, covered crypto events and historical economic observations, or build calendar integrations with its API, MCP tools, SDKs and CLI. Use for financial-event dates and source-backed release data, not personal calendar management.
 license: MIT
 ---
 
@@ -31,8 +31,28 @@ Inspect `count`, `total`, continuation and truncation metadata. The hosted MCP s
 
 The complete-results instructions in this section apply to paid access. Free Developer returns at most 20 schedule records per response within its seven-date UTC window and does not support pagination or complete exports. Already-enrolled finite evaluations retain their separate original ten-record response limit and 25-request/48-hour grant. Paid REST calendar windows are at most 92 days. For larger exports, chunk the requested dates, paginate every chunk, and deduplicate stable event IDs. Preserve full unknown/range timing and nested provenance when exporting JSON/CSV; human CLI output is a summary. Respect rate-limit errors and `Retry-After` instead of repeatedly retrying.
 
+## Research historical data
+
+For long-run observations or past publications, discover actual stored depth
+with `/history/coverage` before choosing dates. New-archive windows are one year
+on Starter, ten years on Build and all available history on Scale; explicit
+prior licences and legacy history/curated access remain separate. Use the
+returned access scope and omit date bounds for the authorized default window.
+Use `/history/observations` by
+measured reference-period start, or `/history/releases` by publication date.
+The local stdio tools `history_coverage`, `historic_observations` and
+`historic_releases` are available in client 0.2.4; the hosted catalogue is
+unchanged. If they are absent, use authenticated REST or the Python/CLI archive
+methods described in [the history recipes](references/api.md#historical-archive).
+
+Keep exact decimal strings, derived-input evidence and nulls. Follow every
+`next_cursor` with unchanged filters and limit. A 409 invalidates the partial
+export; restart rather than reporting it complete. Current-vintage backfills
+do not establish original prints or old market forecasts. `as_of` uses FC's
+durable evidence receipt bound; it cannot make a new import known years ago.
+
 ## Build an integration
 
 Read [API and client recipes](references/api.md) when choosing a transport, exporting data or following change cursors. Prefer the existing client/tool interfaces and the current OpenAPI document over guessed endpoints. Use the user's chosen language and environment. Every production data request requires a key. Ongoing Free Developer at https://www.financecalendar.com/account/?free=1 requires verified email and one account key; it provides 100 successful JSON schedule responses per UTC month, at most 10/day, with no card or expiry. GET /calendar and /today cover UTC today through today+6 with at most 20 records, up to 3 country codes and impact filters. Free omits forecasts/results, numerical evidence, history, other formats, hosted MCP and browser tools. Starter US$9.99/year adds these richer capabilities. Existing enrolled trials and paid/legacy grants remain intact. Keep the key in `X-API-Key` or the client's private environment configuration, not generated source or shared URLs.
 
-The hosted plugin is read-only and requires a configured key with paid access for hosted MCP. Account signup, email verification and key creation are separate actions; do not create accounts or keys as a side effect of a read request.
+The shipped hosted plugin manifest is read-only and uses a configured API key with paid access. OAuth-capable clients can connect separately through the hosted account-linking setup. Account signup, email verification and key creation are separate actions; do not create accounts or keys as a side effect of a read request.

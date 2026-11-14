@@ -1,6 +1,6 @@
 # Finance Calendar plugin and skill
 
-A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Hosted MCP requires a verified account, active paid plan and API key. Every request requires credentials.
+A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Hosted MCP requires verified paid or applicable retained access. The shipped manifest uses your private API key; compatible chat clients may use OAuth account linking. Every request is authenticated.
 
 [Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
@@ -12,7 +12,7 @@ The skill covers current release schedules, source attribution, unknown clocks/p
 
 ## Downloads
 
-Use the current repository source and authenticated configuration below. The [current 0.1.3 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.3) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
+Use the current repository source and authenticated configuration below. The [current 0.1.4 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.4) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
 
 ## Claude Code
 
@@ -55,3 +55,19 @@ Sources: [OpenAI plugin packaging](https://developers.openai.com/plugins/build/p
 ## Working application example
 
 The [economic calendar dashboard starter](examples/economic-calendar-dashboard/README.md) includes a Node backend, responsive browser calendar, explicit demo mode and a shared 30-minute cache. It keeps your API key on the server and performs browser filtering locally. Read its setup instructions and copy the coding-assistant prompt to adapt a working app.
+
+## Historical research
+
+The portable skill now guides long-run observation and dated-release research
+through the [historical archive](../docs/history.md): Starter one year, Build ten
+years and Scale all available history, subject to actual coverage and explicit
+prior licences. Legacy history/curated access is unchanged. It discovers coverage,
+preserves exact values/nulls and distinguishes source vintages from FC receipt
+bounds. Use authenticated REST, Python/CLI 0.1.4/0.2.4, or the three local stdio
+archive tools. Installing this hosted manifest does not add those three tools
+to the hosted catalogue; it retains its fourteen established tools.
+
+For OAuth account linking in supported Claude/ChatGPT clients, use the hosted
+setup and approve read-only `calendar:read`; optional `offline_access` permits
+token renewal. The packaged manifests remain the explicit API-key configuration
+shown above. No account, key or consent is created by installing the skill.

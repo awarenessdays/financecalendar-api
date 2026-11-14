@@ -9,7 +9,7 @@ from urllib.parse import quote
 
 import httpx
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1"
 USER_AGENT = f"financecalendar-python/{__version__}"
@@ -211,6 +211,78 @@ class Client:
     def history(self, series: str, **params: Any) -> dict[str, Any]:
         """Past releases of a series with consensus, prior and actual. Params: from_, to, limit, asset, tz."""
         return self._request("/history", {"series": series, **params})
+
+    def archive_observations(self, **params: Any) -> dict[str, Any]:
+        """One page of long-run observations; dates filter reference periods.
+
+        Exact values remain decimal strings. Inspect vintage_basis, source
+        evidence and coverage: a revised observation is not an original release.
+        as_of selects when versions were committed to the FC archive, which
+        cannot predate the import of historical data. Reuse all filters with
+        next_cursor; HTTP 409 means the archive changed and traversal must restart.
+        """
+        return self._request("/history/observations", self._archive_params(params))
+
+    def archive_releases(self, **params: Any) -> dict[str, Any]:
+        """One page of evidenced archive releases; dates filter publication dates.
+
+        Unknown clocks, original values and historical consensus stay null
+        unless independently evidenced. This is separate from observation dates.
+        """
+        return self._request("/history/releases", self._archive_params(params))
+
+    def history_coverage(self, **params: Any) -> dict[str, Any]:
+        """Measured stored archive coverage by source, series and exact metric."""
+        return self._request("/history/coverage", self._archive_params(params))
+
+    @staticmethod
+    def _archive_params(params: dict[str, Any]) -> dict[str, Any]:
+        if "series" in params:
+            series = params.pop("series")
+            if "series_code" in params and params["series_code"] != series:
+                raise ValueError("series and series_code must agree")
+            params["series_code"] = series
+        return params
+
+    def iter_history_coverage(self, **params: Any) -> Iterator[dict[str, Any]]:
+        """Traverse measured source/metric coverage at one pinned revision."""
+        yield from self._iter_archive_pages(self.history_coverage, params)
+
+    def iter_archive(self, kind: str = "observations", **params: Any) -> Iterator[dict[str, Any]]:
+        """Traverse a revision-pinned archive without a hidden offset ceiling.
+
+        kind is observations or releases. Values retain exact strings/nulls.
+        A changed revision or a malformed continuation fails explicitly rather
+        than silently returning a partial export. Do not consume partially
+        yielded rows as a complete export if an exception is raised.
+        """
+        if kind not in {"observations", "releases"}:
+            raise ValueError("kind must be observations or releases")
+        read = self.archive_observations if kind == "observations" else self.archive_releases
+        yield from self._iter_archive_pages(read, params)
+
+    def _iter_archive_pages(self, read: Any, params: dict[str, Any]) -> Iterator[dict[str, Any]]:
+        cursor = params.pop("cursor", None)
+        seen_cursors: set[str] = set()
+        revision: Any = None
+        while True:
+            page = read(**params, **({"cursor": cursor} if cursor else {}))
+            rows = page.get("rows")
+            current_revision = page.get("archive_revision")
+            if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows) or current_revision is None:
+                raise FinanceCalendarError(502, "Malformed archive page; export is incomplete")
+            if revision is not None and current_revision != revision:
+                raise FinanceCalendarError(409, "Archive revision changed; restart the export")
+            revision = current_revision
+            continuation = page.get("next_cursor")
+            if continuation is not None and (not isinstance(continuation, str) or not continuation
+                    or continuation == cursor or continuation in seen_cursors or not rows):
+                raise FinanceCalendarError(502, "Invalid archive continuation; export is incomplete")
+            yield from rows
+            if continuation is None:
+                return
+            seen_cursors.add(continuation)
+            cursor = continuation
 
     def enrichment_history(self, series: str, **params: Any) -> dict[str, Any]:
         """One page of evidenced economic results from the enrichment ledger.
