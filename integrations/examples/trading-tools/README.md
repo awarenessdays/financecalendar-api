@@ -118,3 +118,12 @@ python3 -m unittest discover -s tests -p 'test_*.py' -v
 The suite starts a temporary numeric-loopback HTTP server and invokes both actual CLIs with invented fixture credentials. It exercises pagination, full-record/null/zero/staleness retention, private cache hits and key separation, cross-language cache use, persistent access stops, `Retry-After`, malformed JSON, other HTTP failures, redirects, timeouts and response bounds. MetaTrader checks compare source files and the manual call shape; they are not compiler tests.
 
 For these offline tests only, `FC_TRADING_TOOLS_TEST_HTTP=1` enables a transport restricted to `http://127.0.0.1:<port>/calendar`, plus a fixed clock and shorter timeout. There is no arbitrary external endpoint flag. Leave all `FC_TRADING_TOOLS_TEST_*` variables unset for normal use. The production destination is fixed to `https://www.financecalendar.com/wp-json/fc/v1/calendar`.
+
+## Historical analysis
+
+This example targets the current calendar workflow. For long-run observations,
+evidenced dated publications and a complete historical export, use the
+[archive guide](../../../docs/history.md). Discover actual metric coverage first;
+current-vintage data and an FC receipt cutoff do not establish original market
+prints or contemporaneous forecasts. The new archive MCP tools are local stdio
+only; the hosted catalogue is unchanged.

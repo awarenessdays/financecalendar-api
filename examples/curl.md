@@ -53,3 +53,19 @@ control can fetch authenticated data and publish an appropriately restricted fee
 Use the [Data explorer](https://www.financecalendar.com/data/) for browser research
 and matching/selected CSV or JSON exports. It is included with active
 Starter, Build and Scale subscriptions and uses a verified account session rather than an API key. Free Developer does not include the Data explorer.
+
+## Historical observations and publication dates
+
+These paid archive routes have independent measured coverage. Start with
+coverage, then follow every `next_cursor` using identical filters and limit:
+
+```sh
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/coverage?metric_id=gb-cpi-all-items-yoy&limit=100"
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/observations?metric_id=gb-cpi-all-items-yoy&from=2006-01-01&limit=100"
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/releases?metric_id=gb-gdp-monthly-mom-sa&from=2018-01-01&limit=100"
+```
+
+Observations filter measured reference-period starts; releases filter publisher
+dates. A changed revision returns 409: discard the partial export and restart.
+Current-vintage history does not imply original prints or old forecast cutoffs.
+See the [complete history workflow](../docs/history.md).

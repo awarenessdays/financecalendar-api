@@ -30,7 +30,7 @@ function loadFinanceCalendar() {
   const key = PropertiesService.getUserProperties().getProperty("FC_API_KEY");
   if (!key) throw new Error("Run setFinanceCalendarKey first.");
   const response = UrlFetchApp.fetch(
-    "https://www.financecalendar.com/wp-json/fc/v1/calendar?impact=high&tz=Europe/London&limit=10",
+    "https://www.financecalendar.com/wp-json/fc/v1/calendar?impact=high&limit=10",
     {headers: {"X-API-Key": key, Accept: "application/json"}, muteHttpExceptions: true, followRedirects: false}
   );
   if (response.getResponseCode() !== 200) throw new Error("Finance Calendar HTTP " + response.getResponseCode() + ". Check your key and account allowance.");
@@ -46,7 +46,12 @@ function loadFinanceCalendar() {
 ```
 
 A real zero stays a value; unavailable fields stay blank. Records are current
-recorded vintages, not original first prints. Each successful free-access fetch
-uses one of the 25 total requests; the 48-hour allowance does not renew. Paid
-account keys share their plan allowance. Retain a visible link to https://www.financecalendar.com
+recorded vintages, not original first prints. Free Developer counts successful schedule JSON responses against its ongoing
+100/UTC-month and 10/UTC-day allowance. Paid account keys share their plan allowance. Retain a visible link to https://www.financecalendar.com
 and the supplied source credits when sharing data.
+
+For long-run numerical research, use the paid [historical archive](../docs/history.md)
+and its complete Python/CLI export, then import the JSON/CSV into your sheet.
+The bounded schedule example above is not a historical export. Preserve exact
+strings, reference periods and source credits; do not turn current revisions
+into original release values.

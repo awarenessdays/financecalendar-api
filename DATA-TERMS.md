@@ -19,3 +19,12 @@ Earnings dates are not part of the dataset (upstream licensing). Dates marked `s
 No warranty. Verify anything you trade on against the official source linked in each row.
 
 Contact: https://www.financecalendar.com/about/
+
+Historical archive rows retain their reviewed official-source notices, including
+BLS public-domain material, ONS Open Government Licence, ECB/Eurostat reuse
+conditions, the Statistics Canada Open Licence and ABS CC BY 4.0 where applicable.
+Preserve each record's exact source attribution, unit and transformation evidence;
+the software MIT licence does not replace those source conditions. Current-vintage
+observations and FC evidence receipt bounds do not establish original prints,
+historical consensus or past market availability. See the [history guide](docs/history.md)
+and authenticated coverage for the actual scope.

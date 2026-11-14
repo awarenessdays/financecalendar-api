@@ -13,8 +13,8 @@ sign-in rather than an API key. Free Developer does not include these browser to
 To show calendar data in your own website, fetch the API from a server you
 control using `X-API-Key` from a private environment variable. Keep the key on
 that server, apply appropriate access controls to your own response, and preserve
-Finance Calendar attribution and record-specific source credits. This repository
-does not ship an authenticated browser widget or an OAuth flow.
+Finance Calendar attribution and record-specific source credits. This directory contains server-side integration guidance. Hosted assistant
+OAuth account linking is described in the [MCP setup](https://www.financecalendar.com/api/mcp/).
 
 See the [server-side examples](../examples/) and
 [API reference](https://www.financecalendar.com/api/reference/). A complete current
@@ -24,3 +24,8 @@ responses remain available within each plan's allowance.
 [Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
 [Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
+
+For historical charts, use the paid [archive endpoints and complete export](../docs/history.md)
+from your backend. Observation dates describe measured reference periods;
+evidenced publication dates are a separate dataset. Query coverage instead of
+assuming all current calendar families have twenty years of numerical history.
