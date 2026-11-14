@@ -56,13 +56,14 @@ Starter, Build and Scale subscriptions and uses a verified account session rathe
 
 ## Historical observations and publication dates
 
-These paid archive routes have independent measured coverage. Start with
-coverage, then follow every `next_cursor` using identical filters and limit:
+The new archive includes one year on Starter, ten years on Build and all
+available history on Scale. Existing `/history` and curated rights are unchanged.
+These archive routes have independent measured coverage. Start with coverage, then follow every `next_cursor` using identical filters and limit:
 
 ```sh
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/coverage?metric_id=gb-cpi-all-items-yoy&limit=100"
-curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/observations?metric_id=gb-cpi-all-items-yoy&from=2006-01-01&limit=100"
-curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/releases?metric_id=gb-gdp-monthly-mom-sa&from=2018-01-01&limit=100"
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/observations?metric_id=gb-cpi-all-items-yoy&limit=100"
+curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/history/releases?metric_id=gb-gdp-monthly-mom-sa&limit=100"
 ```
 
 Observations filter measured reference-period starts; releases filter publisher

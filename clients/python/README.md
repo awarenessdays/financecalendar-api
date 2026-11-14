@@ -366,15 +366,16 @@ these retain their original description and do not imply one headline result.
 Reference-year conflicts and indistinguishable release identities are held for
 review. Inspect per-source health and the verified fiscal-year horizon.
 
-## Historical archive CLI
+## Historical archive CLI and Python
 
-This release includes archive commands and complete traversal against the live
-historical API. Use your paid or applicable retained API key.
+Historical archive access: Starter includes one year, Build includes ten years, and Scale includes all available history. Stored depth varies by exact measure and source. Free Developer excludes the archive. The existing recent-event `/history` route and curated datasets retain their established access; previous agreements are preserved. These commands use paged JSON within the server-authorized window. Scale can traverse all available archive history; its complete current snapshot download is a separate feature.
+
+Inspect coverage first. Its rows expose `accessible_range.from`, `accessible_range.to` and `date_basis`, alongside full stored metadata; top-level `access` describes your effective rolling UTC calendar-year window. Omitting date bounds below uses the authorized range. Explicit dates before your plan floor return HTTP403.
 
 ```sh
 financecalendar history-coverage --source-id ons --all
-financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --from 2006-01-01 --to 2026-11-14 --limit 100 --all
-financecalendar archive-releases --series-code gb-cpi --from 2016-01-01 --to 2026-11-14 --limit 100
+financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --limit 100 --all
+financecalendar archive-releases --series-code gb-cpi --limit 100
 ```
 
 Each command returns JSON with exact decimal strings, nulls, source/vintage
@@ -386,3 +387,5 @@ invalid continuation or request failure produces no partial success. The
 optional `--as-of` uses FC's durable-evidence receipt bound and does not establish
 original market availability. Check `history-coverage` for actual stored depth;
 these clients do not promise twenty years for every metric.
+
+For a Scale key and a measure with stored coverage extending that far, an explicit long-range request can use `--from 2006-01-01`. Check `accessible_range` first; available depth is measure-specific. Scale history uses the same paged JSON retrieval.

@@ -3960,7 +3960,7 @@
           "Historical archive"
         ],
         "summary": "Historical observations",
-        "description": "Independent long-run archive; dates filter the start of the measured reference period. Supply series_code or metric_id. Decimal values remain strings and unknowns remain null. Inspect vintage_basis and source evidence. Current-vintage backfills do not establish original first prints, contemporaneous consensus or intraday backtesting availability.",
+        "description": "Independent long-run archive; dates filter the start of the measured reference period. Supply series_code or metric_id. Decimal values remain strings and unknowns remain null. Inspect vintage_basis and source evidence. Starter includes one rolling UTC calendar year, Build ten, and Scale all stored history. Omitted date bounds are limited to the caller's window; an explicitly older from or to returns HTTP 403. Current-vintage backfills do not establish original first prints, contemporaneous consensus or intraday backtesting availability.",
         "parameters": [
           {
             "name": "source_id",
@@ -4093,7 +4093,7 @@
           "Historical archive"
         ],
         "summary": "Historical releases",
-        "description": "Independent long-run archive; dates filter the publisher release calendar date. Supply series_code or metric_id. Decimal values remain strings and unknowns remain null. Inspect vintage_basis and source evidence. Current-vintage backfills do not establish original first prints, contemporaneous consensus or intraday backtesting availability.",
+        "description": "Independent long-run archive; dates filter the publisher release calendar date. Supply series_code or metric_id. Decimal values remain strings and unknowns remain null. Inspect vintage_basis and source evidence. Starter includes one rolling UTC calendar year, Build ten, and Scale all stored history. Omitted date bounds are limited to the caller's window; an explicitly older from or to returns HTTP 403. Current-vintage backfills do not establish original first prints, contemporaneous consensus or intraday backtesting availability.",
         "parameters": [
           {
             "name": "source_id",
@@ -8772,6 +8772,34 @@
               "array",
               "null"
             ]
+          },
+          "accessible_range": {
+            "type": "object",
+            "description": "Measured eligible first/last stored dates and count within the caller's plan window; source-wide dates are descriptive metadata, not an access grant.",
+            "properties": {
+              "from": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "record_count": {
+                "type": "integer"
+              },
+              "date_basis": {
+                "type": "string",
+                "enum": [
+                  "reference_period_start",
+                  "publisher_release_date"
+                ]
+              }
+            }
           }
         }
       },
@@ -8817,6 +8845,9 @@
           "filters": {
             "type": "object"
           },
+          "access": {
+            "$ref": "#/components/schemas/FCHistoryAccess"
+          },
           "rows": {
             "type": "array",
             "items": {
@@ -8829,6 +8860,58 @@
                 }
               ]
             }
+          }
+        }
+      },
+      "FCHistoryAccess": {
+        "type": "object",
+        "description": "Effective caller policy for the new official archive. Existing release-history and curated-dataset routes retain their prior access rules.",
+        "required": [
+          "policy_version",
+          "plan",
+          "label",
+          "lookback_years",
+          "unlimited",
+          "range_basis",
+          "as_at_date",
+          "earliest_allowed_date",
+          "date_basis"
+        ],
+        "properties": {
+          "policy_version": {
+            "const": "fc-history-plan-v1"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "lookback_years": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "unlimited": {
+            "type": "boolean"
+          },
+          "range_basis": {
+            "const": "rolling_UTC_calendar_years"
+          },
+          "as_at_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "earliest_allowed_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "date_basis": {
+            "type": "string"
           }
         }
       }
@@ -8955,8 +9038,8 @@
       "active_key_limit": 1,
       "quota_basis": "successful_json_responses",
       "window": {
-        "from": "2026-11-13",
-        "to": "2026-11-19",
+        "from": "2026-11-14",
+        "to": "2026-11-20",
         "timezone": "UTC"
       },
       "allowed_routes": [
@@ -8971,7 +9054,9 @@
       "ongoing": true,
       "renewable": true,
       "card_required": false,
-      "automatic_charge": false
+      "automatic_charge": false,
+      "review_required": true,
+      "review_hours": 24
     },
     "plans": {
       "starter": {
@@ -9074,7 +9159,7 @@
     },
     "history_coverage": {
       "available": true,
-      "snapshot_generated_at": "2026-11-13T08:42:17+00:00",
+      "snapshot_generated_at": "2026-11-14T15:40:56+00:00",
       "release_event_history": {
         "endpoint": "/history?series={code}",
         "basis": "elapsed_release_records_in_current_snapshot",
@@ -9084,8 +9169,8 @@
           "to": "2026-11-13"
         },
         "declared_snapshot_window": {
-          "from": "2025-11-13",
-          "to": "2027-12-18"
+          "from": "2025-11-14",
+          "to": "2027-12-19"
         },
         "fixed_retention_guarantee": false
       },
@@ -9136,6 +9221,566 @@
         "original_first_print_archive": false
       },
       "coverage_url": "https://www.financecalendar.com/api/coverage/#history-availability"
+    },
+    "data_scope_summary": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release.",
+    "package_faq": [
+      {
+        "question": "Is there an ongoing free economic calendar API?",
+        "answer": "Yes. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Starter adds forecasts across 10 economies, source-backed results and history and paid integration tools."
+      },
+      {
+        "question": "Does Starter include international forecasts and numerical data?",
+        "answer": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. These paid capabilities include customer-facing apps within the plan allowances, attribution and applicable source terms."
+      }
+    ],
+    "plan_comparison": {
+      "columns": {
+        "free_developer": "Free Developer",
+        "starter": "Starter",
+        "build": "Build",
+        "scale": "Scale"
+      },
+      "groups": {
+        "limits": "Price and limits",
+        "data": "Data",
+        "tools": "Tools",
+        "use": "Use"
+      },
+      "recommended_plan": "starter",
+      "actions": {
+        "free_developer": {
+          "label": "Create Free Developer account",
+          "url": "https://www.financecalendar.com/account/?free=1",
+          "plan_id": "free_developer"
+        },
+        "starter": {
+          "label": "Choose Starter",
+          "url": "/account/?mode=register&return_to=%2Faccount%2F%3Fplan%3Dstarter%26billing_interval%3Dyear&plan=starter&billing_interval=year",
+          "plan_id": "starter"
+        },
+        "build": {
+          "label": "Choose Build",
+          "url": "/account/?mode=register&return_to=%2Faccount%2F%3Fplan%3Dpro&plan=pro",
+          "plan_id": "pro"
+        },
+        "scale": {
+          "label": "Choose Scale",
+          "url": "/account/?mode=register&return_to=%2Faccount%2F%3Fplan%3Dbusiness&plan=business",
+          "plan_id": "business"
+        }
+      },
+      "rows": [
+        {
+          "id": "price",
+          "group": "limits",
+          "feature": "Price",
+          "note": "Annual prices are charged upfront. Paid plans renew at the selected interval until cancelled. Applicable tax included.",
+          "values": {
+            "free_developer": "US$0; No card",
+            "starter": "US$9.99/year",
+            "build": "US$9.99/month; or US$95.90/year",
+            "scale": "US$29.00/month; or US$278.40/year"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "US$0",
+              "detail": "No card",
+              "included": null
+            },
+            "starter": {
+              "label": "US$9.99/year",
+              "detail": "",
+              "included": null
+            },
+            "build": {
+              "label": "US$9.99/month",
+              "detail": "or US$95.90/year",
+              "included": null
+            },
+            "scale": {
+              "label": "US$29.00/month",
+              "detail": "or US$278.40/year",
+              "included": null
+            }
+          }
+        },
+        {
+          "id": "daily",
+          "group": "limits",
+          "feature": "Requests / UTC day",
+          "note": "",
+          "values": {
+            "free_developer": "10",
+            "starter": "1,000",
+            "build": "100,000",
+            "scale": "1,000,000"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "10",
+              "detail": "",
+              "included": null
+            },
+            "starter": {
+              "label": "1,000",
+              "detail": "",
+              "included": null
+            },
+            "build": {
+              "label": "100,000",
+              "detail": "",
+              "included": null
+            },
+            "scale": {
+              "label": "1,000,000",
+              "detail": "",
+              "included": null
+            }
+          }
+        },
+        {
+          "id": "monthly",
+          "group": "limits",
+          "feature": "Requests / UTC month",
+          "note": "Free Developer counts successful schedule JSON responses. Paid plans count admitted requests; linked keys share the account allowance.",
+          "values": {
+            "free_developer": "100",
+            "starter": "25,000",
+            "build": "No monthly cap",
+            "scale": "No monthly cap"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "100",
+              "detail": "",
+              "included": null
+            },
+            "starter": {
+              "label": "25,000",
+              "detail": "",
+              "included": null
+            },
+            "build": {
+              "label": "No monthly cap",
+              "detail": "",
+              "included": null
+            },
+            "scale": {
+              "label": "No monthly cap",
+              "detail": "",
+              "included": null
+            }
+          }
+        },
+        {
+          "id": "records",
+          "group": "limits",
+          "feature": "Calendar records / response",
+          "note": "Record limits and pagination apply to calendar list responses; other routes use their documented limits.",
+          "values": {
+            "free_developer": "Up to 20; No pagination",
+            "starter": "Up to 500; With pagination",
+            "build": "Up to 500; With pagination",
+            "scale": "Up to 500; With pagination"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "Up to 20",
+              "detail": "No pagination",
+              "included": null
+            },
+            "starter": {
+              "label": "Up to 500",
+              "detail": "With pagination",
+              "included": null
+            },
+            "build": {
+              "label": "Up to 500",
+              "detail": "With pagination",
+              "included": null
+            },
+            "scale": {
+              "label": "Up to 500",
+              "detail": "With pagination",
+              "included": null
+            }
+          }
+        },
+        {
+          "id": "schedule",
+          "group": "data",
+          "feature": "Release schedules",
+          "note": "Dates, times and status. Paid date ranges follow the current snapshot coverage.",
+          "values": {
+            "free_developer": "Today through +6; UTC",
+            "starter": "Full calendar",
+            "build": "Full calendar",
+            "scale": "Full calendar"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "Today through +6",
+              "detail": "UTC",
+              "included": null
+            },
+            "starter": {
+              "label": "Full calendar",
+              "detail": "",
+              "included": null
+            },
+            "build": {
+              "label": "Full calendar",
+              "detail": "",
+              "included": null
+            },
+            "scale": {
+              "label": "Full calendar",
+              "detail": "",
+              "included": null
+            }
+          }
+        },
+        {
+          "id": "categories",
+          "group": "data",
+          "feature": "Calendar categories",
+          "note": "Paid categories include central bank speeches, exchange holidays and selected crypto events.",
+          "values": {
+            "free_developer": "Economic releases; and central banks",
+            "starter": "All categories",
+            "build": "All categories",
+            "scale": "All categories"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "Economic releases",
+              "detail": "and central banks",
+              "included": null
+            },
+            "starter": {
+              "label": "All categories",
+              "detail": "",
+              "included": null
+            },
+            "build": {
+              "label": "All categories",
+              "detail": "",
+              "included": null
+            },
+            "scale": {
+              "label": "All categories",
+              "detail": "",
+              "included": null
+            }
+          }
+        },
+        {
+          "id": "forecasts",
+          "group": "data",
+          "feature": "Release forecasts",
+          "note": "Forecast coverage maps 60 headline measures across 10 economies. A forecast appears when a matched pre-release value is available; coverage varies by release.",
+          "values": {
+            "free_developer": "No",
+            "starter": "Yes",
+            "build": "Yes",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "starter": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "build": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        },
+        {
+          "id": "figures",
+          "group": "data",
+          "feature": "Consensus, prior and actual",
+          "note": "Schedule rows mark figures available on paid plans. Recorded figures vary by series and release; missing values stay null.",
+          "values": {
+            "free_developer": "No",
+            "starter": "Yes",
+            "build": "Yes",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "starter": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "build": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        },
+        {
+          "id": "history",
+          "group": "data",
+          "feature": "Release history",
+          "note": "Retained release records and curated datasets vary by series; see coverage for their date ranges.",
+          "values": {
+            "free_developer": "No",
+            "starter": "Yes",
+            "build": "Yes",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "starter": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "build": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        },
+        {
+          "id": "changes",
+          "group": "tools",
+          "feature": "Change feed and webhooks",
+          "note": "Signed webhooks notify your integration when calendar updates are published.",
+          "values": {
+            "free_developer": "No",
+            "starter": "Yes",
+            "build": "Yes",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "starter": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "build": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        },
+        {
+          "id": "formats",
+          "group": "tools",
+          "feature": "Formats",
+          "note": "",
+          "values": {
+            "free_developer": "JSON",
+            "starter": "JSON, CSV, ICS",
+            "build": "JSON, CSV, ICS",
+            "scale": "JSON, CSV, ICS"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "JSON",
+              "detail": "",
+              "included": null
+            },
+            "starter": {
+              "label": "JSON, CSV, ICS",
+              "detail": "",
+              "included": null
+            },
+            "build": {
+              "label": "JSON, CSV, ICS",
+              "detail": "",
+              "included": null
+            },
+            "scale": {
+              "label": "JSON, CSV, ICS",
+              "detail": "",
+              "included": null
+            }
+          }
+        },
+        {
+          "id": "local_clients",
+          "group": "tools",
+          "feature": "REST, CLI and Python",
+          "note": "Free Developer uses /calendar and /today through REST and local clients. Routes and response fields follow the active plan.",
+          "values": {
+            "free_developer": "Yes",
+            "starter": "Yes",
+            "build": "Yes",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "starter": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "build": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        },
+        {
+          "id": "hosted_tools",
+          "group": "tools",
+          "feature": "Hosted MCP and Data explorer",
+          "note": "",
+          "values": {
+            "free_developer": "No",
+            "starter": "Yes",
+            "build": "Yes",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "starter": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "build": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        },
+        {
+          "id": "download",
+          "group": "tools",
+          "feature": "Complete dataset download",
+          "note": "Scale includes the complete current snapshot as one JSON download.",
+          "values": {
+            "free_developer": "No",
+            "starter": "No",
+            "build": "No",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "starter": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "build": {
+              "label": "No",
+              "detail": "",
+              "included": false
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        },
+        {
+          "id": "customer_apps",
+          "group": "use",
+          "feature": "Customer-facing apps",
+          "note": "Personal and customer-facing products are allowed within each plan’s scope, request limits and applicable source terms. Retain Finance Calendar attribution and publisher credits.",
+          "values": {
+            "free_developer": "Yes",
+            "starter": "Yes",
+            "build": "Yes",
+            "scale": "Yes"
+          },
+          "cells": {
+            "free_developer": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "starter": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "build": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            },
+            "scale": {
+              "label": "Yes",
+              "detail": "",
+              "included": true
+            }
+          }
+        }
+      ]
     }
   },
   "x-product-offer-url": "https://www.financecalendar.com/wp-json/fc/v1/product-offer",
@@ -9157,7 +9802,7 @@
   },
   "x-history-coverage": {
     "available": true,
-    "snapshot_generated_at": "2026-11-13T08:42:17+00:00",
+    "snapshot_generated_at": "2026-11-14T15:40:56+00:00",
     "release_event_history": {
       "endpoint": "/history?series={code}",
       "basis": "elapsed_release_records_in_current_snapshot",
@@ -9167,8 +9812,8 @@
         "to": "2026-11-13"
       },
       "declared_snapshot_window": {
-        "from": "2025-11-13",
-        "to": "2027-12-18"
+        "from": "2025-11-14",
+        "to": "2027-12-19"
       },
       "fixed_retention_guarantee": false
     },

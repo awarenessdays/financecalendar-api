@@ -374,30 +374,32 @@ these retain their original description and do not imply one headline result.
 Reference-year conflicts and indistinguishable release identities are held for
 review. Inspect per-source health and the verified fiscal-year horizon.
 
-## Historical archive clients
+## Historical archive CLI and local MCP
 
-This release adds historical archive commands and three local stdio MCP tools
-for the live archive API. Use your paid or applicable retained API key. The
-hosted MCP catalogue is unchanged.
+Historical archive access: Starter includes one year, Build includes ten years, and Scale includes all available history. Stored depth varies by exact measure and source. Free Developer excludes the archive. The existing recent-event `/history` route and curated datasets retain their established access; previous agreements are preserved. These commands use paged JSON within the server-authorized window. Scale can traverse all available archive history; its complete current snapshot download is a separate feature.
+
+Inspect coverage first. Its rows expose `accessible_range.from`, `accessible_range.to` and `date_basis`, alongside full stored metadata; top-level `access` describes your effective rolling UTC calendar-year window. Omitting date bounds below uses the authorized range. Explicit dates before your plan floor return HTTP403.
 
 ```sh
 financecalendar history-coverage --source-id ons --all
-financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --from 2006-01-01 --to 2026-11-14 --limit 100 --all
-financecalendar archive-releases --series-code gb-cpi --from 2016-01-01 --to 2026-11-14 --limit 100
+financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --limit 100 --all
+financecalendar archive-releases --series-code gb-cpi --limit 100
 ```
 
 These commands always return JSON, preserving exact decimal strings, nulls,
 source evidence and receipt metadata. Observation dates filter the measured
 reference-period start; release dates filter the publisher's publication date.
 Default output is one complete page with `next_cursor`. Repeat identical filters
-and limit alongside `--cursor`. `--all` buffers the whole pinned traversal and
+and limit alongside `--cursor`. `--all` buffers the whole plan-authorized pinned traversal and
 prints only after completion; any error or changed revision fails without a
 partial success. An `--as-of` cutoff selects FC durable-evidence receipt bounds,
 not original first prints or what the market knew twenty years ago.
 
-The local stdio tools are `historic_observations`, `historic_releases` and
+Local tools are `historic_observations`, `historic_releases` and
 `history_coverage`. Each makes one request, defaults to 20 rows and accepts at
 most 50. They preserve the server's entire page and continuation token; they do
 not loop or silently trim rows. Inspect coverage before selecting dates. The
 hosted catalog generator explicitly excludes these tools until its dispatcher
 and payload policy receive a separate verified release.
+
+For a Scale key and a measure with stored coverage extending that far, an explicit long-range request can use `--from 2006-01-01`. Check `accessible_range` first; available depth is measure-specific. Scale history uses the same paged JSON retrieval.

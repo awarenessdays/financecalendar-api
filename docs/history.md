@@ -2,8 +2,10 @@
 
 Use long-run economic observations for charts, research and reproducible data
 exports. Start with authenticated coverage, select the exact metric you need,
-then page its observations or dated release records. Existing paid API access
-covers these routes; the [current plans](https://www.financecalendar.com/pricing/)
+then page its observations or dated release records. The new archive supplies
+one year with Starter, ten years with Build and all available history with Scale.
+These windows apply to the new archive only: legacy `/history`, curated datasets
+and explicit existing licence rights keep their applicable access. The [current plans](https://www.financecalendar.com/pricing/)
 state allowances and source terms.
 
 ```sh
@@ -11,7 +13,7 @@ B=https://www.financecalendar.com/wp-json/fc/v1
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" \
   "$B/history/coverage?metric_id=gb-cpi-all-items-yoy&limit=100"
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" \
-  "$B/history/observations?metric_id=gb-cpi-all-items-yoy&from=2006-01-01&limit=100"
+  "$B/history/observations?metric_id=gb-cpi-all-items-yoy&limit=100"
 ```
 
 `FC_API_KEY` must be your own paid or applicable retained key. No keys appear in
@@ -31,13 +33,17 @@ clocks appear only where evidenced. Unknown clocks and numerical results remain
 null. A current revised observation is not silently copied onto an old release.
 
 **Coverage** returns actual stored counts, populated values and earliest/latest
-periods for each source/metric/kind. It is paginated. A null expected count or gap
+periods for each source/metric/kind. It is paginated. Inspect each row's
+`accessible_range.from`, `accessible_range.to`, `accessible_range.record_count`
+and `date_basis` alongside the global stored metadata. Top-level `access`
+describes your effective rolling UTC calendar-year window. A global earliest
+period is not permission to request data before your own plan floor. A null expected count or gap
 list means no authoritative full publisher inventory was asserted. Configured
 start dates and raw row totals do not establish complete event coverage.
 
 The initial roster covers 21 exact metrics from six official agencies across the
-US, UK, euro area, Canada and Australia. Most observation series reach into 2006.
-The selected Canadian retail vector and US hourly-earnings series start later;
+US, UK, euro area, Canada and Australia. Within Scale's all-available scope,
+most observation series reach into 2006. The selected Canadian retail vector and US hourly-earnings series start later;
 the initial legacy euro-area HICP series stop in December 2025. Query coverage
 for current bounds. Original source gaps and missing derivation operands are
 retained rather than filled with incompatible measures. Dated ONS releases have
@@ -61,7 +67,7 @@ with Client() as fc:  # reads your private FC_API_KEY environment variable
     scopes = list(fc.iter_history_coverage(limit=100))
     rows = list(fc.iter_archive(
         kind="observations", metric_id="gb-cpi-all-items-yoy",
-        from_="2006-01-01", limit=100,
+        limit=100,  # omit from_ for the authorized plan window
     ))
 print(len(rows), rows[0]["reference_period"], rows[-1]["reference_period"])
 ```
@@ -70,9 +76,15 @@ The installed Python or Node CLI buffers a complete pinned traversal with `--all
 
 ```sh
 financecalendar history-coverage --all
-financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --from 2006-01-01 --limit 100 --all
-financecalendar archive-releases --series-code gb-cpi --from 2018-01-01 --limit 100 --all
+financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --limit 100 --all
+financecalendar archive-releases --series-code gb-cpi --limit 100 --all
 ```
+
+Omit `from` to use the server-authorized window, inspect returned access metadata,
+and keep explicit date bounds within that range. A request outside the plan
+window fails explicitly. Complete pagination is available within every paid
+plan's permitted history; Scale's all-available history is not a new bulk ZIP.
+The existing Scale complete-current-snapshot download is a separate feature.
 
 These commands emit JSON, preserve exact values and fail rather than report a
 partial traversal as a complete export. The runnable

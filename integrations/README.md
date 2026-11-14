@@ -59,7 +59,9 @@ The [economic calendar dashboard starter](examples/economic-calendar-dashboard/R
 ## Historical research
 
 The portable skill now guides long-run observation and dated-release research
-through the [historical archive](../docs/history.md). It discovers coverage,
+through the [historical archive](../docs/history.md): Starter one year, Build ten
+years and Scale all available history, subject to actual coverage and explicit
+prior licences. Legacy history/curated access is unchanged. It discovers coverage,
 preserves exact values/nulls and distinguishes source vintages from FC receipt
 bounds. Use authenticated REST, Python/CLI 0.1.4/0.2.4, or the three local stdio
 archive tools. Installing this hosted manifest does not add those three tools

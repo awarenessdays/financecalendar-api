@@ -34,7 +34,11 @@ The complete-results instructions in this section apply to paid access. Free Dev
 ## Research historical data
 
 For long-run observations or past publications, discover actual stored depth
-with `/history/coverage` before choosing dates. Use `/history/observations` by
+with `/history/coverage` before choosing dates. New-archive windows are one year
+on Starter, ten years on Build and all available history on Scale; explicit
+prior licences and legacy history/curated access remain separate. Use the
+returned access scope and omit date bounds for the authorized default window.
+Use `/history/observations` by
 measured reference-period start, or `/history/releases` by publication date.
 The local stdio tools `history_coverage`, `historic_observations` and
 `historic_releases` are available in client 0.2.4; the hosted catalogue is

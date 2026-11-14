@@ -33,13 +33,16 @@ REST and local clients use your private API key; hosted MCP supports a configure
 ## Historical archive
 
 Start with authenticated `/history/coverage`; inspect actual counts, populated
-values and first/last periods. Choose an exact metric, not a guessed release
+values, first/last periods and access metadata. The new archive grants Starter
+one year, Build ten years and Scale all available history. Omit date bounds for
+the permitted default; explicit bounds must fit the returned plan window.
+Legacy `/history`, curated datasets and explicit prior licences are separate. Choose an exact metric, not a guessed release
 family. Historical observations are separate from dated publication records:
 
 ```sh
 financecalendar history-coverage --source-id ons --all
-financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --from 2006-01-01 --limit 100 --all
-financecalendar archive-releases --metric-id gb-gdp-monthly-mom-sa --from 2018-01-01 --limit 100 --all
+financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --limit 100 --all
+financecalendar archive-releases --metric-id gb-gdp-monthly-mom-sa --limit 100 --all
 ```
 
 Python `Client.iter_history_coverage()` and `Client.iter_archive()` traverse all

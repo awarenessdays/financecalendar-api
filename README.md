@@ -198,13 +198,15 @@ Keys created or linked in your [verified account](https://www.financecalendar.co
 ## Historical economic data
 
 Explore long-run inflation, employment and growth observations alongside evidenced
-publication dates. Paid API access includes the separate historical archive;
-[check measured coverage](https://www.financecalendar.com/api/coverage/) and start
+publication dates. The new archive includes **one year with Starter**, **ten
+years with Build**, and **all available history with Scale**. Existing `/history`
+and curated datasets keep their current access; explicit prior licences remain
+applicable. [Check measured coverage](https://www.financecalendar.com/api/coverage/) and start
 with `GET /history/coverage` to choose an exact metric and available period.
 
 The initial official-source roster contains 21 metrics from BLS, ONS, ECB,
-Eurostat, Statistics Canada and ABS. Many observation series extend into 2006;
-coverage and latest periods vary. Dated ONS publication records are supplied
+Eurostat, Statistics Canada and ABS. In the all-available Scale scope, many
+observation series extend into 2006; available depth and latest periods vary. Dated ONS publication records are supplied
 separately, with values left unknown when an original result was not collected.
 Use the [history guide](docs/history.md) for the measured definitions, paging,
 source credits and complete export examples.
@@ -216,8 +218,9 @@ source credits and complete export examples.
 - `GET /history/coverage`: paginated counts and actual earliest/latest periods
   for each source, metric and record kind.
 
-Repeat the original filters and limit with `next_cursor` to retrieve every page.
-A changed archive revision returns 409; discard the partial export and restart.
+Omit `from` for the server-authorized plan window, or select dates within the
+returned access scope. Repeat the original filters and limit with `next_cursor`
+to retrieve every permitted page. A changed archive revision returns 409; discard the partial export and restart.
 `as_of` selects evidence held by Finance Calendar by its server receipt bound;
 it does not turn a newly imported historical value into knowledge FC held years
 ago. Current-vintage backfills are labelled and do not establish original prints

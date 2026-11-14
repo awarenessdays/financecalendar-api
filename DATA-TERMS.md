@@ -28,3 +28,10 @@ the software MIT licence does not replace those source conditions. Current-vinta
 observations and FC evidence receipt bounds do not establish original prints,
 historical consensus or past market availability. See the [history guide](docs/history.md)
 and authenticated coverage for the actual scope.
+
+The new `/history/observations`, `/history/releases` and `/history/coverage`
+archive follows the active plan window: Starter one year, Build ten years,
+Scale all available history. Full pagination is available within the authorized
+range; all-available history is not a new bulk ZIP product. Existing `/history`,
+curated data and explicit prior licences keep their applicable rights. The
+complete-current-snapshot Scale download remains a separate feature.

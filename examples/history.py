@@ -11,7 +11,7 @@ from financecalendar import Client
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metric", default="gb-cpi-all-items-yoy")
-    parser.add_argument("--from", dest="from_", default="2006-01-01")
+    parser.add_argument("--from", dest="from_", help="Optional reference-period start within your plan window; omit for authorized history")
     parser.add_argument("--output", type=Path, default=Path("history-export.json"))
     args = parser.parse_args()
     with Client() as fc:
