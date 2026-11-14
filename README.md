@@ -103,7 +103,7 @@ curl --fail-with-body \
 
 The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-free-developer-2026-11-12) accept a configured API key. These current archives include authenticated setup and the current pricing/access guide. npm/PyPI registry publication remains pending.
 
-Programmatic data access requires a verified account and API key. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
+REST, local stdio, CLI and SDK data access require a verified account and private API key. Hosted MCP can instead use OAuth account linking. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
 
 Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
@@ -118,24 +118,19 @@ Active Starter, Build and Scale subscriptions include the Data explorer. Complet
 
 ## Hosted connector
 
-Use Streamable HTTP with your own key on **every** request:
+Use **Streamable HTTP** and **OAuth account linking** in Claude, ChatGPT or another compatible client:
 
 ```text
 https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp
-X-API-Key: fc_live_YOUR_ACTUAL_KEY
 ```
 
-`Authorization: Bearer fc_live_YOUR_ACTUAL_KEY` is also accepted. Use an actual
-key in private client settings. Hosted MCP requires paid access or an applicable retained grant. A custom local wrapper can use Free Developer’s permitted REST routes; installing a wrapper does not expand scope. Hosted data calls consume the same account
-allowance as direct REST; protocol initialization/discovery validates the key
-without consuming a data request. There is no shared anonymous MCP allowance.
+Sign in on `www.financecalendar.com`, review the client and read-only `calendar:read` permission, then approve the connection. Optional `offline_access` lets the client renew the connection. Hosted MCP requires an existing verified account with eligible paid access or an applicable retained grant. Connecting an assistant does not create a subscription, change billing or expand the account's access.
 
-The server does not implement OAuth. Use a header-capable MCP client; a platform
-that only offers no authentication or OAuth cannot use this hosted setup. The
-[local stdio server](clients/node/README.md) accepts `FC_API_KEY` instead.
-[Setup and full reference](https://www.financecalendar.com/api/mcp/). Existing
-platform smoke results predate this authentication change and do not establish
-current ChatGPT or Claude.ai account-level setup or directory approval.
+Existing header-capable clients can continue to send a private `X-API-Key` or `Authorization: Bearer` credential on every POST. Configure credentials in the client's private settings, never in a conversation, URL or committed file. The separate [local stdio server](clients/node/README.md) uses `FC_API_KEY` in its private process environment; hosted OAuth does not change the local package's authentication.
+
+Data calls share the same account allowance as REST, SDKs and other connections. Initialization, ping and tool discovery authenticate without consuming data quota. One question may require several data calls; OAuth connections do not consume ordinary personal API-key slots. There is no shared anonymous hosted allowance. Free Developer's restricted schedule REST routes do not include hosted MCP.
+
+Review or revoke linked assistants in [Finance Calendar connection settings](https://www.financecalendar.com/?fc_oauth_connections=1). Revoking one connection does not cancel your subscription or revoke unrelated API keys. See [setup and the full reference](https://www.financecalendar.com/api/mcp/) for authentication, rate limits and supported tools. Client and workspace controls govern custom connections; repository distribution does not establish ChatGPT or Claude directory approval.
 
 ## Quick start
 
