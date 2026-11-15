@@ -3953,47 +3953,6 @@
         }
       }
     },
-    "/account/full-export": {
-      "get": {
-        "tags": [
-          "Scale exports"
-        ],
-        "operationId": "downloadBusinessFullDataset",
-        "summary": "Download the complete current JSON dataset (Scale)",
-        "description": "Requires an active Scale subscription and an account-owned API key sent in X-API-Key or Bearer Authorization. URL API keys are not accepted for this download. Verified browser sessions use a WordPress REST nonce. Free Developer, Starter, Build and expired Scale access are denied. The response is an attachment with private, no-store cache control.",
-        "security": [
-          {
-            "ApiKey": []
-          },
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-required-plan": "business",
-        "responses": {
-          "200": {
-            "description": "Exact current canonical dataset JSON attachment. Source evidence and attribution are preserved.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Valid account authentication required."
-          },
-          "403": {
-            "description": "Active live Scale subscription and verified account required."
-          },
-          "503": {
-            "description": "Account or dataset access could not be verified. Retry later."
-          }
-        }
-      }
-    },
     "/history/observations": {
       "get": {
         "operationId": "archive_observations",
@@ -4490,6 +4449,47 @@
           }
         ],
         "x-new-account-access": "paid_plan_required"
+      }
+    },
+    "/account/full-export": {
+      "get": {
+        "tags": [
+          "Scale exports"
+        ],
+        "operationId": "downloadBusinessFullDataset",
+        "summary": "Download the complete current JSON dataset (Scale)",
+        "description": "Requires an active Scale subscription and an account-owned API key sent in X-API-Key or Bearer Authorization. URL API keys are not accepted for this download. Verified browser sessions use a WordPress REST nonce. Free Developer, Starter, Build and expired Scale access are denied. The response is an attachment with private, no-store cache control.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-required-plan": "business",
+        "responses": {
+          "200": {
+            "description": "Exact current canonical dataset JSON attachment. Source evidence and attribution are preserved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Valid account authentication required."
+          },
+          "403": {
+            "description": "Active live Scale subscription and verified account required."
+          },
+          "503": {
+            "description": "Account or dataset access could not be verified. Retry later."
+          }
+        }
       }
     },
     "/history/editions": {
@@ -9471,58 +9471,6 @@
           }
         }
       },
-      "FCHistoryAccess": {
-        "type": "object",
-        "description": "Effective caller policy for the new official archive. Existing release-history and curated-dataset routes retain their prior access rules.",
-        "required": [
-          "policy_version",
-          "plan",
-          "label",
-          "lookback_years",
-          "unlimited",
-          "range_basis",
-          "as_at_date",
-          "earliest_allowed_date",
-          "date_basis"
-        ],
-        "properties": {
-          "policy_version": {
-            "const": "fc-history-plan-v1"
-          },
-          "plan": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string"
-          },
-          "lookback_years": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "unlimited": {
-            "type": "boolean"
-          },
-          "range_basis": {
-            "const": "rolling_UTC_calendar_years"
-          },
-          "as_at_date": {
-            "type": "string",
-            "format": "date"
-          },
-          "earliest_allowed_date": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date"
-          },
-          "date_basis": {
-            "type": "string"
-          }
-        }
-      },
       "FCHistoryPage": {
         "type": "object",
         "required": [
@@ -9580,6 +9528,58 @@
                 }
               ]
             }
+          }
+        }
+      },
+      "FCHistoryAccess": {
+        "type": "object",
+        "description": "Effective caller policy for the new official archive. Existing release-history and curated-dataset routes retain their prior access rules.",
+        "required": [
+          "policy_version",
+          "plan",
+          "label",
+          "lookback_years",
+          "unlimited",
+          "range_basis",
+          "as_at_date",
+          "earliest_allowed_date",
+          "date_basis"
+        ],
+        "properties": {
+          "policy_version": {
+            "const": "fc-history-plan-v1"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "lookback_years": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "unlimited": {
+            "type": "boolean"
+          },
+          "range_basis": {
+            "const": "rolling_UTC_calendar_years"
+          },
+          "as_at_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "earliest_allowed_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "date_basis": {
+            "type": "string"
           }
         }
       },
