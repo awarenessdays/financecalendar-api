@@ -1,6 +1,6 @@
 {
   "name": "financecalendar",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Economic calendar tools with source evidence and history-aware guidance. Paid API from US$4.99/month; includes a key-configured hosted MCP connection.",
   "author": {
     "name": "Awareness Days Ltd",

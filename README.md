@@ -103,7 +103,7 @@ curl --fail-with-body \
 - **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2) accept a configured API key. These archives include authenticated setup, historical archive traversal and the current pricing/access guide. npm/PyPI registry publication remains pending.
+The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-vintages-2026-11-15) accept a configured API key. These archives include authenticated setup, historical archive traversal and the current pricing/access guide. npm/PyPI registry publication remains pending.
 
 Programmatic data access requires a verified account and API key. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
 
@@ -182,6 +182,9 @@ This table describes paid-plan capabilities. Free Developer is limited to schedu
 | `GET /history/observations` | Exact archived observations by measured reference-period start date; paginated, source-linked and version pinned |
 | `GET /history/releases` | Evidenced dated publications; original values and clocks remain null when unknown |
 | `GET /history/coverage` | Actual per-source/metric counts and period bounds; paginated |
+| `GET /history/editions` | Named numerical source editions by publication day, with qualified initial/revision/correction status |
+| `GET /history/forecasts` | Typed public survey aggregates by issue-period start index, with separate target and horizon |
+| `GET /history/vintage-coverage` | Measured edition/forecast scopes, clocks and plan-accessible ranges |
 | `GET /holidays` | Exchange holidays and early closes for 12 exchanges (`exchange=nyse\|sifma\|cme\|lse\|tsx\|asx\|hkex\|euronext\|jpx\|six\|xetra\|nse\|all`) |
 | `GET /market-status` | Is the exchange open right now (session, breaks, early closes, holidays) |
 | `GET /changes` | Lossless cursor-paginated change log for the last 30 days (`since=`, `limit=`, `cursor=`); restart the original checkpoint on snapshot-change HTTP 409 |
@@ -211,6 +214,18 @@ The initial official-source roster contains 21 metrics from BLS, ONS, ECB,
 Eurostat, Statistics Canada and ABS. In the all-available Scale scope, many
 observation series extend into 2006; available depth and latest periods vary. Dated ONS publication records are supplied
 separately, with values left unknown when an original result was not collected.
+Source editions and historical survey forecasts use their own numerical routes.
+`/history/editions` retains native release stages and qualified initial/correction
+status; `/history/forecasts` retains survey type, aggregation, issue period and
+separate target. Discover actual scope with `/history/vintage-coverage`.
+Starter includes one year, Build ten years and Scale all available, using
+publication-day filters plus an in-window measured reference-period start for
+edition eligibility, and issue-period start index for forecasts.
+Survey aggregates are distinct from event-matched market consensus. Exact
+`available_before` cutoffs exclude unknown/date-only clocks and may return no rows.
+Local MCP now has 19 tools; hosted keeps 14. Preserve source credits, including
+the ECB free-source notice.
+
 Use the [history guide](docs/history.md) for the measured definitions, paging,
 source credits and complete export examples.
 
@@ -229,7 +244,7 @@ it does not turn a newly imported historical value into knowledge FC held years
 ago. Current-vintage backfills are labelled and do not establish original prints
 or historical forecast cutoffs.
 
-[Python and CLI downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2)
+[Python and CLI downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-vintages-2026-11-15)
 include archive methods and complete traversal. The Node package adds three local
 stdio MCP tools. The hosted MCP tool catalogue is unchanged; call these archive
 routes through REST, Python, the CLI or local MCP.

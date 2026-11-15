@@ -21,10 +21,10 @@ For paid plans, daily and monthly quota usage counts admitted requests, not succ
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-vintages-2026-11-15). Use the direct package URL in your chosen environment:
 
 ```sh
-npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-pricing-2026-11-15-r2/financecalendar-mcp-0.2.5.tgz
+npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-vintages-2026-11-15/financecalendar-mcp-0.2.6.tgz
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
@@ -55,7 +55,7 @@ publisher. Check source health and say which values or dates are uncertain.”
 
 ### Hosted tools and output
 
-The hosted server provides the 13 established shared tools plus `feed_status()`; the three historical archive tools below are local stdio tools. `feed_status()` reports snapshot age, source health, stale records and numerical coverage. All are
+The hosted server provides the 13 established shared tools plus `feed_status()`; the six historical archive tools below are local stdio tools. `feed_status()` reports snapshot age, source health, stale records and numerical coverage. All are
 read-only. It does not expose the local briefing prompt or OpenAPI resource,
 tasks, sessions, server notifications or subscriptions. GET and DELETE return
 405; Streamable HTTP requests use POST and receive JSON, without an SSE stream.
@@ -403,3 +403,30 @@ hosted catalog generator explicitly excludes these tools until its dispatcher
 and payload policy receive a separate verified release.
 
 For a Scale key and a measure with stored coverage extending that far, an explicit long-range request can use `--from 2006-01-01`. Check `accessible_range` first; available depth is measure-specific. Scale history uses the same paged JSON retrieval.
+
+## Dated source editions and historical survey forecasts
+
+Explore numerical values in named source editions with `/history/editions` and typed public survey aggregates with `/history/forecasts`. Start with `/history/vintage-coverage` to inspect each exact metric’s stored scope and your key’s `accessible_range`. **Starter includes one year, Build ten years, and Scale all available history**; omit date bounds to use your plan window. Depth varies by metric/source. Free Developer excludes these routes; existing legacy routes and agreements keep their established access.
+
+Edition `from`/`to` filters use publication day; edition access also requires the measured reference-period start inside the plan window. A newly published edition does not grant older measured periods beyond your plan. Forecast filters use `issue_period_start`, an ordering index; `reference_period` describes the separate target. Preserve `forecast_type`, aggregation, target definition, native horizon, exact decimal strings, nulls, units, scale and source credits. Published survey aggregates are distinct from event-matched market consensus and FC blends. Historical survey databases may contain publisher corrections; they are not automatically unchanged original archived issues. Inspect `first_print_status`, `first_print_rule_id`, native stage and correction status for source editions.
+
+`as_of` replays Finance Calendar’s durable receipt versions. `available_before` is a separate strict source-public-availability cutoff: provide exact UTC seconds ending in `Z`; unknown, date-only and coarse issue clocks are excluded. A valid query may return no rows. These source cutoffs test the selected FC capture version and do not silently fall back to a different earlier capture. Future/coarse/naive cutoffs are rejected. Follow `next_cursor` with the same original filters and limit; on 409 restart and discard partial results.
+```sh
+financecalendar vintage-coverage --kind forecasts --all
+financecalendar historic-editions --metric-id us-gdp-real-qoq-saar --all
+financecalendar historic-forecasts --metric-id eu-spf-hicp-annual-mean-p12m --all
+```
+
+All six archive commands return intact JSON pages; `--all` prints only after a complete revision-consistent traversal succeeds. Do not combine `--all` with a starting cursor.
+
+```js
+import { archiveEditions, archiveForecasts, vintageCoverage, collectArchive } from "./lib.js";
+const scopes = await collectArchive("vintage-coverage", { kind: "forecasts" });
+const metric = scopes.rows.find((scope) => scope.accessible_range?.from)?.metric_id;
+if (!metric) throw new Error("No survey forecasts in this plan window");
+const complete = await collectArchive("forecasts", { metric_id: metric, limit: 100 });
+// The helper buffers all pages and fails rather than returning a partial export.
+console.log(JSON.stringify(complete));
+```
+
+Local MCP adds `historic_editions`, `historic_forecasts` and `vintage_coverage`: **19 local tools** total. Each history tool defaults to 20 rows/max 50 and returns one complete page without looping or slicing. The hosted server retains its 14 tools; use REST or the local tools for the six archive routes. Source-edition and survey routes are separate from `/enrichment/editions` and its event/provider ledger.

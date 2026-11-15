@@ -1,7 +1,7 @@
 // Shared HTTP client and formatting helpers for the financecalendar.com API.
 // Zero runtime dependencies: uses the global fetch available in Node 20+.
 
-export const VERSION = "0.2.4";
+export const VERSION = "0.2.6";
 export const DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1";
 export const USER_AGENT = `financecalendar-mcp/${VERSION}`;
 
@@ -80,9 +80,27 @@ export function validateArchivePage(page) {
 }
 
 export async function archivePage(kind, params = {}, options = {}) {
-  if (!["observations", "releases", "coverage"].includes(kind)) throw new Error("Archive kind must be observations, releases or coverage.");
-  return validateArchivePage(await api(`/history/${kind}`, params, options));
+  if (!["observations", "releases", "coverage", "editions", "forecasts", "vintage-coverage"].includes(kind)) throw new Error("Archive kind must be observations, releases, coverage, editions, forecasts or vintage-coverage.");
+  if (["editions", "forecasts", "vintage-coverage"].includes(kind)) for (const key of ["as_of", "available_before"]) {
+    const value = params[key];
+    if (value === undefined || value === null) continue;
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/.test(value)) throw new Error(`${key} requires exact UTC seconds and Z; a date or issue period is not an availability clock.`);
+    const instant = new Date(value);
+    if (!Number.isFinite(instant.getTime()) || instant.toISOString().slice(0, 19) !== value.slice(0, 19)) throw new Error(`${key} is not a valid UTC timestamp.`);
+    if (instant.getTime() > Date.now()) throw new Error(`${key} cannot be in the future.`);
+  }
+  const page = validateArchivePage(await api(`/history/${kind}`, params, options));
+  if (["editions", "forecasts", "vintage-coverage"].includes(kind) && page.schema_version !== 2) throw new Error("Malformed source-vintage schema; export is incomplete.");
+  return page;
 }
+
+/** Dated source editions; from/to filter publication day. Plan access also
+ * requires the measured reference-period start within the permitted window. */
+export const archiveEditions = (params = {}, options = {}) => archivePage("editions", params, options);
+/** Typed survey aggregates; from/to filter issue-period start index, not target date. */
+export const archiveForecasts = (params = {}, options = {}) => archivePage("forecasts", params, options);
+/** Separate measured source-edition/forecast inventory and accessible ranges. */
+export const vintageCoverage = (params = {}, options = {}) => archivePage("vintage-coverage", params, options);
 
 /** Buffer a complete, revision-consistent export before callers emit output.
  * Errors, repeated cursors and revision changes never return a partial success.

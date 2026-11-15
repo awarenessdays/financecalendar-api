@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import os
+import re
 from datetime import date, datetime, timedelta, timezone
 from typing import Any, Iterator
 from urllib.parse import quote
 
 import httpx
 
-__version__ = "0.1.4"
+__version__ = "0.1.6"
 
 DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1"
 USER_AGENT = f"financecalendar-python/{__version__}"
@@ -235,6 +236,80 @@ class Client:
         """Measured stored archive coverage by source, series and exact metric."""
         return self._request("/history/coverage", self._archive_params(params))
 
+    def archive_editions(self, **params: Any) -> dict[str, Any]:
+        """One page of dated source editions, ordered by publication day.
+
+        Plan access requires both publication day and measured reference-period
+        start inside the permitted window; from_/to still filter publication day.
+
+        Inspect first_print_status/release_stage/correction_status: a named
+        edition is not automatically a verified original. as_of replays FC
+        receipts; available_before requires independently proven exact source
+        availability and excludes date-only/unknown clocks.
+        """
+        return self._vintage_page("/history/editions", params)
+
+    def archive_forecasts(self, **params: Any) -> dict[str, Any]:
+        """One page of typed public survey forecasts.
+
+        from_/to and package access use issue_period_start, an ordering index;
+        reference_period is the separate forecast target. Survey aggregates
+        are not event-matched market consensus. Unknown publication/availability
+        clocks stay null; a strict available_before query may honestly be empty.
+        """
+        return self._vintage_page("/history/forecasts", params)
+
+    def vintage_coverage(self, **params: Any) -> dict[str, Any]:
+        """Measured source-edition/forecast scopes and plan-accessible ranges.
+
+        Optional kind is editions or forecasts. This separate inventory does
+        not mix source vintages with the observation/release coverage route.
+        """
+        return self._vintage_page("/history/vintage-coverage", params)
+
+    def _vintage_page(self, path: str, params: dict[str, Any]) -> dict[str, Any]:
+        for name in ("as_of", "available_before"):
+            value = params.get(name)
+            if value is None:
+                continue
+            if isinstance(value, datetime):
+                if value.tzinfo is None or value.utcoffset() is None:
+                    raise ValueError(f"{name} requires an aware datetime or exact UTC timestamp")
+                value = value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+            if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z", value):
+                raise ValueError(f"{name} requires exact UTC seconds and Z; a date or issue period is not an availability clock")
+            try:
+                instant = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            except ValueError:
+                raise ValueError(f"{name} is not a valid UTC timestamp") from None
+            if instant > datetime.now(timezone.utc):
+                raise ValueError(f"{name} cannot be in the future")
+            params[name] = value
+        page = self._request(path, self._archive_params(params))
+        if not isinstance(page, dict):
+            raise FinanceCalendarError(502, "Malformed source-vintage page; export is incomplete")
+        rows, revision, cursor = page.get("rows"), page.get("archive_revision"), page.get("next_cursor")
+        if (page.get("schema_version") != 2 or not isinstance(rows, list)
+                or any(not isinstance(row, dict) for row in rows)
+                or not isinstance(revision, int) or isinstance(revision, bool) or revision < 0
+                or page.get("count") != len(rows) or not isinstance(page.get("has_more"), bool)
+                or cursor is not None and (not isinstance(cursor, str) or not cursor or len(cursor) > 2048)
+                or page["has_more"] != (cursor is not None) or cursor is not None and not rows):
+            raise FinanceCalendarError(502, "Malformed source-vintage page; export is incomplete")
+        return page
+
+    def iter_archive_editions(self, **params: Any) -> Iterator[dict[str, Any]]:
+        """Traverse source editions at one revision; discard partial output on error."""
+        yield from self._iter_archive_pages(self.archive_editions, params)
+
+    def iter_archive_forecasts(self, **params: Any) -> Iterator[dict[str, Any]]:
+        """Traverse survey forecasts at one revision; retain issue/target distinctions."""
+        yield from self._iter_archive_pages(self.archive_forecasts, params)
+
+    def iter_vintage_coverage(self, **params: Any) -> Iterator[dict[str, Any]]:
+        """Traverse every measured source-edition/forecast coverage scope."""
+        yield from self._iter_archive_pages(self.vintage_coverage, params)
+
     @staticmethod
     def _archive_params(params: dict[str, Any]) -> dict[str, Any]:
         if "series" in params:
@@ -251,14 +326,16 @@ class Client:
     def iter_archive(self, kind: str = "observations", **params: Any) -> Iterator[dict[str, Any]]:
         """Traverse a revision-pinned archive without a hidden offset ceiling.
 
-        kind is observations or releases. Values retain exact strings/nulls.
+        kind is observations, releases, editions or forecasts. Values retain exact strings/nulls.
         A changed revision or a malformed continuation fails explicitly rather
         than silently returning a partial export. Do not consume partially
         yielded rows as a complete export if an exception is raised.
         """
-        if kind not in {"observations", "releases"}:
-            raise ValueError("kind must be observations or releases")
-        read = self.archive_observations if kind == "observations" else self.archive_releases
+        routes = {"observations": self.archive_observations, "releases": self.archive_releases,
+                  "editions": self.archive_editions, "forecasts": self.archive_forecasts}
+        if kind not in routes:
+            raise ValueError("kind must be observations, releases, editions or forecasts")
+        read = routes[kind]
         yield from self._iter_archive_pages(read, params)
 
     def _iter_archive_pages(self, read: Any, params: dict[str, Any]) -> Iterator[dict[str, Any]]:

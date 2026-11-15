@@ -116,17 +116,18 @@ server.registerTool("history", {
 
 const archiveId = (description) => z.string().min(1).max(200).regex(/^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$/).optional().describe(description);
 const archiveCommon = {
-  metric_id: archiveId("Exact reviewed metric ID; discover populated metrics with history_coverage."),
+  metric_id: archiveId("Exact reviewed metric ID; discover observations/releases with history_coverage or editions/forecasts with vintage_coverage."),
   series_code: archiveId("Exact series code, for example gb-cpi. Supply metric_id or series_code."),
   source_id: archiveId("Optional original-source identifier."),
   limit: z.number().int().min(1).max(50).default(20).describe("One page only: 1 to 50 rows, default 20. Follow next_cursor with the SAME original filters and limit."),
   cursor: z.string().min(1).max(2048).optional().describe("Opaque archive continuation. Repeat the original filters and limit. On HTTP 409 restart from page one and discard prior partial output."),
 };
-const archiveSchema = (period) => z.strictObject({
+const archiveSchema = (period, vintage = false) => z.strictObject({
   ...archiveCommon,
   from: date(`Inclusive ${period} date YYYY-MM-DD.`),
   to: date(`Inclusive ${period} date YYYY-MM-DD.`),
   order: z.enum(["asc", "desc"]).optional(),
+  ...(vintage ? { available_before: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/).optional().describe("Strict exact source-public-availability cutoff in UTC. Unknown and date-only clocks are excluded; an empty result is valid.") } : {}),
   as_of: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/).optional().describe("FC durable-evidence receipt bound in UTC, not historical market availability or an original-print selector."),
 }).refine((args) => args.metric_id || args.series_code, { message: "Supply metric_id or series_code." });
 
@@ -150,6 +151,27 @@ server.registerTool("history_coverage", {
   annotations: readOnly,
   inputSchema: z.strictObject({ ...archiveCommon, kind: z.enum(["observations", "releases"]).optional() }),
 }, run((args) => archivePage("coverage", args)));
+
+server.registerTool("historic_editions", {
+  title: "Dated economic source editions",
+  description: "One intact page of numerical source editions, ordered by edition publication day. Plan access also requires reference-period start inside the permitted window. Inspect native release_stage, first_print_status and correction_status to identify verified initial values separately from revisions or unverified editions. Values, scale, null clocks and source credits remain exact. as_of is FC receipt time; available_before includes only proven exact public-availability clocks, so an empty result is valid. Follow next_cursor with identical filters and limit; restart on 409. Never automatically traverse or truncate a page.",
+  annotations: readOnly,
+  inputSchema: archiveSchema("source-edition publication", true),
+}, run((args) => archivePage("editions", args)));
+
+server.registerTool("historic_forecasts", {
+  title: "Historical survey forecasts",
+  description: "One intact page of typed public survey aggregates. from/to filter the forecast issue-period START INDEX, an ordering key rather than availability; reference_period is the separate forecast target. Preserve forecast_type, aggregation, horizon, exact values, units and source credits. Survey forecasts are distinct from event-matched market consensus and private FC blends. Unknown clocks stay null; available_before excludes unknown/date-only clocks. Repeat original filters and limit with next_cursor; restart on 409. No automatic traversal or truncation.",
+  annotations: readOnly,
+  inputSchema: archiveSchema("forecast issue-period start index", true),
+}, run((args) => archivePage("forecasts", args)));
+
+server.registerTool("vintage_coverage", {
+  title: "Source-edition and forecast coverage",
+  description: "One intact page of measured source-edition/forecast scopes, with source credits, per-metric ranges, stage/first-print counts or survey issue/target/horizon metadata. Use accessible_range for the current key's measured plan window. kind optionally selects editions or forecasts. This inventory is separate from observation/release coverage. Default20/max 50 rows; repeat filters and limit with next_cursor, restart on 409. Does not infer original prints, availability clocks or universal historical depth.",
+  annotations: readOnly,
+  inputSchema: z.strictObject({ ...archiveCommon, kind: z.enum(["editions", "forecasts"]).optional() }),
+}, run((args) => archivePage("vintage-coverage", args)));
 
 const resultSeries = z.enum(["us-jolts", "us-adp", "us-ism-services", "us-trade-balance", "us-cpi", "us-nfp", "us-ppi", "us-retail-sales", "us-pce", "us-ism-manufacturing", "us-industrial-production", "us-consumer-confidence"])
   .describe("Twelve supported US headline series. Published evidence varies by series, provider qualification and server activation; inspect returned values and provenance.");
