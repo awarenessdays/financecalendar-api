@@ -21,10 +21,10 @@ For paid plans, daily and monthly quota usage counts admitted requests, not succ
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r4). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-vintages-2026-11-15). Use the direct package URL in your chosen environment:
 
 ```sh
-npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-pricing-2026-11-15-r4/financecalendar-mcp-0.2.6.tgz
+npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-vintages-2026-11-15/financecalendar-mcp-0.2.6.tgz
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
