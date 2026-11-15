@@ -8115,6 +8115,12 @@
               "currency": "usd",
               "interval": "month",
               "tax_behavior": "inclusive"
+            },
+            "year": {
+              "unit_amount": 5389,
+              "currency": "usd",
+              "interval": "year",
+              "tax_behavior": "inclusive"
             }
           },
           "full_dataset_export": false

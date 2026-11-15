@@ -8,7 +8,7 @@ The [public economic calendar is free to browse](https://www.financecalendar.com
 
 | Plan | Price | Shared account allowance | Included access |
 |---|---|---|---|
-| Starter | **US$4.99/month**, paid monthly | **1,000 requests/UTC day; 25,000/UTC calendar month** | REST, MCP, CLI, Python, Data explorer and filtered CSV/JSON exports |
+| Starter | **US$4.99/month** or **US$53.89/year**, annual billing saves 10% | **1,000 requests/UTC day; 25,000/UTC calendar month** | REST, MCP, CLI, Python, Data explorer and filtered CSV/JSON exports |
 | Build | **US$9.99/month** or **US$95.90/year** | **100,000 requests/UTC day** | Higher API capacity and the same recorded fields and tools |
 | Scale | **US$29/month** or **US$278.40/year** | **1,000,000 requests/UTC day** | Complete current dataset JSON download and larger integrations |
 | Free Developer | **US$0, ongoing** | **100 successful JSON responses/UTC month; at most 10/UTC day** | Schedule-only `/calendar` and `/today`, 7 UTC dates, 20 records, one key |
@@ -22,7 +22,7 @@ Starter, Build and Scale can power customer-facing websites and apps, including 
 <!-- fc-plan-comparison:start -->
 | Feature | Free Developer | Starter | Build | Scale |
 | --- | --- | --- | --- | --- |
-| Price | US$0; No card | US$4.99/month | US$9.99/month; or US$95.90/year | US$29.00/month; or US$278.40/year |
+| Price | US$0; No card | US$4.99/month; or US$53.89/year | US$9.99/month; or US$95.90/year | US$29.00/month; or US$278.40/year |
 | Requests / UTC day | 10 | 1,000 | 100,000 | 1,000,000 |
 | Requests / UTC month | 100 | 25,000 | No monthly cap | No monthly cap |
 | Calendar records / response | Up to 20; No pagination | Up to 500; With pagination | Up to 500; With pagination | Up to 500; With pagination |
@@ -103,11 +103,11 @@ curl --fail-with-body \
 - **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2) accept a configured API key. These archives include authenticated setup, historical archive traversal and the current pricing/access guide. npm/PyPI registry publication remains pending.
+The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r3) accept a configured API key. These archives include authenticated setup, historical archive traversal and the current pricing/access guide. npm/PyPI registry publication remains pending.
 
 Programmatic data access requires a verified account and API key. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
 
-Starter costs **US$4.99/month** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
+Starter costs **US$4.99/month or US$53.89/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
 Free Developer counts successful committed HTTP 200 JSON responses, including valid empty results. Invalid/denied requests, quota errors and pre-commit failures do not count. Its account ledger survives key rotation, with UTC day/month resets. `GET /keys/me` is uncounted and reports a distinct `free_developer` usage object. Existing enrolled trials keep their separate original budgets and clocks.
 
@@ -229,7 +229,7 @@ it does not turn a newly imported historical value into knowledge FC held years
 ago. Current-vintage backfills are labelled and do not establish original prints
 or historical forecast cutoffs.
 
-[Python and CLI downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2)
+[Python and CLI downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r3)
 include archive methods and complete traversal. The Node package adds three local
 stdio MCP tools. The hosted MCP tool catalogue is unchanged; call these archive
 routes through REST, Python, the CLI or local MCP.

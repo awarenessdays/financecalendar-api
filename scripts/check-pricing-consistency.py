@@ -9,7 +9,7 @@ import argparse
 
 ROOT=Path(__file__).resolve().parents[1]
 EXPECTED={
- 'starter':(1000,25000,{'month':499}),
+ 'starter':(1000,25000,{'month':499,'year':5389}),
  'build':(100000,None,{'month':999,'year':9590}),
  'scale':(1000000,None,{'month':2900,'year':27840}),
 }
@@ -44,11 +44,11 @@ def main():
     readme=(ROOT/'README.md').read_text()
     assert '## Affordable API access' in readme and '/fc/v1/sample' in readme
     assert '## Free economic calendar API access' not in readme
-    for amount in ['4.99/month','95.90/year','278.40/year']:
+    for amount in ['4.99/month','53.89/year','95.90/year','278.40/year']:
         assert amount in readme, 'Missing current upfront charge '+amount
     for dirname in ['clients/node','clients/python']:
         guide=(ROOT/dirname/'README.md').read_text()
-        for amount in ['4.99/month','95.90/year','278.40/year']:
+        for amount in ['4.99/month','53.89/year','95.90/year','278.40/year']:
             assert amount in guide, dirname+' lacks current charge '+amount
     # Test captures are distributed in the Python source archive and are also
     # machine-readable current-offer examples; protect their numeric prices too.
