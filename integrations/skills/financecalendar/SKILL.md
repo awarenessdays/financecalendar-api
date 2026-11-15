@@ -41,7 +41,7 @@ returned access scope and omit date bounds for the authorized default window.
 Use `/history/observations` by
 measured reference-period start, or `/history/releases` by publication date.
 The local stdio tools `history_coverage`, `historic_observations` and
-`historic_releases` are available in client 0.2.4; the hosted catalogue is
+`historic_releases` are available in client 0.2.5; the hosted catalogue is
 unchanged. If they are absent, use authenticated REST or the Python/CLI archive
 methods described in [the history recipes](references/api.md#historical-archive).
 
@@ -50,6 +50,19 @@ Keep exact decimal strings, derived-input evidence and nulls. Follow every
 export; restart rather than reporting it complete. Current-vintage backfills
 do not establish original prints or old market forecasts. `as_of` uses FC's
 durable evidence receipt bound; it cannot make a new import known years ago.
+
+For dated numerical editions and typed historical survey forecasts, start with
+`/history/vintage-coverage`, then use `/history/editions` or `/history/forecasts`.
+The same plan windows apply. Edition filters use publication day, while plan
+eligibility also requires reference-period start within the window. Forecast ranges
+use issue-period start index, separate from target reference_period. Inspect
+source-qualified first_print_status, native stages and corrections. Survey
+aggregates are distinct from event-matched market consensus and FC blends.
+`available_before` requires exact proven source availability: unknown/date-only
+clocks are excluded and an empty result is valid. Preserve source credits,
+including the ECB notice that original data are freely available at source.
+Local client 0.2.5 adds `historic_editions`, `historic_forecasts` and
+`vintage_coverage`; all six archive tools are local only. Hosted remains 14 tools.
 
 ## Build an integration
 

@@ -355,7 +355,7 @@
             "ApiKeyQuery": []
           }
         ],
-        "description": "Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Starter adds recorded figures, history, wider dates and paid integration tools. Keep your existing active API key linked to the same verified account when paid access is confirmed. Free Developer and paid access use different JSON response schemas: Free returns compact schedules and omits numerical fields; paid access adds richer event fields and endpoint-specific responses. Use the documented paid response model when adding these features, including the different /today envelope. Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Existing enrolled trials only; new trial enrollment is closed. Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour.",
+        "description": "Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Starter adds recorded figures, history, wider dates and paid integration tools. Keep your existing active API key linked to the same verified account when paid access is confirmed. Free Developer and paid access use different JSON response schemas: Free returns compact schedules and omits numerical fields; paid access adds richer event fields and endpoint-specific responses. Use the documented paid response model when adding these features, including the different /today envelope. Existing enrolled trials only; new trial enrollment is closed. Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour.",
         "x-free-developer": {
           "available": true,
           "schema": {
@@ -596,7 +596,7 @@
             "ApiKeyQuery": []
           }
         ],
-        "description": "Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Starter adds recorded figures, history, wider dates and paid integration tools. Keep your existing active API key linked to the same verified account when paid access is confirmed. Free Developer and paid access use different JSON response schemas: Free returns compact schedules and omits numerical fields; paid access adds richer event fields and endpoint-specific responses. Use the documented paid response model when adding these features, including the different /today envelope. Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Existing enrolled trials only; new trial enrollment is closed. Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour.",
+        "description": "Free Developer: schedule-only JSON, UTC today through today+6 (today only on /today), country/impact filters and bounded date narrowing, maximum 20 records without pagination. Numerical fields are omitted, not source-missing nulls. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Starter adds recorded figures, history, wider dates and paid integration tools. Keep your existing active API key linked to the same verified account when paid access is confirmed. Free Developer and paid access use different JSON response schemas: Free returns compact schedules and omits numerical fields; paid access adds richer event fields and endpoint-specific responses. Use the documented paid response model when adding these features, including the different /today envelope. Existing enrolled trials only; new trial enrollment is closed. Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour.",
         "x-free-developer": {
           "available": true,
           "schema": {
@@ -3953,6 +3953,47 @@
         }
       }
     },
+    "/account/full-export": {
+      "get": {
+        "tags": [
+          "Scale exports"
+        ],
+        "operationId": "downloadBusinessFullDataset",
+        "summary": "Download the complete current JSON dataset (Scale)",
+        "description": "Requires an active Scale subscription and an account-owned API key sent in X-API-Key or Bearer Authorization. URL API keys are not accepted for this download. Verified browser sessions use a WordPress REST nonce. Free Developer, Starter, Build and expired Scale access are denied. The response is an attachment with private, no-store cache control.",
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-required-plan": "business",
+        "responses": {
+          "200": {
+            "description": "Exact current canonical dataset JSON attachment. Source evidence and attribution are preserved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Valid account authentication required."
+          },
+          "403": {
+            "description": "Active live Scale subscription and verified account required."
+          },
+          "503": {
+            "description": "Account or dataset access could not be verified. Retry later."
+          }
+        }
+      }
+    },
     "/history/observations": {
       "get": {
         "operationId": "archive_observations",
@@ -4069,21 +4110,64 @@
             "description": "Invalid or mismatched filters/cursor"
           },
           "401": {
-            "description": "Missing or malformed key"
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "Access not entitled"
+            "description": "Access not entitled Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "409": {
             "description": "Archive changed; discard partial traversal and restart"
           },
           "429": {
-            "description": "Shared allowance exhausted"
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/QuotaExceeded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "503": {
             "description": "Archive not ready or temporarily unavailable"
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/history/releases": {
@@ -4202,21 +4286,64 @@
             "description": "Invalid or mismatched filters/cursor"
           },
           "401": {
-            "description": "Missing or malformed key"
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "Access not entitled"
+            "description": "Access not entitled Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "409": {
             "description": "Archive changed; discard partial traversal and restart"
           },
           "429": {
-            "description": "Shared allowance exhausted"
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/QuotaExceeded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "503": {
             "description": "Archive not ready or temporarily unavailable"
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     },
     "/history/coverage": {
@@ -4305,21 +4432,562 @@
             "description": "Invalid or mismatched filters/cursor"
           },
           "401": {
-            "description": "Missing or malformed key"
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
           },
           "403": {
-            "description": "Access not entitled"
+            "description": "Access not entitled Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
           },
           "409": {
             "description": "Archive changed; discard partial traversal and restart"
           },
           "429": {
-            "description": "Shared allowance exhausted"
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/QuotaExceeded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "503": {
             "description": "Archive not ready or temporarily unavailable"
+          },
+          "402": {
+            "description": "Paid activation is required for this key/route. Existing enrolled trials retain their original limited grant; Free Developer, where available, provides only its separately documented schedule scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "x-new-account-access": "paid_plan_required"
+      }
+    },
+    "/history/editions": {
+      "get": {
+        "operationId": "archive_editions",
+        "tags": [
+          "Historical archive"
+        ],
+        "summary": "Source edition values",
+        "description": "Named source editions retain native stages and qualified first-print rules. A source vintage is not automatically an initial release. Account eligibility requires BOTH the source publication day and the measured reference-period start to fall within the plan window; a recent vintage does not grant older reference values. Supply metric_id or series_code. Starter includes one rolling UTC calendar year, Build ten and Scale all available. Date filters and order use source publication day; package eligibility also checks the measured reference-period start. Omitted bounds clip to the caller window; explicit older bounds return403. Decimal values remain strings. Unknown availability stays unknown; inspect /history/vintage-coverage for measured scope.",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "series_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive actual source edition publication day."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive actual source edition publication day."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Canonical UTC FC durable-evidence receipt cutoff. Backfill source dates do not backdate FC knowledge."
+          },
+          {
+            "name": "available_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact UTC source-public-availability cutoff; unknown/date/month/quarter clocks are excluded, possibly yielding zero rows. Tests the selected FC capture only; this is not global historical point-in-time reconstruction."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One complete page; follow next_cursor until null.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FCHistoryVintagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or mismatched query/cursor"
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "403": {
+            "description": "Plan does not permit this range; response includes allowed scope and upgrade link. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Archive changed; restart the complete traversal."
+          },
+          "429": {
+            "description": "Shared allowance exhausted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/QuotaExceeded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Archive not initialized or temporarily unavailable."
+          },
+          "402": {
+            "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "x-new-account-access": "paid_plan_required"
+      }
+    },
+    "/history/forecasts": {
+      "get": {
+        "operationId": "archive_forecasts",
+        "tags": [
+          "Historical archive"
+        ],
+        "summary": "Historical public survey forecasts",
+        "description": "Public published survey aggregates retain issue period, target definition, native horizon and aggregation. These are historical surveys, not event-matched market consensus or private Finance Calendar inputs. Supply metric_id or series_code. Starter includes one rolling UTC calendar year, Build ten and Scale all available. Date filters, order and package eligibility use the forecast issue-period start index. Omitted bounds clip to the caller window; explicit older bounds return403. Decimal values remain strings. Unknown availability stays unknown; inspect /history/vintage-coverage for measured scope.",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "series_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive forecast issue-period start index, not its target period or an inferred publication day."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive forecast issue-period start index, not its target period or an inferred publication day."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Canonical UTC FC durable-evidence receipt cutoff. Backfill source dates do not backdate FC knowledge."
+          },
+          {
+            "name": "available_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact UTC source-public-availability cutoff; unknown/date/month/quarter clocks are excluded, possibly yielding zero rows. Tests the selected FC capture only; this is not global historical point-in-time reconstruction."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One complete page; follow next_cursor until null.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FCHistoryVintagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or mismatched query/cursor"
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "403": {
+            "description": "Plan does not permit this range; response includes allowed scope and upgrade link. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Archive changed; restart the complete traversal."
+          },
+          "429": {
+            "description": "Shared allowance exhausted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/QuotaExceeded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Archive not initialized or temporarily unavailable."
+          },
+          "402": {
+            "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "x-new-account-access": "paid_plan_required"
+      }
+    },
+    "/history/vintage-coverage": {
+      "get": {
+        "operationId": "archive_vintage_coverage",
+        "tags": [
+          "Historical archive"
+        ],
+        "summary": "Measured edition and forecast coverage",
+        "description": "Source-wide edition/reference/verified-initial/clock counts with caller-accessible ranges. Full coverage metadata is not an access grant. Existing /history/coverage remains restricted to observations and releases.",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "series_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "editions",
+                "forecasts"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One complete page; follow next_cursor until null.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FCHistoryVintagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or mismatched query/cursor"
+          },
+          "401": {
+            "description": "A valid API key is required. Create and verify an account, then create a key in the account workspace."
+          },
+          "403": {
+            "description": "Plan does not permit this range; response includes allowed scope and upgrade link. Free Developer returns its scoped error and upgrade/reset context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeDeveloperError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Archive changed; restart the complete traversal."
+          },
+          "429": {
+            "description": "Shared allowance exhausted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/QuotaExceeded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Archive not initialized or temporarily unavailable."
+          },
+          "402": {
+            "description": "Payment is required to activate or renew access for a captured paid-signup customer. Follow account_url or upgrade_url; retrying the data request cannot activate payment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequired"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          },
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyQuery": []
+          }
+        ],
+        "x-new-account-access": "paid_plan_required"
       }
     }
   },
@@ -8803,6 +9471,58 @@
           }
         }
       },
+      "FCHistoryAccess": {
+        "type": "object",
+        "description": "Effective caller policy for the new official archive. Existing release-history and curated-dataset routes retain their prior access rules.",
+        "required": [
+          "policy_version",
+          "plan",
+          "label",
+          "lookback_years",
+          "unlimited",
+          "range_basis",
+          "as_at_date",
+          "earliest_allowed_date",
+          "date_basis"
+        ],
+        "properties": {
+          "policy_version": {
+            "const": "fc-history-plan-v1"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "lookback_years": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "unlimited": {
+            "type": "boolean"
+          },
+          "range_basis": {
+            "const": "rolling_UTC_calendar_years"
+          },
+          "as_at_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "earliest_allowed_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "date_basis": {
+            "type": "string"
+          }
+        }
+      },
       "FCHistoryPage": {
         "type": "object",
         "required": [
@@ -8863,9 +9583,653 @@
           }
         }
       },
-      "FCHistoryAccess": {
+      "FCHistoryVintageRecord": {
         "type": "object",
-        "description": "Effective caller policy for the new official archive. Existing release-history and curated-dataset routes retain their prior access rules.",
+        "required": [
+          "id",
+          "kind",
+          "edition_id",
+          "metric_id",
+          "reference_period",
+          "value",
+          "raw_value",
+          "unit",
+          "scale",
+          "vintage_basis",
+          "historical_first_print",
+          "first_print_status",
+          "source_published_at",
+          "source_published_precision",
+          "available_at",
+          "availability_basis",
+          "evidence_sha256",
+          "source_url",
+          "first_seen_at",
+          "fc_observed_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "metric_id": {
+            "type": "string"
+          },
+          "source_series_id": {
+            "type": "string"
+          },
+          "edition_id": {
+            "type": "string"
+          },
+          "reference_period": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "period_start": {
+            "type": "string"
+          },
+          "period_end": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "raw_unit": {
+            "type": "string"
+          },
+          "scale": {
+            "type": "string",
+            "description": "Registered decimal multiplier, such as 1 or 1000; not a JSON number."
+          },
+          "seasonal_adjustment": {
+            "type": "string"
+          },
+          "evidence_sha256": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "source_captured_at": {
+            "type": "string"
+          },
+          "first_seen_at": {
+            "type": "string"
+          },
+          "fc_observed_at": {
+            "type": "string"
+          },
+          "order_date": {
+            "type": "string"
+          },
+          "order_date_basis": {
+            "type": "string"
+          },
+          "source_published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_published_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_publication_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_publication_period_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "release_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "release_at_utc": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "available_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "availability_rule_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_print_rule_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_correction_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_correction_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supersedes_edition_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "release_stage": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_timezone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_notes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_native_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "submission_deadline_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "submission_deadline_precision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "description": "Exact finite decimal text; null is unknown and zero is preserved."
+          },
+          "raw_value": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "description": "Exact finite decimal text; null is unknown and zero is preserved."
+          },
+          "historical_first_print": {
+            "type": "boolean",
+            "description": "True only for a reviewed metric/stage and first_print_rule_id, not merely the earliest retained edition."
+          },
+          "first_print_status": {
+            "type": "string",
+            "enum": [
+              "verified_initial",
+              "not_initial",
+              "unverified"
+            ]
+          },
+          "vintage_basis": {
+            "type": "string",
+            "enum": [
+              "source_vintage",
+              "as_released"
+            ]
+          },
+          "time_precision": {
+            "type": "string",
+            "enum": [
+              "second",
+              "date",
+              "unknown"
+            ]
+          },
+          "availability_basis": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "verified_source_publication"
+            ]
+          },
+          "correction_status": {
+            "type": "string",
+            "enum": [
+              "none_reported",
+              "publisher_correction",
+              "not_assessed"
+            ]
+          },
+          "stage_class": {
+            "type": "string",
+            "enum": [
+              "initial",
+              "subsequent",
+              "historical_revision",
+              "unknown"
+            ]
+          },
+          "forecast_type": {
+            "type": "string"
+          },
+          "aggregation": {
+            "type": "string"
+          },
+          "issue_period": {
+            "type": "string"
+          },
+          "issue_frequency": {
+            "type": "string"
+          },
+          "issue_period_start": {
+            "type": "string"
+          },
+          "issue_period_end": {
+            "type": "string"
+          },
+          "forecast_target_basis": {
+            "type": "string"
+          },
+          "horizon_label": {
+            "type": "string"
+          },
+          "source_license": {
+            "type": "object"
+          },
+          "source_rights": {
+            "type": "object"
+          },
+          "source_selector": {
+            "type": [
+              "object",
+              "string",
+              "null"
+            ],
+            "description": "Bounded native document/table/cell selector; never a source clock."
+          },
+          "derivation": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "archive_version": {
+            "type": "integer"
+          }
+        }
+      },
+      "FCHistoryVintageCoverage": {
+        "type": "object",
+        "description": "Measured source-wide metadata; accessible_range contains actual allowed stored order dates/count for this caller. Editions require both publication day and reference-period start within the caller window; forecasts use the issue-period start index. Edition counts, reference periods and verified initial values are separate. No complete source inventory is asserted.",
+        "required": [
+          "kind",
+          "metric_id",
+          "record_count",
+          "distinct_reference_period_count",
+          "source_edition_count",
+          "verified_initial_records",
+          "unknown_availability_records",
+          "order_date_basis"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "series_code": {
+            "type": "string"
+          },
+          "metric_id": {
+            "type": "string"
+          },
+          "source_series_id": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "raw_unit": {
+            "type": "string"
+          },
+          "scale": {
+            "type": "string"
+          },
+          "seasonal_adjustment": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "order_date_basis": {
+            "type": "string"
+          },
+          "as_of_basis": {
+            "type": "string"
+          },
+          "record_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "distinct_reference_period_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_edition_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "populated_values": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "verified_initial_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "verified_initial_reference_periods": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "dated_publication_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "coarse_publication_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unverified_initial_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "not_initial_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "exact_availability_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "publisher_correction_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unknown_publication_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unknown_publication_day_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unknown_availability_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "not_verified_initial_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "first_reference_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_reference_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_order_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_order_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_publication_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_publication_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_issue_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_issue_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_fc_capture": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "latest_fc_capture": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "gaps": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "stage_counts": {
+            "type": "object"
+          },
+          "horizon_counts": {
+            "type": "object"
+          },
+          "source_license": {
+            "type": "object"
+          },
+          "source_rights": {
+            "type": "object"
+          },
+          "accessible_range": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "record_count",
+              "date_basis"
+            ],
+            "description": "Actual eligible publication/issue dates and count. Editions also require the measured reference-period start within the same plan window.",
+            "properties": {
+              "from": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "record_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "date_basis": {
+                "type": "string",
+                "enum": [
+                  "edition_publication_and_reference_period_start",
+                  "forecast_issue_period_start_index"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "FCHistoryVintagePage": {
+        "type": "object",
+        "required": [
+          "schema_version",
+          "archive_revision",
+          "rows",
+          "count",
+          "has_more",
+          "next_cursor",
+          "as_of_basis"
+        ],
+        "properties": {
+          "schema_version": {
+            "const": 2
+          },
+          "archive_revision": {
+            "type": "integer"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "order_date_basis": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "as_of": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "as_of_basis": {
+            "const": "fc_evidence_commit_observed_bound"
+          },
+          "access": {
+            "$ref": "#/components/schemas/FCHistoryV2Access"
+          },
+          "filters": {
+            "type": "object"
+          },
+          "cutoff": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "When available_before is supplied, exact proof is required. Unknown clocks are excluded; only the selected FC capture version is tested, with no fallback to another historical source capture.",
+            "properties": {
+              "available_before": {
+                "type": "string"
+              },
+              "basis": {
+                "const": "verified_source_public_availability"
+              },
+              "unknown_clocks_excluded": {
+                "const": true
+              },
+              "selected_version_only": {
+                "const": true
+              }
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FCHistoryVintageRecord"
+                },
+                {
+                  "$ref": "#/components/schemas/FCHistoryVintageCoverage"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "FCHistoryV2Access": {
+        "type": "object",
+        "description": "The same paid archive package policy. Editions require BOTH source publication day and measured reference-period start within the window. Forecasts use the issue-period start index.",
         "required": [
           "policy_version",
           "plan",
@@ -8911,7 +10275,12 @@
             "format": "date"
           },
           "date_basis": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "edition_publication_and_reference_period_start",
+              "forecast_issue_period_start_index",
+              "per_row_edition_publication_and_reference_period_start_or_forecast_issue_index"
+            ]
           }
         }
       }
@@ -9074,14 +10443,7 @@
             "tax_behavior": "inclusive"
           }
         },
-        "full_dataset_export": false,
-        "official_history": {
-          "plan": "starter",
-          "label": "Starter",
-          "lookback_years": 1,
-          "range_basis": "rolling_UTC_calendar_years",
-          "unlimited": false
-        }
+        "full_dataset_export": false
       },
       "build": {
         "id": "build",
@@ -9104,14 +10466,7 @@
             "tax_behavior": "inclusive"
           }
         },
-        "full_dataset_export": false,
-        "official_history": {
-          "plan": "build",
-          "label": "Build",
-          "lookback_years": 10,
-          "range_basis": "rolling_UTC_calendar_years",
-          "unlimited": false
-        }
+        "full_dataset_export": false
       },
       "scale": {
         "id": "scale",
@@ -9134,14 +10489,7 @@
             "tax_behavior": "inclusive"
           }
         },
-        "full_dataset_export": true,
-        "official_history": {
-          "plan": "scale",
-          "label": "Scale",
-          "lookback_years": null,
-          "range_basis": "rolling_UTC_calendar_years",
-          "unlimited": true
-        }
+        "full_dataset_export": true
       }
     },
     "sample": {
@@ -9180,7 +10528,7 @@
     },
     "history_coverage": {
       "available": true,
-      "snapshot_generated_at": "2026-11-14T15:40:56+00:00",
+      "snapshot_generated_at": "2026-11-14T14:41:01+00:00",
       "release_event_history": {
         "endpoint": "/history?series={code}",
         "basis": "elapsed_release_records_in_current_snapshot",
@@ -9241,590 +10589,9 @@
         "basis": "accepted_recorded_editions_only",
         "original_first_print_archive": false
       },
-      "official_archive": {
-        "available": true,
-        "archive_revision": 25,
-        "observations": {
-          "endpoint": "/history/observations",
-          "record_count": 5074,
-          "metric_count": 21,
-          "reference_periods": {
-            "from": "2006-01-01",
-            "to": "2026-10-31"
-          },
-          "metrics": [
-            {
-              "source_id": "bls",
-              "series_code": "us-unemployment",
-              "metric_id": "us-unemployment-rate-sa",
-              "source_series_id": "LNS14000000",
-              "source_license": {
-                "id": "US-PUBLIC-DOMAIN",
-                "url": "https://www.bls.gov/bls/linksite.htm",
-                "attribution": "Source: U.S. Bureau of Labor Statistics."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-10-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "statcan",
-              "series_code": "ca-retail-sales",
-              "metric_id": "ca-retail-sales-mom-sa",
-              "source_series_id": "1446859483",
-              "source_license": {
-                "id": "STATCAN-OPEN",
-                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-              },
-              "record_count": 115,
-              "distinct_period_count": 115,
-              "populated_values": 115,
-              "first_period": "2017-02-01",
-              "last_period": "2026-08-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "bls",
-              "series_code": "us-cpi",
-              "metric_id": "us-cpi-all-items-index-nsa",
-              "source_series_id": "CUUR0000SA0",
-              "source_license": {
-                "id": "US-PUBLIC-DOMAIN",
-                "url": "https://www.bls.gov/bls/linksite.htm",
-                "attribution": "Source: U.S. Bureau of Labor Statistics."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-10-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "statcan",
-              "series_code": "ca-cpi",
-              "metric_id": "ca-cpi-all-items-mom-nsa",
-              "source_series_id": "41690973",
-              "source_license": {
-                "id": "STATCAN-OPEN",
-                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "bls",
-              "series_code": "us-cpi",
-              "metric_id": "us-cpi-all-items-mom-sa",
-              "source_series_id": "CUSR0000SA0",
-              "source_license": {
-                "id": "US-PUBLIC-DOMAIN",
-                "url": "https://www.bls.gov/bls/linksite.htm",
-                "attribution": "Source: U.S. Bureau of Labor Statistics."
-              },
-              "record_count": 248,
-              "distinct_period_count": 248,
-              "populated_values": 248,
-              "first_period": "2006-01-01",
-              "last_period": "2026-10-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "bls",
-              "series_code": "us-nfp",
-              "metric_id": "us-nonfarm-payrolls-monthly-change-sa",
-              "source_series_id": "CES0000000001",
-              "source_license": {
-                "id": "US-PUBLIC-DOMAIN",
-                "url": "https://www.bls.gov/bls/linksite.htm",
-                "attribution": "Source: U.S. Bureau of Labor Statistics."
-              },
-              "record_count": 250,
-              "distinct_period_count": 250,
-              "populated_values": 250,
-              "first_period": "2006-01-01",
-              "last_period": "2026-10-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ecb",
-              "series_code": "eu-cpi",
-              "metric_id": "eu-hicp-all-items-yoy-changing-composition-nsa",
-              "source_series_id": "ICP.M.U2.N.000000.4.ANR",
-              "source_license": {
-                "id": "ECB-REUSE",
-                "url": "https://www.ecb.europa.eu/services/using-our-site/disclaimer/html/index.en.html",
-                "attribution": "Source: European Central Bank. Original data are freely available from the ECB; Finance Calendar calculations are identified separately."
-              },
-              "record_count": 240,
-              "distinct_period_count": 240,
-              "populated_values": 240,
-              "first_period": "2006-01-01",
-              "last_period": "2025-12-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "abs",
-              "series_code": "au-employment",
-              "metric_id": "au-employment-monthly-change-sa",
-              "source_series_id": "LF/M3.3.1599.20.AUS.M",
-              "source_license": {
-                "id": "CC-BY-4.0",
-                "url": "https://creativecommons.org/licenses/by/4.0/",
-                "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ons",
-              "series_code": "gb-cpi",
-              "metric_id": "gb-cpi-core-yoy",
-              "source_series_id": "DKO8",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "statcan",
-              "series_code": "ca-gdp",
-              "metric_id": "ca-gdp-monthly-mom-sa",
-              "source_series_id": "65201210",
-              "source_license": {
-                "id": "STATCAN-OPEN",
-                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-              },
-              "record_count": 248,
-              "distinct_period_count": 248,
-              "populated_values": 248,
-              "first_period": "2006-01-01",
-              "last_period": "2026-08-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "bls",
-              "series_code": "us-nfp",
-              "metric_id": "us-average-hourly-earnings-mom-sa",
-              "source_series_id": "CES0500000003",
-              "source_license": {
-                "id": "US-PUBLIC-DOMAIN",
-                "url": "https://www.bls.gov/bls/linksite.htm",
-                "attribution": "Source: U.S. Bureau of Labor Statistics."
-              },
-              "record_count": 247,
-              "distinct_period_count": 247,
-              "populated_values": 247,
-              "first_period": "2006-04-01",
-              "last_period": "2026-10-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ons",
-              "series_code": "gb-cpi",
-              "metric_id": "gb-cpi-all-items-yoy",
-              "source_series_id": "D7G7",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "bls",
-              "series_code": "us-cpi",
-              "metric_id": "us-cpi-core-yoy-nsa",
-              "source_series_id": "CUUR0000SA0L1E",
-              "source_license": {
-                "id": "US-PUBLIC-DOMAIN",
-                "url": "https://www.bls.gov/bls/linksite.htm",
-                "attribution": "Source: U.S. Bureau of Labor Statistics."
-              },
-              "record_count": 248,
-              "distinct_period_count": 248,
-              "populated_values": 248,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "statcan",
-              "series_code": "ca-cpi",
-              "metric_id": "ca-cpi-all-items-yoy-nsa",
-              "source_series_id": "41690973",
-              "source_license": {
-                "id": "STATCAN-OPEN",
-                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ons",
-              "series_code": "gb-gdp",
-              "metric_id": "gb-gdp-monthly-mom-sa",
-              "source_series_id": "ECYX",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "bls",
-              "series_code": "us-cpi",
-              "metric_id": "us-cpi-all-items-yoy-nsa",
-              "source_series_id": "CUUR0000SA0",
-              "source_license": {
-                "id": "US-PUBLIC-DOMAIN",
-                "url": "https://www.bls.gov/bls/linksite.htm",
-                "attribution": "Source: U.S. Bureau of Labor Statistics."
-              },
-              "record_count": 248,
-              "distinct_period_count": 248,
-              "populated_values": 248,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ons",
-              "series_code": "gb-retail-sales",
-              "metric_id": "gb-retail-sales-volume-mom-sa",
-              "source_series_id": "J5EC",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "abs",
-              "series_code": "au-unemployment",
-              "metric_id": "au-unemployment-rate-sa",
-              "source_series_id": "LF/M13.3.1599.20.AUS.M",
-              "source_license": {
-                "id": "CC-BY-4.0",
-                "url": "https://creativecommons.org/licenses/by/4.0/",
-                "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
-              },
-              "record_count": 249,
-              "distinct_period_count": 249,
-              "populated_values": 249,
-              "first_period": "2006-01-01",
-              "last_period": "2026-09-30",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "statcan",
-              "series_code": "ca-unemployment",
-              "metric_id": "ca-unemployment-rate-sa",
-              "source_series_id": "2062815",
-              "source_license": {
-                "id": "STATCAN-OPEN",
-                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-              },
-              "record_count": 250,
-              "distinct_period_count": 250,
-              "populated_values": 250,
-              "first_period": "2006-01-01",
-              "last_period": "2026-10-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "statcan",
-              "series_code": "ca-employment",
-              "metric_id": "ca-employment-monthly-change-sa",
-              "source_series_id": "2062811",
-              "source_license": {
-                "id": "STATCAN-OPEN",
-                "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-                "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-              },
-              "record_count": 250,
-              "distinct_period_count": 250,
-              "populated_values": 250,
-              "first_period": "2006-01-01",
-              "last_period": "2026-10-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "eurostat",
-              "series_code": "eu-cpi",
-              "metric_id": "eu-hicp-all-items-yoy-ea20-coicop1999-nsa",
-              "source_series_id": "prc_hicp_manr:EA20:CP00:RCH_A",
-              "source_license": {
-                "id": "EUROSTAT-REUSE",
-                "url": "https://ec.europa.eu/eurostat/help/copyright-notice",
-                "attribution": "Source: Eurostat. Changes and calculations by Finance Calendar are identified separately."
-              },
-              "record_count": 240,
-              "distinct_period_count": 240,
-              "populated_values": 240,
-              "first_period": "2006-01-01",
-              "last_period": "2025-12-31",
-              "first_release": null,
-              "last_release": null,
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            }
-          ]
-        },
-        "release_metadata": {
-          "endpoint": "/history/releases",
-          "metric_link_count": 402,
-          "metric_count": 4,
-          "unique_release_count": null,
-          "release_dates": {
-            "from": "2017-10-19",
-            "to": "2026-11-12"
-          },
-          "metrics": [
-            {
-              "source_id": "ons",
-              "series_code": "gb-retail-sales",
-              "metric_id": "gb-retail-sales-volume-mom-sa",
-              "source_series_id": "J5EC",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 91,
-              "distinct_period_count": 91,
-              "populated_values": 0,
-              "first_period": "2017-09-01",
-              "last_period": "2026-09-30",
-              "first_release": "2017-10-19",
-              "last_release": "2026-10-23",
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ons",
-              "series_code": "gb-gdp",
-              "metric_id": "gb-gdp-monthly-mom-sa",
-              "source_series_id": "ECYX",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 101,
-              "distinct_period_count": 101,
-              "populated_values": 0,
-              "first_period": "2018-05-01",
-              "last_period": "2026-09-30",
-              "first_release": "2018-07-10",
-              "last_release": "2026-11-12",
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ons",
-              "series_code": "gb-cpi",
-              "metric_id": "gb-cpi-core-yoy",
-              "source_series_id": "DKO8",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 105,
-              "distinct_period_count": 105,
-              "populated_values": 0,
-              "first_period": "2018-01-01",
-              "last_period": "2026-09-30",
-              "first_release": "2018-02-13",
-              "last_release": "2026-10-21",
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            },
-            {
-              "source_id": "ons",
-              "series_code": "gb-cpi",
-              "metric_id": "gb-cpi-all-items-yoy",
-              "source_series_id": "D7G7",
-              "source_license": {
-                "id": "OGL-UK-3.0",
-                "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-              },
-              "record_count": 105,
-              "distinct_period_count": 105,
-              "populated_values": 0,
-              "first_period": "2018-01-01",
-              "last_period": "2026-09-30",
-              "first_release": "2018-02-13",
-              "last_release": "2026-10-21",
-              "gaps": null,
-              "expected_count": null,
-              "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-            }
-          ]
-        },
-        "coverage_endpoint": "/history/coverage",
-        "basis": "current_vintage_official_observations_and_recorded_release_metadata",
-        "original_first_print_archive": false,
-        "historical_pre_release_consensus_archive": false,
-        "as_of_basis": "fc_evidence_commit_observed_bound",
-        "customer_availability_at_cutoff_proven": false
-      },
       "coverage_url": "https://www.financecalendar.com/api/coverage/#history-availability"
     },
-    "official_history_packages": {
-      "starter": {
-        "plan": "starter",
-        "label": "Starter",
-        "lookback_years": 1,
-        "range_basis": "rolling_UTC_calendar_years",
-        "unlimited": false
-      },
-      "build": {
-        "plan": "build",
-        "label": "Build",
-        "lookback_years": 10,
-        "range_basis": "rolling_UTC_calendar_years",
-        "unlimited": false
-      },
-      "scale": {
-        "plan": "scale",
-        "label": "Scale",
-        "lookback_years": null,
-        "range_basis": "rolling_UTC_calendar_years",
-        "unlimited": true
-      }
-    },
-    "data_scope_summary": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. The new official archive includes 1 year with Starter, 10 years with Build and all available history with Scale. Available dates vary by measure. These archive limits are separate from existing release history and curated datasets.",
+    "data_scope_summary": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release.",
     "package_faq": [
       {
         "question": "Is there an ongoing free economic calendar API?",
@@ -9832,7 +10599,7 @@
       },
       {
         "question": "Does Starter include international forecasts and numerical data?",
-        "answer": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. The new official archive includes 1 year with Starter, 10 years with Build and all available history with Scale. Available dates vary by measure. These archive limits are separate from existing release history and curated datasets. These paid capabilities include customer-facing apps within the plan allowances, attribution and applicable source terms."
+        "answer": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. These paid capabilities include customer-facing apps within the plan allowances, attribution and applicable source terms."
       }
     ],
     "plan_comparison": {
@@ -10179,40 +10946,6 @@
           }
         },
         {
-          "id": "official_history",
-          "group": "data",
-          "feature": "Official observation archive",
-          "note": "Plan windows use rolling UTC calendar years. Check each measure’s stored and accessible dates; source coverage varies. Existing release history and curated datasets are separate.",
-          "values": {
-            "free_developer": "No",
-            "starter": "1 year",
-            "build": "10 years",
-            "scale": "All available"
-          },
-          "cells": {
-            "free_developer": {
-              "label": "No",
-              "detail": "",
-              "included": false
-            },
-            "starter": {
-              "label": "1 year",
-              "detail": "",
-              "included": null
-            },
-            "build": {
-              "label": "10 years",
-              "detail": "",
-              "included": null
-            },
-            "scale": {
-              "label": "All available",
-              "detail": "",
-              "included": null
-            }
-          }
-        },
-        {
           "id": "changes",
           "group": "tools",
           "feature": "Change feed and webhooks",
@@ -10438,7 +11171,7 @@
   },
   "x-history-coverage": {
     "available": true,
-    "snapshot_generated_at": "2026-11-14T15:40:56+00:00",
+    "snapshot_generated_at": "2026-11-14T14:41:01+00:00",
     "release_event_history": {
       "endpoint": "/history?series={code}",
       "basis": "elapsed_release_records_in_current_snapshot",
@@ -10498,564 +11231,6 @@
       "cutoff_endpoint": "/enrichment/as-of",
       "basis": "accepted_recorded_editions_only",
       "original_first_print_archive": false
-    },
-    "official_archive": {
-      "available": true,
-      "archive_revision": 25,
-      "observations": {
-        "endpoint": "/history/observations",
-        "record_count": 5074,
-        "metric_count": 21,
-        "reference_periods": {
-          "from": "2006-01-01",
-          "to": "2026-10-31"
-        },
-        "metrics": [
-          {
-            "source_id": "bls",
-            "series_code": "us-unemployment",
-            "metric_id": "us-unemployment-rate-sa",
-            "source_series_id": "LNS14000000",
-            "source_license": {
-              "id": "US-PUBLIC-DOMAIN",
-              "url": "https://www.bls.gov/bls/linksite.htm",
-              "attribution": "Source: U.S. Bureau of Labor Statistics."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-10-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "statcan",
-            "series_code": "ca-retail-sales",
-            "metric_id": "ca-retail-sales-mom-sa",
-            "source_series_id": "1446859483",
-            "source_license": {
-              "id": "STATCAN-OPEN",
-              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-            },
-            "record_count": 115,
-            "distinct_period_count": 115,
-            "populated_values": 115,
-            "first_period": "2017-02-01",
-            "last_period": "2026-08-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "bls",
-            "series_code": "us-cpi",
-            "metric_id": "us-cpi-all-items-index-nsa",
-            "source_series_id": "CUUR0000SA0",
-            "source_license": {
-              "id": "US-PUBLIC-DOMAIN",
-              "url": "https://www.bls.gov/bls/linksite.htm",
-              "attribution": "Source: U.S. Bureau of Labor Statistics."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-10-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "statcan",
-            "series_code": "ca-cpi",
-            "metric_id": "ca-cpi-all-items-mom-nsa",
-            "source_series_id": "41690973",
-            "source_license": {
-              "id": "STATCAN-OPEN",
-              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "bls",
-            "series_code": "us-cpi",
-            "metric_id": "us-cpi-all-items-mom-sa",
-            "source_series_id": "CUSR0000SA0",
-            "source_license": {
-              "id": "US-PUBLIC-DOMAIN",
-              "url": "https://www.bls.gov/bls/linksite.htm",
-              "attribution": "Source: U.S. Bureau of Labor Statistics."
-            },
-            "record_count": 248,
-            "distinct_period_count": 248,
-            "populated_values": 248,
-            "first_period": "2006-01-01",
-            "last_period": "2026-10-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "bls",
-            "series_code": "us-nfp",
-            "metric_id": "us-nonfarm-payrolls-monthly-change-sa",
-            "source_series_id": "CES0000000001",
-            "source_license": {
-              "id": "US-PUBLIC-DOMAIN",
-              "url": "https://www.bls.gov/bls/linksite.htm",
-              "attribution": "Source: U.S. Bureau of Labor Statistics."
-            },
-            "record_count": 250,
-            "distinct_period_count": 250,
-            "populated_values": 250,
-            "first_period": "2006-01-01",
-            "last_period": "2026-10-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ecb",
-            "series_code": "eu-cpi",
-            "metric_id": "eu-hicp-all-items-yoy-changing-composition-nsa",
-            "source_series_id": "ICP.M.U2.N.000000.4.ANR",
-            "source_license": {
-              "id": "ECB-REUSE",
-              "url": "https://www.ecb.europa.eu/services/using-our-site/disclaimer/html/index.en.html",
-              "attribution": "Source: European Central Bank. Original data are freely available from the ECB; Finance Calendar calculations are identified separately."
-            },
-            "record_count": 240,
-            "distinct_period_count": 240,
-            "populated_values": 240,
-            "first_period": "2006-01-01",
-            "last_period": "2025-12-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "abs",
-            "series_code": "au-employment",
-            "metric_id": "au-employment-monthly-change-sa",
-            "source_series_id": "LF/M3.3.1599.20.AUS.M",
-            "source_license": {
-              "id": "CC-BY-4.0",
-              "url": "https://creativecommons.org/licenses/by/4.0/",
-              "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ons",
-            "series_code": "gb-cpi",
-            "metric_id": "gb-cpi-core-yoy",
-            "source_series_id": "DKO8",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "statcan",
-            "series_code": "ca-gdp",
-            "metric_id": "ca-gdp-monthly-mom-sa",
-            "source_series_id": "65201210",
-            "source_license": {
-              "id": "STATCAN-OPEN",
-              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-            },
-            "record_count": 248,
-            "distinct_period_count": 248,
-            "populated_values": 248,
-            "first_period": "2006-01-01",
-            "last_period": "2026-08-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "bls",
-            "series_code": "us-nfp",
-            "metric_id": "us-average-hourly-earnings-mom-sa",
-            "source_series_id": "CES0500000003",
-            "source_license": {
-              "id": "US-PUBLIC-DOMAIN",
-              "url": "https://www.bls.gov/bls/linksite.htm",
-              "attribution": "Source: U.S. Bureau of Labor Statistics."
-            },
-            "record_count": 247,
-            "distinct_period_count": 247,
-            "populated_values": 247,
-            "first_period": "2006-04-01",
-            "last_period": "2026-10-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ons",
-            "series_code": "gb-cpi",
-            "metric_id": "gb-cpi-all-items-yoy",
-            "source_series_id": "D7G7",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "bls",
-            "series_code": "us-cpi",
-            "metric_id": "us-cpi-core-yoy-nsa",
-            "source_series_id": "CUUR0000SA0L1E",
-            "source_license": {
-              "id": "US-PUBLIC-DOMAIN",
-              "url": "https://www.bls.gov/bls/linksite.htm",
-              "attribution": "Source: U.S. Bureau of Labor Statistics."
-            },
-            "record_count": 248,
-            "distinct_period_count": 248,
-            "populated_values": 248,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "statcan",
-            "series_code": "ca-cpi",
-            "metric_id": "ca-cpi-all-items-yoy-nsa",
-            "source_series_id": "41690973",
-            "source_license": {
-              "id": "STATCAN-OPEN",
-              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ons",
-            "series_code": "gb-gdp",
-            "metric_id": "gb-gdp-monthly-mom-sa",
-            "source_series_id": "ECYX",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "bls",
-            "series_code": "us-cpi",
-            "metric_id": "us-cpi-all-items-yoy-nsa",
-            "source_series_id": "CUUR0000SA0",
-            "source_license": {
-              "id": "US-PUBLIC-DOMAIN",
-              "url": "https://www.bls.gov/bls/linksite.htm",
-              "attribution": "Source: U.S. Bureau of Labor Statistics."
-            },
-            "record_count": 248,
-            "distinct_period_count": 248,
-            "populated_values": 248,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ons",
-            "series_code": "gb-retail-sales",
-            "metric_id": "gb-retail-sales-volume-mom-sa",
-            "source_series_id": "J5EC",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "abs",
-            "series_code": "au-unemployment",
-            "metric_id": "au-unemployment-rate-sa",
-            "source_series_id": "LF/M13.3.1599.20.AUS.M",
-            "source_license": {
-              "id": "CC-BY-4.0",
-              "url": "https://creativecommons.org/licenses/by/4.0/",
-              "attribution": "Source: Australian Bureau of Statistics. Licensed under CC BY 4.0. Changes by Finance Calendar are identified separately."
-            },
-            "record_count": 249,
-            "distinct_period_count": 249,
-            "populated_values": 249,
-            "first_period": "2006-01-01",
-            "last_period": "2026-09-30",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "statcan",
-            "series_code": "ca-unemployment",
-            "metric_id": "ca-unemployment-rate-sa",
-            "source_series_id": "2062815",
-            "source_license": {
-              "id": "STATCAN-OPEN",
-              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-            },
-            "record_count": 250,
-            "distinct_period_count": 250,
-            "populated_values": 250,
-            "first_period": "2006-01-01",
-            "last_period": "2026-10-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "statcan",
-            "series_code": "ca-employment",
-            "metric_id": "ca-employment-monthly-change-sa",
-            "source_series_id": "2062811",
-            "source_license": {
-              "id": "STATCAN-OPEN",
-              "url": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
-              "attribution": "Source: Statistics Canada. Reproduced and distributed on an as is basis with the permission of Statistics Canada; adaptations by Finance Calendar are identified separately."
-            },
-            "record_count": 250,
-            "distinct_period_count": 250,
-            "populated_values": 250,
-            "first_period": "2006-01-01",
-            "last_period": "2026-10-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "eurostat",
-            "series_code": "eu-cpi",
-            "metric_id": "eu-hicp-all-items-yoy-ea20-coicop1999-nsa",
-            "source_series_id": "prc_hicp_manr:EA20:CP00:RCH_A",
-            "source_license": {
-              "id": "EUROSTAT-REUSE",
-              "url": "https://ec.europa.eu/eurostat/help/copyright-notice",
-              "attribution": "Source: Eurostat. Changes and calculations by Finance Calendar are identified separately."
-            },
-            "record_count": 240,
-            "distinct_period_count": 240,
-            "populated_values": 240,
-            "first_period": "2006-01-01",
-            "last_period": "2025-12-31",
-            "first_release": null,
-            "last_release": null,
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          }
-        ]
-      },
-      "release_metadata": {
-        "endpoint": "/history/releases",
-        "metric_link_count": 402,
-        "metric_count": 4,
-        "unique_release_count": null,
-        "release_dates": {
-          "from": "2017-10-19",
-          "to": "2026-11-12"
-        },
-        "metrics": [
-          {
-            "source_id": "ons",
-            "series_code": "gb-retail-sales",
-            "metric_id": "gb-retail-sales-volume-mom-sa",
-            "source_series_id": "J5EC",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 91,
-            "distinct_period_count": 91,
-            "populated_values": 0,
-            "first_period": "2017-09-01",
-            "last_period": "2026-09-30",
-            "first_release": "2017-10-19",
-            "last_release": "2026-10-23",
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ons",
-            "series_code": "gb-gdp",
-            "metric_id": "gb-gdp-monthly-mom-sa",
-            "source_series_id": "ECYX",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 101,
-            "distinct_period_count": 101,
-            "populated_values": 0,
-            "first_period": "2018-05-01",
-            "last_period": "2026-09-30",
-            "first_release": "2018-07-10",
-            "last_release": "2026-11-12",
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ons",
-            "series_code": "gb-cpi",
-            "metric_id": "gb-cpi-core-yoy",
-            "source_series_id": "DKO8",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 105,
-            "distinct_period_count": 105,
-            "populated_values": 0,
-            "first_period": "2018-01-01",
-            "last_period": "2026-09-30",
-            "first_release": "2018-02-13",
-            "last_release": "2026-10-21",
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          },
-          {
-            "source_id": "ons",
-            "series_code": "gb-cpi",
-            "metric_id": "gb-cpi-all-items-yoy",
-            "source_series_id": "D7G7",
-            "source_license": {
-              "id": "OGL-UK-3.0",
-              "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-              "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0."
-            },
-            "record_count": 105,
-            "distinct_period_count": 105,
-            "populated_values": 0,
-            "first_period": "2018-01-01",
-            "last_period": "2026-09-30",
-            "first_release": "2018-02-13",
-            "last_release": "2026-10-21",
-            "gaps": null,
-            "expected_count": null,
-            "gap_measurement_basis": "No authoritative complete release inventory or expected cadence has been asserted."
-          }
-        ]
-      },
-      "coverage_endpoint": "/history/coverage",
-      "basis": "current_vintage_official_observations_and_recorded_release_metadata",
-      "original_first_print_archive": false,
-      "historical_pre_release_consensus_archive": false,
-      "as_of_basis": "fc_evidence_commit_observed_bound",
-      "customer_availability_at_cutoff_proven": false
     },
     "coverage_url": "https://www.financecalendar.com/api/coverage/#history-availability"
   },

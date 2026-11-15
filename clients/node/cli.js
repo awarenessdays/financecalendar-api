@@ -22,6 +22,12 @@ Usage:
   financecalendar history-coverage [--source-id ID] [--series-code CODE] [--metric-id ID] [--kind observations|releases]
                             [--limit 100] [--cursor TOKEN] [--all]
                             archive commands always return JSON; --all prints only a complete pinned traversal
+  financecalendar historic-editions --metric-id ID [--from YYYY-MM-DD] [--to YYYY-MM-DD]
+  financecalendar historic-forecasts --metric-id ID [--from YYYY-MM-DD] [--to YYYY-MM-DD]
+                            source edition filters use publication day; plan access also checks reference-period start
+                            forecast filters/access use issue-period start, not target date
+                            [--as-of UTC] [--available-before UTC] [--all] (unknown exact clocks excluded)
+  financecalendar vintage-coverage [--kind editions|forecasts] [--source-id ID] [--all]
   financecalendar results <series> [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--limit 20] [--offset 0]
   financecalendar editions <event_id> [--limit 20] [--offset 0]
                             [--ledger-cursor N --publication-revision N] (both for offset > 0)
@@ -84,8 +90,9 @@ function enrichmentParams(cmd, rest, flags) {
 }
 
 function archiveParams(cmd, rest, flags) {
-  const coverage = cmd === "history-coverage";
-  const allowed = new Set(["metric-id", "series-code", "source-id", "limit", "cursor", "json", "all", ...(coverage ? ["kind"] : ["from", "to", "order", "as-of"])]);
+  const coverage = ["history-coverage", "vintage-coverage"].includes(cmd);
+  const vintage = cmd.startsWith("historic-") || cmd === "vintage-coverage";
+  const allowed = new Set(["metric-id", "series-code", "source-id", "limit", "cursor", "json", "all", ...(coverage ? ["kind"] : ["from", "to", "order", "as-of", ...(vintage ? ["available-before"] : [])])]);
   if (rest.length) throw new Error(`${cmd} uses --metric-id or --series-code, not positional arguments.`);
   for (const flag of Object.keys(flags)) if (!allowed.has(flag)) throw new Error(`${cmd} does not support --${flag}.`);
   if (!coverage && !flags["metric-id"] && !flags["series-code"]) throw new Error(`${cmd} needs --metric-id ID or --series-code CODE.`);
@@ -97,7 +104,7 @@ function archiveParams(cmd, rest, flags) {
   }
   if (params.limit !== undefined && (!/^[1-9]\d{0,2}$/.test(params.limit) || Number(params.limit) > 500)) throw new Error("Archive --limit must be from 1 to 500.");
   if (params.order !== undefined && !["asc", "desc"].includes(params.order)) throw new Error("Archive --order must be asc or desc.");
-  if (params.kind !== undefined && !["observations", "releases"].includes(params.kind)) throw new Error("Coverage --kind must be observations or releases.");
+  if (params.kind !== undefined && !(vintage ? ["editions", "forecasts"] : ["observations", "releases"]).includes(params.kind)) throw new Error(vintage ? "Coverage --kind must be editions or forecasts." : "Coverage --kind must be observations or releases.");
   return params;
 }
 
@@ -181,8 +188,11 @@ export async function main(argv, out = console.log) {
     }
     case "archive-observations":
     case "archive-releases":
-    case "history-coverage": {
-      const kind = cmd === "history-coverage" ? "coverage" : cmd.slice("archive-".length);
+    case "history-coverage":
+    case "historic-editions":
+    case "historic-forecasts":
+    case "vintage-coverage": {
+      const kind = cmd === "history-coverage" ? "coverage" : cmd === "vintage-coverage" ? "vintage-coverage" : cmd.replace(/^(archive|historic)-/, "");
       const params = archiveParams(cmd, rest, flags);
       json(await (flags.all ? collectArchive : archivePage)(kind, params));
       return 0;

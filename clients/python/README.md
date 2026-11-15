@@ -22,10 +22,10 @@ Use your real key and keep it private; never include it in a shared notebook or 
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-history-2026-11-14). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-vintages-2026-11-15). Use the direct package URL in your chosen environment:
 
 ```sh
-python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-history-2026-11-14/financecalendar-0.1.4-py3-none-any.whl
+python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-vintages-2026-11-15/financecalendar-0.1.5-py3-none-any.whl
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
@@ -389,3 +389,38 @@ original market availability. Check `history-coverage` for actual stored depth;
 these clients do not promise twenty years for every metric.
 
 For a Scale key and a measure with stored coverage extending that far, an explicit long-range request can use `--from 2006-01-01`. Check `accessible_range` first; available depth is measure-specific. Scale history uses the same paged JSON retrieval.
+
+## Dated source editions and historical survey forecasts
+
+Explore numerical values in named source editions with `/history/editions` and typed public survey aggregates with `/history/forecasts`. Start with `/history/vintage-coverage` to inspect each exact metric’s stored scope and your key’s `accessible_range`. **Starter includes one year, Build ten years, and Scale all available history**; omit date bounds to use your plan window. Depth varies by metric/source. Free Developer excludes these routes; existing legacy routes and agreements keep their established access.
+
+Edition `from`/`to` filters use publication day; edition access also requires the measured reference-period start inside the plan window. A newly published edition does not grant older measured periods beyond your plan. Forecast filters use `issue_period_start`, an ordering index; `reference_period` describes the separate target. Preserve `forecast_type`, aggregation, target definition, native horizon, exact decimal strings, nulls, units, scale and source credits. Published survey aggregates are distinct from event-matched market consensus and FC blends. Historical survey databases may contain publisher corrections; they are not automatically unchanged original archived issues. Inspect `first_print_status`, `first_print_rule_id`, native stage and correction status for source editions.
+
+`as_of` replays Finance Calendar’s durable receipt versions. `available_before` is a separate strict source-public-availability cutoff: provide exact UTC seconds ending in `Z`; unknown, date-only and coarse issue clocks are excluded. A valid query may return no rows. These source cutoffs test the selected FC capture version and do not silently fall back to a different earlier capture. Future/coarse/naive cutoffs are rejected. Follow `next_cursor` with the same original filters and limit; on 409 restart and discard partial results.
+```python
+from financecalendar import Client
+
+with Client() as calendar:
+    scopes = list(calendar.iter_vintage_coverage(kind="forecasts"))
+    metric = next((scope["metric_id"] for scope in scopes
+                   if (scope.get("accessible_range") or {}).get("from")), None)
+    if metric is None:
+        raise ValueError("No survey forecasts in this plan window")
+    forecasts = list(calendar.iter_archive_forecasts(metric_id=metric, limit=100))
+    editions = list(calendar.iter_archive_editions(
+        metric_id="us-gdp-real-qoq-saar", limit=100,
+    ))
+
+# Use an export only after iteration finishes successfully.
+for forecast in forecasts:
+    print(forecast["issue_period"], forecast["reference_period"], forecast["value"])
+    print(forecast["source_license"]["attribution"])
+```
+
+One-page methods are `archive_editions()`, `archive_forecasts()` and `vintage_coverage()`; complete iterators are `iter_archive_editions()`, `iter_archive_forecasts()` and `iter_vintage_coverage()`. `iter_archive(kind="editions"|"forecasts", ...)` is also supported. A later error makes previously yielded rows partial: buffer or commit only after success. API values remain exact strings/nulls; use `Decimal` explicitly for calculations.
+
+```sh
+financecalendar vintage-coverage --kind forecasts --all
+financecalendar historic-editions --metric-id us-gdp-real-qoq-saar --all
+financecalendar historic-forecasts --metric-id eu-spf-hicp-annual-mean-p12m --all
+```

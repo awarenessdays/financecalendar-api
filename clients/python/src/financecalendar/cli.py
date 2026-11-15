@@ -286,7 +286,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--to")
     s.add_argument("--limit", type=int)
 
-    for command, label in (("archive-observations", "reference-period start"), ("archive-releases", "publisher publication"), ("history-coverage", None)):
+    for command, label in (("archive-observations", "reference-period start"), ("archive-releases", "publisher publication"), ("history-coverage", None), ("historic-editions", "source-edition publication"), ("historic-forecasts", "forecast issue-period start index"), ("vintage-coverage", None)):
         s = sub.add_parser(command, help="historical archive JSON by " + label + " date" if label else "measured historical coverage JSON")
         s.add_argument("--metric-id", help="exact reviewed metric ID")
         s.add_argument("--series-code", help="exact public series code")
@@ -299,8 +299,10 @@ def build_parser() -> argparse.ArgumentParser:
             s.add_argument("--to", help=f"inclusive {label} date YYYY-MM-DD")
             s.add_argument("--order", choices=["asc", "desc"])
             s.add_argument("--as-of", help="FC durable-evidence receipt cutoff in UTC, not original market availability")
+            if command in {"historic-editions", "historic-forecasts"}:
+                s.add_argument("--available-before", help="strict exact UTC source-availability cutoff; excludes unknown/date-only clocks")
         else:
-            s.add_argument("--kind", choices=["observations", "releases"])
+            s.add_argument("--kind", choices=["editions", "forecasts"] if command == "vintage-coverage" else ["observations", "releases"])
 
     s = sub.add_parser("holidays", help="exchange holidays")
     s.add_argument("exchange", nargs="?", default="nyse")
@@ -383,12 +385,12 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
     if cmd == "history":
         data = client.history(args.series, from_=args.from_, to=args.to, limit=args.limit, asset=args.asset, tz=tz)
         return _emit(args, out, data, lambda: f"{data.get('series_code') or args.series}: {data['count']} releases, {data['from']} to {data['to']}\n\n" + (fmt(data["events"]) if data.get("events") else "No past releases in that range."))
-    if cmd in {"archive-observations", "archive-releases", "history-coverage"}:
+    if cmd in {"archive-observations", "archive-releases", "history-coverage", "historic-editions", "historic-forecasts", "vintage-coverage"}:
         if not 1 <= args.limit <= 500:
             raise ValueError("Archive --limit must be from 1 to 500")
         if args.tz is not None:
             raise ValueError("Archive date filters retain their documented basis; --tz is not supported")
-        coverage = cmd == "history-coverage"
+        coverage = cmd in {"history-coverage", "vintage-coverage"}
         if not coverage and not (args.metric_id or args.series_code):
             raise ValueError(f"{cmd} needs --metric-id ID or --series-code CODE")
         if args.all and args.cursor:
@@ -396,10 +398,13 @@ def run(args: argparse.Namespace, client: Client, out: Callable[[str], None]) ->
         params = dict(metric_id=args.metric_id, series_code=args.series_code, source_id=args.source_id, limit=args.limit, cursor=args.cursor)
         if coverage:
             params["kind"] = args.kind
-            read = client.history_coverage
+            read = client.vintage_coverage if cmd == "vintage-coverage" else client.history_coverage
         else:
             params.update(from_=args.from_, to=args.to, order=args.order, as_of=args.as_of)
-            read = client.archive_observations if cmd == "archive-observations" else client.archive_releases
+            if cmd in {"historic-editions", "historic-forecasts"}:
+                params["available_before"] = args.available_before
+            read = {"archive-observations": client.archive_observations, "archive-releases": client.archive_releases,
+                    "historic-editions": client.archive_editions, "historic-forecasts": client.archive_forecasts}[cmd]
         out(json.dumps(_archive_output(read, params, complete=args.all), indent=2))
         return 0
     if cmd == "holidays":
