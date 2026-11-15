@@ -19,7 +19,7 @@ Replace placeholder dates with explicit requested dates, within 92 days per wind
 
 For change polling, retain the original `since` checkpoint until all pages complete. Follow `next_cursor` without changing bound filters or resending conflicting defaults. A snapshot-change HTTP 409 means restart that checkpoint and deduplicate consumed changes. Advance the checkpoint only after the complete interval is processed.
 
-[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-free-developer-2026-11-12) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
+[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-history-2026-11-14) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
 
 ```sh
 financecalendar next in-cpi --json
@@ -33,3 +33,34 @@ Hosted MCP uses OAuth account linking and the read-only `calendar:read` scope. T
 OAuth data calls and API keys share the linked account's existing allowance. Initialization, ping and discovery authenticate without data quota. Check actual usage and rate-limit responses for effective limits; account entitlement, including any retained grant, is authoritative. Free Developer supports separate constrained schedule REST calls and excludes hosted MCP. Public OpenAPI, product-offer and fixed sample inspection are separate resources, not a grant of production data access.
 
 Do not promote a plan, initiate a subscription, quote subscription prices or link checkout from the assistant experience. If a requested entitlement is unavailable, state that fact and continue with permitted capabilities. Respect reset times rather than repeated retries. Recorded series availability does not establish guaranteed latency or universal coverage.
+
+## Historical archive
+
+Start with authenticated `/history/coverage`; inspect actual counts, populated
+values, first/last periods and access metadata. The new archive grants Starter
+one year, Build ten years and Scale all available history. Omit date bounds for
+the permitted default; explicit bounds must fit the returned plan window.
+Legacy `/history`, curated datasets and explicit prior licences are separate. Choose an exact metric, not a guessed release
+family. Historical observations are separate from dated publication records:
+
+```sh
+financecalendar history-coverage --source-id ons --all
+financecalendar archive-observations --metric-id gb-cpi-all-items-yoy --limit 100 --all
+financecalendar archive-releases --metric-id gb-gdp-monthly-mom-sa --limit 100 --all
+```
+
+Python `Client.iter_history_coverage()` and `Client.iter_archive()` traverse all
+pages. CLI `--all` buffers a complete consistent traversal before printing.
+For individual REST/local MCP pages, repeat the original filters and limit with
+`next_cursor`; a changed revision returns 409 and requires a fresh traversal.
+Local archive MCP tools default to 20 records, maximum 50, and preserve whole
+pages. They do not loop or trim them. These three tools are not in the hosted
+catalogue, which retains its established fourteen tools.
+
+Observation `from`/`to` bounds use measured period-start dates; release bounds use
+publisher publication dates. Preserve strings/nulls, units, exact derivations
+and source attribution. Initial current-vintage data is not a complete original
+print or historical consensus archive. `as_of` selects FC's durable evidence
+receipt bound (`fc_evidence_commit_observed_bound`), not past market availability.
+Source capture, publication and vintage precision have separate meanings.
+See the [maintained history guide](https://github.com/awarenessdays/financecalendar-api/blob/main/docs/history.md).

@@ -1,6 +1,6 @@
 ---
 name: financecalendar
-description: Use Finance Calendar to find scheduled economic releases, central-bank decisions, exchange holidays and covered crypto events, or build calendar integrations with its API, MCP tools, SDKs and CLI. Use for financial-event dates and source-backed release data, not personal calendar management.
+description: Use Finance Calendar to find scheduled economic releases, central-bank decisions, exchange holidays, covered crypto events and historical economic observations, or build calendar integrations with its API, MCP tools, SDKs and CLI. Use for financial-event dates and source-backed release data, not personal calendar management.
 license: MIT
 ---
 
@@ -32,6 +32,26 @@ If an answer depends on a missing or unverified field, state that limitation wit
 Inspect `count`, `total`, continuation and truncation metadata. The hosted MCP server returns at most 50 rows per call, with lower defaults and bounded overview arrays. Recover partial week/today/series results with `calendar` using the returned dates and filters, then `limit`/`offset`. Local MCP and REST limits differ. A single `history` call is not an exhaustive export.
 
 Paid REST calendar windows are at most 92 days. For larger exports, chunk the requested dates, paginate every chunk, and deduplicate stable event IDs. Preserve full unknown/range timing and nested provenance when exporting JSON/CSV; human CLI output is a summary. Respect rate-limit errors and `Retry-After` instead of repeatedly retrying. The complete snapshot download remains subject to the connected account's existing entitlement; do not imply that installing this plugin grants it.
+
+## Research historical data
+
+For long-run observations or past publications, discover actual stored depth
+with `/history/coverage` before choosing dates. New-archive windows are one year
+on Starter, ten years on Build and all available history on Scale; explicit
+prior licences and legacy history/curated access remain separate. Use the
+returned access scope and omit date bounds for the authorized default window.
+Use `/history/observations` by
+measured reference-period start, or `/history/releases` by publication date.
+The local stdio tools `history_coverage`, `historic_observations` and
+`historic_releases` are available in client 0.2.4; the hosted catalogue is
+unchanged. If they are absent, use authenticated REST or the Python/CLI archive
+methods described in [the history recipes](references/api.md#historical-archive).
+
+Keep exact decimal strings, derived-input evidence and nulls. Follow every
+`next_cursor` with unchanged filters and limit. A 409 invalidates the partial
+export; restart rather than reporting it complete. Current-vintage backfills
+do not establish original prints or old market forecasts. `as_of` uses FC's
+durable evidence receipt bound; it cannot make a new import known years ago.
 
 ## Build an integration
 

@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-const TOOLS = ["next_event", "calendar", "today", "week", "series_list", "series_detail", "history", "economic_results_history", "release_editions", "market_holidays", "market_status", "changes", "countries"];
+const TOOLS = ["next_event", "calendar", "today", "week", "series_list", "series_detail", "history", "historic_observations", "historic_releases", "history_coverage", "economic_results_history", "release_editions", "market_holidays", "market_status", "changes", "countries"];
 
 /** Minimal JSON-RPC client over the server's stdio. */
 function startServer(apiKey="fc_live_0123456789abcdef0123456789abcdef") {
@@ -42,7 +42,7 @@ async function initialised(apiKey) {
   const s = startServer(apiKey);
   const init = await s.send("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "0" } });
   assert.equal(init.result.serverInfo.name, "financecalendar");
-  assert.equal(init.result.serverInfo.version, "0.2.3");
+  assert.equal(init.result.serverInfo.version, "0.2.4");
   await s.send("notifications/initialized", {}, true);
   return s;
 }
@@ -52,13 +52,13 @@ describe("MCP server over stdio", () => {
     const server=await initialised("");
     try {const response=await server.send("tools/call",{name:"countries",arguments:{}});assert.equal(response.result.isError,true);assert.match(response.result.content[0].text,/HTTP 401/);assert.match(response.result.content[0].text,/FC_API_KEY/);assert.match(response.result.content[0].text,/account\//);}finally{server.stop();}
   });
-  test("initialize + tools/list exposes the 13 tools with schemas", async () => {
+  test("initialize + tools/list exposes the 16 local tools with schemas", async () => {
     const s = await initialised();
     try {
       const res = await s.send("tools/list", {});
       const names = res.result.tools.map((t) => t.name).sort();
       assert.deepEqual(names, [...TOOLS].sort());
-      assert.equal(res.result.tools.length, 13);
+      assert.equal(res.result.tools.length, 16);
       for (const t of res.result.tools) {
         assert.ok(t.description && t.description.length > 30, `${t.name} needs a description`);
         assert.equal(t.inputSchema.type, "object");
@@ -147,6 +147,38 @@ describe("MCP server over stdio", () => {
       const second = await s.send("tools/call", { name: "changes", arguments: { cursor: first.result.structuredContent.next_cursor } });
       assert.equal(second.result.structuredContent.has_more, false);
       assert.equal(second.result.structuredContent.count, 0);
+    } finally { s.stop(); }
+  });
+
+  test("historical tools return one intact bounded page and preserve archive continuation", async () => {
+    const s = await initialised();
+    try {
+      const listed = await s.send("tools/list", {});
+      for (const name of ["historic_observations", "historic_releases", "history_coverage"]) {
+        const schema = listed.result.tools.find((tool) => tool.name === name).inputSchema;
+        assert.equal(schema.additionalProperties, false);
+        assert.equal(schema.properties.limit.default, 20);
+        assert.equal(schema.properties.limit.maximum, 50);
+        const first = await s.send("tools/call", { name, arguments: { metric_id: "gb-cpi-all-items-yoy" } });
+        assert.notEqual(first.result.isError, true, JSON.stringify(first));
+        const body = first.result.structuredContent;
+        assert.equal(body.count, 20);
+        assert.equal(body.rows.length, 20);
+        assert.equal(body.next_cursor, "archive-page-20");
+        assert.equal(body.filters.limit, "20");
+        assert.equal(body.rows[0].value, name === "historic_releases" ? null : "0");
+        assert.equal(body.rows[0].release_at_utc, null);
+        assert.deepEqual(JSON.parse(first.result.content[0].text), body);
+        const second = await s.send("tools/call", { name, arguments: { metric_id: "gb-cpi-all-items-yoy", cursor: body.next_cursor } });
+        assert.equal(second.result.structuredContent.rows[0].id, "synthetic-archive-20");
+        assert.equal(second.result.structuredContent.archive_revision, body.archive_revision);
+        const bad = await s.send("tools/call", { name, arguments: { metric_id: "gb-cpi-all-items-yoy", limit: 51 } });
+        assert.ok(bad.error?.code === -32602 || bad.result?.isError);
+      }
+      const missing = await s.send("tools/call", { name: "historic_observations", arguments: {} });
+      assert.ok(missing.error?.code === -32602 || missing.result?.isError);
+      const unsupported = await s.send("tools/call", { name: "history_coverage", arguments: { from: "2006-01-01" } });
+      assert.ok(unsupported.error?.code === -32602 || unsupported.result?.isError);
     } finally { s.stop(); }
   });
 

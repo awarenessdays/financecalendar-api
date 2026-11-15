@@ -3,7 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { api, baseUrl, VERSION } from "./lib.js";
+import { api, archivePage, baseUrl, VERSION } from "./lib.js";
 
 const server = new McpServer({ name: "financecalendar", version: VERSION });
 
@@ -113,6 +113,43 @@ server.registerTool("history", {
     tz,
   },
 }, run((args) => api("/history", args)));
+
+const archiveId = (description) => z.string().min(1).max(200).regex(/^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$/).optional().describe(description);
+const archiveCommon = {
+  metric_id: archiveId("Exact reviewed metric ID; discover populated metrics with history_coverage."),
+  series_code: archiveId("Exact series code, for example gb-cpi. Supply metric_id or series_code."),
+  source_id: archiveId("Optional original-source identifier."),
+  limit: z.number().int().min(1).max(50).default(20).describe("One page only: 1 to 50 rows, default 20. Follow next_cursor with the SAME original filters and limit."),
+  cursor: z.string().min(1).max(2048).optional().describe("Opaque archive continuation. Repeat the original filters and limit. On HTTP 409 restart from page one and discard prior partial output."),
+};
+const archiveSchema = (period) => z.strictObject({
+  ...archiveCommon,
+  from: date(`Inclusive ${period} date YYYY-MM-DD.`),
+  to: date(`Inclusive ${period} date YYYY-MM-DD.`),
+  order: z.enum(["asc", "desc"]).optional(),
+  as_of: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/).optional().describe("FC durable-evidence receipt bound in UTC, not historical market availability or an original-print selector."),
+}).refine((args) => args.metric_id || args.series_code, { message: "Supply metric_id or series_code." });
+
+server.registerTool("historic_observations", {
+  title: "Historical economic observations",
+  description: "One complete page of archived economic observations, filtered by measured reference-period START dates. Values retain exact decimals, source evidence, vintage and FC receipt metadata. This is distinct from release-date history; current-vintage backfills do not establish original prints or historical market knowledge. Follow next_cursor unchanged with the same filters and limit; a 409 requires restarting. Never infer missing release clocks or consensus.",
+  annotations: readOnly,
+  inputSchema: archiveSchema("reference-period start"),
+}, run((args) => archivePage("observations", args)));
+
+server.registerTool("historic_releases", {
+  title: "Historical release occurrences",
+  description: "One complete page of evidenced historical release occurrences, filtered by publisher publication dates. A null value or UTC clock remains unknown; do not attach today's revised observations to an old release. Inspect source evidence, time precision and FC receipt basis. Follow next_cursor with the same original filters and limit; on 409 discard partial output and restart. This tool never loops or truncates a returned page.",
+  annotations: readOnly,
+  inputSchema: archiveSchema("publisher publication"),
+}, run((args) => archivePage("releases", args)));
+
+server.registerTool("history_coverage", {
+  title: "Historical coverage by metric",
+  description: "One complete page of measured historical coverage, by source, series, metric and observations/releases kind. Inspect actual earliest/latest periods, release dates and populated values before requesting history. Null expected counts and gaps mean no authoritative denominator was asserted. Follow next_cursor with identical filters and limit; a 409 requires restarting. Does not claim universal ten- or twenty-year coverage.",
+  annotations: readOnly,
+  inputSchema: z.strictObject({ ...archiveCommon, kind: z.enum(["observations", "releases"]).optional() }),
+}, run((args) => archivePage("coverage", args)));
 
 const resultSeries = z.enum(["us-jolts", "us-adp", "us-ism-services", "us-trade-balance", "us-cpi", "us-nfp", "us-ppi", "us-retail-sales", "us-pce", "us-ism-manufacturing", "us-industrial-production", "us-consumer-confidence"])
   .describe("Twelve supported US headline series. Published evidence varies by series, provider qualification and server activation; inspect returned values and provenance.");

@@ -136,7 +136,14 @@ a subscription or change the user's plan. Do not infer a missing release or figu
 def claude_sources(root=ROOT):
     """Derive the seven-file Claude directory; no examples or runtime scripts."""
     skill = (root/'skills/financecalendar/SKILL.md').read_text()
-    skill = skill.split('## Build an integration', 1)[0].rstrip()
+    # Keep the hosted directory skill within the published MCP capabilities.
+    # Portable/local archive recipes are maintained separately and can grow.
+    sections = re.split(r'(?m)(?=^## )', skill)
+    hosted_sections = {'Find and explain events', 'Retrieve complete results'}
+    selected = [part for part in sections[1:]
+                if part.splitlines()[0].removeprefix('## ') in hosted_sections]
+    assert len(selected) == len(hosted_sections), 'Hosted skill section missing or duplicated'
+    skill = (sections[0] + ''.join(selected)).rstrip()
     start = skill.index('description: ')
     end = skill.index('\n', start)
     skill = skill[:start] + ('description: Find economic releases, central-bank decisions, '

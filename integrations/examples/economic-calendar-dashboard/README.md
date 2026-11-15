@@ -133,3 +133,12 @@ npm test
 ```
 
 Tests cover cache expiry, concurrent visitor deduplication, stale retention, rate-limit cooldowns, invalid configuration, fixed-origin requests, incomplete pages, secret/error protection, demo isolation, unknown timing and null/zero handling. Two tests bind a temporary loopback HTTP port; test environments must permit local listening. All upstream responses are mocked.
+
+## Historical analysis
+
+This example targets the current calendar workflow. For long-run observations,
+evidenced dated publications and a complete historical export, use the
+[archive guide](../../../docs/history.md). Discover actual metric coverage first;
+current-vintage data and an FC receipt cutoff do not establish original market
+prints or contemporaneous forecasts. The new archive MCP tools are local stdio
+only; the hosted catalogue is unchanged.

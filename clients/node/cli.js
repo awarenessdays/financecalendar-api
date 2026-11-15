@@ -2,7 +2,7 @@
 // financecalendar: the economic calendar in your terminal.
 import { pathToFileURL } from "node:url";
 import { realpathSync } from "node:fs";
-import { api, formatEvent, formatEvents, formatHoliday, formatSeries, formatChange, localZone, VERSION } from "./lib.js";
+import { api, archivePage, collectArchive, formatEvent, formatEvents, formatHoliday, formatSeries, formatChange, localZone, VERSION } from "./lib.js";
 
 const HELP = `financecalendar ${VERSION}: economic calendar in your terminal
 
@@ -17,6 +17,11 @@ Usage:
   financecalendar series [--country gb]
   financecalendar show <code>
   financecalendar history <series> [--limit 12]
+  financecalendar archive-observations --metric-id ID [--series-code CODE] [--from YYYY-MM-DD] [--to YYYY-MM-DD]
+  financecalendar archive-releases --metric-id ID [--from YYYY-MM-DD] [--to YYYY-MM-DD]
+  financecalendar history-coverage [--source-id ID] [--series-code CODE] [--metric-id ID] [--kind observations|releases]
+                            [--limit 100] [--cursor TOKEN] [--all]
+                            archive commands always return JSON; --all prints only a complete pinned traversal
   financecalendar results <series> [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--limit 20] [--offset 0]
   financecalendar editions <event_id> [--limit 20] [--offset 0]
                             [--ledger-cursor N --publication-revision N] (both for offset > 0)
@@ -42,7 +47,7 @@ Other routes and formats require paid access; do not add timezone or pagination 
 
 Data: financecalendar.com. Paid API plans start at US$9.99/year (Starter: 1,000/day, 25,000/month). Ongoing Free Developer: schedule JSON, 100 successful responses/month, 10/day, one verified account key, no card. https://www.financecalendar.com/pricing/`;
 
-const BOOL_FLAGS = new Set(["json", "csv", "next", "holidays", "help"]);
+const BOOL_FLAGS = new Set(["json", "csv", "next", "holidays", "help", "all"]);
 
 export function parseArgs(argv) {
   const pos = [];
@@ -75,6 +80,24 @@ function enrichmentParams(cmd, rest, flags) {
     ledger_cursor: flags["ledger-cursor"], publication_revision: flags["publication-revision"] };
   if (cmd === "results") Object.assign(params, { series: rest[0], from: flags.from, to: flags.to });
   else params.event_id = rest[0];
+  return params;
+}
+
+function archiveParams(cmd, rest, flags) {
+  const coverage = cmd === "history-coverage";
+  const allowed = new Set(["metric-id", "series-code", "source-id", "limit", "cursor", "json", "all", ...(coverage ? ["kind"] : ["from", "to", "order", "as-of"])]);
+  if (rest.length) throw new Error(`${cmd} uses --metric-id or --series-code, not positional arguments.`);
+  for (const flag of Object.keys(flags)) if (!allowed.has(flag)) throw new Error(`${cmd} does not support --${flag}.`);
+  if (!coverage && !flags["metric-id"] && !flags["series-code"]) throw new Error(`${cmd} needs --metric-id ID or --series-code CODE.`);
+  if (flags.all && flags.cursor) throw new Error("--all starts at the first page; omit --cursor.");
+  const params = {};
+  for (const flag of allowed) if (!["json", "all"].includes(flag) && flags[flag] !== undefined) {
+    if (typeof flags[flag] !== "string") throw new Error(`--${flag} needs a value.`);
+    params[flag.replaceAll("-", "_")] = flags[flag];
+  }
+  if (params.limit !== undefined && (!/^[1-9]\d{0,2}$/.test(params.limit) || Number(params.limit) > 500)) throw new Error("Archive --limit must be from 1 to 500.");
+  if (params.order !== undefined && !["asc", "desc"].includes(params.order)) throw new Error("Archive --order must be asc or desc.");
+  if (params.kind !== undefined && !["observations", "releases"].includes(params.kind)) throw new Error("Coverage --kind must be observations or releases.");
   return params;
 }
 
@@ -154,6 +177,14 @@ export async function main(argv, out = console.log) {
       if (flags.json) return json(data), 0;
       out(`${data.series_code || rest[0]}: ${data.count} releases, ${dateRangeLabel(data.from, data.to)}\n`);
       out(data.events?.length ? fmt(data.events) : "No past releases in that range.");
+      return 0;
+    }
+    case "archive-observations":
+    case "archive-releases":
+    case "history-coverage": {
+      const kind = cmd === "history-coverage" ? "coverage" : cmd.slice("archive-".length);
+      const params = archiveParams(cmd, rest, flags);
+      json(await (flags.all ? collectArchive : archivePage)(kind, params));
       return 0;
     }
     case "results": {

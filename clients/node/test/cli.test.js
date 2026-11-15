@@ -64,7 +64,7 @@ describe("CLI (child process with mocked fetch)", () => {
   test("--help prints usage and exits 0", () => {
     const r = cli(["--help"]);
     assert.equal(r.code, 0);
-    assert.match(r.out, /financecalendar 0\.2\.3/);
+    assert.match(r.out, /financecalendar 0\.2\.4/);
     assert.match(r.out, /FC_API_KEY/);
   });
 
@@ -75,7 +75,7 @@ describe("CLI (child process with mocked fetch)", () => {
       symlinkSync(join(ROOT, "cli.js"), executable);
       const result = spawnSync(process.execPath, [executable, "--help"], { encoding: "utf8" });
       assert.equal(result.status, 0, result.stderr);
-      assert.match(result.stdout, /financecalendar 0\.2\.3/);
+      assert.match(result.stdout, /financecalendar 0\.2\.4/);
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
