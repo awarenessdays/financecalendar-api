@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "financecalendar",
   "version": "0.1.5",
-  "description": "Economic calendar tools with source evidence and history-aware guidance. Paid API from US$4.99/month; includes a key-configured hosted MCP connection.",
+  "description": "Economic calendar tools with source evidence and history-aware guidance. Paid API from US$4.99/month or US$53.89/year; includes a key-configured hosted MCP connection.",
   "author": {
     "name": "Awareness Days Ltd",
     "url": "https://www.financecalendar.com"
@@ -21,7 +21,7 @@
       "interface": {
         "displayName": "Finance Calendar",
         "shortDescription": "Economic event dates with original source evidence",
-        "longDescription": "Economic calendar tools with source evidence and history-aware guidance. Paid API from US$4.99/month; includes a key-configured hosted MCP connection.",
+        "longDescription": "Economic calendar tools with source evidence and history-aware guidance. Paid API from US$4.99/month or US$53.89/year; includes a key-configured hosted MCP connection.",
         "developerName": "Awareness Days Ltd",
         "category": "Finance",
         "capabilities": [
