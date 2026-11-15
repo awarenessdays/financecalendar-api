@@ -4627,7 +4627,7 @@
             "description": "Archive changed; restart the complete traversal."
           },
           "429": {
-            "description": "Shared allowance exhausted.",
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4806,7 +4806,7 @@
             "description": "Archive changed; restart the complete traversal."
           },
           "429": {
-            "description": "Shared allowance exhausted.",
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4946,7 +4946,7 @@
             "description": "Archive changed; restart the complete traversal."
           },
           "429": {
-            "description": "Shared allowance exhausted.",
+            "description": "The paid account allowance has been reached. All keys share the account daily and calendar-month limits. Follow upgrade_url to review a higher plan or retry after the indicated reset.",
             "content": {
               "application/json": {
                 "schema": {
