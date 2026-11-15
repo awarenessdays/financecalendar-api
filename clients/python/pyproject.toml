@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "financecalendar"
-version = "0.1.6"
-description = "Economic calendar Python client and CLI. Starter US$4.99/month or US$53.89/year adds forecasts/results and tools; ongoing Free Developer schedule JSON is available. Account key required."
+version = "0.1.7"
+description = "Economic calendar Python client and CLI. Starter US$9.99/year adds forecasts/results and tools; ongoing Free Developer schedule JSON is available. Account key required."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
