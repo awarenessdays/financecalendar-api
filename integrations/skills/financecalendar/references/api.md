@@ -19,7 +19,7 @@ Replace placeholder dates with explicit requested dates, within 92 days per wind
 
 For change polling, retain the original `since` checkpoint until all pages complete. Follow `next_cursor` without changing bound filters or resending conflicting defaults. A snapshot-change HTTP 409 means restart that checkpoint and deduplicate consumed changes. Advance the checkpoint only after the complete interval is processed.
 
-[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
+[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
 
 ```sh
 financecalendar next in-cpi --json
