@@ -50,6 +50,14 @@ def main():
         guide=(ROOT/dirname/'README.md').read_text()
         for amount in ['4.99/month','95.90/year','278.40/year']:
             assert amount in guide, dirname+' lacks current charge '+amount
+    # Test captures are distributed in the Python source archive and are also
+    # machine-readable current-offer examples; protect their numeric prices too.
+    for dirname,tests in [('clients/node','test'),('clients/python','tests')]:
+        fixture=json.loads((ROOT/dirname/tests/'fixtures/openapi.json').read_text())['body']
+        validate_offer(fixture['x-product-offer'])
+        for key,(daily,monthly,prices) in EXPECTED.items():
+            quota=fixture['x-rate-limits'][key]
+            assert quota['per_day']==daily and quota['per_calendar_month']==monthly, dirname+' fixture quota drift'
     for folder in [ROOT/'clients',ROOT/'integrations',ROOT/'examples']:
         for path in folder.rglob('*'):
             if not path.is_file() or any(part in {'node_modules','tests','test','fixtures','dist','build','__pycache__'} for part in path.relative_to(ROOT).parts):continue

@@ -329,7 +329,7 @@
               "description": "Requested language is disabled or service unavailable."
             },
             "403": {
-              "description": "Access is outside the presented key\u2019s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
+              "description": "Access is outside the presented key’s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
               "content": {
                 "application/json": {
                   "schema": {
@@ -570,7 +570,7 @@
               "description": "Requested language is disabled or service unavailable."
             },
             "403": {
-              "description": "Access is outside the presented key\u2019s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
+              "description": "Access is outside the presented key’s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
               "content": {
                 "application/json": {
                   "schema": {
@@ -852,7 +852,7 @@
               "description": "Requested language is disabled or service unavailable."
             },
             "403": {
-              "description": "Access is outside the presented key\u2019s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
+              "description": "Access is outside the presented key’s permitted scope, or an existing trial has ended. Inspect current account access and upgrade options. Free Developer returns its scoped error and upgrade/reset context.",
               "content": {
                 "application/json": {
                   "schema": {
@@ -873,7 +873,7 @@
               }
             }
           },
-          "description": "Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. This or next Monday\u2013Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
+          "description": "Retained trial grant: an already enrolled verified-email trial key can request up to ten selected economic/policy events as JSON within the previous seven UTC days through the next two days, with 25 successful data requests total and 48 hours from first use. Trial responses include a trial object; paid access retains the normal route behaviour. This or next Monday–Sunday week, capped at 500 matching rows. The base API validates limit and offset but does not apply them to /week. If total exceeds count, use /calendar with the returned from/to dates and explicit limit/offset to fetch every page.",
           "security": [
             {
               "ApiKey": []
@@ -899,7 +899,7 @@
             {
               "name": "series",
               "in": "query",
-              "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi\u2026 Generic names default to the US release.",
+              "description": "Series code, alias or keyword: fomc, cpi, nfp, gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi… Generic names default to the US release.",
               "required": true,
               "schema": {
                 "type": "string"
@@ -3500,7 +3500,7 @@
                 "maximum": 500,
                 "default": 100
               },
-              "description": "Evidence entries per page, 1\u2013500; default 100."
+              "description": "Evidence entries per page, 1–500; default 100."
             },
             {
               "name": "offset",
@@ -3512,7 +3512,7 @@
                 "maximum": 1000000,
                 "default": 0
               },
-              "description": "Zero-based offset, 0\u20131000000; default 0."
+              "description": "Zero-based offset, 0–1000000; default 0."
             },
             {
               "name": "snapshot_generated_at",
@@ -8110,10 +8110,10 @@
           "monthly_limit": 25000,
           "quota_basis": "admitted_requests",
           "prices": {
-            "year": {
-              "unit_amount": 999,
+            "month": {
+              "unit_amount": 499,
               "currency": "usd",
-              "interval": "year",
+              "interval": "month",
               "tax_behavior": "inclusive"
             }
           },
