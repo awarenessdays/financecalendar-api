@@ -12,7 +12,7 @@ The skill covers current release schedules, source attribution, unknown clocks/p
 
 ## Downloads
 
-Use the current repository source and authenticated configuration below. The [current 0.1.6 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.6) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
+Use the current repository source and authenticated configuration below. The [current 0.1.6 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-pricing-2026-11-15-r4) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
 
 ## Claude Code
 
