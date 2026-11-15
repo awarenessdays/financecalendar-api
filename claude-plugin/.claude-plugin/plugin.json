@@ -1,0 +1,22 @@
+{
+  "name": "financecalendar",
+  "version": "0.2.0",
+  "description": "Read-only economic releases, central-bank decisions, market holidays and source evidence through your linked Finance Calendar account.",
+  "author": {
+    "name": "Awareness Days Ltd",
+    "url": "https://www.financecalendar.com"
+  },
+  "homepage": "https://www.financecalendar.com/api/mcp/",
+  "repository": "https://github.com/awarenessdays/financecalendar-api",
+  "license": "MIT",
+  "keywords": [
+    "economic-calendar",
+    "finance",
+    "mcp",
+    "release-dates"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "icon": "./assets/icon.png",
+  "privacyPolicyUrl": "https://www.financecalendar.com/privacy-policy/"
+}
