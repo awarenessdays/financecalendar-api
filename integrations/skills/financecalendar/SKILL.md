@@ -41,7 +41,7 @@ returned access scope and omit date bounds for the authorized default window.
 Use `/history/observations` by
 measured reference-period start, or `/history/releases` by publication date.
 The local stdio tools `history_coverage`, `historic_observations` and
-`historic_releases` are available in client 0.2.5; the hosted catalogue is
+`historic_releases` are available in client 0.2.6; the hosted catalogue is
 unchanged. If they are absent, use authenticated REST or the Python/CLI archive
 methods described in [the history recipes](references/api.md#historical-archive).
 
@@ -61,11 +61,11 @@ aggregates are distinct from event-matched market consensus and FC blends.
 `available_before` requires exact proven source availability: unknown/date-only
 clocks are excluded and an empty result is valid. Preserve source credits,
 including the ECB notice that original data are freely available at source.
-Local client 0.2.5 adds `historic_editions`, `historic_forecasts` and
+Local client 0.2.6 adds `historic_editions`, `historic_forecasts` and
 `vintage_coverage`; all six archive tools are local only. Hosted remains 14 tools.
 
 ## Build an integration
 
-Read [API and client recipes](references/api.md) when choosing a transport, exporting data or following change cursors. Prefer the existing client/tool interfaces and the current OpenAPI document over guessed endpoints. Use the user's chosen language and environment. Every production data request requires a key. Ongoing Free Developer at https://www.financecalendar.com/account/?free=1 requires verified email and one account key; it provides 100 successful JSON schedule responses per UTC month, at most 10/day, with no card or expiry. GET /calendar and /today cover UTC today through today+6 with at most 20 records, up to 3 country codes and impact filters. Free omits forecasts/results, numerical evidence, history, other formats, hosted MCP and browser tools. Starter US$9.99/year adds these richer capabilities. Existing enrolled trials and paid/legacy grants remain intact. Keep the key in `X-API-Key` or the client's private environment configuration, not generated source or shared URLs.
+Read [API and client recipes](references/api.md) when choosing a transport, exporting data or following change cursors. Prefer the existing client/tool interfaces and the current OpenAPI document over guessed endpoints. Use the user's chosen language and environment. Every production data request requires a key. Ongoing Free Developer at https://www.financecalendar.com/account/?free=1 requires verified email and one account key; it provides 100 successful JSON schedule responses per UTC month, at most 10/day, with no card or expiry. GET /calendar and /today cover UTC today through today+6 with at most 20 records, up to 3 country codes and impact filters. Free omits forecasts/results, numerical evidence, history, other formats, hosted MCP and browser tools. Starter US$4.99/month adds these richer capabilities. Existing enrolled trials and paid/legacy grants remain intact. Keep the key in `X-API-Key` or the client's private environment configuration, not generated source or shared URLs.
 
 The shipped hosted plugin manifest is read-only and uses a configured API key with paid access. OAuth-capable clients can connect separately through the hosted account-linking setup. Account signup, email verification and key creation are separate actions; do not create accounts or keys as a side effect of a read request.

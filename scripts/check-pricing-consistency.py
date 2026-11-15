@@ -9,7 +9,7 @@ import argparse
 
 ROOT=Path(__file__).resolve().parents[1]
 EXPECTED={
- 'starter':(1000,25000,{'year':999}),
+ 'starter':(1000,25000,{'month':499}),
  'build':(100000,None,{'month':999,'year':9590}),
  'scale':(1000000,None,{'month':2900,'year':27840}),
 }
@@ -44,11 +44,11 @@ def main():
     readme=(ROOT/'README.md').read_text()
     assert '## Affordable API access' in readme and '/fc/v1/sample' in readme
     assert '## Free economic calendar API access' not in readme
-    for amount in ['9.99/year','95.90/year','278.40/year']:
+    for amount in ['4.99/month','95.90/year','278.40/year']:
         assert amount in readme, 'Missing current upfront charge '+amount
     for dirname in ['clients/node','clients/python']:
         guide=(ROOT/dirname/'README.md').read_text()
-        for amount in ['9.99/year','95.90/year','278.40/year']:
+        for amount in ['4.99/month','95.90/year','278.40/year']:
             assert amount in guide, dirname+' lacks current charge '+amount
     for folder in [ROOT/'clients',ROOT/'integrations',ROOT/'examples']:
         for path in folder.rglob('*'):
@@ -63,7 +63,7 @@ def main():
         with urllib.request.urlopen(request,timeout=30) as response:live=json.load(response)
         validate_offer(live)
         assert live['plans']==offer['plans'], 'Published source differs from canonical live offers.'
-    for mutate in [lambda x:x['plans']['starter'].update({'daily_limit':250}),lambda x:x['plans']['starter']['prices']['year'].update({'unit_amount':1999}),lambda x:x['free_developer'].update({'monthly_limit':5000})]:
+    for mutate in [lambda x:x['plans']['starter'].update({'daily_limit':250}),lambda x:x['plans']['starter']['prices']['month'].update({'unit_amount':999}),lambda x:x['free_developer'].update({'monthly_limit':5000})]:
         candidate=deepcopy(offer);mutate(candidate)
         try:validate_offer(candidate)
         except AssertionError:continue

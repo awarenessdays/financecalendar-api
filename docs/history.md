@@ -152,11 +152,11 @@ and [Node CLI/local MCP](../clients/node/README.md). Obtain a key through your
 
 ## Source-edition and survey exports
 
-Python 0.1.5 provides `archive_editions`, `archive_forecasts`, `vintage_coverage`
+Python 0.1.6 provides `archive_editions`, `archive_forecasts`, `vintage_coverage`
 and the complete `iter_archive_editions`, `iter_archive_forecasts`,
 `iter_vintage_coverage` iterators. Values retain exact decimal strings, scale,
 units, nulls and source licences. Buffer iterator output before committing an
-export, because later errors make earlier yielded rows partial. Node 0.2.5 provides
+export, because later errors make earlier yielded rows partial. Node 0.2.6 provides
 `archiveEditions`, `archiveForecasts`, `vintageCoverage` and buffered
 `collectArchive(kind, filters)`.
 

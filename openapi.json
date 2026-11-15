@@ -4,7 +4,7 @@
     "title": "Finance Calendar API",
     "version": "2.0.0",
     "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-    "description": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$9.99/year. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Programmatic data requires an API key and the entitlement for the requested scope. Retain field-level source evidence and rights. Finance Calendar is operated by Awareness Days Ltd, the company behind AwarenessDays.com. The company was incorporated on 20 December 2017 (UK company 11118824). The Finance Calendar API launched on 31 August 2026, as recorded in its changelog. Company incorporation, API launch and individual documentation publication dates describe different things. Use paid API access to explore curated historical datasets and past releases. The dataset for US CPI includes 78 curated records with reference periods from 2020-01 to 2026-07 in the dataset field of GET /series/us-cpi. The dataset for FOMC decisions includes 54 curated records with decision dates from 2020-01-29 to 2026-07-29 in the dataset field of GET /series/fomc. These curated datasets are separate from /history. GET /history returns elapsed release records retained in the current snapshot; dates and populated figures vary by series. GET /observations exposes recorded numerical evidence with its own reference periods. Captured-edition and as-of reads use accepted recorded evidence; the current-vintage observation backfill does not establish original first prints or a complete point-in-time archive. Free Developer supplies upcoming schedules; history requires paid access.",
+    "description": "Starter, Build and Scale include release forecasts for 60 headline measures across 10 economies, provider consensus across 12 selected US headline series, and source-backed actual and prior values where recorded, including official observations on supported non-US series such as UK CPI, monthly GDP and retail sales. Availability and reporting periods follow the evidence for each release. Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$4.99/month. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued on request after a short review. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Programmatic data requires an API key and the entitlement for the requested scope. Retain field-level source evidence and rights. Finance Calendar is operated by Awareness Days Ltd, the company behind AwarenessDays.com. The company was incorporated on 20 December 2017 (UK company 11118824). The Finance Calendar API launched on 31 August 2026, as recorded in its changelog. Company incorporation, API launch and individual documentation publication dates describe different things. Use paid API access to explore curated historical datasets and past releases. The dataset for US CPI includes 78 curated records with reference periods from 2020-01 to 2026-07 in the dataset field of GET /series/us-cpi. The dataset for FOMC decisions includes 54 curated records with decision dates from 2020-01-29 to 2026-07-29 in the dataset field of GET /series/fomc. These curated datasets are separate from /history. GET /history returns elapsed release records retained in the current snapshot; dates and populated figures vary by series. GET /observations exposes recorded numerical evidence with its own reference periods. Captured-edition and as-of reads use accepted recorded evidence; the current-vintage observation backfill does not establish original first prints or a complete point-in-time archive. Free Developer supplies upcoming schedules; history requires paid access.",
     "termsOfService": "https://www.financecalendar.com/api/terms/",
     "contact": {
       "url": "https://www.financecalendar.com/about/"
@@ -10436,10 +10436,10 @@
         "monthly_limit": 25000,
         "quota_basis": "admitted_requests",
         "prices": {
-          "year": {
-            "unit_amount": 999,
+          "month": {
+            "unit_amount": 499,
             "currency": "usd",
-            "interval": "year",
+            "interval": "month",
             "tax_behavior": "inclusive"
           }
         },
@@ -10624,7 +10624,7 @@
         },
         "starter": {
           "label": "Choose Starter",
-          "url": "/account/?mode=register&return_to=%2Faccount%2F%3Fplan%3Dstarter%26billing_interval%3Dyear&plan=starter&billing_interval=year",
+          "url": "/account/?mode=register&return_to=%2Faccount%2F%3Fplan%3Dstarter%26billing_interval%3Dmonth&plan=starter&billing_interval=month",
           "plan_id": "starter"
         },
         "build": {
@@ -10646,7 +10646,7 @@
           "note": "Annual prices are charged upfront. Paid plans renew at the selected interval until cancelled. Applicable tax included.",
           "values": {
             "free_developer": "US$0; No card",
-            "starter": "US$9.99/year",
+            "starter": "US$4.99/month",
             "build": "US$9.99/month; or US$95.90/year",
             "scale": "US$29.00/month; or US$278.40/year"
           },
@@ -10657,7 +10657,7 @@
               "included": null
             },
             "starter": {
-              "label": "US$9.99/year",
+              "label": "US$4.99/month",
               "detail": "",
               "included": null
             },
