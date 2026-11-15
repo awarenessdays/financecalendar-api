@@ -12,7 +12,7 @@ The skill covers current release schedules, source attribution, unknown clocks/p
 
 ## Downloads
 
-Use the current repository source and authenticated configuration below. The [current 0.1.5 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-pricing-2026-11-15-r3) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
+Use the current repository source and authenticated configuration below. The [current 0.1.6 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-pricing-2026-11-15-r4) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
 
 ## Claude Code
 
@@ -63,11 +63,15 @@ through the [historical archive](../docs/history.md): Starter one year, Build te
 years and Scale all available history, subject to actual coverage and explicit
 prior licences. Legacy history/curated access is unchanged. It discovers coverage,
 preserves exact values/nulls and distinguishes source vintages from FC receipt
-bounds. Use authenticated REST, Python/CLI 0.1.4/0.2.4, or the three local stdio
-archive tools. Installing this hosted manifest does not add those three tools
+bounds. Use authenticated REST, Python/CLI 0.1.6/0.2.6, or the local stdio
+archive tools. Installing this hosted manifest does not add the six archive tools
 to the hosted catalogue; it retains its fourteen established tools.
 
 For OAuth account linking in supported Claude/ChatGPT clients, use the hosted
 setup and approve read-only `calendar:read`; optional `offline_access` permits
 token renewal. The packaged manifests remain the explicit API-key configuration
 shown above. No account, key or consent is created by installing the skill.
+
+## Source editions and survey forecasts
+
+The skill now guides source-edition analysis and typed historical survey forecasts, with separate issue/target periods, qualified first-print status, source credits and strict availability cutoffs. Starter includes one year, Build ten years and Scale all available history; stored ranges vary by metric. Read [API and client recipes](skills/financecalendar/references/api.md) for complete paged exports. These new routes are available through REST and current local clients; the hosted connection retains its 14 tools and existing authentication permissions.

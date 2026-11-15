@@ -42,7 +42,10 @@ export function fixtureFor(url) {
     case "/history": return fixture("history_us_cpi");
     case "/history/observations":
     case "/history/releases":
-    case "/history/coverage": {
+    case "/history/coverage":
+    case "/history/editions":
+    case "/history/forecasts":
+    case "/history/vintage-coverage": {
       const kind = path.split("/").at(-1);
       const offset = q.has("cursor") ? Number(q.get("cursor").replace("archive-page-", "")) : 0;
       if (!Number.isInteger(offset) || offset < 0) return { status: 400, headers: {}, body: { error: "Invalid archive cursor" } };
@@ -51,7 +54,7 @@ export function fixtureFor(url) {
         value: kind === "releases" ? null : index === 0 ? "0" : "1.234567890123456789012345", release_at_utc: null,
         historical_first_print: false, vintage_basis: "current_vintage", source_license: { id: "SYNTHETIC", attribution: "Synthetic fixture; no publisher facts asserted." } }));
       const rows = all.slice(offset, offset + limit), more = offset + limit < all.length;
-      return { status: 200, headers: {}, body: { schema_version: 1, archive_revision: 11, kind, filters: Object.fromEntries(q),
+      return { status: 200, headers: {}, body: { schema_version: ["editions", "forecasts", "vintage-coverage"].includes(kind) ? 2 : 1, archive_revision: 11, kind, filters: Object.fromEntries(q),
         as_of_basis: "fc_evidence_commit_observed_bound", count: rows.length, rows, has_more: more, next_cursor: more ? `archive-page-${offset + limit}` : null } };
     }
     case "/enrichment/history":

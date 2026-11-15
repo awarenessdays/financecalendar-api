@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-const TOOLS = ["next_event", "calendar", "today", "week", "series_list", "series_detail", "history", "historic_observations", "historic_releases", "history_coverage", "economic_results_history", "release_editions", "market_holidays", "market_status", "changes", "countries"];
+const TOOLS = ["next_event", "calendar", "today", "week", "series_list", "series_detail", "history", "historic_observations", "historic_releases", "history_coverage", "historic_editions", "historic_forecasts", "vintage_coverage", "economic_results_history", "release_editions", "market_holidays", "market_status", "changes", "countries"];
 
 /** Minimal JSON-RPC client over the server's stdio. */
 function startServer(apiKey="fc_live_0123456789abcdef0123456789abcdef") {
@@ -42,7 +42,7 @@ async function initialised(apiKey) {
   const s = startServer(apiKey);
   const init = await s.send("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "0" } });
   assert.equal(init.result.serverInfo.name, "financecalendar");
-  assert.equal(init.result.serverInfo.version, "0.2.4");
+  assert.equal(init.result.serverInfo.version, "0.2.6");
   await s.send("notifications/initialized", {}, true);
   return s;
 }
@@ -52,13 +52,13 @@ describe("MCP server over stdio", () => {
     const server=await initialised("");
     try {const response=await server.send("tools/call",{name:"countries",arguments:{}});assert.equal(response.result.isError,true);assert.match(response.result.content[0].text,/HTTP 401/);assert.match(response.result.content[0].text,/FC_API_KEY/);assert.match(response.result.content[0].text,/account\//);}finally{server.stop();}
   });
-  test("initialize + tools/list exposes the 16 local tools with schemas", async () => {
+  test("initialize + tools/list exposes the 19 local tools with schemas", async () => {
     const s = await initialised();
     try {
       const res = await s.send("tools/list", {});
       const names = res.result.tools.map((t) => t.name).sort();
       assert.deepEqual(names, [...TOOLS].sort());
-      assert.equal(res.result.tools.length, 16);
+      assert.equal(res.result.tools.length, 19);
       for (const t of res.result.tools) {
         assert.ok(t.description && t.description.length > 30, `${t.name} needs a description`);
         assert.equal(t.inputSchema.type, "object");
@@ -154,9 +154,9 @@ describe("MCP server over stdio", () => {
     const s = await initialised();
     try {
       const listed = await s.send("tools/list", {});
-      for (const name of ["historic_observations", "historic_releases", "history_coverage"]) {
+      for (const name of ["historic_observations", "historic_releases", "history_coverage", "historic_editions", "historic_forecasts", "vintage_coverage"]) {
         const schema = listed.result.tools.find((tool) => tool.name === name).inputSchema;
-        assert.equal(schema.additionalProperties, false);
+        assert.equal(schema.additionalProperties, false, name);
         assert.equal(schema.properties.limit.default, 20);
         assert.equal(schema.properties.limit.maximum, 50);
         const first = await s.send("tools/call", { name, arguments: { metric_id: "gb-cpi-all-items-yoy" } });

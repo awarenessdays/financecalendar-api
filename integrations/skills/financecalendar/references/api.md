@@ -19,7 +19,7 @@ Replace placeholder dates with explicit requested dates, within 92 days per wind
 
 For change polling, retain the original `since` checkpoint until all pages complete. Follow `next_cursor` without changing bound filters or resending conflicting defaults. A snapshot-change HTTP 409 means restart that checkpoint and deduplicate consumed changes. Advance the checkpoint only after the complete interval is processed.
 
-[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r3) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
+[Versioned beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r4) work without npm/PyPI registry publication. [Full CLI/SDK reference](https://www.financecalendar.com/api/cli/) includes every command and option. Node requires 20+; Python requires 3.10+. Both CLIs use `financecalendar`; choose the appropriate environment.
 
 ```sh
 financecalendar next in-cpi --json
@@ -60,3 +60,21 @@ print or historical consensus archive. `as_of` selects FC's durable evidence
 receipt bound (`fc_evidence_commit_observed_bound`), not past market availability.
 Source capture, publication and vintage precision have separate meanings.
 See the [maintained history guide](https://github.com/awarenessdays/financecalendar-api/blob/main/docs/history.md).
+
+## Dated source editions and historical survey forecasts
+
+Explore numerical values in named source editions with `/history/editions` and typed public survey aggregates with `/history/forecasts`. Start with `/history/vintage-coverage` to inspect each exact metric’s stored scope and your key’s `accessible_range`. **Starter includes one year, Build ten years, and Scale all available history**; omit date bounds to use your plan window. Depth varies by metric/source. Free Developer excludes these routes; existing legacy routes and agreements keep their established access.
+
+Edition `from`/`to` filters use publication day; edition access also requires the measured reference-period start inside the plan window. A newly published edition does not grant older measured periods beyond your plan. Forecast filters use `issue_period_start`, an ordering index; `reference_period` describes the separate target. Preserve `forecast_type`, aggregation, target definition, native horizon, exact decimal strings, nulls, units, scale and source credits. Published survey aggregates are distinct from event-matched market consensus and FC blends. Historical survey databases may contain publisher corrections; they are not automatically unchanged original archived issues. Inspect `first_print_status`, `first_print_rule_id`, native stage and correction status for source editions.
+
+`as_of` replays Finance Calendar’s durable receipt versions. `available_before` is a separate strict source-public-availability cutoff: provide exact UTC seconds ending in `Z`; unknown, date-only and coarse issue clocks are excluded. A valid query may return no rows. These source cutoffs test the selected FC capture version and do not silently fall back to a different earlier capture. Future/coarse/naive cutoffs are rejected. Follow `next_cursor` with the same original filters and limit; on 409 restart and discard partial results.
+
+Use REST or the current local clients for these three V2 routes. Local tools `historic_editions`, `historic_forecasts` and `vintage_coverage` default to 20/max 50 rows; all six archive tools are local only. The hosted catalogue remains 14 tools. Python 0.1.6 methods are `archive_editions`, `archive_forecasts`, `vintage_coverage` and their `iter_archive_editions`, `iter_archive_forecasts`, `iter_vintage_coverage` iterators. Node 0.2.6 exports `archiveEditions`, `archiveForecasts`, `vintageCoverage` and buffered `collectArchive(kind, params)`.
+
+```sh
+financecalendar vintage-coverage --kind forecasts --all
+financecalendar historic-editions --metric-id us-gdp-real-qoq-saar --all
+financecalendar historic-forecasts --metric-id eu-spf-hicp-annual-mean-p12m --all
+```
+
+Retain every row’s `source_license`, including the ECB notice that its original data are freely available at source. A historical issue month/quarter is not a publication instant. Do not substitute an index date, midnight, submission deadline or FC receipt for unknown source availability. Official source editions can identify qualified initial releases for specific mappings; do not extend that claim to every series or treat all survey history as release consensus.
