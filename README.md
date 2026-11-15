@@ -103,7 +103,7 @@ curl --fail-with-body \
 - **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15) accept a configured API key. These archives include authenticated setup, historical archive traversal and the current pricing/access guide. npm/PyPI registry publication remains pending.
+The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2) accept a configured API key. These archives include authenticated setup, historical archive traversal and the current pricing/access guide. npm/PyPI registry publication remains pending.
 
 Programmatic data access requires a verified account and API key. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
 
@@ -244,7 +244,7 @@ it does not turn a newly imported historical value into knowledge FC held years
 ago. Current-vintage backfills are labelled and do not establish original prints
 or historical forecast cutoffs.
 
-[Python and CLI downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15)
+[Python and CLI downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2)
 include archive methods and complete traversal. The Node package adds three local
 stdio MCP tools. The hosted MCP tool catalogue is unchanged; call these archive
 routes through REST, Python, the CLI or local MCP.

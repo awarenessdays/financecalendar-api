@@ -22,10 +22,10 @@ Use your real key and keep it private; never include it in a shared notebook or 
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15-r2). Use the direct package URL in your chosen environment:
 
 ```sh
-python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-pricing-2026-11-15/financecalendar-0.1.5-py3-none-any.whl
+python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-pricing-2026-11-15-r2/financecalendar-0.1.5-py3-none-any.whl
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
