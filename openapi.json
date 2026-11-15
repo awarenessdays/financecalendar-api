@@ -10441,6 +10441,12 @@
             "currency": "usd",
             "interval": "month",
             "tax_behavior": "inclusive"
+          },
+          "year": {
+            "unit_amount": 5389,
+            "currency": "usd",
+            "interval": "year",
+            "tax_behavior": "inclusive"
           }
         },
         "full_dataset_export": false,
@@ -16435,7 +16441,7 @@
           "note": "Annual prices are charged upfront. Paid plans renew at the selected interval until cancelled. Applicable tax included.",
           "values": {
             "free_developer": "US$0; No card",
-            "starter": "US$4.99/month",
+            "starter": "US$4.99/month; or US$53.89/year",
             "build": "US$9.99/month; or US$95.90/year",
             "scale": "US$29.00/month; or US$278.40/year"
           },
@@ -16447,7 +16453,7 @@
             },
             "starter": {
               "label": "US$4.99/month",
-              "detail": "",
+              "detail": "or US$53.89/year",
               "included": null
             },
             "build": {

@@ -2,7 +2,7 @@
 
 A read-only economic-calendar integration for Codex and Claude Code. The plugin bundles an authenticated hosted MCP connection and a portable `financecalendar` Agent Skill. It queries the hosted feed; installing it does not create a local copy of the database. Hosted MCP requires verified paid or applicable retained access. The shipped manifest uses your private API key; compatible chat clients may use OAuth account linking. Every request is authenticated.
 
-[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$4.99/month** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
+[Paid API plans](https://www.financecalendar.com/pricing/) include Starter at **US$4.99/month or US$53.89/year** (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan. Starter annual billing saves 10% compared with twelve monthly payments; monthly billing is the default.
 
 [Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit forecasts, consensus, actual/prior figures and numerical evidence, and mark releases that have them (`figures_available`, `result_available`); Starter adds available release forecasts across 10 economies, these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
 
@@ -12,7 +12,7 @@ The skill covers current release schedules, source attribution, unknown clocks/p
 
 ## Downloads
 
-Use the current repository source and authenticated configuration below. The [current 0.1.6 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-0.1.6) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
+Use the current repository source and authenticated configuration below. The [current 0.1.6 ZIPs](https://github.com/awarenessdays/financecalendar-api/releases/tag/plugins-pricing-2026-11-15-r4) include authenticated connection settings and the current access guide. The plugin ZIP contains the manifests at its root; the skill ZIP contains a `financecalendar/` folder with `SKILL.md` and its supporting files. Upload, environment expansion and custom-header availability depend on the client and workspace settings.
 
 ## Claude Code
 
