@@ -7,13 +7,13 @@ One package, two binaries:
 - `financecalendar-mcp`: an MCP server over stdio for Claude Desktop, Claude Code, Cursor and any other MCP client.
 - `financecalendar`: a CLI for your terminal and scripts.
 
-[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$9.99/year** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
+[Paid API plans](https://www.financecalendar.com/pricing/) start at **US$4.99/month** for Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan.
 
 [Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit forecasts, consensus, actual/prior figures and numerical evidence, and mark releases that have them (`figures_available`, `result_available`); Starter adds release forecasts across 10 economies, these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
 
 The [public calendar remains free to browse](https://www.financecalendar.com/events/). Hosted MCP, status and the wider data examples below require a paid plan. The public sample, product offer and OpenAPI document can be read directly without a key; SDK requests consistently use your configured account key. Set `FC_API_KEY` securely for local clients.
 
-Starter costs **US$9.99/year** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
+Starter costs **US$4.99/month** and includes **1,000 requests per UTC day and 25,000 per UTC calendar month**. Build includes **100,000 requests per day** and Scale **1,000,000 per day**. All account keys share the applicable allowance. Daily usage resets at 00:00 UTC; monthly usage resets at 00:00 UTC on the first day of the next calendar month. Existing paid customers retain their contracted prices and applicable allowances; check your account or `/keys/me` for effective limits. See [current plans](https://www.financecalendar.com/pricing/) for billing options and complete snapshot downloads.
 
 Free Developer counts successful committed HTTP 200 JSON schedule responses, including valid empty responses. Invalid or denied requests, quota errors and pre-commit server failures do not consume its allowance. Usage is shared by the account and survives key rotation; daily and monthly resets follow UTC. Already-enrolled evaluations retain their original 25-successful-request budget, 48-hour clock from first use and original scope. New trial enrolment is closed. Existing paid, legacy and custom access grants are preserved; no account is silently converted to Free Developer.
 
@@ -21,10 +21,10 @@ For paid plans, daily and monthly quota usage counts admitted requests, not succ
 
 ## Install the tested beta download
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-history-2026-11-14). Use the direct package URL in your chosen environment:
+[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-pricing-2026-11-15). Use the direct package URL in your chosen environment:
 
 ```sh
-npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-history-2026-11-14/financecalendar-mcp-0.2.4.tgz
+npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-pricing-2026-11-15/financecalendar-mcp-0.2.5.tgz
 ```
 
 Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.

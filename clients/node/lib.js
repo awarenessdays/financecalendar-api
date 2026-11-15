@@ -29,7 +29,7 @@ export async function api(path, params = {}, { apiKey, base, raw = false, fetch:
   const url = buildUrl(path, params, base);
   const key = String(apiKey || process.env.FC_API_KEY || "").trim();
   if (!key) {
-    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Starter US$9.99/year adds recorded forecasts/results and wider integrations. Ongoing Free Developer schedule JSON: 100 successful responses/month, 10/day, one key, no card. https://www.financecalendar.com/pricing/ Create your verified account key: https://www.financecalendar.com/account/?free=1.");
+    const error = new Error("HTTP 401: Finance Calendar requires an API key. Set FC_API_KEY or pass apiKey. Starter US$4.99/month adds recorded forecasts/results and wider integrations. Ongoing Free Developer schedule JSON: 100 successful responses/month, 10/day, one key, no card. https://www.financecalendar.com/pricing/ Create your verified account key: https://www.financecalendar.com/account/?free=1.");
     error.status = 401;
     error.retryAfter = null;
     throw error;
