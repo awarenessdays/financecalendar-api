@@ -1,0 +1,28 @@
+name: Finance Calendar ChatGPT package
+on:
+  pull_request:
+    paths: ['chatgpt-plugin/**', 'chatgpt-plugin-source/**', 'build-chatgpt-plugin.py', 'integrations/build.py', 'fc-integrations/build.py', '.github/workflows/chatgpt-plugin-check.yml']
+  push:
+    paths: ['chatgpt-plugin/**', 'chatgpt-plugin-source/**', 'build-chatgpt-plugin.py', 'integrations/build.py', 'fc-integrations/build.py', '.github/workflows/chatgpt-plugin-check.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Verify fixed package, listing limits and deterministic archive
+        run: |
+          python build-chatgpt-plugin.py --check --out /tmp/fc-chatgpt-first
+          python build-chatgpt-plugin.py --check --out /tmp/fc-chatgpt-second
+          cmp /tmp/fc-chatgpt-first/SHA256SUMS /tmp/fc-chatgpt-second/SHA256SUMS
+      - uses: actions/upload-artifact@v6
+        with:
+          name: financecalendar-chatgpt-plugin
+          path: /tmp/fc-chatgpt-first/*
+          retention-days: 14
