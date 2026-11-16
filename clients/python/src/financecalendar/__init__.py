@@ -1,7 +1,7 @@
 """Python client for Finance Calendar paid data and Free Developer schedule JSON.
 
-Connect source-aware release data with an account key. Starter US$9.99/year;
-current pricing and source terms: https://www.financecalendar.com/pricing/.
+Connect source-aware release data with an account key. Starter bills annually.
+Current pricing and source terms: https://www.financecalendar.com/pricing/.
 The public browser calendar is free to browse.
 """
 

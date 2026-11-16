@@ -7,7 +7,7 @@
     {
       "name": "financecalendar",
       "source": "./integrations",
-      "description": "Source-aware economic calendar tools. Paid API plans start at US$9.99/year; authenticated hosted MCP."
+      "description": "Source-aware economic calendar tools. Authenticated hosted MCP and API plans. Current offer: https://www.financecalendar.com/pricing/."
     }
   ],
   "description": "Finance Calendar economic release data, hosted MCP tools and an accuracy-focused Agent Skill."

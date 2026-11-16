@@ -10,7 +10,7 @@
       "title": "Finance Calendar API",
       "version": "2.0.0",
       "summary": "Economic releases, central bank decisions and exchange holidays as JSON, CSV and ICS.",
-      "description": "Browse the public economic calendar free. Connect apps and AI tools with paid API access from US$9.99/year. Starter includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key after email verification. Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Programmatic data requires an API key and the entitlement for the requested scope. Retain field-level source evidence and rights.",
+      "description": "Browse the public economic calendar free. Connect apps and AI tools with paid API access. Commercial fields in this repository copy describe plan structure. Fetch the live offer at https://www.financecalendar.com/wp-json/fc/v1/product-offer for the current Starter charge, or see https://www.financecalendar.com/pricing/ for plan details. Starter is billed annually and includes 1,000 requests per UTC day and 25,000 per UTC calendar month. Build is US$9.99/month or US$95.90/year, with 100,000 requests per UTC day. Scale is US$29.00/month or US$278.40/year, with 1,000,000 requests per UTC day and the complete current dataset download. Free Developer provides 100 successful schedule JSON responses per UTC calendar month, up to 10 per UTC day, with one key issued after approval of your request (allow up to 48 hours for review). Use /calendar and /today for economic-release and central-bank schedules from UTC today through today+6, with country/impact filters, bounded date narrowing and up to 20 records per response. The allowance renews monthly; no card, fixed expiry or automatic paid subscription. Figures, history, wider dates/routes, CSV/ICS, hosted MCP, Data explorer and webhooks require a paid plan. Personal and customer-facing projects are allowed within these limits and applicable source terms. Annual prices are charged upfront. Paid plans renew at their selected interval until cancelled; applicable tax is included. Linked keys share one account allowance. Inspect the publisher-selected /sample without a key. Programmatic data requires an API key and the entitlement for the requested scope. Retain field-level source evidence and rights.",
       "termsOfService": "https://www.financecalendar.com/api/terms/",
       "contact": {
         "url": "https://www.financecalendar.com/about/"
@@ -8099,7 +8099,9 @@
         "ongoing": true,
         "renewable": true,
         "card_required": false,
-        "automatic_charge": false
+        "automatic_charge": false,
+        "review_required": true,
+        "review_hours": 48
       },
       "plans": {
         "starter": {
@@ -8109,14 +8111,7 @@
           "daily_limit": 1000,
           "monthly_limit": 25000,
           "quota_basis": "admitted_requests",
-          "prices": {
-            "year": {
-              "unit_amount": 999,
-              "currency": "usd",
-              "interval": "year",
-              "tax_behavior": "inclusive"
-            }
-          },
+          "prices": {},
           "full_dataset_export": false,
           "annual_discount_percent": 0
         },

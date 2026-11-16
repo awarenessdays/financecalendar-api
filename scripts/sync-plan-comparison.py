@@ -17,6 +17,7 @@ import urllib.request
 START = '<!-- fc-plan-comparison:start -->'
 END = '<!-- fc-plan-comparison:end -->'
 URL = 'https://www.financecalendar.com/wp-json/fc/v1/product-offer'
+STARTER_PRICE_LINK = '[Live annual price](https://www.financecalendar.com/pricing/#starter)'
 
 
 def comparison_text(comparison: dict) -> str:
@@ -31,7 +32,10 @@ def comparison_text(comparison: dict) -> str:
     for row in rows:
         if list(row['values']) != list(columns):
             raise ValueError('Comparison row columns differ from the canonical columns')
-        lines.append('| ' + markdown(row['feature']) + ' | ' + ' | '.join(markdown(row['values'][key]) for key in columns) + ' |')
+        values = dict(row['values'])
+        if row.get('id') == 'price' and 'starter' in values:
+            values['starter'] = STARTER_PRICE_LINK
+        lines.append('| ' + markdown(row['feature']) + ' | ' + ' | '.join(markdown(values[key]) for key in columns) + ' |')
     result = '\n'.join(lines) + '\n'
     for row in rows:
         if row.get('note'):
