@@ -4,7 +4,7 @@ A complete, small dashboard for recorded economic releases, built with the [Fina
 
 The API key stays in the server environment. Every visitor shares one server cache. Search, market, date and impact filters operate on the records already loaded; they do not send additional upstream requests.
 
-## Preview without an API key
+## Preview with bundled demo data
 
 From a fresh public checkout:
 
@@ -18,9 +18,9 @@ Open [http://127.0.0.1:3010](http://127.0.0.1:3010). The **Demo data** notice is
 
 ## Run with your own API key
 
-[Paid API plans](https://www.financecalendar.com/pricing/) include Starter at **US$9.99/year** (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan. Starter is billed annually at US$9.99/year.
+[Paid API plans](https://www.financecalendar.com/pricing/) include annually billed Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan. Check the [current Starter quote](https://www.financecalendar.com/pricing/#starter) or the [machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer).
 
-[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one active key, no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
+[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one API key issued after approval (allow up to 48 hours for review), no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
 
 1. [Choose Starter or another paid plan](https://www.financecalendar.com/pricing/), confirm your email, complete checkout and create an API key. The default dashboard loads a 14-day window and is outside the Free Developer date window.
 2. Stop the demo server with Ctrl+C.

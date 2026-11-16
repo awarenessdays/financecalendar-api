@@ -5,4 +5,4 @@ date,time_utc,time_et,all_day,name,title,impact,category,consensus,prior,actual,
 2026-10-20,2026-10-20T06:00:00+00:00,02:00,false,"UK Labour Market Report","UK Labour Market Report October 2026",high,economic-indicators,,,,,GB,,uk-labour-market-report-october-2026,gb-jobs,confirmed,"October 2026","% unemployment rate",https://www.ons.gov.uk/releasecalendar
 2026-10-21,2026-10-21T06:00:00+00:00,02:00,false,"UK CPI Inflation","UK CPI Inflation October 2026",high,economic-indicators,,,,,GB,,uk-cpi-inflation-october-2026,gb-cpi,confirmed,"September 2026","% y/y",https://www.ons.gov.uk/releasecalendar
 
-"# Source: financecalendar.com - free with attribution. Docs: https://www.financecalendar.com/api/"
+"# Source: financecalendar.com - account access and source terms apply. Docs: https://www.financecalendar.com/api/"

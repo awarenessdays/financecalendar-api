@@ -1,7 +1,7 @@
 {
   "name": "financecalendar",
   "version": "0.1.7",
-  "description": "Economic calendar tools with source evidence and history-aware guidance. Paid API from US$9.99/year; includes a key-configured hosted MCP connection.",
+  "description": "Economic calendar tools with source evidence and history-aware guidance. Includes a key-configured hosted MCP connection. Current plans: https://www.financecalendar.com/pricing/.",
   "author": {
     "name": "Awareness Days Ltd",
     "url": "https://www.financecalendar.com"
