@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "financecalendar",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Read economic releases, central-bank decisions, exchange holidays and recorded source evidence through a linked Finance Calendar account.",
   "author": {
     "name": "Awareness Days Ltd",
@@ -95,7 +95,8 @@
           ]
         },
         "commerce": false,
-        "commerce_description": "Read-only access to capabilities already included with the linked account. The plugin does not sell products, display subscription plans, initiate subscriptions, promote upgrades, open checkout or process payments."
+        "commerce_description": "Read-only access to capabilities already included with the linked account. The plugin does not sell products, display subscription plans, initiate subscriptions, promote upgrades, open checkout or process payments.",
+        "demo_recording_url": "https://www.financecalendar.com/wp-content/uploads/2026/11/financecalendar-chatgpt-review-walkthrough-20261115.mp4"
       },
       "publication": {
         "countries": [],
