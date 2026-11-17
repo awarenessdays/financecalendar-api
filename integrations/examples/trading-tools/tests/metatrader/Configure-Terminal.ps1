@@ -7,6 +7,15 @@ Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName UIAutomationTypes
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
+if (-not ('FcTerminalUi' -as [type])) {
+Add-Type @'
+using System;
+using System.Runtime.InteropServices;
+public static class FcTerminalUi {
+  [DllImport("user32.dll")] public static extern IntPtr SendMessage(IntPtr hwnd, uint message, IntPtr wparam, IntPtr lparam);
+}
+'@
+}
 $script:process = $null
 function Dump-VisibleUI($root, $name) {
   try {
@@ -36,18 +45,24 @@ try {
   [System.Windows.Forms.SendKeys]::SendWait('^o')
   Start-Sleep -Seconds 2
   $desktop = [System.Windows.Automation.AutomationElement]::RootElement
-  $elements = Get-VisibleElements $desktop
-  $tab = $elements | Where-Object { $_.Current.ControlType -eq [System.Windows.Automation.ControlType]::TabItem -and $_.Current.Name -match 'Expert Advisors' } | Select-Object -First 1
-  if (-not $tab) { Dump-VisibleUI $desktop 'options-missing'; throw 'Expert Advisors settings tab was not found' }
-  $selection = $tab.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern)
-  $selection.Select()
-  Start-Sleep -Seconds 1
-  $elements = Get-VisibleElements $desktop
-  $checkbox = $elements | Where-Object { $_.Current.Name -match '^Allow WebRequest' -and $_.Current.ControlType -eq [System.Windows.Automation.ControlType]::CheckBox } | Select-Object -First 1
-  if (-not $checkbox) { Dump-VisibleUI $desktop 'webrequest-missing'; throw 'WebRequest checkbox was not found' }
-  $toggle = $checkbox.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
-  if ($toggle.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) { $toggle.Toggle() }
-  $checkbox.SetFocus()
+  # Legacy MetaTrader controls expose their names/HWNDs but are UIA Panes,
+  # not TabItem/CheckBox patterns. Cycle visible tabs until the actual label appears.
+  $checkbox = $null
+  foreach ($tabIndex in 0..13) {
+    $elements = Get-VisibleElements $desktop
+    $checkbox = $elements | Where-Object { $_.Current.Name -match '^Allow WebRequest' -and $_.Current.ClassName -eq 'Button' } | Select-Object -First 1
+    if ($checkbox) { break }
+    [System.Windows.Forms.SendKeys]::SendWait('^{TAB}')
+    Start-Sleep -Milliseconds 300
+  }
+  if (-not $checkbox) { Dump-VisibleUI $desktop 'webrequest-missing'; throw 'WebRequest checkbox was not found on any settings tab' }
+  $handle = [IntPtr]::new($checkbox.Current.NativeWindowHandle)
+  $checked = [FcTerminalUi]::SendMessage($handle, 0x00F0, [IntPtr]::Zero, [IntPtr]::Zero).ToInt64()
+  if ($checked -ne 1) { $null = [FcTerminalUi]::SendMessage($handle, 0x00F5, [IntPtr]::Zero, [IntPtr]::Zero) }
+  $options = $elements | Where-Object { $_.Current.Name -eq 'Options' -and $_.Current.ClassName -eq '#32770' } | Select-Object -First 1
+  if (-not $options) { throw 'Visible Options dialog was not found' }
+  # WM_NEXTDLGCTL focuses this real visible checkbox before tabbing to its URL list.
+  $null = [FcTerminalUi]::SendMessage([IntPtr]::new($options.Current.NativeWindowHandle), 0x0028, $handle, [IntPtr]::new(1))
   [System.Windows.Forms.SendKeys]::SendWait('{TAB}')
   [System.Windows.Forms.SendKeys]::SendWait('{END}{ENTER}')
   Start-Sleep -Milliseconds 300
@@ -57,12 +72,12 @@ try {
   $elements = Get-VisibleElements $desktop
   $url = $elements | Where-Object { $_.Current.Name -eq 'https://www.financecalendar.com' } | Select-Object -First 1
   Dump-VisibleUI $desktop 'webrequest-configured'
-  if (-not $url) { throw 'The allowed URL could not be verified in the visible settings list' }
-  $ok = $elements | Where-Object { $_.Current.Name -eq 'OK' -and $_.Current.ControlType -eq [System.Windows.Automation.ControlType]::Button } | Select-Object -First 1
+  if (-not $url) { Write-Host 'Legacy URL list does not expose row text to UIA; real HTTPS smoke must verify the entry.' }
+  $ok = $elements | Where-Object { $_.Current.Name -eq 'OK' -and $_.Current.ClassName -eq 'Button' } | Select-Object -First 1
   if (-not $ok) { throw 'Settings OK button was not found' }
-  $invoke = $ok.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern); $invoke.Invoke()
+  $null = [FcTerminalUi]::SendMessage([IntPtr]::new($ok.Current.NativeWindowHandle), 0x00F5, [IntPtr]::Zero, [IntPtr]::Zero)
   Start-Sleep -Seconds 2
-  Write-Host "MT${Version}: WebRequest allowlist was configured through the visible terminal settings."
+  Write-Host "MT${Version}: WebRequest allowlist entry was submitted through visible terminal settings; HTTPS smoke decides acceptance."
 } catch {
   Dump-VisibleUI ([System.Windows.Automation.AutomationElement]::RootElement) 'allowlist-failed'
   Write-Warning "MT${Version}: allowlist UI setup was not established: $_"
