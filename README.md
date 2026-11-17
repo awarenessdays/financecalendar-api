@@ -107,7 +107,7 @@ curl --fail-with-body \
 - **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
-The API and [tested beta client downloads](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-annual-restored-2026-11-15) accept a configured API key. These versioned packages include authenticated setup and historical archive traversal. Use the [live offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) for pricing and access. npm/PyPI registry publication remains pending.
+Install the Node CLI and local MCP server with `npm install --global financecalendar-mcp` when its [npm release](https://www.npmjs.com/package/financecalendar-mcp) is available. Install the Python SDK and CLI with `python -m pip install financecalendar` when its [PyPI release](https://pypi.org/project/financecalendar/) is available. The [earlier GitHub beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-annual-restored-2026-11-15) remain available for version-pinned installs. Configure a private API key for data requests. Use the [live offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) for pricing and access.
 
 Programmatic data access requires a verified account and API key. Choose Starter for richer recorded data and tools or explicitly enrol in Free Developer for the bounded schedule scope above. Public sample, product-offer and OpenAPI routes are separate inspection resources. Creating an account does not charge you. Anonymous `POST /keys` creation remains unavailable.
 
