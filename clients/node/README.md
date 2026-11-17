@@ -19,15 +19,21 @@ Free Developer counts successful committed HTTP 200 JSON schedule responses, inc
 
 For paid plans, daily and monthly quota usage counts admitted requests, not successful responses. Requests refused with HTTP 429 do not consume more allowance; a request that passes the quota check can still consume allowance if it later returns an error. Retained per-key request history remains a separate attempt diagnostic and can include rejected requests.
 
-## Install the tested beta download
+## Install the Node client
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-annual-restored-2026-11-15). Use the direct package URL in your chosen environment:
+Requires Node.js 20 or newer. To install the [npm release](https://www.npmjs.com/package/financecalendar-mcp) when available:
 
 ```sh
-npm install --global https://github.com/awarenessdays/financecalendar-api/releases/download/clients-annual-restored-2026-11-15/financecalendar-mcp-0.2.7.tgz
+npm install --global financecalendar-mcp
+financecalendar --help
 ```
 
-Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
+To launch the local MCP server on demand, configure your client to run
+`npx --yes --package=financecalendar-mcp financecalendar-mcp` and supply
+`FC_API_KEY` in the client's private environment.
+
+For a version-pinned download of the earlier beta, see the
+[GitHub archives and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-annual-restored-2026-11-15).
 
 ## Hosted MCP connector: ChatGPT and Claude
 
@@ -101,8 +107,7 @@ See the [MCP reference](https://www.financecalendar.com/api/mcp/).
 
 ## Install from source
 
-Registry publication is pending. Install the current version from the public
-source repository:
+To build directly from the public source repository:
 
 ```sh
 git clone https://github.com/awarenessdays/financecalendar-api.git
@@ -112,7 +117,7 @@ npm link
 financecalendar --help
 ```
 
-For MCP, configure `node` as the command and the absolute path to this checkout's `mcp.js` as its argument, as shown below. The `financecalendar-mcp` name is not currently published on npm; use the tested download or source command above.
+For a source installation of MCP, configure `node` as the command and the absolute path to this checkout's `mcp.js` as its argument, as shown below.
 
 Requires Node 20 or newer.
 

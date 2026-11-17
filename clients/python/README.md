@@ -20,20 +20,22 @@ export FC_API_KEY='fc_live_YOUR_ACTUAL_KEY'
 
 Use your real key and keep it private; never include it in a shared notebook or URL.
 
-## Install the tested beta download
+## Install the Python client
 
-[Download packages and SHA-256 checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-annual-restored-2026-11-15). Use the direct package URL in your chosen environment:
+Requires Python 3.10 or newer. To install the [PyPI release](https://pypi.org/project/financecalendar/) when available, use a virtual environment:
 
 ```sh
-python -m pip install https://github.com/awarenessdays/financecalendar-api/releases/download/clients-annual-restored-2026-11-15/financecalendar-0.1.7-py3-none-any.whl
+python -m pip install financecalendar
+financecalendar --help
 ```
 
-Registry publication remains pending. The GitHub release is a versioned, tested distribution; source installation is also available below.
+For the optional pandas helpers, install `"financecalendar[pandas]"`.
+For a version-pinned download of the earlier beta, see the
+[GitHub archives and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-annual-restored-2026-11-15).
 
 ## Install from source
 
-Registry publication is pending. Install the current version from the public
-source repository:
+To build directly from the public source repository:
 
 ```sh
 git clone https://github.com/awarenessdays/financecalendar-api.git
@@ -46,9 +48,7 @@ python -m venv .venv
 Use `.venv\Scripts\python` and `.venv\Scripts\financecalendar` on Windows.
 Install `".[pandas]"` instead of `.` for the optional DataFrame helper.
 
-The `financecalendar` name is not currently published on PyPI; use the tested wheel or source command above.
-
-Requires Python 3.10 or newer. The only runtime dependency is `httpx` (plus `tzdata` on Windows for timezone names).
+The runtime dependencies are `httpx` and, on Windows, `tzdata` for time zone names.
 
 ## Quick start
 
@@ -314,8 +314,7 @@ record-level source credits when reusing data.
 
 ### Query quality and observation evidence
 
-These methods are available in the current source checkout. The older versioned
-beta wheel above may predate these additions; no new registry release is implied.
+The current Python client includes methods for inspecting data quality and publication evidence.
 
 ```python
 with Client() as fc:
