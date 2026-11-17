@@ -109,6 +109,9 @@ def main():
         lambda value: value['components']['schemas']['Event']['properties']['forecasts'].update(type='number'),
         lambda value: value['components']['schemas']['FreeDeveloperEvent']['properties']['figures_available'].update(const=False),
         lambda value: next(parameter for parameter in value['paths']['/changes']['get']['parameters'] if parameter['name'] == 'fields')['schema'].update(type='number'),
+        lambda value: next(parameter for parameter in value['paths']['/calendar']['get']['parameters'] if parameter['name'] == 'pair')['schema'].update(type='number'),
+        lambda value: value['paths']['/today']['get']['parameters'].append(deepcopy(next(parameter for parameter in value['paths']['/today']['get']['parameters'] if parameter['name'] == 'pair'))),
+        lambda value: value['paths']['/week']['get'].update(parameters=[parameter for parameter in value['paths']['/week']['get']['parameters'] if parameter.get('name') != 'pair']),
     ]
     for mutate in mutations:
         candidate = deepcopy(document)

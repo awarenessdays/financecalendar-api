@@ -25,6 +25,21 @@
         "fields": "9bfe54e10badfbfe59e4d4522573e28c960022dc28bcb00f8b2a9ab9d28b0729",
         "exclude": "183bd12636a4be100a5ae391869360c889444a01a9bfd8d59d0f63defb277e62"
       }
+    },
+    "/calendar": {
+      "get": {
+        "pair": "006e48171e1d116fa60980347ad02810af26e0e16a1c5fe0016ef98dfbfe58b8"
+      }
+    },
+    "/today": {
+      "get": {
+        "pair": "006e48171e1d116fa60980347ad02810af26e0e16a1c5fe0016ef98dfbfe58b8"
+      }
+    },
+    "/week": {
+      "get": {
+        "pair": "006e48171e1d116fa60980347ad02810af26e0e16a1c5fe0016ef98dfbfe58b8"
+      }
     }
   },
   "property_updates": {

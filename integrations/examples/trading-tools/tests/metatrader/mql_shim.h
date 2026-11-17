@@ -19,7 +19,7 @@ template <class T> struct Array {
 };
 #define input
 enum { FILE_READ = 1, FILE_WRITE = 2, FILE_BIN = 4, FILE_SHARE_READ = 8, CP_UTF8 = 65001, INVALID_HANDLE = -1,
-       TIME_DATE = 1, TIME_MINUTES = 2, SYMBOL_CURRENCY_BASE = 1, SYMBOL_CURRENCY_PROFIT = 2, INIT_SUCCEEDED = 0 };
+       TIME_DATE = 1, TIME_MINUTES = 2, TIME_SECONDS = 4, SYMBOL_CURRENCY_BASE = 1, SYMBOL_CURRENCY_PROFIT = 2, INIT_SUCCEEDED = 0, INIT_FAILED = 1, INIT_PARAMETERS_INCORRECT = 2 };
 // --- test controls ---
 static datetime t_now = 0;
 static int t_status = 200, t_requests = 0, t_error = 0;
@@ -54,17 +54,19 @@ inline string IntegerToString(long long n) { return std::to_string(n); }
 inline string TimeToString(datetime t, int flags = TIME_DATE | TIME_MINUTES) {
    time_t tt = (time_t)t; struct tm g; gmtime_r(&tt, &g); char buf[32]; string out;
    if(flags & TIME_DATE) { strftime(buf, sizeof buf, "%Y.%m.%d", &g); out += buf; }
-   if(flags & TIME_MINUTES) { strftime(buf, sizeof buf, "%H:%M", &g); out += (out.empty() ? "" : " "); out += buf; }
+   if(flags & TIME_MINUTES) { strftime(buf, sizeof buf, (flags & TIME_SECONDS) ? "%H:%M:%S" : "%H:%M", &g); out += (out.empty() ? "" : " "); out += buf; }
    return out;
 }
 inline datetime StringToTime(const string &s) {
-   struct tm g = {}; if(sscanf(s.c_str(), "%d.%d.%d %d:%d", &g.tm_year, &g.tm_mon, &g.tm_mday, &g.tm_hour, &g.tm_min) < 3) return 0;
+   struct tm g = {}; if(sscanf(s.c_str(), "%d.%d.%d %d:%d:%d", &g.tm_year, &g.tm_mon, &g.tm_mday, &g.tm_hour, &g.tm_min, &g.tm_sec) < 3) return 0;
    g.tm_year -= 1900; g.tm_mon -= 1; return (datetime)timegm(&g);
 }
 inline datetime TimeGMT() { return t_now; }
 inline bool GlobalVariableCheck(const string &n) { return t_globals.count(n) > 0; }
 inline double GlobalVariableGet(const string &n) { return t_globals.count(n) ? t_globals[n] : 0; }
 inline datetime GlobalVariableSet(const string &n, double v) { t_globals[n] = v; return t_now; }
+inline bool GlobalVariableTemp(const string &n) { if(!t_globals.count(n)) t_globals[n] = 0; return true; }
+inline bool GlobalVariableSetOnCondition(const string &n, double value, double expected) { if(!t_globals.count(n) || t_globals[n] != expected) return false; t_globals[n] = value; return true; }
 inline bool GlobalVariableDel(const string &n) { return t_globals.erase(n) > 0; }
 static std::map<int, std::pair<string, int>> t_handles; static int t_next = 1;
 inline int FileOpen(const string &name, int flags) {
