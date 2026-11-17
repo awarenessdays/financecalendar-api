@@ -20,6 +20,22 @@ Use `sample.captured_at` as the example's capture time. Read the `completed_rele
 
 The sample is limited to at most three publisher-selected records. It has no configurable filters, dates or pagination. Use the canonical URL above without filter parameters. If an assistant cannot open JSON, it can read the [same sample as HTML](https://www.financecalendar.com/api/sample/).
 
+### Read the sample through a connected hosted MCP client
+
+If the assistant already has an authenticated hosted Finance Calendar connection but cannot fetch the public HTML or JSON, call `feed_status`. Its `structuredContent.recorded_public_sample` contains the same fixed sample response as the public JSON endpoint. Read its `sample.captured_at`, event roles and official source fields using the briefing rules above.
+
+The recorded sample is distinct from `feed_status`'s live service or snapshot-health fields. A successful status call does not turn the captured examples into live results. This fallback does not provide anonymous hosted access, expand a plan, or create an owner setup; the existing hosted authentication and access requirements continue to apply.
+
+## Use browser preparation when the agent cannot send a POST
+
+Open the [browser preparation page for ChatGPT](https://www.financecalendar.com/api/sample/?setup_client=chatgpt#prepare-owner-setup). A person or browser-capable agent can review the workflow and select **Prepare setup link**. The button sends a same-origin POST to the existing setup endpoint and, after an HTTP 201 response, displays the genuine server-returned `owner_url`.
+
+Opening the page with GET only renders the form. It does not create a setup, sign in, link an account or start checkout. The preparation page link is not the returned `owner_url`. A text-only assistant can offer that link, but must not claim to have created a setup unless the POST actually succeeds. No existing paid account or connector is needed for this preparation step; the owner still completes the account and payment approvals below.
+
+This is useful when ChatGPT can browse documentation but its code tool cannot send API requests. OpenAI documents that the [Python data-analysis environment cannot make external web requests or API calls](https://help.openai.com/en/articles/8437071-data-analysis-with-chatgpt). A hostname-resolution error there does not establish that Finance Calendar's public DNS is broken. Use browser preparation or a network-enabled agent or CLI rather than retrying from that restricted environment.
+
+The browser keeps the private status token out of chat. Do not copy it into the conversation to let a text-only assistant poll. Continue using the owner link and the account's connection instructions, or resume through an authorized tool connection once available.
+
 ## Prepare live access without an API key
 
 The current setup recipe preserves a next-US-CPI query. It does not create an account, make a payment or return a production credential. Create the setup from trusted agent or CLI tool state:
