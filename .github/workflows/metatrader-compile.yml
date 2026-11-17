@@ -18,13 +18,19 @@ permissions:
 jobs:
   native:
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['5', '4']
     env:
+      MT_VERSION: ${{ matrix.version }}
       SOURCES: integrations/examples/trading-tools/metatrader
       FIXTURES: integrations/examples/trading-tools/tests/metatrader
     steps:
       - uses: actions/checkout@v6
       - name: Install MetaTrader 5
+        if: matrix.version == '5'
         shell: pwsh
         run: |
           Invoke-WebRequest 'https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe' -OutFile "$env:RUNNER_TEMP\mt5setup.exe"
@@ -36,6 +42,7 @@ jobs:
           if (-not (Test-Path $editor)) { throw 'MetaEditor 5 was not installed' }
           "MT5_EDITOR=$editor" >> $env:GITHUB_ENV
       - name: Install MetaTrader 4
+        if: matrix.version == '4'
         shell: pwsh
         run: |
           Invoke-WebRequest 'https://download.mql5.com/cdn/web/metaquotes.software.corp/mt4/mt4setup.exe' -OutFile "$env:RUNNER_TEMP\mt4setup.exe"
@@ -55,7 +62,7 @@ jobs:
           $evidence = Join-Path $env:RUNNER_TEMP 'fc-metatrader-evidence'
           New-Item -ItemType Directory -Force $evidence | Out-Null
           "FC_MT_EVIDENCE=$evidence" >> $env:GITHUB_ENV
-          foreach ($version in @('5','4')) {
+          foreach ($version in @($env:MT_VERSION)) {
             $editor = if ($version -eq '5') { $env:MT5_EDITOR } else { $env:MT4_EDITOR }
             $work = Join-Path $env:RUNNER_TEMP "fc-native-$version"
             New-Item -ItemType Directory -Force $work | Out-Null
@@ -77,8 +84,13 @@ jobs:
         run: |
           $commonFiles = Join-Path $env:APPDATA 'MetaQuotes\Terminal\Common\Files'
           New-Item -ItemType Directory -Force $commonFiles | Out-Null
+          Add-Type -AssemblyName UIAutomationClient
+          Add-Type -AssemblyName UIAutomationTypes
+          Add-Type -AssemblyName System.Windows.Forms
+          Add-Type -AssemblyName System.Drawing
+          Add-Type 'using System; using System.Runtime.InteropServices; public static class FcTerminalUi { [DllImport("user32.dll")] public static extern IntPtr SendMessage(IntPtr h,uint m,IntPtr w,IntPtr l); }'
           $runtimeFailures = @()
-          foreach ($version in @('5','4')) {
+          foreach ($version in @($env:MT_VERSION)) {
             $editor = if ($version -eq '5') { $env:MT5_EDITOR } else { $env:MT4_EDITOR }
             $install = Split-Path $editor
             $portable = Join-Path $env:RUNNER_TEMP "fc-terminal-$version"
@@ -87,7 +99,9 @@ jobs:
             New-Item -ItemType Directory -Force $expert | Out-Null
             Copy-Item (Join-Path $env:RUNNER_TEMP "fc-native-$version\FinanceCalendarNativeAcceptance.ex$version") $expert
             $terminal = Join-Path $portable $(if ($version -eq '5') { 'terminal64.exe' } else { 'terminal.exe' })
-            & "$env:FIXTURES\Configure-Terminal.ps1" -Terminal $terminal -Evidence $env:FC_MT_EVIDENCE -Version $version
+            $uiScript = (Resolve-Path "$env:FIXTURES\Configure-Terminal.ps1").Path
+            $ui = Start-Process pwsh -ArgumentList '-NoProfile','-File',"`"$uiScript`"",'-Terminal',"`"$terminal`"",'-Evidence',"`"$env:FC_MT_EVIDENCE`"",'-Version',$version -PassThru -NoNewWindow
+            if (-not $ui.WaitForExit(75000)) { Stop-Process -Id $ui.Id -Force; Write-Warning "MT$version UI helper timed out at 75 seconds" }
             # First startup spawns a full-recompile editor. Close disposable terminal
             # and compiler processes before the second config-driven launch so an
             # existing instance cannot absorb the launch and ignore its startup EA.
@@ -103,8 +117,6 @@ jobs:
           Enabled=1
           AllowLiveTrading=0
           AllowDllImport=0
-          WebRequest=1
-          WebRequestUrl=https://www.financecalendar.com
           [StartUp]
           Expert=FinanceCalendarAcceptance\FinanceCalendarNativeAcceptance
           Symbol=EURUSD
@@ -121,7 +133,7 @@ jobs:
           ExpertsExpImport=false
           ExpertsTrades=false
           Symbol=EURUSD
-          Period=M1
+          Period=H4
           Expert=FinanceCalendarAcceptance\FinanceCalendarNativeAcceptance
           "@ | Set-Content $config -Encoding ASCII
               $arguments = @('/portable', "`"$config`"")
@@ -129,14 +141,29 @@ jobs:
             $process = Start-Process $terminal -ArgumentList $arguments -PassThru
             Start-Sleep -Seconds 3
             [ordered]@{pid=$process.Id; exited=$process.HasExited; exitCode=$(if ($process.HasExited) {$process.ExitCode} else {$null}); arguments=$arguments} | ConvertTo-Json | Set-Content (Join-Path $env:FC_MT_EVIDENCE "mt$version-launch.json")
-            foreach ($i in 1..90) { if (Test-Path $result) { break }; Start-Sleep -Seconds 2 }
-            if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+            foreach ($i in 1..45) {
+              if (Test-Path $result) { break }
+              # MT4 can show an authorization prompt before dispatching EA events.
+              # Cancel only this disposable terminal's visible login prompt.
+              $condition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,[int]$process.Id)
+              $windows = [System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Children,$condition)
+              foreach ($window in $windows) {
+                $nodes = $window.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition)
+                $auth = $nodes | Where-Object {$_.Current.Name -match '^Authorization allows'} | Select-Object -First 1
+                if ($auth) {
+                  $cancel = $nodes | Where-Object {$_.Current.Name -eq 'Cancel' -and $_.Current.ClassName -eq 'Button'} | Select-Object -First 1
+                  if ($cancel) { $null = [FcTerminalUi]::SendMessage([IntPtr]::new($cancel.Current.NativeWindowHandle),0x00F5,[IntPtr]::Zero,[IntPtr]::Zero) }
+                }
+              }
+              Start-Sleep -Seconds 2
+            }
             $platformEvidence = Join-Path $env:FC_MT_EVIDENCE "mt$version-runtime"
             New-Item -ItemType Directory -Force $platformEvidence | Out-Null
-            Copy-Item (Join-Path $portable 'MQL*\Logs\*.log') $platformEvidence -ErrorAction SilentlyContinue
-            Copy-Item (Join-Path $portable 'Logs\*.log') $platformEvidence -ErrorAction SilentlyContinue
+            foreach ($log in (Get-ChildItem (Join-Path $portable 'MQL*\Logs\*.log') -ErrorAction SilentlyContinue)) { Copy-Item $log.FullName (Join-Path $platformEvidence "experts-$($log.Name)") }
+            foreach ($log in (Get-ChildItem (Join-Path $portable 'Logs\*.log') -ErrorAction SilentlyContinue)) { Copy-Item $log.FullName (Join-Path $platformEvidence "terminal-$($log.Name)") }
             if (-not (Test-Path $result)) {
               $runtimeFailures += "MT$version never produced native runtime evidence"
+              Copy-Item (Join-Path $commonFiles "FinanceCalendar-native-start-$version.json") $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
               try {
                 $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
                 $bitmap = [System.Drawing.Bitmap]::new($screen.Width,$screen.Height)
@@ -145,8 +172,11 @@ jobs:
                 $bitmap.Save((Join-Path $platformEvidence 'runtime-missing.png'),[System.Drawing.Imaging.ImageFormat]::Png)
                 $graphics.Dispose(); $bitmap.Dispose()
               } catch { Write-Host "Runtime screenshot unavailable: $_" }
+              if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
               continue
             }
+            if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+            Copy-Item (Join-Path $commonFiles "FinanceCalendar-native-start-$version.json") $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
             Copy-Item $result $env:FC_MT_EVIDENCE
             $report = Get-Content $result -Raw | ConvertFrom-Json
             $report | ConvertTo-Json
@@ -157,7 +187,7 @@ jobs:
       - name: Report public HTTPS transport separately
         shell: pwsh
         run: |
-          foreach ($version in @('5','4')) {
+          foreach ($version in @($env:MT_VERSION)) {
             $report = Get-Content (Join-Path $env:FC_MT_EVIDENCE "FinanceCalendar-native-$version.json") -Raw | ConvertFrom-Json
             if ($report.public_sample_http_status -ne 200 -or $report.public_sample_bytes -lt 2) {
               throw "MT$version public sample HTTPS not accepted (status $($report.public_sample_http_status), MQL error $($report.public_sample_mql_error)); terminal allowlist requires inspection."
@@ -166,6 +196,6 @@ jobs:
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: metatrader-native-evidence
+          name: metatrader-native-evidence-${{ matrix.version }}
           path: ${{ runner.temp }}/fc-metatrader-evidence/
           if-no-files-found: warn
