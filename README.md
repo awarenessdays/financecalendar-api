@@ -2,7 +2,7 @@
 
 Build release watchlists, compare recorded consensus forecasts with published results, and query economic schedules as JSON, CSV and ICS. Paid plans support **release forecasts for 60 mapped headline measures across 10 economies**. Available values appear in the `forecasts` field, refreshed hourly and labelled with their update time and source count. Coverage varies by release; the mapped total is not the number with a live forecast at any moment. Provider consensus spans **12 selected US headline release series**, alongside source-linked actual/prior values. The calendar also covers central bank decisions, selected crypto events and exchange holidays. Records retain their metric, reference period, source verification, timing precision and freshness metadata. Snapshot builds run hourly; source freshness is reported separately.
 
-Building a **US CPI and FOMC watchlist with an AI agent**? Read the [public recorded sample and briefing](https://www.financecalendar.com/api/sample/) without an account, then use the [agent setup guide](docs/agent-setup.md) to prepare an owner-approved connection to live paid data. The guide covers the no-key setup request, owner sign-in and payment, private readiness polling, and the first authenticated query.
+Building a **US CPI and FOMC watchlist with an AI agent**? Read the [public recorded sample and briefing](https://www.financecalendar.com/api/sample/) without an account, then use the [agent setup guide](docs/agent-setup.md) to prepare an owner-approved connection to live paid data. An agent that cannot send API requests can offer the [browser preparation page](https://www.financecalendar.com/api/sample/?setup_client=chatgpt#prepare-owner-setup), where a person or browser-capable agent selects **Prepare setup link** to create a genuine owner link.
 
 ## Affordable API access
 
@@ -80,11 +80,15 @@ curl --fail-with-body "https://www.financecalendar.com/wp-json/fc/v1/sample"
 
 Read `sample.captured_at` before briefing the data: it is a recorded example, not a current watchlist. Use the `completed_release`, `scheduled_release` and `scheduled_decision` roles to distinguish the published result from future schedules. Cite `actual_evidence.edition_url` for the CPI result and each record's `source_url` for its schedule. Keep missing values as `null`; a passed release time does not establish that a result was captured.
 
+If a connected hosted MCP client cannot fetch the public page or JSON, call `feed_status` and read `structuredContent.recorded_public_sample`. It carries the same fixed sample, including its capture time, record roles and official source evidence. Keep that recorded example separate from the tool's live status fields. Hosted MCP still requires eligible account access and authentication.
+
 The public sample contains at most three publisher-selected records, with no configurable filters, dates, pagination or full export. Use the canonical URL above without filter parameters. It does not grant ongoing production API access. [Sample guide and owner setup](https://www.financecalendar.com/api/sample/) · [Machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer)
 
 ### Set up live access for an account owner
 
 An agent can prepare a next-US-CPI setup without an API key by sending `POST https://www.financecalendar.com/wp-json/fc-handoff/v1/setup` with `{"recipe":"next-us-cpi","client":"claude","plan":"starter","billing_interval":"year","timezone":"America/New_York"}`. Use `chatgpt`, `cursor`, `rest` or `cli` for the corresponding client. Check the [current offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) for available plans and billing intervals.
+
+If the agent cannot make outbound API requests, use the [browser preparation page](https://www.financecalendar.com/api/sample/?setup_client=chatgpt#prepare-owner-setup). Opening the page only displays the form; selecting **Prepare setup link** sends the POST and displays the genuine `owner_url` returned by the server. The preparation page URL is not an `owner_url`, and offering or opening it does not create a setup. This fallback needs no existing paid connector; the owner still approves account linking and any payment.
 
 Share only the returned `owner_url`. The owner signs in with a verified account, approves **Link this setup to my account**, then reviews and pays through Stripe if needed. Keep `status_token` in private tool state and send it in the `X-FC-Handoff-Token` header to `status_url`, respecting `poll_after_seconds` and `expires_at`. When the status is `ready`, follow `resume` to connect the account and run the first query. Setup and readiness do not supply a data credential or authorize payment on the owner's behalf.
 
