@@ -86,6 +86,7 @@ jobs:
             New-Item -ItemType Directory -Force $expert | Out-Null
             Copy-Item (Join-Path $env:RUNNER_TEMP "fc-native-$version\FinanceCalendarNativeAcceptance.ex$version") $expert
             $terminal = Join-Path $portable $(if ($version -eq '5') { 'terminal64.exe' } else { 'terminal.exe' })
+            & "$env:FIXTURES\Configure-Terminal.ps1" -Terminal $terminal -Evidence $env:FC_MT_EVIDENCE -Version $version
             $config = Join-Path $portable 'fc-acceptance.ini'
             # Disposable runner settings only. Auto-trading and DLL imports remain off.
             @"
@@ -105,11 +106,27 @@ jobs:
           "@ | Set-Content $config -Encoding Unicode
             $result = Join-Path $commonFiles "FinanceCalendar-native-$version.json"
             Remove-Item $result -ErrorAction SilentlyContinue
-            $process = Start-Process $terminal -ArgumentList '/portable', "/config:`"$config`"" -PassThru
+            $arguments = @('/portable', "/config:`"$config`"")
+            if ($version -eq '4') {
+              # MT4 uses flat settings and a positional config path (official MT4 help).
+              @"
+          ExpertsEnable=true
+          ExpertsDllImport=false
+          ExpertsExpImport=false
+          ExpertsTrades=false
+          Symbol=EURUSD
+          Period=M1
+          Expert=FinanceCalendarAcceptance\FinanceCalendarNativeAcceptance
+          "@ | Set-Content $config -Encoding ASCII
+              $arguments = @('/portable', "`"$config`"")
+            }
+            $process = Start-Process $terminal -ArgumentList $arguments -PassThru
             foreach ($i in 1..90) { if (Test-Path $result) { break }; Start-Sleep -Seconds 2 }
             if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
-            Copy-Item (Join-Path $portable 'MQL*\Logs\*.log') $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
-            Copy-Item (Join-Path $portable 'Logs\*.log') $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
+            $platformEvidence = Join-Path $env:FC_MT_EVIDENCE "mt$version-runtime"
+            New-Item -ItemType Directory -Force $platformEvidence | Out-Null
+            Copy-Item (Join-Path $portable 'MQL*\Logs\*.log') $platformEvidence -ErrorAction SilentlyContinue
+            Copy-Item (Join-Path $portable 'Logs\*.log') $platformEvidence -ErrorAction SilentlyContinue
             if (-not (Test-Path $result)) { throw "MT$version never produced native runtime evidence. Compile alone is insufficient." }
             Copy-Item $result $env:FC_MT_EVIDENCE
             $report = Get-Content $result -Raw | ConvertFrom-Json
