@@ -12,7 +12,7 @@ int main() {
    verify(FcSymbolCountries("BTCUSD") == "" && FcSymbolCountries("XAUUSD") == "US", "unsupported bases not silently mapped");
    fresh_terminal(); t_body = FcFixtureCalendar(FcFixtureRow());
    verify(FcNewsInit(KEY), "valid key accepted"); FcNewsRefresh();
-   verify(t_url == "https://www.financecalendar.com/wp-json/fc/v1/calendar?from=2026-11-16&to=2026-11-23&country=US,EU,DE,GB,JP,CA,AU,NZ,CH,CN,IN,KR,MY,HK,NO,SE&impact=high&limit=500", "paid range includes yesterday");
+   verify(t_url == "https://www.financecalendar.com/wp-json/fc/v1/calendar?from=2026-11-15&to=2026-11-23&country=US,EU,DE,GB,JP,CA,AU,NZ,CH,CN,IN,KR,MY,HK,NO,SE&impact=high&limit=500", "paid range includes two preceding publisher dates");
    verify(t_request_headers.find(KEY) != string::npos && t_url.find(KEY) == string::npos, "key only in header");
    verify(FcNewsReady(), "complete fetched schedule ready");
    string reason; verify(FcNewsBlocked("EURUSD", 30, 30, reason), "quiet compatibility blocks");

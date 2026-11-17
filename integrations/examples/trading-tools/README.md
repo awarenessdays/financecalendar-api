@@ -84,11 +84,11 @@ if(state != FC_NEWS_CLEAR) return;
 // Your existing entry logic.
 ```
 
-Initialise with `FcNewsInit(apiKey, "high", 180, 500)` and call `FcNewsRefresh()` from `OnTimer()`. The defaults request yesterday through today+6 UTC every three hours (8 requests/day; 248 in 31 days), including yesterday to preserve after-release windows across midnight. This wider scope requires paid access. The same-key/settings charts share a terminal-local cache and an atomic request lease; keys never appear in file names, cache data or logs.
+Initialise with `FcNewsInit(apiKey, "high", 180, 500)` and call `FcNewsRefresh()` from `OnTimer()`. The defaults request two days ago through today+6 UTC every three hours (8 requests/day; 248 in 31 days), using the two preceding publisher dates and interior UTC coverage buffers to preserve windows up to 24 hours across timezone boundaries. This wider scope requires paid access. The same-key/settings charts share a terminal-local cache and an atomic request lease; keys never appear in file names, cache data or logs.
 
 `FcNewsState()` returns `FC_NEWS_QUIET` (1), `FC_NEWS_CLEAR` (0) or `FC_NEWS_UNKNOWN` (-1). Unknown includes failed, truncated or stale schedules, missing source freshness, imprecise/estimated timing and unsupported symbols. `FcNewsBlocked()` conservatively returns true for quiet **and unknown**. The clear state describes the queried schedule, not trading safety. The example publishes a state and UTC timestamp for other EAs; missing or expired timestamps must be treated as unknown. Use one publisher per symbol/tag and distinct `InpStateTag` values for different settings.
 
-Read the [complete MetaTrader installation, state and recovery guide](../../../docs/metatrader.md) in this working repository, or the README supplied with the downloadable package. Release evidence distinguishes MetaEditor compilation, local stand-in fixtures, native terminal/timer fixtures, a public-sample HTTPS smoke and any separately recorded paid-key/broker acceptance. Do not infer one from another.
+Read the [complete MetaTrader installation, state and recovery guide](../../../docs/fc-forex-2026-11-17/metatrader-README.md) in this working repository, or the README supplied with the downloadable package. Release evidence distinguishes MetaEditor compilation, local stand-in fixtures, native terminal/timer fixtures, a public-sample HTTPS smoke and any separately recorded paid-key/broker acceptance. Do not infer one from another.
 
 ## Run the offline checks
 

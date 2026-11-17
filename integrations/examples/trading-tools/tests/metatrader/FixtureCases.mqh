@@ -88,6 +88,21 @@ void FcFixtureRun()
    FcFixtureCheck(FcNewsParse(body, now) && g_fc_count == 0, "clearly unrelated countryless crypto excluded");
    body = FcFixtureCalendar(FcFixtureRow()); StringReplace(body, "\"events\":[", "\"free_developer\":{},\"events\":[");
    FcFixtureCheck(FcNewsParse(body, now) && !g_fc_complete, "schedule-only Free response cannot claim paid completeness");
+   row = FcFixtureRow(); StringReplace(row, "\"2026-11-17T12:00:00Z\"", "null"); body = FcFixtureCalendar(row);
+   FcFixtureCheck(FcNewsParse(body, now) && FcNewsStateAt("US", now + 3601, 30, 30, reason) == FC_NEWS_UNKNOWN, "editorial row without verification is unknown even with stale=false");
+   row = FcFixtureRow(); StringReplace(row, "2026-11-17T12:00:00Z", "2026-11-17T14:00:00Z"); body = FcFixtureCalendar(row);
+   FcFixtureCheck(FcNewsParse(body, now) && FcNewsStateAt("US", now + 3601, 30, 30, reason) == FC_NEWS_UNKNOWN, "future verification clock is unknown");
+   row = FcFixtureRow(); StringReplace(row, "2026-11-17T12:00:00Z", "2026-11-17T12:00:00.164125+00:00"); body = FcFixtureCalendar(row);
+   FcFixtureCheck(FcNewsParse(body, now) && FcNewsStateAt("US", now + 3601, 30, 30, reason) == FC_NEWS_CLEAR, "real API microsecond verification clock accepted");
+   row = FcFixtureRow(); StringReplace(row, "2026-11-17T12:00:00Z", "2026-11-17T13:00:00.000001Z"); body = FcFixtureCalendar(row);
+   FcFixtureCheck(FcNewsParse(body, now) && FcNewsStateAt("US", now + 3601, 30, 30, reason) == FC_NEWS_UNKNOWN, "future subsecond verification is not truncated into current evidence");
+   row = FcFixtureRow(); StringReplace(row, "2026-11-17T12:00:00Z", "2026-11-17T13:00:00.000000Z"); body = FcFixtureCalendar(row);
+   FcFixtureCheck(FcNewsParse(body, now) && FcNewsStateAt("US", now + 3601, 30, 30, reason) == FC_NEWS_CLEAR, "exact equal zero-fraction verification accepted");
+   body = FcFixtureCalendar(FcFixtureRow());
+   datetime interior = FcParseDate("2026-11-17");
+   FcNewsParse(body, interior - 60);
+   FcFixtureCheck(FcNewsStateAt("GB", interior + 1799, 30, 30, reason) == FC_NEWS_UNKNOWN, "publisher-local query dates require an interior UTC lower bound");
+   FcFixtureCheck(FcNewsStateAt("GB", interior + 1800, 30, 30, reason) == FC_NEWS_CLEAR, "exact interior UTC coverage boundary is included");
    // Restore a useful fixture for adapter/timer checks.
    body = FcFixtureCalendar(FcFixtureRow()); FcNewsParse(body, now - 60);
 }

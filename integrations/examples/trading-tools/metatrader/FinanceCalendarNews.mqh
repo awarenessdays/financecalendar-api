@@ -7,7 +7,7 @@
 // Downloads scheduled releases and computes configurable news windows. No order operations.
 // Allow https://www.financecalendar.com in Tools > Options > Expert Advisors.
 // Run as an Expert Advisor or script; WebRequest is unavailable in indicators/Strategy Tester.
-// Defaults use paid API access: yesterday through today+6, 500 rows, refresh every 3 hours.
+// Defaults use paid API access: two days ago through today+6, 500 rows, refresh every 3 hours.
 // All charts using the same key/settings share a private terminal-local cache.
 #property strict
 
@@ -258,6 +258,27 @@ datetime FcParseUtc(const string iso)
    return TimeToString(out, TIME_DATE | TIME_MINUTES | TIME_SECONDS) == value ? out : 0;
 }
 datetime FcParseDate(const string date) { return StringLen(date) == 10 ? FcParseUtc(date + "T00:00:00Z") : 0; }
+// Verification clocks in the API may contain fractional seconds. Validate the
+// complete UTC spelling; never round a future fractional instant into the fetch.
+bool FcVerifiedAtFetch(const string stamp, const datetime fetched)
+{
+   datetime verified = FcParseUtc(stamp);
+   if(verified > 0) return verified <= fetched;
+   int n = StringLen(stamp);
+   if(n < 22 || StringSubstr(stamp, 19, 1) != ".") return false;
+   int i = 20;
+   bool nonzero = false;
+   while(i < n && FcJsonDigit(StringGetCharacter(stamp, i)))
+   {
+      if(StringGetCharacter(stamp, i) != '0') nonzero = true;
+      i++;
+   }
+   if(i == 20 || i - 20 > 9) return false;
+   string zone = StringSubstr(stamp, i);
+   if(zone != "Z" && zone != "+00:00") return false;
+   verified = FcParseUtc(StringSubstr(stamp, 0, 19) + zone);
+   return verified > 0 && (verified < fetched || (verified == fetched && !nonzero));
+}
 bool FcJsonInteger(const string raw)
 {
    if(StringLen(raw) < 1 || StringLen(raw) > 7) return false;
@@ -315,7 +336,8 @@ bool FcNewsParse(const string &body, const datetime fetched_utc)
          parsed[count].when_utc = FcJsonTop(item, "release_at_utc", raw) ? FcParseUtc(FcJsonText(raw)) : 0;
          parsed[count].last_verified_at = FcJsonTop(item, "last_verified_at", raw) ? FcJsonText(raw) : "";
          string precision = FcJsonTop(item, "time_precision", raw) ? FcJsonText(raw) : "";
-         bool fresh = FcJsonTop(item, "data_stale", raw) && raw == "false";
+         bool fresh = FcJsonTop(item, "data_stale", raw) && raw == "false"
+            && FcVerifiedAtFetch(parsed[count].last_verified_at, fetched_utc);
          bool timed = parsed[count].when_utc > 0 && (precision == "minute" || precision == "second" || precision == "exact" || precision == "instant");
          bool confirmed = status == "confirmed" || status == "rescheduled" || status == "released";
          parsed[count].freshness_unknown = !fresh;
@@ -333,8 +355,10 @@ bool FcNewsParse(const string &body, const datetime fetched_utc)
    for(int k = 0; k < count; k++) g_fc_events[k] = parsed[k];
    g_fc_count = count;
    g_fc_loaded_utc = fetched_utc;
-   g_fc_from_utc = from;
-   g_fc_until_utc = to + 86400;
+   // API dates are publisher-local. Only the interior UTC dates are guaranteed
+   // covered across publisher zones, so retain one day of padding on each side.
+   g_fc_from_utc = from + 86400;
+   g_fc_until_utc = to;
    g_fc_complete = !incomplete;
    g_fc_quality = incomplete ? "The calendar is truncated; increase the event limit or narrow the query" : "";
    return true;
@@ -421,8 +445,8 @@ bool FcNewsFetch()
    g_fc_complete = false;
    GlobalVariableSet(FcGvName("FAILED"), (double)now);
    g_fc_quality = "The latest calendar refresh did not succeed";
-   // Paid calendar window includes yesterday so after-release windows survive UTC midnight.
-   string url = FC_NEWS_URL + "?from=" + FcUtcDate(now - 86400) + "&to=" + FcUtcDate(now + 6 * 86400)
+   // Paid calendar window includes two preceding publisher dates so 24-hour windows survive timezone boundaries.
+   string url = FC_NEWS_URL + "?from=" + FcUtcDate(now - 2 * 86400) + "&to=" + FcUtcDate(now + 6 * 86400)
       + "&country=US,EU,DE,GB,JP,CA,AU,NZ,CH,CN,IN,KR,MY,HK,NO,SE&impact=" + g_fc_impact + "&limit=" + IntegerToString(g_fc_max_events);
    string headers = "X-API-Key: " + g_fc_key + "\r\nAccept: application/json\r\n";
    char request[];
