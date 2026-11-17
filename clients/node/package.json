@@ -1,6 +1,6 @@
 {
   "name": "financecalendar-mcp",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Economic calendar MCP server and CLI. Starter adds recorded forecasts/results and hosted tools; ongoing Free Developer schedule JSON is available. Account key required.",
   "type": "module",
   "bin": {

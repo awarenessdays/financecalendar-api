@@ -2,6 +2,11 @@ name: FC client checks
 
 on:
   workflow_dispatch:
+    inputs:
+      publish_python:
+        description: Publish the tested Python wheel and source distribution to PyPI
+        type: boolean
+        default: false
   pull_request:
     paths:
       - 'clients/**'
@@ -80,6 +85,14 @@ jobs:
           "$RUNNER_TEMP/fc-node-clean/node_modules/.bin/financecalendar" --help > "$RUNNER_TEMP/fc-node-help.txt"
           grep -q 'economic calendar in your terminal' "$RUNNER_TEMP/fc-node-help.txt"
 
+      - name: Stage tested npm distribution
+        if: github.event_name == 'workflow_dispatch' && matrix.node == '24'
+        uses: actions/upload-artifact@v4
+        with:
+          name: financecalendar-node
+          path: clients/node/*.tgz
+          if-no-files-found: error
+
   python:
     name: Python ${{ matrix.python }}
     runs-on: ubuntu-latest
@@ -117,3 +130,27 @@ jobs:
           "$RUNNER_TEMP/fc-python-clean/bin/financecalendar" --help > fc-python-help.txt
           grep -q 'Economic calendar in your terminal' fc-python-help.txt
           "$RUNNER_TEMP/fc-python-clean/bin/python" -c 'from financecalendar import Client; assert callable(Client.calendar)'
+
+      - name: Stage tested Python distributions
+        if: github.event_name == 'workflow_dispatch' && matrix.python == '3.14'
+        uses: actions/upload-artifact@v4
+        with:
+          name: financecalendar-python
+          path: clients/python/dist/*
+          if-no-files-found: error
+
+  publish-python:
+    name: Publish Finance Calendar Python
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_python && github.ref == 'refs/heads/main' && github.repository == 'awarenessdays/financecalendar-api'
+    needs: [openapi, node, python]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: financecalendar-python
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086
