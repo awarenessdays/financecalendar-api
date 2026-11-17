@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.awarenessdays/financecalendar",
+  "title": "Finance Calendar",
+  "description": "Economic release dates, central-bank decisions and market holidays. Read-only with a linked account.",
+  "repository": {
+    "url": "https://github.com/awarenessdays/financecalendar-api",
+    "source": "github"
+  },
+  "websiteUrl": "https://www.financecalendar.com/api/mcp/",
+  "version": "1.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://www.financecalendar.com/wp-json/fc-mcp/v1/mcp"
+    }
+  ]
+}

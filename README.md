@@ -124,6 +124,8 @@ Active Starter, Build and Scale subscriptions include the Data explorer. Complet
 
 ## Hosted connector
 
+The [MCP Registry manifest](server.json) describes the read-only hosted connector. See the [setup guide](https://www.financecalendar.com/api/mcp/) for account linking and supported clients.
+
 Use Streamable HTTP with your own key on **every** request:
 
 ```text
