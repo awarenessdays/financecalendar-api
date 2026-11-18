@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   native:
+    name: ${{ matrix.version == '4' && 'MT4 compiler and parser (runtime pending)' || 'MT5 terminal and HTTPS' }}
     runs-on: windows-latest
     timeout-minutes: 18
     strategy:
@@ -79,7 +80,7 @@ jobs:
               if ($text -notmatch '\b0 errors?, 0 warnings?\b' -or -not (Test-Path (Join-Path $work "$base.ex$version"))) { throw "Compile failed: $target" }
             }
           }
-      - name: Run real terminal fixture EA and timer
+      - name: Verify declared platform scope
         shell: pwsh
         run: |
           $commonFiles = Join-Path $env:APPDATA 'MetaQuotes\Terminal\Common\Files'
@@ -105,7 +106,7 @@ jobs:
             Get-Process terminal64, terminal, metaeditor64, metaeditor -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
             Start-Sleep -Seconds 2
             $config = Join-Path $portable 'fc-acceptance.ini'
-            # Disposable runner settings only. Auto-trading and DLL imports remain off.
+            # Disposable accountless/order-free runner. No broker credentials; DLL imports remain off.
             @"
           [Common]
           KeepPrivate=0
@@ -120,6 +121,8 @@ jobs:
           Period=M1
           "@ | Set-Content $config -Encoding Unicode
             $result = Join-Path $commonFiles "FinanceCalendar-native-$version.json"
+            $parserResult = Join-Path $commonFiles "FinanceCalendar-native-parser-$version.json"
+            Remove-Item $parserResult -ErrorAction SilentlyContinue
             Remove-Item $result -ErrorAction SilentlyContinue
             $arguments = @('/portable', "/config:`"$config`"")
             if ($version -eq '4') {
@@ -128,7 +131,7 @@ jobs:
           ExpertsEnable=true
           ExpertsDllImport=false
           ExpertsExpImport=false
-          ExpertsTrades=false
+          ExpertsTrades=true
           Symbol=EURUSD
           Period=H4
           Expert=FinanceCalendarAcceptance\FinanceCalendarNativeAcceptance
@@ -144,13 +147,25 @@ jobs:
               $dismiss = Start-Process pwsh -ArgumentList '-NoProfile','-File',"`"$uiScript`"",'-Terminal',"`"$terminal`"",'-Evidence',"`"$env:FC_MT_EVIDENCE`"",'-Version',$version,'-ExistingProcessId',$process.Id,'-DismissOnly' -PassThru -NoNewWindow
               if (-not $dismiss.WaitForExit(15000)) { Stop-Process -Id $dismiss.Id -Force; Write-Warning 'Startup dialog cancellation exceeded 15 seconds' }
             }
-            # Passive file polling only. Querying the terminal's UIA provider while
-            # its EA is in OnInit can deadlock native timer creation on its UI thread.
-            foreach ($i in 1..45) { if (Test-Path $result) { break }; Start-Sleep -Seconds 2 }
+            # Passive file polling avoids querying GUI providers during EA initialization.
+            foreach ($i in 1..45) { if ((Test-Path $result) -or ($version -eq '4' -and (Test-Path $parserResult))) { break }; Start-Sleep -Seconds 2 }
             $platformEvidence = Join-Path $env:FC_MT_EVIDENCE "mt$version-runtime"
             New-Item -ItemType Directory -Force $platformEvidence | Out-Null
             foreach ($log in (Get-ChildItem (Join-Path $portable 'MQL*\Logs\*.log') -ErrorAction SilentlyContinue)) { Copy-Item $log.FullName (Join-Path $platformEvidence "experts-$($log.Name)") }
             foreach ($log in (Get-ChildItem (Join-Path $portable 'Logs\*.log') -ErrorAction SilentlyContinue)) { Copy-Item $log.FullName (Join-Path $platformEvidence "terminal-$($log.Name)") }
+            Copy-Item $parserResult $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
+            if ($version -eq '4') {
+              if (-not (Test-Path $parserResult)) { $runtimeFailures += 'MT4 native parser receipt is missing' }
+              else {
+                $parser = Get-Content $parserResult -Raw | ConvertFrom-Json
+                if ($parser.fixture_failures -ne 0 -or $parser.fixture_checks -lt 48) { $runtimeFailures += 'MT4 native parser regression' }
+                [ordered]@{platform='MT4';status='source_preview';compiler='passed';native_parser_checks=$parser.fixture_checks;native_parser_failures=$parser.fixture_failures;callback_acceptance='pending_connected_demo';https_acceptance='pending_connected_demo';paid_key_tested=$false;broker_account_tested=$false} | ConvertTo-Json | Set-Content (Join-Path $env:FC_MT_EVIDENCE 'FinanceCalendar-mt4-validation-scope.json')
+                "- MT4 source preview: compiler and $($parser.fixture_checks) real native parser/decision checks; callback and HTTPS acceptance remain PENDING a connected demo terminal. This is not full runtime acceptance." >> $env:GITHUB_STEP_SUMMARY
+              }
+              if (Test-Path $result) { Copy-Item $result $env:FC_MT_EVIDENCE }
+              if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+              continue
+            }
             if (-not (Test-Path $result)) {
               $runtimeFailures += "MT$version never produced native runtime evidence"
               Copy-Item (Join-Path $commonFiles "FinanceCalendar-native-start-$version.json") $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
@@ -170,11 +185,12 @@ jobs:
             Copy-Item $result $env:FC_MT_EVIDENCE
             $report = Get-Content $result -Raw | ConvertFrom-Json
             $report | ConvertTo-Json
-            if ($report.fixture_failures -ne 0 -or $report.fixture_checks -lt 40 -or $report.timer_calls -lt 2) { $runtimeFailures += "MT$version fixture/timer acceptance failed" }
+            if ($report.fixture_failures -ne 0 -or $report.fixture_checks -lt 50 -or $report.timer_calls -lt 2) { $runtimeFailures += "MT$version fixture/timer acceptance failed" }
             "- MT${version}: $($report.fixture_checks) native fixture checks; $($report.timer_calls) timer calls; public HTTPS status $($report.public_sample_http_status). Paid-key/broker test: not performed." >> $env:GITHUB_STEP_SUMMARY
           }
           if ($runtimeFailures.Count -gt 0) { throw ($runtimeFailures -join '; ') }
       - name: Report public HTTPS transport separately
+        if: matrix.version == '5'
         shell: pwsh
         run: |
           foreach ($version in @($env:MT_VERSION)) {

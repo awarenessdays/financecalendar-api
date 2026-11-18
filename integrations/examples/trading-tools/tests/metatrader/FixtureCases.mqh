@@ -5,9 +5,6 @@ string g_fixture_failures = "";
 void FcFixtureCheck(const bool ok, const string name)
 {
    g_fixture_checks++;
-#ifdef FC_NATIVE_FIXTURE_TRACE
-   Print("[DEBUG-fcmt4] Fixture completed ", g_fixture_checks, ": ", name);
-#endif
    if(!ok) { g_fixture_failed++; g_fixture_failures += name + "; "; Print("FAILED: ", name); }
 }
 string FcFixtureRow()
@@ -22,13 +19,7 @@ string FcFixtureCalendar(const string events, const int count = 1, const int tot
 void FcFixtureRun()
 {
    g_fixture_checks = 0; g_fixture_failed = 0; g_fixture_failures = "";
-#ifdef FC_NATIVE_FIXTURE_TRACE
-   Print("[DEBUG-fcmt4] Fixture initial UTC parse starting");
-#endif
    datetime now = FcParseUtc("2026-11-17T13:00:00Z");
-#ifdef FC_NATIVE_FIXTURE_TRACE
-   Print("[DEBUG-fcmt4] Fixture initial UTC parse completed");
-#endif
    g_fc_stopped = false;
    string row = FcFixtureRow(), body = FcFixtureCalendar(row), reason;
    FcFixtureCheck(FcParseUtc("2026-11-17T13:30:42+00:00") == FcParseUtc("2026-11-17T13:30:42Z"), "UTC offsets and seconds");
@@ -113,15 +104,6 @@ void FcFixtureRun()
    FcFixtureCheck(FcNewsStateAt("GB", interior + 1799, 30, 30, reason) == FC_NEWS_UNKNOWN, "publisher-local query dates require an interior UTC lower bound");
    FcFixtureCheck(FcNewsStateAt("GB", interior + 1800, 30, 30, reason) == FC_NEWS_CLEAR, "exact interior UTC coverage boundary is included");
    // Restore a useful fixture for adapter/timer checks.
-#ifdef FC_NATIVE_FIXTURE_TRACE
-   Print("[DEBUG-fcmt4] restore fixture body starting");
-#endif
    body = FcFixtureCalendar(FcFixtureRow());
-#ifdef FC_NATIVE_FIXTURE_TRACE
-   Print("[DEBUG-fcmt4] restore parser starting");
-#endif
    FcNewsParse(body, now - 60);
-#ifdef FC_NATIVE_FIXTURE_TRACE
-   Print("[DEBUG-fcmt4] restore parser completed");
-#endif
 }

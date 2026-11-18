@@ -2,6 +2,8 @@
 
 Add configurable economic-news windows to an Expert Advisor. The filter loads the Finance Calendar release schedule, matches both currencies of a forex symbol, and returns `quiet`, `clear` or `unknown`. It places, changes and closes no orders. Gold pairs such as XAUUSD use their quote currency; other unsupported bases return unknown.
 
+**Choose your platform:** the MT5 source has passed native timer and public-sample HTTPS checks. The MT4 download is a **source preview**: it compiles and passes native parser/decision checks; timer callbacks and HTTPS still need validation in a connected demo terminal.
+
 ## Install
 
 1. In MetaTrader choose **File → Open Data Folder**. Copy the package's `MQL4` or `MQL5` folder into that data folder, merging the `Experts` folders.
@@ -61,9 +63,11 @@ A 429 respects a numeric or standard HTTP-date `Retry-After` delay with a 15-min
 
 ## Acceptance and limits
 
-The repository includes shared MQL fixture cases that run through the actual parser/decision source in a C++ stand-in, plus a Windows workflow that compiles both versions with MetaEditor. Its native fixture EA must actually run in the terminal and deliver timer callbacks before runtime acceptance can pass. A separate HTTPS smoke records a public fixed sample request without an API key.
+The release compiles both versions with MetaEditor and checks the same 48 parser/decision cases in actual MT4 and MT5 terminals. MT5 also passed two real timer callbacks and an HTTPS request for the public fixed sample, without a broker connection.
 
-Consult the release's dated acceptance evidence for the checks that actually passed. A compile, a C++ stand-in run, or a public-sample HTTPS request does **not** establish an end-to-end paid-key/broker account test. No broker account is created by these checks. Live broker-specific symbol metadata, permissions and your EA's integration should be tested on a demo terminal.
+MT4 remains a **source preview**. In the accountless Windows test environment, a standalone timer control with no Finance Calendar code returned success with no error, but delivered no callbacks. Its connected-demo callback and HTTPS acceptance is pending. Validate that workflow in a connected demo terminal before relying on the MT4 example. These results do not establish a product-specific parser defect or successful MT4 callback delivery.
+
+Consult the dated acceptance receipt for source/package hashes and run links. The public-sample request uses no API key; an end-to-end paid-key/broker account test has not been performed for either platform. No order functions or broker account creation are part of these checks.
 
 WebRequest is synchronous, unavailable to indicators and unavailable in Strategy Tester. The package does not provide historical backtesting, trade execution, automatic position management or guaranteed release delivery speed.
 

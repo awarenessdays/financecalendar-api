@@ -202,6 +202,8 @@ curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/changes"
 
 ```
 
+The MetaTrader package has verified MT5 native parser, timer and public HTTPS checks. MT4 is a source preview with native compiler/parser checks; connected-demo callbacks and HTTPS remain pending. Read the [verification scope](docs/metatrader-acceptance.json).
+
 ## Endpoints
 
 This table describes paid-plan capabilities. Free Developer is limited to schedule-only JSON `/calendar` and `/today` within the 100/month, 10/day allowance and seven-date window above. It excludes figures, market status, holidays, crypto, history and the other data routes.
