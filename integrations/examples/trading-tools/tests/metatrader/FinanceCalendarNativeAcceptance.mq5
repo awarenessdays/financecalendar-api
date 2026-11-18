@@ -2,6 +2,7 @@
 // Compile in the disposable portable terminal; never distributed as a trading EA.
 #property strict
 #include "FinanceCalendarNews.mqh"
+#define FC_NATIVE_FIXTURE_TRACE
 #include "FixtureCases.mqh"
 int g_native_timer_calls = 0;
 string NativeContext()
@@ -36,8 +37,11 @@ int OnInit()
    Print("Finance Calendar native OnInit entered: ", NativeContext());
    NativeWrite("FinanceCalendar-native-start-" + NativePlatform() + ".json", "{" + NativeContext() + ",\"on_init_entered\":true}");
    FcFixtureRun();
+   Print("[DEBUG-fcmt4] FcFixtureRun returned; ResetLastError starting");
    ResetLastError();
+   Print("[DEBUG-fcmt4] ResetLastError completed; EventSetTimer starting");
    bool timer_set = EventSetTimer(1);
+   Print("[DEBUG-fcmt4] EventSetTimer returned");
    Print("Finance Calendar native timer set: ", timer_set, "; error: ", GetLastError());
    if(!timer_set) return INIT_FAILED;
    return INIT_SUCCEEDED;

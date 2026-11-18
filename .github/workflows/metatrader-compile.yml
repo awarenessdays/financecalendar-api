@@ -84,11 +84,8 @@ jobs:
         run: |
           $commonFiles = Join-Path $env:APPDATA 'MetaQuotes\Terminal\Common\Files'
           New-Item -ItemType Directory -Force $commonFiles | Out-Null
-          Add-Type -AssemblyName UIAutomationClient
-          Add-Type -AssemblyName UIAutomationTypes
           Add-Type -AssemblyName System.Windows.Forms
           Add-Type -AssemblyName System.Drawing
-          Add-Type 'using System; using System.Runtime.InteropServices; public static class FcTerminalUi { [DllImport("user32.dll")] public static extern IntPtr SendMessage(IntPtr h,uint m,IntPtr w,IntPtr l); }'
           $runtimeFailures = @()
           foreach ($version in @($env:MT_VERSION)) {
             $editor = if ($version -eq '5') { $env:MT5_EDITOR } else { $env:MT4_EDITOR }
@@ -141,22 +138,15 @@ jobs:
             $process = Start-Process $terminal -ArgumentList $arguments -PassThru
             Start-Sleep -Seconds 3
             [ordered]@{pid=$process.Id; exited=$process.HasExited; exitCode=$(if ($process.HasExited) {$process.ExitCode} else {$null}); arguments=$arguments} | ConvertTo-Json | Set-Content (Join-Path $env:FC_MT_EVIDENCE "mt$version-launch.json")
-            foreach ($i in 1..45) {
-              if (Test-Path $result) { break }
-              # MT4 can show an authorization prompt before dispatching EA events.
-              # Cancel only this disposable terminal's visible login prompt.
-              $condition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,[int]$process.Id)
-              $windows = [System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Children,$condition)
-              foreach ($window in $windows) {
-                $nodes = $window.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition)
-                $auth = $nodes | Where-Object {$_.Current.Name -match '^Authorization allows'} | Select-Object -First 1
-                if ($auth) {
-                  $cancel = $nodes | Where-Object {$_.Current.Name -eq 'Cancel' -and $_.Current.ClassName -eq 'Button'} | Select-Object -First 1
-                  if ($cancel) { $null = [FcTerminalUi]::SendMessage([IntPtr]::new($cancel.Current.NativeWindowHandle),0x00F5,[IntPtr]::Zero,[IntPtr]::Zero) }
-                }
-              }
-              Start-Sleep -Seconds 2
+            if ($version -eq '4' -and -not (Test-Path $result)) {
+              # A first-start account wizard is modal. Cancel the observed wizard
+              # and any follow-on authorization prompt without login or UIA calls.
+              $dismiss = Start-Process pwsh -ArgumentList '-NoProfile','-File',"`"$uiScript`"",'-Terminal',"`"$terminal`"",'-Evidence',"`"$env:FC_MT_EVIDENCE`"",'-Version',$version,'-ExistingProcessId',$process.Id,'-DismissOnly' -PassThru -NoNewWindow
+              if (-not $dismiss.WaitForExit(15000)) { Stop-Process -Id $dismiss.Id -Force; Write-Warning 'Startup dialog cancellation exceeded 15 seconds' }
             }
+            # Passive file polling only. Querying the terminal's UIA provider while
+            # its EA is in OnInit can deadlock native timer creation on its UI thread.
+            foreach ($i in 1..45) { if (Test-Path $result) { break }; Start-Sleep -Seconds 2 }
             $platformEvidence = Join-Path $env:FC_MT_EVIDENCE "mt$version-runtime"
             New-Item -ItemType Directory -Force $platformEvidence | Out-Null
             foreach ($log in (Get-ChildItem (Join-Path $portable 'MQL*\Logs\*.log') -ErrorAction SilentlyContinue)) { Copy-Item $log.FullName (Join-Path $platformEvidence "experts-$($log.Name)") }
