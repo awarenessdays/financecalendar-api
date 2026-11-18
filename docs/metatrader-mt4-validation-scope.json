@@ -1,0 +1,11 @@
+{
+  "platform": "MT4",
+  "status": "source_preview",
+  "compiler": "passed",
+  "native_parser_checks": 48,
+  "native_parser_failures": 0,
+  "callback_acceptance": "pending_connected_demo",
+  "https_acceptance": "pending_connected_demo",
+  "paid_key_tested": false,
+  "broker_account_tested": false
+}

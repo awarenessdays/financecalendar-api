@@ -11,9 +11,9 @@ node node/calendar-watchlist.mjs
 
 ## Set up a private key
 
-This watchlist’s wider fields and pagination require a paid plan. [Paid API plans](https://www.financecalendar.com/pricing/) include annually billed Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan. Check the [current Starter quote](https://www.financecalendar.com/pricing/#starter) or the [machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer).
+The watchlist’s wider fields, filters and pagination use paid API access. Choose Starter, Build or Scale from the [current plans](https://www.financecalendar.com/pricing/); the [canonical product offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) defines current prices and account allowances. Inspect the [public fixed sample](https://www.financecalendar.com/api/sample/) before choosing a plan. Keys on one account share its allowance.
 
-[Free Developer](https://www.financecalendar.com/account/?free=1) is ongoing schedule JSON access: **100 successful responses per UTC calendar month, at most 10 per UTC day**, one verified account and one API key issued after approval (allow up to 48 hours for review), no card or automatic charge. Use `GET /calendar` or `/today` for economic-release and central-bank schedules from UTC today through the following six days, with up to 20 records and no pagination. Country (up to three codes) and impact filters are supported; `from` and `to` may narrow, but cannot extend, the seven-date UTC window. Free `/today` is the current UTC date’s schedule, without market-status or holiday payloads. Free responses omit consensus, actual/prior figures and numerical evidence; Starter adds these recorded fields, wider dates/history, formats, hosted MCP and browser tools.
+The secondary Free Developer option provides a bounded schedule-only response on documented `/calendar` and `/today` queries after account verification and request approval. It has a 48-hour review window, no card or automatic paid conversion, and excludes numerical figures, wider dates, richer filters, pagination and hosted tools. These trading-tool examples use the richer paid contract.
 
 Get your key from [your Finance Calendar account](https://www.financecalendar.com/account/). Set `FC_API_KEY` in the process environment. The programs require the current `fc_live_` key format and check it before making a request. They do not accept a key in command-line arguments or URLs and do not automatically load `.env` files. `.env.example` contains a placeholder only.
 
@@ -63,8 +63,7 @@ node node/calendar-watchlist.mjs --clear-cache
 
 ## MetaTrader 4 and 5 manual download
 
-`metatrader/FinanceCalendarFetch.mq4` and `.mq5` contain the same manual `OnStart` script using the documented seven-argument custom-header `WebRequest` overload. **The source compiles in MetaEditor for MQL4 and MQL5 but has not been run in a MetaTrader terminal here.** This is a source example, not a verified trading terminal integration.
-
+`metatrader/FinanceCalendarFetch.mq4` and `.mq5` contain the same manual `OnStart` script using the documented seven-argument custom-header `WebRequest` overload. See the release's dated MetaEditor/native-terminal acceptance evidence; a source review or local C++ stand-in is not a native compile or broker test.
 1. Copy the matching file to your terminal's `MQL4/Scripts` or `MQL5/Scripts` directory. Open it in MetaEditor and compile it locally.
 2. In the terminal, open Tools → Options → Expert Advisors and allow WebRequest for `https://www.financecalendar.com`.
 3. Run the script manually and enter your key in `InputAPIKey` locally. Do not publish or share a preset containing it.
@@ -74,38 +73,24 @@ This deliberately demonstrates **one page, up to 500 records**. Inspect the JSON
 
 The script stops on access errors, shows `Retry-After` on a 429 and makes no automatic repeat requests. Wait for that delay before manually running it again. MetaTrader WebRequest is synchronous, requires its URL allowlist, and is unavailable in indicators and the Strategy Tester. See the official [MQL4 WebRequest](https://docs.mql4.com/common/webrequest) and [MQL5 WebRequest](https://www.mql5.com/en/docs/network/webrequest) references.
 
-## MetaTrader 4 and 5 news filter
+## MetaTrader 4 and 5 news windows
 
-`metatrader/FinanceCalendarNews.mqh` keeps the upcoming release schedule in your terminal and answers one question for your own Expert Advisor: is this symbol inside a quiet window around a scheduled release right now? `metatrader/FinanceCalendarNewsFilter.mq4` and `.mq5` are the same example Expert Advisor built on it. Neither file places, changes or closes orders.
+**Platform scope:** MT5 has passed native timer and public-sample HTTPS checks. MT4 is a source preview with compiler/native parser checks; connected-demo callback and HTTPS acceptance remain pending.
 
-**The source compiles in MetaEditor for MQL4 and MQL5 with no errors or warnings, and its decisions are checked offline against recorded API responses. It has not been run on a trading terminal by the publisher.** Test it on a demo account before relying on it.
-
-1. Copy `FinanceCalendarNews.mqh` and the matching `FinanceCalendarNewsFilter` file into the same `MQL4/Experts` or `MQL5/Experts` folder and compile in MetaEditor.
-2. In the terminal, open Tools → Options → Expert Advisors and allow WebRequest for `https://www.financecalendar.com`.
-3. Attach the Expert Advisor to a chart and enter your key in `InpApiKey`. Do not publish or share a preset containing it.
-
-The chart shows the next release for the symbol and whether it is in a quiet window. The same state is published as the terminal global variable `FC_NEWS_BLOCK_<symbol>`: `1` inside a window, `0` clear, `-1` when no usable schedule is loaded. Another Expert Advisor can read it without including any code:
+Use `metatrader/FinanceCalendarNews.mqh` with `FinanceCalendarNewsFilter.mq4` or `.mq5`. The include downloads a paid-plan release schedule and matches the forex symbol's base and quote currencies, including broker prefixes/suffixes where broker currency metadata is available. XAUUSD watches USD releases; unsupported bases are unknown. It performs no order operations.
 
 ```mql5
-bool quiet = GlobalVariableCheck("FC_NEWS_BLOCK_" + _Symbol) && GlobalVariableGet("FC_NEWS_BLOCK_" + _Symbol) == 1.0;
-```
-
-To use the include directly:
-
-```mql5
-#include "FinanceCalendarNews.mqh"
-int OnInit()  { FcNewsInit(InpApiKey); EventSetTimer(30); return INIT_SUCCEEDED; }
-void OnTimer() { FcNewsRefresh(); }
-// before opening a trade:
 string reason;
-if(FcNewsBlocked(_Symbol, 30, 30, reason)) return;   // 30 minutes before and after a release
+int state = FcNewsState(_Symbol, 30, 30, reason);
+if(state != FC_NEWS_CLEAR) return;
+// Your existing entry logic.
 ```
 
-**Requests and plans.** The filter makes one request per refresh. The default refresh is every 180 minutes, which is 8 requests a day and fits [Free Developer](https://www.financecalendar.com/account/?free=1) (10 successful responses per UTC day, 100 per UTC calendar month). Every chart in one terminal shares the same schedule file, so several charts still make one request. It asks for `from`, `to`, `impact` and `limit` only, which every plan accepts, and covers UTC today through the following six days. `InpImpact` accepts `high` or `high,medium`; Free Developer returns up to 20 releases per response, and the nearest ones are kept if a response is cut. A paid plan allows a higher `InpMaxEvents` and a shorter refresh.
+Initialise with `FcNewsInit(apiKey, "high", 180, 500)` and call `FcNewsRefresh()` from `OnTimer()`. The defaults request two days ago through today+6 UTC every three hours (8 requests/day; 248 in 31 days), using the two preceding publisher dates and interior UTC coverage buffers to preserve windows up to 24 hours across timezone boundaries. This wider scope requires paid access. The same-key/settings charts share a terminal-local cache and an atomic request lease; keys never appear in file names, cache data or logs.
 
-**What counts as a release.** A symbol is matched through its base and quote currencies: EURUSD watches the euro area, Germany and the United States; XAUUSD watches the United States. Covered currencies are USD, EUR, GBP, JPY, CAD, AUD, NZD, CHF, CNY/CNH, INR, KRW, MYR, HKD, NOK and SEK. Cancelled releases and releases without a published UTC time never open a window.
+`FcNewsState()` returns `FC_NEWS_QUIET` (1), `FC_NEWS_CLEAR` (0) or `FC_NEWS_UNKNOWN` (-1). Unknown includes failed, truncated or stale schedules, missing source freshness, imprecise/estimated timing and unsupported symbols. `FcNewsBlocked()` conservatively returns true for quiet **and unknown**. The clear state describes the queried schedule, not trading safety. The example publishes a state and UTC timestamp for other EAs; missing or expired timestamps must be treated as unknown. Use one publisher per symbol/tag and distinct `InpStateTag` values for different settings.
 
-**When something is wrong.** With no schedule, or one older than 26 hours, `FcNewsBlocked` answers false and `FcNewsReady()` answers false, so your own code decides whether to stand aside. A 401, 402 or 403 stops requests until the program is restarted. A 429 waits for `Retry-After`, with a 15-minute minimum. Other failures wait 15 minutes. The key is sent in a header and is never written to the schedule file or the log.
+Read the [complete MetaTrader installation, state and recovery guide](../../../docs/metatrader.md) in this working repository, or the README supplied with the downloadable package. Release evidence distinguishes MetaEditor compilation, local stand-in fixtures, native terminal/timer fixtures, a public-sample HTTPS smoke and any separately recorded paid-key/broker acceptance. Do not infer one from another.
 
 ## Run the offline checks
 
@@ -115,15 +100,12 @@ No real key, account or external connection is required:
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-The suite starts a temporary numeric-loopback HTTP server and invokes both actual CLIs with invented fixture credentials. It exercises pagination, full-record/null/zero/staleness retention, private cache hits and key separation, cross-language cache use, persistent access stops, `Retry-After`, malformed JSON, other HTTP failures, redirects, timeouts and response bounds. MetaTrader checks compare source files and the manual call shape; they are not compiler tests.
+The suite starts a temporary numeric-loopback HTTP server and invokes both actual CLIs with invented fixture credentials. It exercises pagination, full-record/null/zero/staleness retention, private cache hits and key separation, cross-language cache use, persistent access stops, `Retry-After`, malformed JSON, other HTTP failures, redirects, timeouts and response bounds. MetaTrader parser/state/transport/cache/EA-adapter checks execute the actual MQL source through a C++ stand-in runtime. The shared MQL fixture cases also run in the Windows native-terminal workflow; local tests alone are not a MetaEditor compile or live broker test.
 
 For these offline tests only, `FC_TRADING_TOOLS_TEST_HTTP=1` enables a transport restricted to `http://127.0.0.1:<port>/calendar`, plus a fixed clock and shorter timeout. There is no arbitrary external endpoint flag. Leave all `FC_TRADING_TOOLS_TEST_*` variables unset for normal use. The production destination is fixed to `https://www.financecalendar.com/wp-json/fc/v1/calendar`.
 
-## Historical analysis
+For the focused MQL logic check (C++ compiler required):
 
-This example targets the current calendar workflow. For long-run observations,
-evidenced dated publications and a complete historical export, use the
-[archive guide](../../../docs/history.md). Discover actual metric coverage first;
-current-vintage data and an FC receipt cutoff do not establish original market
-prints or contemporaneous forecasts. The new archive MCP tools are local stdio
-only; the hosted catalogue is unchanged.
+```sh
+python3 tests/metatrader/run_mql_tests.py
+```

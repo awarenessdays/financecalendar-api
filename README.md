@@ -112,6 +112,20 @@ curl --fail-with-body \
   "https://www.financecalendar.com/wp-json/fc/v1/calendar?limit=10"
 ```
 
+### Forex pair filters and MetaTrader
+
+Choose a pair to include scheduled economic releases for both currencies:
+
+```sh
+curl --fail-with-body \
+  -H "X-API-Key: $FC_API_KEY" \
+  "https://www.financecalendar.com/wp-json/fc/v1/calendar?pair=EURUSD&impact=high&limit=100"
+```
+
+The paid API supports one `pair` on `/calendar`, `/today` and `/week`. Use `EURUSD` or `EUR/USD`; case is ignored and surrounding whitespace is removed. EUR/USD includes euro area, German and US releases; GBP/JPY includes UK and Japanese releases; XAU/USD includes US releases for gold’s dollar side. Use `pair` or `country` in a request, not both. Multiple pairs and broker suffixes are not accepted. This selects economic-calendar context, not quotes, order execution or price predictions. Pair filtering does not extend Free Developer or retained evaluation scope. Inspect pagination and source freshness before treating a result as complete.
+
+[Download the MT4/MT5 source package](https://github.com/awarenessdays/financecalendar-api/releases/download/metatrader-0.2.0/financecalendar-metatrader.zip), follow the [MetaTrader setup guide](docs/metatrader.md), or try the [pair request builder](https://www.financecalendar.com/api/forex-calendar/). The filter returns **quiet**, **clear** or **unknown**, with configurable windows and explicit stale/incomplete-data handling. It supplies schedule context to your own EA and places no orders. Consult the release’s acceptance evidence for the compiler/runtime checks performed; test live broker connectivity and your EA’s behaviour in a demo terminal.
+
 - **Docs:** https://www.financecalendar.com/api/
 - **Base URL:** `https://www.financecalendar.com/wp-json/fc/v1`
 - **OpenAPI 3.1:** [`openapi.json`](openapi.json) (also served live at `/openapi`)
@@ -120,7 +134,7 @@ curl --fail-with-body \
 - **Codex and Claude Code:** [Plugin and portable Agent Skill](integrations/README.md)
 - **MCP server and CLI:** [Node source and installation](clients/node/README.md)
 - **Python client and CLI:** [Python source and installation](clients/python/README.md)
-- **Trading tools and bots:** [Runnable Python/Node watchlists and a MetaTrader source example](integrations/examples/trading-tools/README.md)
+- **Trading tools and bots:** [Runnable Python/Node watchlists and the MetaTrader news filter](integrations/examples/trading-tools/README.md)
 - **Measured coverage:** https://www.financecalendar.com/api/coverage/
 
 Install the Node CLI and local MCP server with `npm install --global financecalendar-mcp` when its [npm release](https://www.npmjs.com/package/financecalendar-mcp) is available. Install the Python SDK and CLI with `python -m pip install financecalendar` when its [PyPI release](https://pypi.org/project/financecalendar/) is available. The [earlier GitHub beta packages and checksums](https://github.com/awarenessdays/financecalendar-api/releases/tag/clients-annual-restored-2026-11-15) remain available for version-pinned installs. Configure a private API key for data requests. Use the [live offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) for pricing and access.
@@ -187,6 +201,8 @@ curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/week?format=csv" -o week.c
 curl --fail-with-body -H "X-API-Key: $FC_API_KEY" "$B/changes"
 
 ```
+
+The MetaTrader package has verified MT5 native parser, timer and public HTTPS checks. MT4 is a source preview with native compiler/parser checks; connected-demo callbacks and HTTPS remain pending. Read the [verification scope](docs/metatrader-acceptance.json).
 
 ## Endpoints
 

@@ -79,6 +79,16 @@
             }
           },
           {
+            "name": "pair",
+            "in": "query",
+            "description": "Paid API pair filter, for example EURUSD, EUR/USD or GBPJPY. Case-insensitive; surrounding whitespace is ignored. Selects release countries for both currencies (EUR includes EU and DE). XAUUSD selects US releases. Use pair or country, not both; one pair only, without broker suffixes. Supported currencies: USD, EUR, GBP, JPY, CAD, AUD, NZD, CHF, CNY/CNH, INR, KRW, MYR, HKD, NOK and SEK. Available on calendar, today and week; does not widen Free Developer or retained evaluation scope. Country relevance is calendar context, not a prediction of price movement.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EURUSD"
+          },
+          {
             "name": "impact",
             "in": "query",
             "description": "high, medium or low; comma-separated for several.",
@@ -388,6 +398,16 @@
             }
           },
           {
+            "name": "pair",
+            "in": "query",
+            "description": "Paid API pair filter, for example EURUSD, EUR/USD or GBPJPY. Case-insensitive; surrounding whitespace is ignored. Selects release countries for both currencies (EUR includes EU and DE). XAUUSD selects US releases. Use pair or country, not both; one pair only, without broker suffixes. Supported currencies: USD, EUR, GBP, JPY, CAD, AUD, NZD, CHF, CNY/CNH, INR, KRW, MYR, HKD, NOK and SEK. Available on calendar, today and week; does not widen Free Developer or retained evaluation scope. Country relevance is calendar context, not a prediction of price movement.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EURUSD"
+          },
+          {
             "name": "impact",
             "in": "query",
             "description": "high, medium or low.",
@@ -640,6 +660,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "pair",
+            "in": "query",
+            "description": "Paid API pair filter, for example EURUSD, EUR/USD or GBPJPY. Case-insensitive; surrounding whitespace is ignored. Selects release countries for both currencies (EUR includes EU and DE). XAUUSD selects US releases. Use pair or country, not both; one pair only, without broker suffixes. Supported currencies: USD, EUR, GBP, JPY, CAD, AUD, NZD, CHF, CNY/CNH, INR, KRW, MYR, HKD, NOK and SEK. Available on calendar, today and week; does not widen Free Developer or retained evaluation scope. Country relevance is calendar context, not a prediction of price movement.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EURUSD"
           },
           {
             "name": "impact",

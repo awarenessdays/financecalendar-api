@@ -37,7 +37,7 @@ def main() -> int:
     fixtures = ''.join(f'static const char *FX_{path.stem.upper().replace("-", "_")} = R"FXJSON({path.read_text()})FXJSON";\n'
                        for path in sorted((HERE / 'fixtures').glob('*.json')))
     program = ('#include "mql_shim.h"\n' + to_cpp((META / 'FinanceCalendarNews.mqh').read_text())
-               + to_cpp(five) + fixtures + (HERE / 'cases.inc').read_text())
+               + to_cpp(five) + to_cpp((HERE / 'FixtureCases.mqh').read_text()) + fixtures + (HERE / 'cases.inc').read_text())
     with tempfile.TemporaryDirectory() as tmp:
         src = Path(tmp) / 'news.cpp'
         src.write_text(program)

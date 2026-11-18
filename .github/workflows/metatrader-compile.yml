@@ -1,28 +1,37 @@
-name: MetaTrader compile
-# Compiles the MetaTrader news-filter sources with MetaEditor's own command-line compiler,
-# for MQL5 and MQL4, on a Windows runner. A compile is not a terminal run: WebRequest and
-# timer behaviour still need a demo-account check in a real terminal.
+name: FC MetaTrader acceptance
 
 on:
   workflow_dispatch:
   pull_request:
     paths:
       - 'integrations/examples/trading-tools/metatrader/**'
-      - '.github/workflows/metatrader-compile.yml'
+      - 'integrations/examples/trading-tools/tests/metatrader/**'
+      - '.github/workflows/fc-metatrader-compile.yml'
+
+concurrency:
+  group: fc-metatrader-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  compile:
+  native:
+    name: ${{ matrix.version == '4' && 'MT4 compiler and parser (runtime pending)' || 'MT5 terminal and HTTPS' }}
     runs-on: windows-latest
-    timeout-minutes: 25
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['5', '4']
     env:
+      MT_VERSION: ${{ matrix.version }}
       SOURCES: integrations/examples/trading-tools/metatrader
+      FIXTURES: integrations/examples/trading-tools/tests/metatrader
     steps:
       - uses: actions/checkout@v6
-
       - name: Install MetaTrader 5
+        if: matrix.version == '5'
         shell: pwsh
         run: |
           Invoke-WebRequest 'https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe' -OutFile "$env:RUNNER_TEMP\mt5setup.exe"
@@ -33,10 +42,9 @@ jobs:
           Get-Process terminal64, mt5setup -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
           if (-not (Test-Path $editor)) { throw 'MetaEditor 5 was not installed' }
           "MT5_EDITOR=$editor" >> $env:GITHUB_ENV
-
       - name: Install MetaTrader 4
+        if: matrix.version == '4'
         shell: pwsh
-        continue-on-error: true
         run: |
           Invoke-WebRequest 'https://download.mql5.com/cdn/web/metaquotes.software.corp/mt4/mt4setup.exe' -OutFile "$env:RUNNER_TEMP\mt4setup.exe"
           Start-Process "$env:RUNNER_TEMP\mt4setup.exe" -ArgumentList '/auto'
@@ -47,35 +55,153 @@ jobs:
           }
           Start-Sleep -Seconds 20
           Get-Process terminal, mt4setup -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-          if ($found) { "MT4_EDITOR=$($found.FullName)" >> $env:GITHUB_ENV; "Found $($found.FullName)" } else { 'MetaEditor 4 was not installed' }
-
-      - name: Compile
+          if (-not $found) { throw 'MetaEditor 4 was not installed' }
+          "MT4_EDITOR=$($found.FullName)" >> $env:GITHUB_ENV
+      - name: Compile production sources and native fixtures
         shell: pwsh
         run: |
-          function Compile($editor, $label, $file) {
-            $work = Join-Path $env:RUNNER_TEMP $label
+          $evidence = Join-Path $env:RUNNER_TEMP 'fc-metatrader-evidence'
+          New-Item -ItemType Directory -Force $evidence | Out-Null
+          "FC_MT_EVIDENCE=$evidence" >> $env:GITHUB_ENV
+          foreach ($version in @($env:MT_VERSION)) {
+            $editor = if ($version -eq '5') { $env:MT5_EDITOR } else { $env:MT4_EDITOR }
+            $work = Join-Path $env:RUNNER_TEMP "fc-native-$version"
             New-Item -ItemType Directory -Force $work | Out-Null
             Copy-Item "$env:SOURCES\*" $work
-            $target = Join-Path $work $file
-            $log = Join-Path $work 'compile.log'
-            Start-Process $editor -ArgumentList "/compile:`"$target`"", "/log:`"$log`"" -Wait
-            "===== $label : $file ====="
-            if (-not (Test-Path $log)) { "no compile log written"; return $false }
-            $text = Get-Content $log -Raw -Encoding Unicode
-            $text
-            $built = Test-Path ([IO.Path]::ChangeExtension($target, $(if ($file -like '*.mq5') { 'ex5' } else { 'ex4' })))
-            return ($text -match '(?m)\b0 errors?\b') -and $built
+            Copy-Item "$env:FIXTURES\FixtureCases.mqh" $work
+            Copy-Item "$env:FIXTURES\FinanceCalendarNativeAcceptance.mq$version" $work
+            foreach ($base in @('FinanceCalendarNewsFilter','FinanceCalendarFetch','FinanceCalendarNativeAcceptance')) {
+              $target = Join-Path $work "$base.mq$version"
+              $log = Join-Path $evidence "mt$version-$base.log"
+              Start-Process $editor -ArgumentList "/compile:`"$target`"", "/log:`"$log`"" -Wait
+              if (-not (Test-Path $log)) { throw "No compiler log: $target" }
+              $text = Get-Content $log -Raw -Encoding Unicode
+              $text
+              if ($text -notmatch '\b0 errors?, 0 warnings?\b' -or -not (Test-Path (Join-Path $work "$base.ex$version"))) { throw "Compile failed: $target" }
+            }
           }
-          $results = [ordered]@{}
-          $results['MQL5 news filter'] = Compile $env:MT5_EDITOR 'mql5' 'FinanceCalendarNewsFilter.mq5'
-          $results['MQL5 fetch script'] = Compile $env:MT5_EDITOR 'mql5-fetch' 'FinanceCalendarFetch.mq5'
-          if ($env:MT4_EDITOR) {
-            $results['MQL4 news filter'] = Compile $env:MT4_EDITOR 'mql4' 'FinanceCalendarNewsFilter.mq4'
-            $results['MQL4 fetch script'] = Compile $env:MT4_EDITOR 'mql4-fetch' 'FinanceCalendarFetch.mq4'
-          } else {
-            $results['MQL4 (MetaEditor 4 unavailable)'] = $false
+      - name: Verify declared platform scope
+        shell: pwsh
+        run: |
+          $commonFiles = Join-Path $env:APPDATA 'MetaQuotes\Terminal\Common\Files'
+          New-Item -ItemType Directory -Force $commonFiles | Out-Null
+          Add-Type -AssemblyName System.Windows.Forms
+          Add-Type -AssemblyName System.Drawing
+          $runtimeFailures = @()
+          foreach ($version in @($env:MT_VERSION)) {
+            $editor = if ($version -eq '5') { $env:MT5_EDITOR } else { $env:MT4_EDITOR }
+            $install = Split-Path $editor
+            $portable = Join-Path $env:RUNNER_TEMP "fc-terminal-$version"
+            Copy-Item $install $portable -Recurse
+            $expert = Join-Path $portable "MQL$version\Experts\FinanceCalendarAcceptance"
+            New-Item -ItemType Directory -Force $expert | Out-Null
+            Copy-Item (Join-Path $env:RUNNER_TEMP "fc-native-$version\FinanceCalendarNativeAcceptance.ex$version") $expert
+            $terminal = Join-Path $portable $(if ($version -eq '5') { 'terminal64.exe' } else { 'terminal.exe' })
+            $uiScript = (Resolve-Path "$env:FIXTURES\Configure-Terminal.ps1").Path
+            $ui = Start-Process pwsh -ArgumentList '-NoProfile','-File',"`"$uiScript`"",'-Terminal',"`"$terminal`"",'-Evidence',"`"$env:FC_MT_EVIDENCE`"",'-Version',$version -PassThru -NoNewWindow
+            if (-not $ui.WaitForExit(75000)) { Stop-Process -Id $ui.Id -Force; Write-Warning "MT$version UI helper timed out at 75 seconds" }
+            # First startup spawns a full-recompile editor. Close disposable terminal
+            # and compiler processes before the second config-driven launch so an
+            # existing instance cannot absorb the launch and ignore its startup EA.
+            Get-Process terminal64, terminal, metaeditor64, metaeditor -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+            Start-Sleep -Seconds 2
+            $config = Join-Path $portable 'fc-acceptance.ini'
+            # Disposable accountless/order-free runner. No broker credentials; DLL imports remain off.
+            @"
+          [Common]
+          KeepPrivate=0
+          NewsEnable=0
+          [Experts]
+          Enabled=1
+          AllowLiveTrading=0
+          AllowDllImport=0
+          [StartUp]
+          Expert=FinanceCalendarAcceptance\FinanceCalendarNativeAcceptance
+          Symbol=EURUSD
+          Period=M1
+          "@ | Set-Content $config -Encoding Unicode
+            $result = Join-Path $commonFiles "FinanceCalendar-native-$version.json"
+            $parserResult = Join-Path $commonFiles "FinanceCalendar-native-parser-$version.json"
+            Remove-Item $parserResult -ErrorAction SilentlyContinue
+            Remove-Item $result -ErrorAction SilentlyContinue
+            $arguments = @('/portable', "/config:`"$config`"")
+            if ($version -eq '4') {
+              # MT4 uses flat settings and a positional config path (official MT4 help).
+              @"
+          ExpertsEnable=true
+          ExpertsDllImport=false
+          ExpertsExpImport=false
+          ExpertsTrades=true
+          Symbol=EURUSD
+          Period=H4
+          Expert=FinanceCalendarAcceptance\FinanceCalendarNativeAcceptance
+          "@ | Set-Content $config -Encoding ASCII
+              $arguments = @('/portable', "`"$config`"")
+            }
+            $process = Start-Process $terminal -ArgumentList $arguments -PassThru
+            Start-Sleep -Seconds 3
+            [ordered]@{pid=$process.Id; exited=$process.HasExited; exitCode=$(if ($process.HasExited) {$process.ExitCode} else {$null}); arguments=$arguments} | ConvertTo-Json | Set-Content (Join-Path $env:FC_MT_EVIDENCE "mt$version-launch.json")
+            if ($version -eq '4' -and -not (Test-Path $result)) {
+              # A first-start account wizard is modal. Cancel the observed wizard
+              # and any follow-on authorization prompt without login or UIA calls.
+              $dismiss = Start-Process pwsh -ArgumentList '-NoProfile','-File',"`"$uiScript`"",'-Terminal',"`"$terminal`"",'-Evidence',"`"$env:FC_MT_EVIDENCE`"",'-Version',$version,'-ExistingProcessId',$process.Id,'-DismissOnly' -PassThru -NoNewWindow
+              if (-not $dismiss.WaitForExit(15000)) { Stop-Process -Id $dismiss.Id -Force; Write-Warning 'Startup dialog cancellation exceeded 15 seconds' }
+            }
+            # Passive file polling avoids querying GUI providers during EA initialization.
+            foreach ($i in 1..45) { if ((Test-Path $result) -or ($version -eq '4' -and (Test-Path $parserResult))) { break }; Start-Sleep -Seconds 2 }
+            $platformEvidence = Join-Path $env:FC_MT_EVIDENCE "mt$version-runtime"
+            New-Item -ItemType Directory -Force $platformEvidence | Out-Null
+            foreach ($log in (Get-ChildItem (Join-Path $portable 'MQL*\Logs\*.log') -ErrorAction SilentlyContinue)) { Copy-Item $log.FullName (Join-Path $platformEvidence "experts-$($log.Name)") }
+            foreach ($log in (Get-ChildItem (Join-Path $portable 'Logs\*.log') -ErrorAction SilentlyContinue)) { Copy-Item $log.FullName (Join-Path $platformEvidence "terminal-$($log.Name)") }
+            Copy-Item $parserResult $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
+            if ($version -eq '4') {
+              if (-not (Test-Path $parserResult)) { $runtimeFailures += 'MT4 native parser receipt is missing' }
+              else {
+                $parser = Get-Content $parserResult -Raw | ConvertFrom-Json
+                if ($parser.fixture_failures -ne 0 -or $parser.fixture_checks -lt 48) { $runtimeFailures += 'MT4 native parser regression' }
+                [ordered]@{platform='MT4';status='source_preview';compiler='passed';native_parser_checks=$parser.fixture_checks;native_parser_failures=$parser.fixture_failures;callback_acceptance='pending_connected_demo';https_acceptance='pending_connected_demo';paid_key_tested=$false;broker_account_tested=$false} | ConvertTo-Json | Set-Content (Join-Path $env:FC_MT_EVIDENCE 'FinanceCalendar-mt4-validation-scope.json')
+                "- MT4 source preview: compiler and $($parser.fixture_checks) real native parser/decision checks; callback and HTTPS acceptance remain PENDING a connected demo terminal. This is not full runtime acceptance." >> $env:GITHUB_STEP_SUMMARY
+              }
+              if (Test-Path $result) { Copy-Item $result $env:FC_MT_EVIDENCE }
+              if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+              continue
+            }
+            if (-not (Test-Path $result)) {
+              $runtimeFailures += "MT$version never produced native runtime evidence"
+              Copy-Item (Join-Path $commonFiles "FinanceCalendar-native-start-$version.json") $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
+              try {
+                $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
+                $bitmap = [System.Drawing.Bitmap]::new($screen.Width,$screen.Height)
+                $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+                $graphics.CopyFromScreen($screen.Left,$screen.Top,0,0,$bitmap.Size)
+                $bitmap.Save((Join-Path $platformEvidence 'runtime-missing.png'),[System.Drawing.Imaging.ImageFormat]::Png)
+                $graphics.Dispose(); $bitmap.Dispose()
+              } catch { Write-Host "Runtime screenshot unavailable: $_" }
+              if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+              continue
+            }
+            if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+            Copy-Item (Join-Path $commonFiles "FinanceCalendar-native-start-$version.json") $env:FC_MT_EVIDENCE -ErrorAction SilentlyContinue
+            Copy-Item $result $env:FC_MT_EVIDENCE
+            $report = Get-Content $result -Raw | ConvertFrom-Json
+            $report | ConvertTo-Json
+            if ($report.fixture_failures -ne 0 -or $report.fixture_checks -lt 50 -or $report.timer_calls -lt 2) { $runtimeFailures += "MT$version fixture/timer acceptance failed" }
+            "- MT${version}: $($report.fixture_checks) native fixture checks; $($report.timer_calls) timer calls; public HTTPS status $($report.public_sample_http_status). Paid-key/broker test: not performed." >> $env:GITHUB_STEP_SUMMARY
           }
-          "## MetaEditor compile" >> $env:GITHUB_STEP_SUMMARY
-          foreach ($name in $results.Keys) { "- $name : $(if ($results[$name]) { 'compiled, 0 errors' } else { 'FAILED' })" >> $env:GITHUB_STEP_SUMMARY }
-          $results.GetEnumerator() | ForEach-Object { "$($_.Key) = $($_.Value)" }
-          if ($results.Values -contains $false) { exit 1 }
+          if ($runtimeFailures.Count -gt 0) { throw ($runtimeFailures -join '; ') }
+      - name: Report public HTTPS transport separately
+        if: matrix.version == '5'
+        shell: pwsh
+        run: |
+          foreach ($version in @($env:MT_VERSION)) {
+            $report = Get-Content (Join-Path $env:FC_MT_EVIDENCE "FinanceCalendar-native-$version.json") -Raw | ConvertFrom-Json
+            if ($report.public_sample_http_status -ne 200 -or $report.public_sample_bytes -lt 2) {
+              throw "MT$version public sample HTTPS not accepted (status $($report.public_sample_http_status), MQL error $($report.public_sample_mql_error)); terminal allowlist requires inspection."
+            }
+          }
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: metatrader-native-evidence-${{ matrix.version }}
+          path: ${{ runner.temp }}/fc-metatrader-evidence/
+          if-no-files-found: warn
