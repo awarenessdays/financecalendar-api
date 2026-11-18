@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "recorded_at": "2026-11-18T00:45:10.464749+00:00",
+  "recorded_at": "2026-11-18T00:50:21.754479+00:00",
   "source_sha256": {
     "FinanceCalendarNews.mqh": "01792193ec10e2bc0b770c4fe7c862b9b9e59e3cb668adecee0f907f474a07b4",
     "FinanceCalendarNewsFilter.mq4": "5fc22bda6396a659605d5d76eb3a36fe58314d645dc70e5f89073bd7e040968c",
@@ -26,7 +26,7 @@
     "broker_connected": false,
     "paid_key_tested": false,
     "broker_account_tested": false,
-    "run_url": "https://github.com/awarenessdays/calude-awareness-days/actions/runs/44201627055",
+    "run_url": "https://github.com/awarenessdays/calude-awareness-days/actions/runs/44210601673",
     "receipt": "metatrader-mt5-native-receipt.json"
   },
   "mt4": {
@@ -37,7 +37,7 @@
     },
     "native_parser_decision_checks": 48,
     "native_parser_decision_failures": 0,
-    "parser_evidence_run_url": "https://github.com/awarenessdays/calude-awareness-days/actions/runs/44202829458",
+    "parser_evidence_run_url": "https://github.com/awarenessdays/calude-awareness-days/actions/runs/44210601673",
     "callback_acceptance": "pending_connected_demo",
     "https_acceptance": "pending_connected_demo",
     "paid_key_tested": false,
@@ -57,12 +57,16 @@
       "run_url": "https://github.com/awarenessdays/calude-awareness-days/actions/runs/44209443855",
       "receipt_directory": "metatrader-diagnostics"
     },
-    "interpretation": "The same callback absence occurs in a plain accountless control without Finance Calendar code. A product-specific parser defect was not demonstrated; this does not establish successful connected-demo callbacks or HTTPS."
+    "interpretation": "The same callback absence occurs in a plain accountless control without Finance Calendar code. A product-specific parser defect was not demonstrated; this does not establish successful connected-demo callbacks or HTTPS.",
+    "parser_receipt": "metatrader-mt4-native-parser-receipt.json",
+    "scope_receipt": "metatrader-mt4-validation-scope.json"
   },
   "limitations": [
     "Neither platform has an end-to-end paid-account/API-key test in these receipts.",
     "The public HTTPS request reads the fixed publisher-selected sample, not a live authenticated calendar.",
     "No broker account was created and no order functions were executed."
   ],
-  "final_scope_workflow": "MT4 compilation and native parser regressions remain required. Its callback/HTTPS status is explicitly pending; MT5 requires native callbacks and HTTP 200."
+  "final_scope_workflow": "MT4 compilation and native parser regressions remain required. Its callback/HTTPS status is explicitly pending; MT5 requires native callbacks and HTTP 200.",
+  "final_scoped_run_url": "https://github.com/awarenessdays/calude-awareness-days/actions/runs/44210601673",
+  "final_scoped_commit": "39c55c8a32571e3065d8b7faffa035670b801493"
 }
