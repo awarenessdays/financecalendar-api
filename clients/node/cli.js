@@ -51,7 +51,7 @@ Environment:
 Free Developer uses only today/calendar schedule JSON: seven UTC dates, at most 20 records.
 Other routes and formats require paid access; do not add timezone or pagination flags to Free calls.
 
-Data: financecalendar.com. Starter bills annually and includes 1,000/day, 25,000/month. Ongoing Free Developer: schedule JSON, 100 successful responses/month, 10/day, one key after approval, no card. https://www.financecalendar.com/pricing/`;
+Data: financecalendar.com. Starter bills monthly or annually and includes 250/day, 5,000/month for new accounts. Ongoing Free Developer: schedule JSON, 100 successful responses/month, 10/day, one key after approval, no card. https://www.financecalendar.com/pricing/`;
 
 const BOOL_FLAGS = new Set(["json", "csv", "next", "holidays", "help", "all"]);
 

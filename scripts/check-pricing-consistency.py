@@ -10,7 +10,7 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 OFFER_URL = 'https://www.financecalendar.com/wp-json/fc/v1/product-offer'
 STARTER_URL = 'https://www.financecalendar.com/pricing/#starter'
-PLAN_LIMITS = {'starter': (1000, 25000), 'build': (100000, None), 'scale': (1000000, None)}
+PLAN_LIMITS = {'starter': (250, 5000), 'build': (100000, None), 'scale': (1000000, None)}
 STABLE_PRICES = {'build': {'month': 999, 'year': 9590}, 'scale': {'month': 2900, 'year': 27840}}
 CLIENT_SPECS = (
     'clients/node/test/fixtures/openapi.json',
@@ -19,8 +19,8 @@ CLIENT_SPECS = (
 STALE_COPY = re.compile(
     r'US\$4\.99/month|US\$53\.89/year|US\$(?:9|19)\.99/year|'
     r'Starter\s*(?:is\s+|costs\s+|from\s+|at\s+)?(?:\*\*)?(?:US)?\$\d+\.\d{2}|'
-    r'250(?: API)? requests (?:per day|per UTC day)|'
-    r'(?<![0-9])5,000 (?:requests )?per (?:UTC )?calendar month|'
+    r'(?<![0-9,])1,000(?: API)? requests (?:per day|per UTC day)|'
+    r'(?<![0-9])25,000 (?:requests )?per (?:UTC )?calendar month|'
     r'2,000 keyless|free with attribution|finite free access is a bounded sample|finite JSON calendar scope',
     re.I,
 )
@@ -35,7 +35,7 @@ def validate_offer(offer, *, live=False):
     assert free['max_records_per_response'] == 20 and free['active_key_limit'] == 1
     assert free['allowed_routes'] == ['/fc/v1/calendar', '/fc/v1/today']
     assert free['ongoing'] is True and free['card_required'] is False and free['automatic_charge'] is False
-    assert free['api_key_required'] is True and free['review_required'] is True and free['review_hours'] == 48
+    assert free['api_key_required'] is True and free['review_required'] is True and free['review_hours'] == 168
     assert offer['evaluation'] == {'available': False, 'retained_participants_honored': True}
     assert offer['sample']['max_records'] == 3 and offer['sample']['filtering'] is False and offer['sample']['pagination'] is False
     for key, (daily, monthly) in PLAN_LIMITS.items():
@@ -49,10 +49,10 @@ def validate_offer(offer, *, live=False):
             assert row['unit_amount'] == amount and row['currency'] == 'usd' and row['interval'] == interval, key + ' price drift'
     starter_prices = offer['plans']['starter']['prices']
     if live:
-        assert set(starter_prices) == {'year'}, 'Live Starter must offer only annual billing.'
-        quote = starter_prices['year']
-        assert quote['currency'] == 'usd' and quote['interval'] == 'year'
-        assert type(quote['unit_amount']) is int and quote['unit_amount'] > 0
+        assert set(starter_prices) == {'month', 'year'}, 'Live Starter must offer monthly and annual billing.'
+        for interval, quote in starter_prices.items():
+            assert quote['currency'] == 'usd' and quote['interval'] == interval
+            assert type(quote['unit_amount']) is int and quote['unit_amount'] > 0
     else:
         assert starter_prices == {}, 'Repository snapshots must direct readers to the live Starter charge.'
 
@@ -103,7 +103,7 @@ def main():
         validate_offer(live, live=True)
 
     for mutate in (
-        lambda x: x['plans']['starter'].update(daily_limit=250),
+        lambda x: x['plans']['starter'].update(daily_limit=1000),
         lambda x: x['plans']['starter']['prices'].update(year={'unit_amount': 999, 'currency': 'usd', 'interval': 'year'}),
         lambda x: x['free_developer'].update(monthly_limit=5000),
         lambda x: x['free_developer'].update(api_key_required=False),
