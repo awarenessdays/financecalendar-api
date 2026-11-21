@@ -1,6 +1,6 @@
 # Build a US CPI and FOMC watchlist with an AI agent
 
-Start with the [public US CPI and FOMC sample](https://www.financecalendar.com/api/sample/) to read a recorded inflation result and upcoming schedule examples. Then prepare an owner-approved setup for live paid access. Starter supports the numerical data and tools used in this workflow; use [live pricing](https://www.financecalendar.com/pricing/) and the [machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) for the current annual charge and allowances.
+Start with the [public US CPI and FOMC sample](https://www.financecalendar.com/api/sample/) to read a recorded inflation result and upcoming schedule examples. Then prepare an owner-approved setup for live paid access. Starter supports the numerical data and tools used in this workflow; use [live pricing](https://www.financecalendar.com/pricing/) and the [machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) for the current charge and allowances.
 
 ## Read the public example before connecting
 
@@ -47,7 +47,7 @@ curl --fail-with-body -sS \
   --data '{"recipe":"next-us-cpi","client":"claude","plan":"starter","billing_interval":"year","timezone":"America/New_York"}'
 ```
 
-Supported clients are `claude`, `chatgpt`, `cursor`, `rest` and `cli`. The only current recipe is `next-us-cpi`. Use `starter`, `build` or `scale` with a billing interval offered for that plan; Starter bills annually. The optional IANA `timezone` defaults to `America/New_York`. The endpoint rejects extra fields such as prompts, email addresses, prices and redirects. See the [live OpenAPI contract](https://www.financecalendar.com/wp-json/fc/v1/openapi).
+Supported clients are `claude`, `chatgpt`, `cursor`, `rest` and `cli`. The only current recipe is `next-us-cpi`. Use `starter`, `build` or `scale` with a billing interval offered for that plan; Starter bills monthly or annually. The optional IANA `timezone` defaults to `America/New_York`. The endpoint rejects extra fields such as prompts, email addresses, prices and redirects. See the [live OpenAPI contract](https://www.financecalendar.com/wp-json/fc/v1/openapi).
 
 The response provides `owner_url`, `status_url`, `status_token`, `poll_after_seconds` and `expires_at`. Share **only `owner_url`** with the owner. Keep the polling token in private tool state, out of chat, URLs and logs. The setup expires after two hours; prepare another setup if it expires.
 

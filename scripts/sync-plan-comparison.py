@@ -17,7 +17,7 @@ import urllib.request
 START = '<!-- fc-plan-comparison:start -->'
 END = '<!-- fc-plan-comparison:end -->'
 URL = 'https://www.financecalendar.com/wp-json/fc/v1/product-offer'
-STARTER_PRICE_LINK = '[Live annual price](https://www.financecalendar.com/pricing/#starter)'
+STARTER_PRICE_LINK = '[Live price](https://www.financecalendar.com/pricing/#starter)'
 
 
 def comparison_text(comparison: dict) -> str:
