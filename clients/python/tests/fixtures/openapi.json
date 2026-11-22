@@ -1644,7 +1644,7 @@
             {
               "name": "exchange",
               "in": "query",
-              "description": "nyse (default, same calendar as nasdaq), sifma, sifma-uk, sifma-jp, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse, or all.",
+              "description": "nyse (default, same calendar as nasdaq), sifma, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse, or all.",
               "required": false,
               "schema": {
                 "type": "string"
