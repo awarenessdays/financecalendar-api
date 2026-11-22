@@ -223,7 +223,7 @@ This table describes paid-plan capabilities. Free Developer is limited to schedu
 | `GET /history/editions` | Named numerical source editions by publication day, with qualified initial/revision/correction status |
 | `GET /history/forecasts` | Typed public survey aggregates by issue-period start index, with separate target and horizon |
 | `GET /history/vintage-coverage` | Measured edition/forecast scopes, clocks and plan-accessible ranges |
-| `GET /holidays` | Exchange holidays and early closes for 12 exchanges (`exchange=nyse\|sifma\|cme\|lse\|tsx\|asx\|hkex\|euronext\|jpx\|six\|xetra\|nse\|all`) |
+| `GET /holidays` | Exchange holidays and early closes for 12 exchanges plus SIFMA UK and Japan recommendations (`exchange=nyse\|sifma\|sifma-uk\|sifma-jp\|cme\|lse\|tsx\|asx\|hkex\|euronext\|jpx\|six\|xetra\|nse\|all`) |
 | `GET /market-status` | Is the exchange open right now (session, breaks, early closes, holidays) |
 | `GET /changes` | Lossless cursor-paginated change log for the last 30 days (`since=`, `limit=`, `cursor=`); restart the original checkpoint on snapshot-change HTTP 409 |
 | `GET /countries` | Countries covered with counts |

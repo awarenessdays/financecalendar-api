@@ -23,7 +23,7 @@ const country = z.string().optional().describe("ISO alpha-2 country, comma-separ
 const tz = z.string().optional().describe("IANA timezone such as Europe/London; adds time_local (HH:MM) to every row.");
 const impact = z.string().optional().describe("high, medium or low; comma-separated for several.");
 const date = (what) => z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe(what);
-const exchange = z.string().optional().describe("nyse (default, same calendar as nasdaq), sifma, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse or all.");
+const exchange = z.string().optional().describe("nyse (default, same calendar as nasdaq), sifma, sifma-uk, sifma-jp, cme, lse, tsx, asx, hkex, euronext, jpx, six, xetra, nse or all.");
 
 server.registerTool("next_event", {
   title: "Next event",
