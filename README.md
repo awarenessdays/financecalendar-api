@@ -122,7 +122,7 @@ curl --fail-with-body \
 
 For news filters and watchlists, `/calendar`, `/today` and `/week` accept `currency=USD,EUR` (fifteen currencies), `pair=EURUSD` for one pair and `pair=XAUUSD` for gold. Use one of `currency`, `pair` or `country` in a request, and combine it with `impact=high`.
 
-Build and Scale also include `/news-window`, which answers the question a news filter asks: is a relevant release inside my window now? It returns `blocked`, `clear` or `unknown`, the releases inside the window and the next release. They also include `/currency-holidays?currency=USD,GBP`, which groups exchange and bond-market closures by currency.
+Build and Scale also include `/news-window`, which answers the question a news filter asks: is a relevant release inside my window now? It returns `blocked`, `clear` or `unknown`, the releases inside the window and the next release. They also include `/currency-holidays?currency=USD,GBP`, which groups exchange and bond-market closures by currency. The hosted MCP connector exposes both as the `news_window` and `currency_holidays` tools, and its `calendar`, `today` and `week` tools accept `pair` and `currency`.
 
 ```bash
 curl --fail-with-body \

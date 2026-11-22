@@ -170,7 +170,7 @@ python examples/history.py --kind forecasts --metric eu-spf-hicp-annual-mean-p12
 All six archive commands support one intact page or complete buffered `--all`
 traversal, preserving original filters and limit with every cursor. Local tools
 `historic_editions`, `historic_forecasts` and `vintage_coverage` bring the local
-catalogue to 19; all six archive tools remain local only. Hosted retains 14 tools.
+catalogue to 19; all six archive tools remain local only. Hosted retained 14 tools at that release; it has 16 since 22 November 2026, with `news_window` and `currency_holidays`.
 The same Starter 1 year / Build 10 years / Scale all available policy applies on the
 route’s documented axes; edition eligibility checks both publication and measured-period start, while forecasts use issue-period start. Omitted bounds use the caller’s accessible window.
 Retain every row’s source credit. ECB originals are freely available from the
