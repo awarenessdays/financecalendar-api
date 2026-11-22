@@ -7889,7 +7889,7 @@
             "type": "string",
             "enum": [
               "tradingeconomics",
-              "financialmodelingprep"
+              "licensed-provider"
             ]
           },
           "provider_event_id": {
