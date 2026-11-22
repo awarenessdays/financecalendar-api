@@ -137,7 +137,7 @@ curl --fail-with-body \
 ```
 
 - **High-impact coverage** includes rate decisions from the Fed, ECB, Bank of England, Bank of Japan, RBA, Bank of Canada, RBNZ and SNB; inflation, jobs, GDP and retail sales for the major economies; US ISM, JOLTS, ADP and jobless claims; and flash and final PMI release times. Impact ratings are set by Finance Calendar.
-- **Countries** include the US, euro area, Germany, France, Italy, Spain, the UK, Japan, Canada, Australia, New Zealand and Switzerland. `GET /countries` lists current coverage.
+- **Countries** include the US, euro area, Germany, France, Italy, Spain, the UK, Japan, Canada, Australia, New Zealand and Switzerland. France, Italy and Spain carry national inflation, GDP and unemployment releases with release times (series such as `fr-cpi-flash`, `it-gdp` and `es-unemployment`). `GET /countries` lists current coverage.
 - **Coverage object:** each calendar response includes `coverage`, which says whether events were recorded for the query and lists any source whose latest collection did not complete. An empty result means no matching event is recorded; it is not a guarantee that nothing is scheduled.
 - **Series names:** rate decisions can be requested by bank or by country, for example `series=boc` or `series=ca-rate-decision`.
 - **Holiday rows** carry `estimated`, `source_url` and `last_verified_at`. SIFMA fixed-income close recommendations are available for the US, UK and Japan (`exchange=sifma`, `sifma-uk`, `sifma-jp`).
