@@ -112,6 +112,22 @@ curl --fail-with-body \
   "https://www.financecalendar.com/wp-json/fc/v1/calendar?limit=10"
 ```
 
+### Currency filters, impact ratings and coverage
+
+For news filters and watchlists, `/calendar`, `/today` and `/week` accept `currency=USD,EUR` (fifteen currencies), `pair=EURUSD` for one pair and `pair=XAUUSD` for gold. Use one of `currency`, `pair` or `country` in a request, and combine it with `impact=high`.
+
+```sh
+curl --fail-with-body \
+  "https://www.financecalendar.com/wp-json/fc/v1/calendar?currency=USD,EUR&impact=high&limit=100" \
+  -H "X-API-Key: $FC_API_KEY"
+```
+
+- **High-impact coverage** includes rate decisions from the Fed, ECB, Bank of England, Bank of Japan, RBA, Bank of Canada, RBNZ and SNB; inflation, jobs, GDP and retail sales for the major economies; US ISM, JOLTS, ADP and jobless claims; and flash and final PMI release times. Impact ratings are set by Finance Calendar.
+- **Countries** include the US, euro area, Germany, France, Italy, Spain, the UK, Japan, Canada, Australia, New Zealand and Switzerland. `GET /countries` lists current coverage.
+- **Coverage object:** each calendar response includes `coverage`, which says whether events were recorded for the query and lists any source whose latest collection did not complete. An empty result means no matching event is recorded; it is not a guarantee that nothing is scheduled.
+- **Series names:** rate decisions can be requested by bank or by country, for example `series=boc` or `series=ca-rate-decision`.
+- **Holiday rows** carry `estimated`, `source_url` and `last_verified_at`. SIFMA fixed-income close recommendations are available for the US, UK and Japan (`exchange=sifma`, `sifma-uk`, `sifma-jp`).
+
 ### Forex pair filters and MetaTrader
 
 Choose a pair to include scheduled economic releases for both currencies:
@@ -228,6 +244,7 @@ This table describes paid-plan capabilities. Free Developer is limited to schedu
 | `GET /changes` | Lossless cursor-paginated change log for the last 30 days (`since=`, `limit=`, `cursor=`); restart the original checkpoint on snapshot-change HTTP 409 |
 | `GET /countries` | Countries covered with counts |
 | `GET /status` | Snapshot age/counts and publisher-source health |
+| `GET /health` | Service state, data freshness, source collection results and measured availability (API key required) |
 | `GET /keys/me` | Key and shared-account usage; create keys in your verified account |
 | `GET /account/full-export` | Complete current JSON dataset; active Scale subscription and Scale API key header required |
 
