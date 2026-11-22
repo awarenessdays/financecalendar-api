@@ -36,6 +36,7 @@ Starter, Build and Scale can power customer-facing websites and apps, including 
 | Official observation archive | No | 1 year | 10 years | All available |
 | Change feed and webhooks | No | Yes | Yes | Yes |
 | News window | No | No | Yes | Yes |
+| Market closures by currency | No | No | Yes | Yes |
 | Formats | JSON | JSON, CSV, ICS | JSON, CSV, ICS | JSON, CSV, ICS |
 | REST, CLI and Python | Yes | Yes | Yes | Yes |
 | Hosted MCP and Data explorer | No | Yes | Yes | Yes |
@@ -63,6 +64,8 @@ Official observation archive: Plan windows use rolling UTC calendar years. Check
 Change feed and webhooks: Signed webhooks notify your integration when calendar updates are published.
 
 News window: Build and Scale answer blocked, clear or unknown for a pair and window in one request.
+
+Market closures by currency: Build and Scale group exchange and bond-market closures by currency, with whether there is a closure today.
 
 REST, CLI and Python: Free Developer uses /calendar and /today through REST and local clients. Routes and response fields follow the active plan.
 
@@ -119,7 +122,7 @@ curl --fail-with-body \
 
 For news filters and watchlists, `/calendar`, `/today` and `/week` accept `currency=USD,EUR` (fifteen currencies), `pair=EURUSD` for one pair and `pair=XAUUSD` for gold. Use one of `currency`, `pair` or `country` in a request, and combine it with `impact=high`.
 
-Build and Scale also include `/news-window`, which answers the question a news filter asks: is a relevant release inside my window now? It returns `blocked`, `clear` or `unknown`, the releases inside the window and the next release.
+Build and Scale also include `/news-window`, which answers the question a news filter asks: is a relevant release inside my window now? It returns `blocked`, `clear` or `unknown`, the releases inside the window and the next release. They also include `/currency-holidays?currency=USD,GBP`, which groups exchange and bond-market closures by currency.
 
 ```bash
 curl --fail-with-body \
