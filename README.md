@@ -35,6 +35,7 @@ Starter, Build and Scale can power customer-facing websites and apps, including 
 | Release history | No | Yes | Yes | Yes |
 | Official observation archive | No | 1 year | 10 years | All available |
 | Change feed and webhooks | No | Yes | Yes | Yes |
+| News window | No | No | Yes | Yes |
 | Formats | JSON | JSON, CSV, ICS | JSON, CSV, ICS | JSON, CSV, ICS |
 | REST, CLI and Python | Yes | Yes | Yes | Yes |
 | Hosted MCP and Data explorer | No | Yes | Yes | Yes |
@@ -60,6 +61,8 @@ Release history: Retained release records and curated datasets vary by series; s
 Official observation archive: Plan windows use rolling UTC calendar years. Check each measure’s stored and accessible dates; source coverage varies. Existing release history and curated datasets are separate.
 
 Change feed and webhooks: Signed webhooks notify your integration when calendar updates are published.
+
+News window: Build and Scale answer blocked, clear or unknown for a pair and window in one request.
 
 REST, CLI and Python: Free Developer uses /calendar and /today through REST and local clients. Routes and response fields follow the active plan.
 
@@ -115,6 +118,14 @@ curl --fail-with-body \
 ### Currency filters, impact ratings and coverage
 
 For news filters and watchlists, `/calendar`, `/today` and `/week` accept `currency=USD,EUR` (fifteen currencies), `pair=EURUSD` for one pair and `pair=XAUUSD` for gold. Use one of `currency`, `pair` or `country` in a request, and combine it with `impact=high`.
+
+Build and Scale also include `/news-window`, which answers the question a news filter asks: is a relevant release inside my window now? It returns `blocked`, `clear` or `unknown`, the releases inside the window and the next release.
+
+```bash
+curl --fail-with-body \
+  -H "X-API-Key: $FC_API_KEY" \
+  "https://www.financecalendar.com/wp-json/fc/v1/news-window?pair=EURUSD&before=30&after=30"
+```
 
 ```sh
 curl --fail-with-body \
