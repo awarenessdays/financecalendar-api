@@ -1,6 +1,6 @@
 # financecalendar-mcp
 
-Bring economic-release dates, consensus forecasts and published results into AI assistants and terminal workflows. Paid plans support consensus for 60 mapped measures across 10 economies. Available values appear in each event’s `forecasts` field, refreshed hourly and labelled with their update time and source count. Coverage varies by release; the mapped total is not the number with a live forecast at any moment. The [financecalendar.com API](https://www.financecalendar.com/api/) also includes consensus across **15 selected US headline release series**, with source-linked actual/prior values for covered records. The same API also supplies central bank decisions, exchange holidays and source-backed crypto events. Use each record’s metric, reference period and source evidence when comparing expectations with results.
+Bring economic-release dates, consensus and published results into AI assistants and terminal workflows. Paid plans support consensus for 60 mapped measures across 10 economies. Available values appear in each event’s `forecasts` field, refreshed through the day and labelled with their update time and source count. Coverage varies by release; see the [financecalendar.com API](https://www.financecalendar.com/api/) coverage page for the measures. **15 selected US headline release series** also carry source-linked actual/prior values. The same API also supplies central bank decisions, exchange holidays and source-backed crypto events. Use each record’s metric, reference period and source evidence when comparing expectations with results.
 
 One package, two binaries:
 
@@ -341,7 +341,7 @@ Text output explains this distinction and retains source credits; JSON and CSV
 retain the available lineage. Unknown consensus stays absent. See the
 [REST reference](https://www.financecalendar.com/api/reference/) for the contract.
 
-Expanded US coverage brings consensus forecasts and release results together for
+Expanded US coverage brings consensus and release results together for
 CPI, nonfarm payrolls, PPI, retail sales, headline PCE, ISM Manufacturing,
 industrial production, Consumer Confidence, JOLTS, ADP employment, ISM Services
 and goods-and-services Trade Balance. Inspect each value's source, reference
