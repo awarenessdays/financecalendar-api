@@ -152,7 +152,7 @@ function showDetail(event) {
   if (event.time_window_start || event.time_window_end) detailField(list, 'Recorded window', `${event.time_window_start || 'Unknown'} – ${event.time_window_end || 'Unknown'}`);
   detailField(list, 'Status', statusBadge(event.status)?.label || event.status); const paid = 'Included with paid plans';
   detailField(list, 'Actual', event.actual === null && event.result_available ? paid : formatValue(event.actual, event.unit));
-  detailField(list, 'Forecast', event.forecast ? [formatValue(event.forecast.value, event.forecast.unit || event.unit), event.forecast.measure, event.forecast.source_families ? `${event.forecast.source_families} source${event.forecast.source_families === 1 ? '' : 's'}` : null, event.forecast.as_of ? `updated ${stamp(event.forecast.as_of)}` : null].filter(Boolean).join(' · ') : formatValue(null, event.unit));
+  detailField(list, 'Consensus', event.forecast ? [formatValue(event.forecast.value, event.forecast.unit || event.unit), event.forecast.measure, event.forecast.source_families ? `${event.forecast.source_families} source${event.forecast.source_families === 1 ? '' : 's'}` : null, event.forecast.as_of ? `updated ${stamp(event.forecast.as_of)}` : null].filter(Boolean).join(' · ') : formatValue(null, event.unit));
   detailField(list, 'Prior', formatValue(event.prior, event.unit));
   if (event.figures_available && event.prior === null && !event.forecast) detailField(list, 'Figures', 'A forecast or previous figure is held. ' + paid + '.');
   detailField(list, 'Source checked', stamp(event.last_verified_at));
