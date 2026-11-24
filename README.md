@@ -1,12 +1,12 @@
 # Finance Calendar API
 
-Build release watchlists, compare recorded consensus forecasts with published results, and query economic schedules as JSON, CSV and ICS. Paid plans support **release forecasts for 60 mapped headline measures across 10 economies**. Available values appear in the `forecasts` field, refreshed hourly and labelled with their update time and source count. Coverage varies by release; the mapped total is not the number with a live forecast at any moment. Provider consensus spans **12 selected US headline release series**, alongside source-linked actual/prior values. The calendar also covers central bank decisions, selected crypto events and exchange holidays. Records retain their metric, reference period, source verification, timing precision and freshness metadata. Snapshot builds run hourly; source freshness is reported separately.
+Build release watchlists, compare Finance Calendar's consensus with published results, and query economic schedules as JSON, CSV and ICS. **Consensus is Finance Calendar's own record of the market's expected figure**: the middle value across independent sources, recorded before each release and frozen at release time, so a surprise calculated afterwards never moves. Paid plans carry the headline consensus, previous figure and result for **15 selected US headline releases**, including ISM, Conference Board and ADP, with a year of history; the headline consensus for releases in the UK, euro area, Germany, Canada and Australia; and consensus by measure for **60 mapped measures across 10 economies** in the `forecasts` field, labelled with update time and source count. Coverage varies by release; the mapped total is not the number with a live figure at any moment. The calendar also covers central bank decisions, selected crypto events and exchange holidays. Records retain their metric, reference period, source verification, timing precision and freshness metadata. Snapshot builds run hourly; source freshness is reported separately.
 
 Building a **US CPI and FOMC watchlist with an AI agent**? Read the [public recorded sample and briefing](https://www.financecalendar.com/api/sample/) without an account, then use the [agent setup guide](docs/agent-setup.md) to prepare an owner-approved connection to live paid data. An agent that cannot send API requests can offer the [browser preparation page](https://www.financecalendar.com/api/sample/?setup_client=chatgpt#prepare-owner-setup), where a person or browser-capable agent selects **Prepare setup link** to create a genuine owner link.
 
 ## Affordable API access
 
-The [public economic calendar is free to browse](https://www.financecalendar.com/events/). Start with Starter for recorded forecasts, results and integration tools. A secondary ongoing Free Developer option supplies schedule JSON:
+The [public economic calendar is free to browse](https://www.financecalendar.com/events/). Start with Starter for recorded consensus, results and integration tools. A secondary ongoing Free Developer option supplies schedule JSON:
 
 | Plan | Price | Shared account allowance | Included access |
 |---|---|---|---|
@@ -30,8 +30,8 @@ Starter, Build and Scale can power customer-facing websites and apps, including 
 | Calendar records / response | Up to 20; No pagination | Up to 500; With pagination | Up to 500; With pagination | Up to 500; With pagination |
 | Release schedules | Today through +6; UTC | Full calendar | Full calendar | Full calendar |
 | Calendar categories | Economic releases; and central banks | All categories | All categories | All categories |
-| Release forecasts | No | Yes | Yes | Yes |
-| Consensus, prior and actual | No | Yes | Yes | Yes |
+| Consensus across 10 economies | No | Yes | Yes | Yes |
+| Consensus, previous and result | No | Yes | Yes | Yes |
 | Release history | No | Yes | Yes | Yes |
 | Official observation archive | No | 1 year | 10 years | All available |
 | Change feed and webhooks | No | Yes | Yes | Yes |
@@ -41,7 +41,7 @@ Starter, Build and Scale can power customer-facing websites and apps, including 
 | REST, CLI and Python | Yes | Yes | Yes | Yes |
 | Hosted MCP and Data explorer | No | Yes | Yes | Yes |
 | Complete dataset download | No | No | No | Yes |
-| Customer-facing apps | Yes | Yes | Yes | Yes |
+| Customer-facing apps | No | No | Yes | Yes |
 
 Price: Annual prices are charged upfront. Paid plans renew at the selected interval until cancelled. Applicable tax included.
 
@@ -53,13 +53,13 @@ Release schedules: Dates, times and status. Paid date ranges follow the current 
 
 Calendar categories: Paid categories include central bank speeches, exchange holidays and selected crypto events.
 
-Release forecasts: Forecast coverage maps 60 headline measures across 10 economies. A forecast appears when a matched pre-release value is available; coverage varies by release.
+Consensus across 10 economies: Consensus coverage maps 60 measures across the US, UK, euro area, Germany, Canada, Australia, New Zealand, Japan, Switzerland and China. A figure typically appears in the week before a release and is frozen at release time.
 
-Consensus, prior and actual: Schedule rows mark figures available on paid plans. Recorded figures vary by series and release; missing values stay null.
+Consensus, previous and result: Schedule rows mark figures available on paid plans. The headline consensus, previous figure and result for 15 US releases, with a year of history, and the headline consensus for releases in the UK, euro area, Germany, Canada and Australia.
 
 Release history: Retained release records and curated datasets vary by series; see coverage for their date ranges.
 
-Official observation archive: Plan windows use rolling UTC calendar years. Check each measure’s stored and accessible dates; source coverage varies. Existing release history and curated datasets are separate.
+Official observation archive: Plan windows use rolling UTC calendar years. Each measure lists its stored and accessible dates. Existing release history and curated datasets are separate.
 
 Change feed and webhooks: Signed webhooks notify your integration when calendar updates are published.
 
@@ -71,7 +71,7 @@ REST, CLI and Python: Free Developer uses /calendar and /today through REST and 
 
 Complete dataset download: Scale includes the complete current snapshot as one JSON download.
 
-Customer-facing apps: Personal and customer-facing products are allowed within each plan’s scope, request limits and applicable source terms. Retain Finance Calendar attribution and publisher credits.
+Customer-facing apps: Choose Build or Scale to show Finance Calendar data to users of your app, website or service. Free Developer and Starter cover personal use, internal tools and private development. Existing grants continue under their agreed terms. Retain Finance Calendar attribution and publisher credits.
 <!-- fc-plan-comparison:end -->
 
 This comparison is generated from the canonical offer with `python3 scripts/sync-plan-comparison.py`; run it with `--check` to reject drift. Consult the [machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer) and the [pricing page](https://www.financecalendar.com/pricing/#plan-comparison) for the current Starter charge and complete offer.
@@ -330,7 +330,7 @@ routes through REST, Python, the CLI or local MCP.
 
 Release forecast coverage maps 60 headline measures across the US, UK, euro area, Germany, Canada, Australia, New Zealand, Japan, Switzerland and China: inflation, jobs, GDP, retail sales, business surveys and central bank rate decisions, with separate forecasts for headline and core measures. A forecast appears when a matched pre-release market value is available. Each is a Finance Calendar blend of market forecasts, frozen at release time, with its `as_of` time and `source_families` count. See the [coverage guide](https://www.financecalendar.com/api/coverage/#release-forecasts).
 
-Provider consensus coverage spans **12 selected US headline release series**: US headline CPI, nonfarm payrolls, PPI, retail sales, PCE, ISM Manufacturing, industrial production, Conference Board Consumer Confidence, JOLTS, ADP employment, ISM Services PMI and goods-and-services Trade Balance. Actual and prior values combine validated official observations with matched provider data; validated official values retain precedence. Compare values with their metric, reference period, unit and source evidence. The existing `/calendar`, `/history` and series endpoints return the expanded records without new request paths.
+Consensus coverage spans **15 selected US headline release series**: US headline CPI, nonfarm payrolls, PPI, retail sales, PCE, ISM Manufacturing, industrial production, Conference Board Consumer Confidence, JOLTS, ADP employment, ISM Services PMI, goods-and-services Trade Balance, core CPI, core PPI and University of Michigan consumer sentiment. Actual and prior values combine validated official observations with recorded release figures; validated official values retain precedence. Compare values with their metric, reference period, unit and source evidence. The existing `/calendar`, `/history` and series endpoints return the expanded records without new request paths.
 
 Check the [current coverage and source evidence](https://www.financecalendar.com/api/coverage/) or authenticated `/quality` report for recorded availability. Preserve `null` when a value has no recorded evidence. BLS payroll values are already in jobs, while `source_value` retains thousands of jobs and the exact conversion factor. Publisher-reported revisions, engine-observed revisions and original first prints are distinct. See the [complete reference](https://www.financecalendar.com/api/reference/) for document manifests and occurrence bindings.
 
