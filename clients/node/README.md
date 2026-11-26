@@ -1,6 +1,6 @@
 # financecalendar-mcp
 
-Bring economic-release dates, consensus and published results into AI assistants and terminal workflows. Paid plans support consensus for 60 mapped measures across 10 economies. Available values appear in each event’s `forecasts` field, refreshed through the day and labelled with their update time and source count. Coverage varies by release; see the [financecalendar.com API](https://www.financecalendar.com/api/) coverage page for the measures. **15 selected US headline release series** also carry source-linked actual/prior values. The same API also supplies central bank decisions, exchange holidays and source-backed crypto events. Use each record’s metric, reference period and source evidence when comparing expectations with results.
+Bring economic-release dates, consensus and published results into AI assistants and terminal workflows. Paid plans support consensus for 60 mapped measures across 10 economies. Available values appear in each event’s `forecasts` field, refreshed through the day and labelled with their update time and source count. Coverage varies by release; see the [financecalendar.com API](https://www.financecalendar.com/api/) coverage page for the measures. **15 selected US headline release series** also carry source-linked actual/prior values. The same API also supplies central bank decisions and exchange holidays. Use each record’s metric, reference period and source evidence when comparing expectations with results.
 
 One package, two binaries:
 
@@ -190,60 +190,6 @@ Also included:
 
 - Prompt `economic_calendar_briefing(country?, days?)`: asks the model to pull the high-impact calendar and summarise the week's risk events.
 - Resource `financecalendar://openapi`: the live OpenAPI 3.1 document from `{base}/openapi`.
-
-## Crypto coverage
-
-Use canonical asset IDs such as `ethereum`, rather than ticker symbols. Discover
-currently covered series and assets with `series_list(category="crypto")`.
-The existing `calendar`, `today`, `week`, `next_event`, `series_list`,
-`series_detail` and `history` MCP tools accept `asset`; calendar-like tools also
-accept `category="crypto"`. Macro queries and existing tool names remain valid.
-
-```sh
-financecalendar series --category crypto
-financecalendar calendar --category crypto --asset ethereum --json
-financecalendar next ethereum-network-upgrades --asset ethereum --tz UTC
-financecalendar week --category crypto --asset ethereum
-```
-
-Crypto is global (`country=null`), with nullable impact. Do not add a country
-filter to a global asset query. A testnet environment is distinct from mainnet;
-`crypto.activation_status="scheduled"` is configuration evidence, not proof of
-observed activation. Roadmap targets retain their complete `date_window_start`
-and `date_window_end`; `date` is only the lower-bound index. Calendar filters
-include overlapping windows; history includes them only after the upper bound.
-
-Coverage includes network schedules, vesting installments, governance voting
-deadlines and issuer supply projections. Inspect `crypto.event_type`:
-
-- `network-upgrade`: check `environment` and `activation_status`; a configured schedule is not observed activation.
-- `token-unlock`: retain `schedule_id`, `installment`, `beneficiaries`, `unlock_status`, `date_basis`, `token_amount` and `token_amount_basis` when supplied. A schedule or upper-bound amount does not prove tokens were transferred or sold.
-- `governance-vote`: retain `dao`, `space_id`, `proposal_id`, optional `proposal_title`, `voting_start`, `voting_end`, `voting_state`, `voting_type` and `choice_count`. The event marks a deadline, not approval, rejection or execution.
-- `supply-projection`: retain `projection_status`, `projected_circulating_supply`, `projected_monthly_supply_change` and `date_basis`. These are issuer estimates, not confirmed unlocks or observed circulating supply; decimal strings retain source precision.
-
-Check `verification_url`, `verification_method`, `manually_reviewed_at`,
-`last_verified_at` and `data_stale`. Public records combine licensed feeds and
-independently normalised factual records. `source_license` carries an actual
-upstream licence and its credit requirements when applicable; `source_rights`
-carries the factual provenance, access basis, review time, attribution and
-notice without asserting a publisher copyright licence. Either may be null.
-An optional `discovery_url` identifies where an event was found, including an
-aggregator; it is separate from primary `source_url` and verification evidence.
-CoinMarketCal internal API evaluation payloads are never returned.
-
-MCP JSON, CLI `--json` and API CSV via CLI `--csv` preserve these nested fields;
-CSV stores structured objects as JSON cells. Retain all source-specific rights,
-licence and attribution metadata when redistributing. PatternPlus records
-require the linked credit [Data: PatternPlus](https://pattern.plus), carried in
-`source_license.attribution` and `source_license.attribution_url`, alongside the
-licence link and adaptation notice. Human CLI output includes source credits,
-attribution links and factual notices, but remains a summary; use JSON/CSV to
-retain every metadata field when redistributing.
-Coverage varies by source and asset; an empty result is valid and does not
-establish comprehensive crypto coverage.
-
-This server retains its existing SDK v1 dependency. SDK v2 is the current stable
-line; `npx @modelcontextprotocol/codemod@latest v1-to-v2 .` is the migration path.
 
 ## CLI
 

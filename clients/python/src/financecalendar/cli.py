@@ -239,19 +239,19 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("next", help="next occurrence of a series")
     s.add_argument("series")
     s.add_argument("--country")
-    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
+    s.add_argument("--asset", help=argparse.SUPPRESS)
     s.add_argument("--category")
 
     s = sub.add_parser("today", help="today's releases; paid access also includes NYSE status")
     s.add_argument("--country")
-    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
+    s.add_argument("--asset", help=argparse.SUPPRESS)
     s.add_argument("--category")
 
     s = sub.add_parser("week", help="this week, Monday to Sunday")
     s.add_argument("--next", action="store_true", help="next week instead")
     s.add_argument("--category")
     s.add_argument("--country")
-    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
+    s.add_argument("--asset", help=argparse.SUPPRESS)
     s.add_argument("--impact")
     s.add_argument("--series")
 
@@ -259,7 +259,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--from", dest="from_")
     s.add_argument("--to")
     s.add_argument("--country")
-    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
+    s.add_argument("--asset", help=argparse.SUPPRESS)
     s.add_argument("--impact")
     s.add_argument("--category")
     s.add_argument("--series")
@@ -271,7 +271,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser("series", help="list every series")
     s.add_argument("--country")
-    s.add_argument("--asset", help="canonical crypto asset ID, e.g. ethereum (not ETH)")
+    s.add_argument("--asset", help=argparse.SUPPRESS)
     s.add_argument("--category")
     s.add_argument("--kind", choices=["instance", "holiday"])
 
