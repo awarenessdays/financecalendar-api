@@ -42,7 +42,7 @@ async function initialised(apiKey) {
   const s = startServer(apiKey);
   const init = await s.send("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "0" } });
   assert.equal(init.result.serverInfo.name, "financecalendar");
-  assert.equal(init.result.serverInfo.version, "0.2.8");
+  assert.equal(init.result.serverInfo.version, "0.2.9");
   await s.send("notifications/initialized", {}, true);
   return s;
 }
@@ -67,13 +67,13 @@ describe("MCP server over stdio", () => {
       }
       const next = res.result.tools.find((t) => t.name === "next_event");
       assert.deepEqual(next.inputSchema.required, ["series"]);
-      assert.deepEqual(Object.keys(next.inputSchema.properties).sort(), ["asset", "category", "country", "series", "tz"]);
+      assert.deepEqual(Object.keys(next.inputSchema.properties).sort(), ["category", "country", "series", "tz"]);
       const cal = res.result.tools.find((t) => t.name === "calendar");
-      assert.deepEqual(Object.keys(cal.inputSchema.properties).sort(), ["asset", "category", "country", "from", "impact", "include_holidays", "limit", "offset", "series", "status", "to", "tz"]);
+      assert.deepEqual(Object.keys(cal.inputSchema.properties).sort(), ["category", "country", "from", "impact", "include_holidays", "limit", "offset", "series", "status", "to", "tz"]);
       const props = (n) => Object.keys(res.result.tools.find((t) => t.name === n).inputSchema.properties).sort();
-      assert.deepEqual(props("today"), ["asset", "category", "country", "impact", "tz"]);
-      assert.deepEqual(props("week"), ["asset", "category", "country", "impact", "include_holidays", "series", "tz", "which"]);
-      assert.deepEqual(props("history"), ["asset", "from", "limit", "series", "to", "tz"]);
+      assert.deepEqual(props("today"), ["category", "country", "impact", "tz"]);
+      assert.deepEqual(props("week"), ["category", "country", "impact", "include_holidays", "series", "tz", "which"]);
+      assert.deepEqual(props("history"), ["from", "limit", "series", "to", "tz"]);
       assert.deepEqual(props("changes"), ["change", "cursor", "limit", "series", "since"]);
       assert.deepEqual(props("economic_results_history"), ["from", "ledger_cursor", "limit", "offset", "publication_revision", "series", "to"]);
       assert.deepEqual(props("release_editions"), ["event_id", "ledger_cursor", "limit", "offset", "publication_revision"]);
@@ -102,33 +102,18 @@ describe("MCP server over stdio", () => {
     } finally { s.stop(); }
   });
 
-  test("typed crypto filters pass through every relevant tool and preserve structured data", async () => {
+  test("crypto is retired: no tool offers the category or an asset filter", async () => {
     const s = await initialised();
     try {
       const list = await s.send("tools/list", {});
-      assert.ok(list.result.tools.find((t) => t.name === "calendar").inputSchema.properties.category.enum.includes("crypto"));
-      for (const [name, args] of [
-        ["calendar", { category: "crypto" }], ["today", { category: "crypto" }],
-        ["week", { category: "crypto" }], ["series_list", { category: "crypto" }],
-        ["next_event", { series: "ethereum-network-upgrades" }],
-        ["series_detail", { code: "ethereum-network-upgrades" }],
-        ["history", { series: "ethereum-network-upgrades" }],
-      ]) {
-        const response = await s.send("tools/call", { name, arguments: { ...args, asset: "ethereum" } });
-        assert.equal(response.result.isError, undefined, name);
-        const data = JSON.parse(response.result.content[0].text);
-        assert.deepEqual(response.result.structuredContent, data);
-        assert.match(JSON.stringify(data), /ethereum-network-upgrades/);
+      for (const tool of list.result.tools) {
+        const properties = tool.inputSchema.properties || {};
+        assert.ok(!("asset" in properties), `${tool.name} has no asset filter`);
+        assert.ok(!(properties.category?.enum || []).includes("crypto"), `${tool.name} does not offer the crypto category`);
+        assert.ok(!/crypto/i.test(tool.description || ""), `${tool.name} does not describe crypto`);
       }
-      const response = await s.send("tools/call", { name: "calendar", arguments: { category: "crypto", asset: "ethereum" } });
-      const row = response.result.structuredContent.events[1];
-      assert.equal(row.country, null);
-      assert.equal(row.actual, 0);
-      assert.equal(row.crypto.environment, "sepolia");
-      assert.equal(row.source_license.adapted, true);
     } finally { s.stop(); }
   });
-
   test("tools/call next_event returns the fixture as JSON text", async () => {
     const s = await initialised();
     try {

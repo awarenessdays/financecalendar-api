@@ -14,7 +14,6 @@ from conftest import Recorder, load
 
 @pytest.mark.parametrize("method,args,params,path", [
     ("calendar", (), {"category": "crypto", "limit": 1, "offset": 2}, "/calendar"),
-    ("crypto_calendar", (), {}, "/calendar"),
     ("today", (), {"category": "crypto"}, "/today"),
     ("week", (), {"category": "crypto"}, "/week"),
     ("next", ("ethereum-network-upgrades",), {}, "/next"),
@@ -27,7 +26,7 @@ def test_asset_passthrough_every_client_workflow(client, recorder, method, args,
     assert recorder.last.url.path.endswith(path)
     assert recorder.last.url.params["asset"] == "ethereum"
     assert "ethereum-network-upgrades" in str(data)
-    if method in ("calendar", "crypto_calendar"):
+    if method == "calendar":
         assert recorder.last.url.params["category"] == "crypto"
         assert data["events"][1]["country"] is None
         assert data["events"][1]["impact"] is None
@@ -36,10 +35,13 @@ def test_asset_passthrough_every_client_workflow(client, recorder, method, args,
         assert data["events"][1]["source_license"]["adapted"] is True
 
 
-def test_crypto_calendar_cannot_be_accidentally_overridden_to_macro(client, recorder):
-    client.crypto_calendar(asset=["ethereum", "bitcoin"], category="economic-indicators")
-    assert recorder.last.url.params["category"] == "crypto"
-    assert recorder.last.url.params["asset"] == "ethereum,bitcoin"
+def test_crypto_calendar_is_retired_and_makes_no_request(client, recorder):
+    before = len(recorder.requests) if hasattr(recorder, "requests") else None
+    with pytest.warns(DeprecationWarning):
+        data = client.crypto_calendar(asset=["ethereum", "bitcoin"])
+    assert data == {"events": [], "count": 0, "total": 0}
+    if before is not None:
+        assert len(recorder.requests) == before
 
 
 def test_iter_calendar_preserves_asset_filters_and_deduplicates_overlapping_windows():
@@ -143,3 +145,18 @@ def test_dataframe_retains_asset_objects_license_zero_and_null():
     assert frame.loc[1, "source_license"]["id"] == "CC-BY-4.0"
     assert frame.loc[0, "date_window_end"] == pd.Timestamp("2026-12-31")
     assert pd.isna(frame.loc[0, "release_at_utc"])
+
+
+@pytest.mark.parametrize("body,expected", [
+    ({"error": "Use pair or country, not both."}, "Use pair or country, not both."),
+    ({"code": "fc_plan", "message": "The news window is included with the Build and Scale plans.", "data": {"status": 403}},
+     "The news window is included with the Build and Scale plans."),
+    ({"error": "", "message": "Fallback reason."}, "Fallback reason."),
+])
+def test_the_reason_is_read_from_error_or_message(body, expected):
+    import httpx
+    from financecalendar.client import FinanceCalendarError
+    transport = httpx.MockTransport(lambda request: httpx.Response(403, json=body))
+    with Client(api_key="k", transport=transport) as client, pytest.raises(FinanceCalendarError) as caught:
+        client.calendar()
+    assert caught.value.status == 403 and expected in str(caught.value)

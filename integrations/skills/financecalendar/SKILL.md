@@ -1,12 +1,12 @@
 ---
 name: financecalendar
-description: Use Finance Calendar to find scheduled economic releases, central-bank decisions, exchange holidays, covered crypto events and historical economic observations, or build calendar integrations with its API, MCP tools, SDKs and CLI. Use for financial-event dates and source-backed release data, not personal calendar management.
+description: Use Finance Calendar to find scheduled economic releases, central-bank decisions, exchange holidays and historical economic observations, or build calendar integrations with its API, MCP tools, SDKs and CLI. Use for financial-event dates and source-backed release data, not personal calendar management.
 license: MIT
 ---
 
 # Finance Calendar
 
-Use the connected Finance Calendar tools for release schedules and available official observations. Discover covered countries and series instead of assuming a fixed country list or that a familiar series name means the US release. A country filter excludes global crypto rows; use canonical asset IDs for asset queries.
+Use the connected Finance Calendar tools for release schedules and available official observations. Discover covered countries and series instead of assuming a fixed country list or that a familiar series name means the US release.
 
 ## Find and explain events
 
@@ -21,7 +21,7 @@ Treat these distinctions as part of the answer:
 - Keep publication date separate from the measured `period` / `source_reference_period`. An Indian fiscal publication slot is not the measured month. Some GDP publications bundle several periods/stages and do not identify one headline metric.
 - Use `status`, `last_verified_at`, `data_stale` and `observation_status`. An estimated date is tentative; a retained stale record keeps its original verification. Calendar health and numerical health are separate. Missing future dates can reflect an unpublished publisher horizon.
 - Current-vintage observations, publisher-reported revisions, engine-observed revisions and original first prints differ. Calendar history and the change log are not a first-print backtesting dataset. BLS payroll `value` is already in jobs; `source_value` preserves thousands and its conversion factor. Do not multiply the canonical value again.
-- Distinguish an auction bidding deadline from result publication. For crypto, distinguish mainnet from testnet, scheduled activation from observed activation, voting deadline from outcome, and issuer supply projection from a confirmed unlock. Preserve complete approximate date windows rather than reporting their lower-bound index as an exact date.
+- Distinguish an auction bidding deadline from result publication.
 
 If an answer depends on a missing or unverified field, state that limitation with the relevant event; continue with the verified facts.
 

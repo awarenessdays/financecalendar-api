@@ -17,8 +17,7 @@ const run = (fn) => async (args) => {
 };
 
 const readOnly = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true };
-const category = z.enum(["economic-indicators", "central-banks-monetary-policy", "market-holidays", "crypto"]).optional();
-const asset = z.string().max(500).optional().describe("Canonical asset IDs, comma-separated, e.g. ethereum or bitcoin. Obtain covered IDs from series_list(category=crypto); ticker symbols are not IDs.");
+const category = z.enum(["economic-indicators", "central-banks-monetary-policy", "market-holidays"]).optional();
 const country = z.string().optional().describe("ISO alpha-2 country, comma-separated for several: US, GB, EU, DE, JP, CA, AU, CN, CH, NZ, NO, SE, IN, HK. 'uk' and 'eurozone' are accepted.");
 const tz = z.string().optional().describe("IANA timezone such as Europe/London; adds time_local (HH:MM) to every row.");
 const impact = z.string().optional().describe("high, medium or low; comma-separated for several.");
@@ -27,12 +26,11 @@ const exchange = z.string().optional().describe("nyse (default, same calendar as
 
 server.registerTool("next_event", {
   title: "Next event",
-  description: "The next occurrence of a public crypto series, economic series or central bank decision: fomc, cpi, nfp (jobs), gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi, or any keyword. Generic names default to the US release; pass country to override. Returns date, UTC and ET time, consensus, prior, actual and the financecalendar.com preview URL.",
+  description: "The next occurrence of an economic series or central bank decision: fomc, cpi, nfp (jobs), gdp, pce, ppi, retail-sales, jobless-claims, ism, jolts, ecb, boe, boj, boc, rba, rbnz, snb, pboc, uk-cpi, eurozone-cpi, japan-cpi, or any keyword. Generic names default to the US release; pass country to override. Returns date, UTC and ET time, consensus, prior, actual and the financecalendar.com preview URL.",
   annotations: readOnly,
   inputSchema: {
     series: z.string().describe("Series code, alias or keyword, e.g. 'fomc', 'cpi', 'nfp', 'boe'."),
     country,
-    asset,
     category,
     tz,
   },
@@ -40,7 +38,7 @@ server.registerTool("next_event", {
 
 server.registerTool("calendar", {
   title: "Economic calendar",
-  description: "Source-backed crypto events, scheduled economic releases and central bank decisions in a date range (default today to today + 14 days, at most 92 days). Filter by country, impact, category, canonical asset ID or series. Crypto has country=null and impact may be null; inspect estimated date windows and network environment. Market holidays are left out unless include_holidays is true. Rows are soonest first with consensus, prior and actual where known.",
+  description: "Scheduled economic releases and central bank decisions in a date range (default today to today + 14 days, at most 92 days). Filter by country, impact, category or series. Market holidays are left out unless include_holidays is true. Rows are soonest first with consensus, prior and actual where known.",
   annotations: readOnly,
   inputSchema: {
     from: date("Start date YYYY-MM-DD, default today (America/New_York)."),
@@ -48,7 +46,6 @@ server.registerTool("calendar", {
     country,
     impact,
     category,
-    asset,
     series: z.string().optional().describe("Series code or alias, comma-separated for several, e.g. 'us-cpi,fomc'."),
     include_holidays: z.boolean().optional().describe("Add exchange holiday rows to the economic rows."),
     status: z.string().optional().describe("confirmed, estimated, released, rescheduled or cancelled; comma-separated for several."),
@@ -62,19 +59,18 @@ server.registerTool("today", {
   title: "Today",
   description: "Today's scheduled releases, whether the NYSE is open right now, and any exchange closures today.",
   annotations: readOnly,
-  inputSchema: { country, impact, category, asset, tz },
+  inputSchema: { country, impact, category, tz },
 }, run((args) => api("/today", args)));
 
 server.registerTool("week", {
   title: "This or next week",
-  description: "Up to 500 matching events Monday to Sunday for this week (default) or next week, filtered by country, impact, category, asset or series. If total exceeds count, page calendar using the returned from/to dates; week has no paging.",
+  description: "Up to 500 matching events Monday to Sunday for this week (default) or next week, filtered by country, impact, category or series. If total exceeds count, page calendar using the returned from/to dates; week has no paging.",
   annotations: readOnly,
   inputSchema: {
     which: z.enum(["this", "next"]).optional().describe("this (default) or next."),
     country,
     impact,
     category,
-    asset,
     series: z.string().optional().describe("Series code or alias, comma-separated for several."),
     include_holidays: z.boolean().optional().describe("Add exchange holiday rows to the economic rows."),
     tz,
@@ -88,7 +84,6 @@ server.registerTool("series_list", {
   inputSchema: {
     country,
     category,
-    asset,
     kind: z.enum(["instance", "holiday"]).optional().describe("instance for releases and decisions, holiday for exchange calendars."),
   },
 }, run((args) => api("/series", args)));
@@ -97,7 +92,7 @@ server.registerTool("series_detail", {
   title: "Series detail",
   description: "One series in depth: metadata, next and last events, upcoming dates, recent history and, where published, a verified long-run dataset (e.g. every FOMC decision since 2020).",
   annotations: readOnly,
-  inputSchema: { code: z.string().describe("Series code or alias, e.g. 'fomc', 'us-cpi', 'boe'."), asset, tz },
+  inputSchema: { code: z.string().describe("Series code or alias, e.g. 'fomc', 'us-cpi', 'boe'."), tz },
 }, run(({ code, ...params }) => api(`/series/${encodeURIComponent(code)}`, params)));
 
 server.registerTool("history", {
@@ -106,7 +101,6 @@ server.registerTool("history", {
   annotations: readOnly,
   inputSchema: {
     series: z.string().describe("Series code or alias, e.g. 'us-cpi'."),
-    asset,
     from: date("Start date YYYY-MM-DD."),
     to: date("End date YYYY-MM-DD."),
     limit: z.number().int().min(1).max(500).optional().describe("Rows to return, 1 to 500 (default 100)."),

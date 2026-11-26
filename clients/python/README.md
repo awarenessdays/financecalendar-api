@@ -1,6 +1,6 @@
 # financecalendar
 
-Bring economic-release dates, consensus and published results into Python, pandas and terminal workflows with the [financecalendar.com API](https://www.financecalendar.com/api/). Paid plans support consensus for 60 mapped measures across 10 economies. Available values appear in each event’s `forecasts` field, refreshed through the day and labelled with their update time and source count. Coverage varies by release; see the coverage page for the measures. **15 selected US headline release series** also carry source-linked actual/prior values. The same API also supplies central bank decisions, exchange holidays and source-backed crypto events. Use each record’s metric, reference period and source evidence when comparing expectations with results.
+Bring economic-release dates, consensus and published results into Python, pandas and terminal workflows with the [financecalendar.com API](https://www.financecalendar.com/api/). Paid plans support consensus for 60 mapped measures across 10 economies. Available values appear in each event’s `forecasts` field, refreshed through the day and labelled with their update time and source count. Coverage varies by release; see the coverage page for the measures. **15 selected US headline release series** also carry source-linked actual/prior values. The same API also supplies central bank decisions and exchange holidays. Use each record’s metric, reference period and source evidence when comparing expectations with results.
 
 [Paid API plans](https://www.financecalendar.com/pricing/) include annually billed Starter (**1,000 requests/UTC day and 25,000/UTC calendar month**). Build is **US$9.99/month or US$95.90/year** for **100,000/day**. Scale is **US$29/month or US$278.40/year** for **1,000,000/day** and the complete current dataset download. [Inspect the public sample](https://www.financecalendar.com/api/sample/) before choosing a plan. Check the [current Starter quote](https://www.financecalendar.com/pricing/#starter) or the [machine-readable offer](https://www.financecalendar.com/wp-json/fc/v1/product-offer).
 
@@ -85,7 +85,6 @@ shows these details when provided, labels unknown economic release times
 | Method | Endpoint |
 |---|---|
 | `calendar(**params)` | `GET /calendar` (from_, to, country, impact, category, asset, series, include_holidays, status, tz, limit, offset) |
-| `crypto_calendar(asset=None, **params)` | `GET /calendar` with `category=crypto` forced; canonical asset IDs |
 | `calendar_csv(**params)` | `GET /calendar?format=csv`, returns the CSV text |
 | `iter_calendar(from_, to, **params)` | yields every event over any span: pages with offset/limit and splits ranges longer than 92 days |
 | `today(country=None, tz=None)` | `GET /today` |
@@ -178,68 +177,6 @@ print(df[["date", "consensus", "actual"]])
 | Timeout | `Client(timeout=20)` | |
 
 `Client` is also a context manager and has `close()`.
-
-## Crypto coverage
-
-```python
-from financecalendar import Client, to_dataframe
-
-with Client() as fc:
-    series = fc.series(category="crypto")  # discover canonical series and assets
-    calendar = fc.crypto_calendar(asset="ethereum")
-    nxt = fc.next("ethereum-network-upgrades", asset="ethereum")
-    rows = list(fc.iter_calendar("2026-10-01", "2027-03-01", category="crypto", asset="ethereum"))
-```
-
-`asset` passes through `calendar`, `calendar_csv`, `iter_calendar`, `today`,
-`week`, `next`, `series`, `series_detail` and `history`. Asset IDs are canonical
-names such as `ethereum`, not ticker symbols such as ETH. Crypto rows have
-`country=None` and may have `impact=None`. A country filter excludes global rows.
-
-Estimated month/quarter/year windows retain `date_window_start/end`; `date` is
-only their lower-bound index. Range queries include overlapping windows, and
-`iter_calendar` deduplicates stable IDs across chunks. A scheduled testnet fork
-is distinct from mainnet and is not proof of an observed activation. Inspect
-`crypto.environment`, `crypto.activation_status`, `verification_url`,
-`verification_method`, `manually_reviewed_at`, `last_verified_at` and `data_stale`.
-
-`to_dataframe` retains nested `assets`, `crypto`, `source_license` and
-`source_rights` plus the optional `discovery_url`, parses
-estimated date-window bounds, and adds `asset_ids`, `asset_symbols`,
-`crypto_event_type`, `crypto_network`, `crypto_exchange`, `crypto_environment`
-and `crypto_activation_status`. It preserves null countries and recorded zeros.
-
-```sh
-financecalendar series --category crypto
-financecalendar calendar --category crypto --asset ethereum --json
-financecalendar next ethereum-network-upgrades --asset ethereum --tz UTC
-```
-
-Coverage includes network schedules, vesting installments, governance voting
-deadlines and issuer supply projections. The `crypto` object retains source
-metadata:
-
-- Unlocks: `schedule_id`, `installment`, `beneficiaries`, `unlock_status`, `date_basis`, `token_amount` and `token_amount_basis` when supplied. Scheduled or upper-bound quantities do not prove transfer or sale.
-- Governance: `dao`, `space_id`, `proposal_id`, optional `proposal_title`, `voting_start`, `voting_end`, `voting_state`, `voting_type` and `choice_count`. A voting deadline is not approval, rejection or execution.
-- Supply projections: `projection_status`, `projected_circulating_supply`, `projected_monthly_supply_change` and `date_basis`. Issuer estimates are not confirmed unlocks or observed circulating supply; decimal strings retain source precision.
-
-Public records combine licensed feeds and independently normalised factual
-records. `source_license` carries actual upstream licensing requirements;
-`source_rights` carries factual provenance, access basis, review time,
-attribution and notice without asserting a publisher copyright licence. Either
-may be null. An optional `discovery_url` is a discovery-page link, potentially
-from an aggregator, and is separate from primary `source_url` and verification
-evidence. CoinMarketCal internal API evaluation payloads are excluded. Coverage
-varies by asset and source; empty results do not establish comprehensive coverage.
-
-Raw JSON, `calendar_csv` and CLI `--csv` retain these fields; CSV stores nested
-objects as JSON cells. Preserve record-level rights and licence metadata when
-sharing data. PatternPlus records require the linked credit
-[Data: PatternPlus](https://pattern.plus), carried in
-`source_license.attribution` and `source_license.attribution_url`, alongside the
-licence link and adaptation notice. Human CLI output includes source credits,
-attribution links and factual notices, but remains a summary; use JSON/CSV to
-retain every metadata field when redistributing.
 
 ## CLI
 

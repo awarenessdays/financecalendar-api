@@ -10,7 +10,7 @@ from urllib.parse import quote
 
 import httpx
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 
 DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1"
 USER_AGENT = f"financecalendar-python/{__version__}"
@@ -115,8 +115,12 @@ class Client:
         message = ""
         try:
             body = response.json()
-            if isinstance(body, dict) and isinstance(body.get("error"), str):
-                message = body["error"]
+            # Most routes state the reason under "error"; plan and parameter refusals use "message".
+            if isinstance(body, dict):
+                for key in ("error", "message"):
+                    if isinstance(body.get(key), str) and body[key]:
+                        message = body[key]
+                        break
         except ValueError:
             text = response.text.strip()
             message = text if 0 < len(text) < 200 else ""
@@ -139,12 +143,13 @@ class Client:
         return self._request("/calendar", params)
 
     def crypto_calendar(self, asset: str | list[str] | None = None, **params: Any) -> dict[str, Any]:
-        """Public crypto events, filtered by canonical asset ID (e.g. ethereum).
+        """Retired: Finance Calendar no longer covers crypto events (26 November 2026).
 
-        Only publicly redistributable snapshot data is returned. Estimated date
-        windows and testnet environments remain explicit in the response.
+        Kept so existing code does not break. It makes no request and returns an empty result.
         """
-        return self.calendar(**{**params, "category": "crypto", "asset": asset})
+        import warnings
+        warnings.warn("crypto_calendar is retired: Finance Calendar no longer covers crypto events.", DeprecationWarning, stacklevel=2)
+        return {"events": [], "count": 0, "total": 0}
 
     def calendar_csv(self, **params: Any) -> str:
         """The same range as calendar(), as the API's CSV text."""

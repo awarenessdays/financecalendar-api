@@ -1,7 +1,7 @@
 // Shared HTTP client and formatting helpers for the financecalendar.com API.
 // Zero runtime dependencies: uses the global fetch available in Node 20+.
 
-export const VERSION = "0.2.8";
+export const VERSION = "0.2.9";
 export const DEFAULT_BASE = "https://www.financecalendar.com/wp-json/fc/v1";
 export const USER_AGENT = `financecalendar-mcp/${VERSION}`;
 
@@ -48,7 +48,9 @@ export async function errorFromResponse(r) {
   try {
     body = await r.text();
     const j = JSON.parse(body);
-    if (j && typeof j.error === "string") detail = j.error;
+    // Most routes state the reason under "error"; plan and parameter refusals use "message".
+    if (j && typeof j.error === "string" && j.error) detail = j.error;
+    else if (j && typeof j.message === "string") detail = j.message;
   } catch {
     detail = body.length && body.length < 200 ? body.trim() : "";
   }

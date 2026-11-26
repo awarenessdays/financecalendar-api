@@ -1,6 +1,6 @@
 # Finance Calendar API
 
-Build release watchlists, compare Finance Calendar's consensus with published results, and query economic schedules as JSON, CSV and ICS. **Consensus is Finance Calendar's own record of the market's expected figure**: the middle value across independent sources, recorded before each release and frozen at release time, so a surprise calculated afterwards never moves. Paid plans carry the headline consensus, previous figure and result for **15 selected US headline releases**, including ISM, Conference Board and ADP, with a year of history; the headline consensus for releases in the UK, euro area, Germany, Canada and Australia; and consensus by measure for **60 mapped measures across 10 economies** in the `forecasts` field, labelled with update time and source count. Coverage varies by release; the mapped total is not the number with a live figure at any moment. The calendar also covers central bank decisions, selected crypto events and exchange holidays. Records retain their metric, reference period, source verification, timing precision and freshness metadata. Snapshot builds run hourly; source freshness is reported separately.
+Build release watchlists, compare Finance Calendar's consensus with published results, and query economic schedules as JSON, CSV and ICS. **Consensus is Finance Calendar's own record of the market's expected figure**: the middle value across independent sources, recorded before each release and frozen at release time, so a surprise calculated afterwards never moves. Paid plans carry the headline consensus, previous figure and result for **15 selected US headline releases**, including ISM, Conference Board and ADP, with a year of history; the headline consensus for releases in the UK, euro area, Germany, Canada and Australia; and consensus by measure for **60 mapped measures across 10 economies** in the `forecasts` field, labelled with update time and source count. Coverage varies by release; the mapped total is not the number with a live figure at any moment. The calendar also covers central bank decisions and exchange holidays. Records retain their metric, reference period, source verification, timing precision and freshness metadata. Snapshot builds run hourly; source freshness is reported separately.
 
 Building a **US CPI and FOMC watchlist with an AI agent**? Read the [public recorded sample and briefing](https://www.financecalendar.com/api/sample/) without an account, then use the [agent setup guide](docs/agent-setup.md) to prepare an owner-approved connection to live paid data. An agent that cannot send API requests can offer the [browser preparation page](https://www.financecalendar.com/api/sample/?setup_client=chatgpt#prepare-owner-setup), where a person or browser-capable agent selects **Prepare setup link** to create a genuine owner link.
 
@@ -51,7 +51,7 @@ Calendar records / response: Record limits and pagination apply to calendar list
 
 Release schedules: Dates, times and status. Paid date ranges follow the current snapshot coverage.
 
-Calendar categories: Paid categories include central bank speeches, exchange holidays and selected crypto events.
+Calendar categories: Paid categories include central bank speeches, exchange holidays and market status.
 
 Consensus across 10 economies: Consensus coverage maps 60 measures across the US, UK, euro area, Germany, Canada, Australia, New Zealand, Japan, Switzerland and China. A figure typically appears in the week before a release and is frozen at release time.
 
@@ -236,7 +236,7 @@ The MetaTrader package has verified MT5 native parser, timer and public HTTPS ch
 
 ## Endpoints
 
-This table describes paid-plan capabilities. Free Developer is limited to schedule-only JSON `/calendar` and `/today` within the 100/month, 10/day allowance and seven-date window above. It excludes figures, market status, holidays, crypto, history and the other data routes.
+This table describes paid-plan capabilities. Free Developer is limited to schedule-only JSON `/calendar` and `/today` within the 100/month, 10/day allowance and seven-date window above. It excludes figures, market status, holidays, history and the other data routes.
 
 | Endpoint | What it returns |
 |---|---|
@@ -376,44 +376,6 @@ Access to complete dataset downloads requires Scale. Reuse of lawfully obtained 
 ## Issues
 
 Wrong date? Missing series? Open an issue here. The engine reads official calendars, so tell us the official source and we will add it.
-
-## Selected crypto events
-
-Use `category=crypto&asset=ethereum` with `/calendar`, `/week` or `/today`.
-Discover canonical asset IDs through `/series?category=crypto`; symbols such as
-ETH are display labels. Coverage includes selected network upgrades, token unlock
-schedules, public DAO voting deadlines and labelled supply projections. A declared
-asset or series does not guarantee an upcoming record.
-
-Global crypto has `country=null`; `impact` may be null. Inspect `crypto.event_type`,
-source evidence and `verification_method`. Schedules are not proof of observed
-activation or token transfer. Month/quarter/year targets retain both
-`date_window_start` and `date_window_end`; `date` is their lower-bound index.
-Supply projections are not confirmed cliff unlocks; voting deadlines are not
-proposal outcomes. Provider-reported evidence remains labelled as such.
-
-Keep `source_license` credits, `attribution_url`, licence links, adaptation notices
-and `source_rights` factual-source notices when redistributing records. Licensed
-PatternPlus rows require [Data: PatternPlus](https://pattern.plus) linked credit
-under CC BY 4.0. A discovery URL is separate from primary verification evidence.
-The MIT software licence does not relicense upstream data.
-
-See the [crypto calendar](https://www.financecalendar.com/crypto/) and
-[full REST reference](https://www.financecalendar.com/api/reference/).
-
-Korean calendars use `country=KR` and `kr-` series codes. They retain explicit
-period/stage identities and raw `source_clock` evidence. Where a clock timezone
-has not been independently verified, exact UTC/local time remains null and
-`all_day=false`; `release_tz` records calendar jurisdiction, not permission to
-convert the raw clock. Check the published horizon and per-source health.
-
-MoSPI dates use `country=IN` and `in-` series codes. Its latest fiscal-year
-calendar is discovered from the official manifest. Planned dates remain
-estimated; explicitly recorded publication dates take precedence. No holiday
-move, publication clock or missing measured period is inferred. Combined GDP
-publications retain their original component description and are not a single
-headline observation. Source health exposes held reference-year and identity
-ambiguities.
 
 ## Build a working dashboard
 

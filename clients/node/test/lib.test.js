@@ -221,6 +221,14 @@ describe("api()", () => {
     });
   });
 
+  test("reads the reason from message when the reply has no error text", async () => {
+    const before = globalThis.fetch;
+    globalThis.fetch = async () => new Response(JSON.stringify({ code: "fc_plan", message: "The news window is included with the Build and Scale plans.", data: { status: 403 } }), { status: 403, headers: { "Content-Type": "application/json" } });
+    try {
+      await assert.rejects(api("/news-window", { pair: "EURUSD" }), /The news window is included with the Build and Scale plans\..*HTTP 403/);
+    } finally { globalThis.fetch = before; }
+  });
+
   test("surfaces 404 for an unknown series", async () => {
     await assert.rejects(api("/series/zzz"), /Unknown series.*\(HTTP 404\)/);
   });

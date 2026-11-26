@@ -11,11 +11,10 @@ The following wider-date, non-calendar and export queries require paid access:
 /next?series=cpi&country=IN
 /next?series=kr-cpi&country=KR
 /calendar?country=GB&from=YYYY-MM-DD&to=YYYY-MM-DD&limit=500&offset=0
-/calendar?category=crypto&asset=ethereum&from=YYYY-MM-DD&to=YYYY-MM-DD
 /calendar?series=fomc,us-cpi&format=ics
 ```
 
-Replace placeholder dates with explicit requested dates, within 92 days per window. Calendar defaults omit holidays; use `include=holidays` for an export that needs them. Apply filters before pagination. Keep country null for global crypto, and use canonical asset IDs discovered from the service rather than ticker symbols.
+Replace placeholder dates with explicit requested dates, within 92 days per window. Calendar defaults omit holidays; use `include=holidays` for an export that needs them. Apply filters before pagination.
 
 For change polling, retain the original `since` checkpoint until all pages complete. Follow `next_cursor` without changing bound filters or resending conflicting defaults. A snapshot-change HTTP 409 means restart that checkpoint and deduplicate consumed changes. Advance the checkpoint only after the complete interval is processed.
 

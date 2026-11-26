@@ -37,8 +37,6 @@ Usage:
   financecalendar countries
 
 Options:
-  --asset ID  canonical crypto asset ID, e.g. ethereum (not ticker ETH)
-  --category crypto  crypto events only; no country filter for global events
   --json      raw API response on any command
               results and editions always return JSON, including evidence and next_offset
   --tz ZONE   render times in an IANA zone (default: your local zone)
